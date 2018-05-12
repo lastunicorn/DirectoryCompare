@@ -17,29 +17,20 @@
 using System.IO;
 using Newtonsoft.Json;
 
-namespace DustInTheWind.DirectoryCompare
+namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
-    internal class CompareFilesCommand : ICommand
+    internal class ReadDiskCommand : ICommand
     {
-        public string Path1 { get; set; }
-        public string Path2 { get; set; }
+        public string SourcePath { get; set; }
+        public string DestinationFilePath { get; set; }
 
         public void Execute()
         {
-            string json1 = File.ReadAllText(Path1);
-            string json2 = File.ReadAllText(Path2);
-            Container container1 = JsonConvert.DeserializeObject<Container>(json1);
-            Container container2 = JsonConvert.DeserializeObject<Container>(json2);
+            DiskReader diskReader1 = new DiskReader(SourcePath);
+            diskReader1.Read();
 
-            Compare(container1, container2);
-        }
-
-        private static void Compare(Container container1, Container container2)
-        {
-            ContainerComparer comparer = new ContainerComparer(container1, container2);
-            comparer.Compare();
-
-            Program.DisplayResults(comparer);
+            string json = JsonConvert.SerializeObject(diskReader1.Container);
+            File.WriteAllText(DestinationFilePath, json);
         }
     }
 }

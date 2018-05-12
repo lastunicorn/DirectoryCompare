@@ -15,9 +15,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.IO;
+using DustInTheWind.ConsoleTools;
 using Newtonsoft.Json;
 
-namespace DustInTheWind.DirectoryCompare
+namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
     internal class ReadFileCommand : ICommand
     {
@@ -28,8 +29,10 @@ namespace DustInTheWind.DirectoryCompare
             string json = File.ReadAllText(FilePath);
             Container container = JsonConvert.DeserializeObject<Container>(json);
 
-            ContainerView containerView = new ContainerView(container);
-            containerView.Display();
+            CustomConsole.WriteLine("Container has {0} directories and {1} files.", container.Directories.Count, container.Files.Count);
+
+            //ContainerView containerView = new ContainerView(container);
+            //containerView.Display();
         }
     }
 }

@@ -14,25 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.IO;
-using Newtonsoft.Json;
-
-namespace DustInTheWind.DirectoryCompare
+namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
-    internal class VerifyDiskCommand : ICommand
+    internal class CompareDisksCommand : ICommand
     {
-        public string DiskPath { get; set; }
-        public string FilePath { get; set; }
+        public string Path1 { get; set; }
+        public string Path2 { get; set; }
 
         public void Execute()
         {
-            DiskReader diskReader1 = new DiskReader(DiskPath);
+            DiskReader diskReader1 = new DiskReader(Path1);
             diskReader1.Read();
 
-            string json2 = File.ReadAllText(FilePath);
-            Container container2 = JsonConvert.DeserializeObject<Container>(json2);
+            DiskReader diskReader2 = new DiskReader(Path2);
+            diskReader2.Read();
 
-            Compare(diskReader1.Container, container2);
+            Compare(diskReader1.Container, diskReader2.Container);
         }
 
         private static void Compare(Container container1, Container container2)

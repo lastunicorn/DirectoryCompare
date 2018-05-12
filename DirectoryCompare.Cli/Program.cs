@@ -15,36 +15,57 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections.Generic;
+using DustInTheWind.ConsoleTools;
+using DustInTheWind.ConsoleTools.Spinners;
+using DustInTheWind.DirectoryCompare.Cli.Commands;
 
-namespace DustInTheWind.DirectoryCompare
+namespace DustInTheWind.DirectoryCompare.Cli
 {
     internal class Program
     {
         private static void Main(string[] args)
         {
-            //args = new[] { "read-disk", @"c:\temp1", @"c:\temp\file1.json" };
-            //args = new[] { "read-disk", @"c:\temp2", @"c:\temp\file2.json" };
-            //args = new[] { "read-disk", @"c:\temp", @"c:\temp1\temp.json" };
-            //args = new[] { "read-file", @"c:\temp1\temp.json" };
-            //args = new[] { "verify-disk", @"c:\temp1", @"c:\temp\file1.json" };
-            //args = new[] { "compare-disks", @"c:\temp1", @"c:\temp2" };
-            //args = new[] { "compare-files", @"c:\temp\file1.json", @"c:\temp\file2.json" };
+            try
+            {
+                //args = new[] { "read-disk", @"c:\temp1", @"c:\temp\file1.json" };
+                //args = new[] { "read-disk", @"c:\temp2", @"c:\temp\file2.json" };
+                //args = new[] { "read-disk", @"c:\temp", @"c:\temp1\temp.json" };
+                //args = new[] { "read-file", @"c:\temp1\temp.json" };
+                //args = new[] { "verify-disk", @"c:\temp1", @"c:\temp\file1.json" };
+                //args = new[] { "compare-disks", @"c:\temp1", @"c:\temp2" };
+                //args = new[] { "compare-files", @"c:\temp\file1.json", @"c:\temp\file2.json" };
 
+                //DisplayArguments(args);
+
+                Project project = CreateProject(args);
+                Spinner.Run(() => { project.Run(); });
+
+                CustomConsole.WriteLineSuccess("Done");
+            }
+            catch (Exception ex)
+            {
+                CustomConsole.WriteLineError(ex);
+            }
+
+            Pause.QuickDisplay();
+        }
+
+        private static void DisplayArguments(IEnumerable<string> args)
+        {
             Console.WriteLine("Arguments:");
 
             foreach (string arg in args)
                 Console.WriteLine(arg);
 
             Console.WriteLine();
-
-            Project project = CreateProject(args);
-            project.Run();
-
-            Console.ReadKey(true);
         }
 
-        private static Project CreateProject(string[] args)
+        private static Project CreateProject(IReadOnlyList<string> args)
         {
+            if (args.Count == 0)
+                throw new Exception("Please provide a command name to execute.");
+
             switch (args[0])
             {
                 case "read-disk":
