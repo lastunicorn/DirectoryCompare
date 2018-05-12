@@ -33,7 +33,7 @@ namespace DirectoryCompare
         public IReadOnlyList<string> OnlyInContainer2 => onlyInContainer2;
         public IReadOnlyList<ItemComparison> DifferentNames => differentNames;
         public IReadOnlyList<ItemComparison> DifferentContent => differentContent;
-        
+
         public ContainerComparer(Container container1, Container container2)
         {
             this.container1 = container1 ?? throw new ArgumentNullException(nameof(container1));

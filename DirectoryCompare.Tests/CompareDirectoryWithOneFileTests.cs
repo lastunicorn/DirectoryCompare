@@ -79,6 +79,7 @@ namespace DirectoryCompare.Tests
         }
 
         #endregion
+
         #region OnlyInContainer2
 
         [Test]
