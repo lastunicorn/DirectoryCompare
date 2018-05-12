@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DirectoryCompare")]
+[assembly: AssemblyTitle("DirectoryCompare.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("DirectoryCompare")]
+[assembly: AssemblyProduct("DirectoryCompare.Tests")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("1a2bf82b-a566-4d6b-9ada-3414dd8c12d8")]
+[assembly: Guid("89fc20a7-3b62-4382-9408-1963eb9e0d8e")]
 
 // Version information for an assembly consists of the following four values:
 //
