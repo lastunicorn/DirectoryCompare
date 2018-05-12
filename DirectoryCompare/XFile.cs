@@ -1,6 +1,6 @@
 ﻿namespace DirectoryCompare
 {
-    internal class XFile : XItem
+    public class XFile : XItem
     {
         public byte[] Hash { get; set; }
     }

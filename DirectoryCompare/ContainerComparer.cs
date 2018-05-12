@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace DirectoryCompare
 {
-    internal class ContainerComparer
+    public class ContainerComparer
     {
         private readonly Container container1;
         private readonly Container container2;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DirectoryCompare
 {
-    internal class XDirectory : XItem
+    public class XDirectory : XItem
     {
         public List<XDirectory> Directories { get; set; } = new List<XDirectory>();
 

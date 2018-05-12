@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 
 namespace DirectoryCompare
 {
-    internal class DiskReader : IContainerProvider, IDisposable
+    public class DiskReader : IContainerProvider, IDisposable
     {
         private readonly string rootPath;
         private readonly MD5 md5;

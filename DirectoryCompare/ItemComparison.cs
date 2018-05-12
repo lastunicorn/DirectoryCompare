@@ -1,6 +1,6 @@
 ﻿namespace DirectoryCompare
 {
-    internal struct ItemComparison
+    public struct ItemComparison
     {
         public string RootPath { get; set; }
 

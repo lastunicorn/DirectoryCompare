@@ -1,6 +1,6 @@
 ﻿namespace DirectoryCompare
 {
-    internal class XItem
+    public class XItem
     {
         public string Name { get; set; }
     }
