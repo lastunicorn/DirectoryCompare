@@ -15,8 +15,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.IO;
-using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare
 {
@@ -39,100 +37,80 @@ namespace DustInTheWind.DirectoryCompare
 
             Console.WriteLine();
 
+            Project project = CreateProject(args);
+            project.Run();
+
+            Console.ReadKey(true);
+        }
+
+        private static Project CreateProject(string[] args)
+        {
             switch (args[0])
             {
                 case "read-disk":
                     Console.WriteLine("Reading path: " + args[1]);
-                    ReadDisk(args[1], args[2]);
-                    break;
+                    return new Project
+                    {
+                        Command = new ReadDiskCommand
+                        {
+                            SourcePath = args[1],
+                            DestinationFilePath = args[2]
+                        }
+                    };
 
                 case "read-file":
                     Console.WriteLine("Reading file: " + args[1]);
-                    ReadFile(args[1]);
-                    break;
+                    return new Project
+                    {
+                        Command = new ReadFileCommand
+                        {
+                            FilePath = args[1]
+                        }
+                    };
 
                 case "verify-disk":
                     Console.WriteLine("Verify path: " + args[1]);
-                    VerifyDisk(args[1], args[2]);
-                    break;
+                    return new Project
+                    {
+                        Command = new VerifyDiskCommand
+                        {
+                            DiskPath = args[1],
+                            FilePath = args[2]
+                        }
+                    };
 
                 case "compare-disks":
                     Console.WriteLine("Compare paths:");
                     Console.WriteLine(args[1]);
                     Console.WriteLine(args[2]);
-                    CompareDisks(args[1], args[2]);
-                    break;
+                    return new Project
+                    {
+                        Command = new CompareDisksCommand
+                        {
+                            Path1 = args[1],
+                            Path2 = args[2]
+                        }
+                    };
 
                 case "compare-files":
-                    CompareFiles(args[1], args[2]);
-                    break;
+                    return new Project
+                    {
+                        Command = new CompareFilesCommand
+                        {
+                            Path1 = args[1],
+                            Path2 = args[2]
+                        }
+                    };
+
+                default:
+                    throw new Exception("Invalid command.");
             }
-
-            Console.ReadKey(true);
         }
 
-        private static void ReadFile(string filePath)
+        public static void DisplayResults(ContainerComparer comparer)
         {
-            string json = File.ReadAllText(filePath);
-            Container container = JsonConvert.DeserializeObject<Container>(json);
-
-            ContainerView containerView = new ContainerView(container);
-            containerView.Display();
-        }
-
-        private static void VerifyDisk(string diskPath, string filePath)
-        {
-            DiskReader diskReader1 = new DiskReader(diskPath);
-            diskReader1.Read();
-
-            string json2 = File.ReadAllText(filePath);
-            Container container2 = JsonConvert.DeserializeObject<Container>(json2);
-
-            Compare(diskReader1.Container, container2);
-        }
-
-        private static void CompareFiles(string path1, string path2)
-        {
-            string json1 = File.ReadAllText(path1);
-            string json2 = File.ReadAllText(path2);
-            Container container1 = JsonConvert.DeserializeObject<Container>(json1);
-            Container container2 = JsonConvert.DeserializeObject<Container>(json2);
-
-            Compare(container1, container2);
-        }
-
-        private static void CompareDisks(string path1, string path2)
-        {
-            DiskReader diskReader1 = new DiskReader(path1);
-            diskReader1.Read();
-
-            DiskReader diskReader2 = new DiskReader(path2);
-            diskReader2.Read();
-
-            Compare(diskReader1.Container, diskReader2.Container);
-        }
-
-        private static void ReadDisk(string sourcePath, string destinationFilePath)
-        {
-            DiskReader diskReader1 = new DiskReader(sourcePath);
-            diskReader1.Read();
-
-            string json = JsonConvert.SerializeObject(diskReader1.Container);
-            File.WriteAllText(destinationFilePath, json);
-        }
-
-        private static void Compare(Container container1, Container container2)
-        {
-            ContainerComparer comparer = new ContainerComparer(container1, container2);
-            comparer.Compare();
-
             Console.WriteLine();
 
-            DisplayResults(comparer);
-        }
-
-        private static void DisplayResults(ContainerComparer comparer)
-        {
             Console.WriteLine("Files only in container 1:");
             foreach (string path in comparer.OnlyInContainer1)
                 Console.WriteLine(path);
@@ -160,35 +138,6 @@ namespace DustInTheWind.DirectoryCompare
                 Console.WriteLine("1 - " + itemComparison.FullName1);
                 Console.WriteLine("2 - " + itemComparison.FullName2);
             }
-        }
-    }
-
-    internal class ContainerView
-    {
-        private readonly Container container;
-
-        public ContainerView(Container container)
-        {
-            this.container = container;
-        }
-
-        public void Display()
-        {
-            DisplayDirectory(container, 0);
-        }
-
-        private void DisplayDirectory(XDirectory xDirectory, int index)
-        {
-            string indent = new string(' ', index);
-
-            foreach (XDirectory xSubdirectory in xDirectory.Directories)
-            {
-                Console.WriteLine(indent + xSubdirectory.Name);
-                DisplayDirectory(xSubdirectory, index + 1);
-            }
-
-            foreach (XFile xFile in xDirectory.Files)
-                Console.WriteLine(indent + xFile.Name);
         }
     }
 }

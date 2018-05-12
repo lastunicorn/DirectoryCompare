@@ -52,12 +52,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DirectoryCompare.Cli\DirectoryCompare.Cli.csproj">
-      <Project>{1a2bf82b-a566-4d6b-9ada-3414dd8c12d8}</Project>
-      <Name>DirectoryCompare.Cli</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DirectoryCompare\DirectoryCompare.csproj">
-      <Project>{27EAA312-EC92-41EA-B854-00B5C9F2FC7B}</Project>
+      <Project>{27eaa312-ec92-41ea-b854-00b5c9f2fc7b}</Project>
       <Name>DirectoryCompare</Name>
     </ProjectReference>
   </ItemGroup>
