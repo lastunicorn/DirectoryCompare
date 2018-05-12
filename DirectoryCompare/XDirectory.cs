@@ -17,7 +17,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace DirectoryCompare
+namespace DustInTheWind.DirectoryCompare
 {
     public class XDirectory : XItem
     {

@@ -16,7 +16,7 @@
 
 using NUnit.Framework;
 
-namespace DirectoryCompare.Tests
+namespace DustInTheWind.DirectoryCompare.Tests
 {
     [TestFixture]
     public class CompareOneSubdirectoryTests

@@ -8,8 +8,8 @@
     <ProjectGuid>{89FC20A7-3B62-4382-9408-1963EB9E0D8E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DirectoryCompare.Tests</RootNamespace>
-    <AssemblyName>DirectoryCompare.Tests</AssemblyName>
+    <RootNamespace>DustInTheWind.DirectoryCompare.Tests</RootNamespace>
+    <AssemblyName>DustInTheWind.DirectoryCompare.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>

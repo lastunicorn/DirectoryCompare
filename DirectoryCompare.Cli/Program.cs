@@ -18,7 +18,7 @@ using System;
 using System.IO;
 using Newtonsoft.Json;
 
-namespace DirectoryCompare
+namespace DustInTheWind.DirectoryCompare
 {
     internal class Program
     {

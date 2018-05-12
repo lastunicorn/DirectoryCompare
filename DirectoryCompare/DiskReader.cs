@@ -18,7 +18,7 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 
-namespace DirectoryCompare
+namespace DustInTheWind.DirectoryCompare
 {
     public class DiskReader : IContainerProvider, IDisposable
     {

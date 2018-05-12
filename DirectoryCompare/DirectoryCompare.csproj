@@ -7,8 +7,8 @@
     <ProjectGuid>{27EAA312-EC92-41EA-B854-00B5C9F2FC7B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DirectoryCompare</RootNamespace>
-    <AssemblyName>DirectoryCompare</AssemblyName>
+    <RootNamespace>DustInTheWind.DirectoryCompare</RootNamespace>
+    <AssemblyName>DustInTheWind.DirectoryCompare</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
