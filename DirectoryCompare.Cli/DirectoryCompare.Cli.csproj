@@ -35,6 +35,7 @@
     <Reference Include="DustInTheWind.ConsoleTools, Version=0.2.0.37841, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ConsoleTools.0.3.0\lib\net461\DustInTheWind.ConsoleTools.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -47,10 +48,12 @@
     </Compile>
     <Compile Include="Commands\CompareDisksCommand.cs" />
     <Compile Include="Commands\CompareFilesCommand.cs" />
-    <Compile Include="Commands\IComparationExporter.cs" />
-    <Compile Include="ResultExporters\ConsoleComparationExporter.cs" />
+    <Compile Include="Commands\IComparisonExporter.cs" />
+    <Compile Include="IProjectLogger.cs" />
+    <Compile Include="ProjectLogger.cs" />
+    <Compile Include="ResultExporters\ConsoleComparisonExporter.cs" />
     <Compile Include="ContainerView.cs" />
-    <Compile Include="ResultExporters\FileComparationExporter.cs" />
+    <Compile Include="ResultExporters\FileComparisonExporter.cs" />
     <Compile Include="ICommand.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Project.cs" />

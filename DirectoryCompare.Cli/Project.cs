@@ -18,10 +18,12 @@ namespace DustInTheWind.DirectoryCompare.Cli
 {
     internal class Project
     {
+        public IProjectLogger Logger { get; set; }
         public ICommand Command { get; set; }
 
         public void Run()
         {
+            Logger?.Info("Project started.");
             Command?.Execute();
         }
     }

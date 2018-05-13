@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
+using System.Diagnostics;
 using System.IO;
 using Newtonsoft.Json;
 
@@ -21,16 +23,53 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
     internal class ReadDiskCommand : ICommand
     {
+        private readonly Stopwatch stopwatch;
+        private DiskReader diskReader;
+
+        public ProjectLogger Logger { get; set; }
         public string SourcePath { get; set; }
         public string DestinationFilePath { get; set; }
 
+        public ReadDiskCommand()
+        {
+            stopwatch = new Stopwatch();
+        }
+
         public void Execute()
         {
-            DiskReader diskReader1 = new DiskReader(SourcePath);
-            diskReader1.Read();
+            if (SourcePath == null)
+                throw new Exception("SourcePath was not provided.");
 
-            string json = JsonConvert.SerializeObject(diskReader1.Container);
+            if (!Directory.Exists(SourcePath))
+                throw new Exception("The SourcePath does not exist.");
+
+            diskReader = new DiskReader(SourcePath);
+
+            ScanPath();
+            WriteToFile();
+        }
+
+        private void ScanPath()
+        {
+            Logger?.Info("Scanning path: {0}", SourcePath);
+
+            stopwatch.Reset();
+            diskReader.Read();
+            stopwatch.Stop();
+
+            Logger?.Info("Finished scanning path {0}", stopwatch.Elapsed);
+        }
+
+        private void WriteToFile()
+        {
+            stopwatch.Start();
+
+            string json = JsonConvert.SerializeObject(diskReader.Container);
             File.WriteAllText(DestinationFilePath, json);
+
+            stopwatch.Stop();
+
+            Logger?.Info("Finished writing container into file: {0}", DestinationFilePath);
         }
     }
 }

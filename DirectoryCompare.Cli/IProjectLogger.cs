@@ -14,10 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.Cli.Commands
+namespace DustInTheWind.DirectoryCompare.Cli
 {
-    internal interface IComparationExporter
+    internal interface IProjectLogger
     {
-        void Export(ContainerComparer comparer);
+        void Open();
+        void Info(string format, params object[] args);
     }
 }

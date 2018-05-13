@@ -14,25 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.IO;
-using Newtonsoft.Json;
-
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
-    internal class ReadFileCommand : ICommand
+    internal interface IComparisonExporter
     {
-        public ProjectLogger Logger { get; set; }
-        public string FilePath { get; set; }
-
-        public void Execute()
-        {
-            string json = File.ReadAllText(FilePath);
-            Container container = JsonConvert.DeserializeObject<Container>(json);
-
-            //CustomConsole.WriteLine("Container has {0} directories and {1} files.", container.Directories.Count, container.Files.Count);
-
-            ContainerView containerView = new ContainerView(container);
-            containerView.Display();
-        }
+        void Export(ContainerComparer comparer);
     }
 }

@@ -39,8 +39,8 @@ namespace DustInTheWind.DirectoryCompare.Cli
 
                 //DisplayArguments(args);
 
-                Project project = CreateProject(args);
-                Spinner.Run(() => { project.Run(); });
+                ICommand command = CreateProject(args);
+                Spinner.Run(() => { command.Execute(); });
 
                 CustomConsole.WriteLineSuccess("Done");
             }
@@ -48,8 +48,6 @@ namespace DustInTheWind.DirectoryCompare.Cli
             {
                 CustomConsole.WriteLineError(ex);
             }
-
-            Pause.QuickDisplay();
         }
 
         private static void DisplayArguments(IEnumerable<string> args)
@@ -62,7 +60,7 @@ namespace DustInTheWind.DirectoryCompare.Cli
             Console.WriteLine();
         }
 
-        private static Project CreateProject(IReadOnlyList<string> args)
+        private static ICommand CreateProject(IReadOnlyList<string> args)
         {
             if (args.Count == 0)
                 throw new Exception("Please provide a command name to execute.");
@@ -70,63 +68,52 @@ namespace DustInTheWind.DirectoryCompare.Cli
             switch (args[0])
             {
                 case "read-disk":
-                    Console.WriteLine("Reading path: " + args[1]);
-                    return new Project
+                    return new ReadDiskCommand
                     {
-                        Command = new ReadDiskCommand
-                        {
-                            SourcePath = args[1],
-                            DestinationFilePath = args[2]
-                        }
+                        Logger = new ProjectLogger(),
+                        SourcePath = args[1],
+                        DestinationFilePath = args[2]
                     };
 
                 case "read-file":
                     Console.WriteLine("Reading file: " + args[1]);
-                    return new Project
+                    return new ReadFileCommand
                     {
-                        Command = new ReadFileCommand
-                        {
-                            FilePath = args[1]
-                        }
+                        Logger = new ProjectLogger(),
+                        FilePath = args[1]
                     };
 
                 case "verify-disk":
                     Console.WriteLine("Verify path: " + args[1]);
-                    return new Project
+                    return new VerifyDiskCommand
                     {
-                        Command = new VerifyDiskCommand
-                        {
-                            DiskPath = args[1],
-                            FilePath = args[2],
-                            Exporter = new ConsoleComparationExporter()
-                        }
+                        Logger = new ProjectLogger(),
+                        DiskPath = args[1],
+                        FilePath = args[2],
+                        Exporter = new ConsoleComparisonExporter()
                     };
 
                 case "compare-disks":
                     Console.WriteLine("Compare paths:");
                     Console.WriteLine(args[1]);
                     Console.WriteLine(args[2]);
-                    return new Project
+                    return new CompareDisksCommand
                     {
-                        Command = new CompareDisksCommand
-                        {
-                            Path1 = args[1],
-                            Path2 = args[2],
-                            Exporter = new ConsoleComparationExporter()
-                        }
+                        Logger = new ProjectLogger(),
+                        Path1 = args[1],
+                        Path2 = args[2],
+                        Exporter = new ConsoleComparisonExporter()
                     };
 
                 case "compare-files":
-                    return new Project
+                    return new CompareFilesCommand
                     {
-                        Command = new CompareFilesCommand
-                        {
-                            Path1 = args[1],
-                            Path2 = args[2],
-                            Exporter = args.Count >= 4
-                                ? (IComparationExporter)new FileComparationExporter { ResultsDirectory = args[3] }
-                                : (IComparationExporter)new ConsoleComparationExporter()
-                        }
+                        Logger = new ProjectLogger(),
+                        Path1 = args[1],
+                        Path2 = args[2],
+                        Exporter = args.Count >= 4
+                            ? (IComparisonExporter)new FileComparisonExporter { ResultsDirectory = args[3] }
+                            : (IComparisonExporter)new ConsoleComparisonExporter()
                     };
 
                 default:

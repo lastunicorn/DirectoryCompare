@@ -21,7 +21,7 @@ using DustInTheWind.DirectoryCompare.Cli.Commands;
 
 namespace DustInTheWind.DirectoryCompare.Cli.ResultExporters
 {
-    internal class FileComparationExporter : IComparationExporter
+    internal class FileComparisonExporter : IComparisonExporter
     {
         public string ResultsDirectory { get; set; }
 

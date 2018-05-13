@@ -19,7 +19,7 @@ using DustInTheWind.DirectoryCompare.Cli.Commands;
 
 namespace DustInTheWind.DirectoryCompare.Cli.ResultExporters
 {
-    internal class ConsoleComparationExporter : IComparationExporter
+    internal class ConsoleComparisonExporter : IComparisonExporter
     {
         public void Export(ContainerComparer comparer)
         {

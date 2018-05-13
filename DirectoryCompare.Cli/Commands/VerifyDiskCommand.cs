@@ -21,9 +21,10 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
     internal class VerifyDiskCommand : ICommand
     {
+        public ProjectLogger Logger { get; set; }
         public string DiskPath { get; set; }
         public string FilePath { get; set; }
-        public IComparationExporter Exporter { get; set; }
+        public IComparisonExporter Exporter { get; set; }
 
         public void Execute()
         {
