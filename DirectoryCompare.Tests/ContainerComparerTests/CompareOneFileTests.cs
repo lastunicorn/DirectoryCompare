@@ -16,23 +16,21 @@
 
 using NUnit.Framework;
 
-namespace DustInTheWind.DirectoryCompare.Tests
+namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
 {
     [TestFixture]
-    public class CompareOneSubdirectoryTests
+    public class CompareOneFileTests
     {
         #region OnlyInContainer1
 
         [Test]
-        public void OnlyInContainer1_is_empty_if_both_containers_contain_one_identical_subdir()
+        public void OnlyInContainer1_is_empty_if_both_containers_contain_one_identical_file()
         {
             Container container1 = new Container();
-            XDirectory xDirectory1 = new XDirectory("Dir1");
-            container1.Directories.Add(xDirectory1);
+            container1.Files.Add(new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } });
 
             Container container2 = new Container();
-            XDirectory xDirectory2 = new XDirectory("Dir1");
-            container2.Directories.Add(xDirectory2);
+            container2.Files.Add(new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } });
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
@@ -41,28 +39,26 @@ namespace DustInTheWind.DirectoryCompare.Tests
         }
 
         [Test]
-        public void OnlyInContainer1_contains_the_name_of_the_subdir_if_only_container1_has_one_subdir()
+        public void OnlyInContainer1_contains_the_name_of_the_file_if_only_container1_has_one_file()
         {
             Container container1 = new Container();
-            XDirectory xDirectory1 = new XDirectory("Dir1");
-            container1.Directories.Add(xDirectory1);
+            container1.Files.Add(new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } });
 
             Container container2 = new Container();
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
 
-            Assert.That(comparer.OnlyInContainer1, Is.EqualTo(new[] { "/Dir1/" }));
+            Assert.That(comparer.OnlyInContainer1, Is.EqualTo(new[] { "/File1" }));
         }
 
         [Test]
-        public void OnlyInContainer1_is_empty_if_only_container2_has_one_subdir()
+        public void OnlyInContainer1_is_empty_if_only_container2_has_one_file()
         {
             Container container1 = new Container();
 
             Container container2 = new Container();
-            XDirectory xDirectory2 = new XDirectory("Dir1");
-            container2.Directories.Add(xDirectory2);
+            container2.Files.Add(new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } });
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
@@ -75,15 +71,13 @@ namespace DustInTheWind.DirectoryCompare.Tests
         #region OnlyInContainer2
 
         [Test]
-        public void OnlyInContainer2_is_empty_if_both_containers_contain_one_identical_subdir()
+        public void OnlyInContainer2_is_empty_if_both_containers_contain_one_identical_file()
         {
             Container container1 = new Container();
-            XDirectory xDirectory1 = new XDirectory("Dir1");
-            container1.Directories.Add(xDirectory1);
+            container1.Files.Add(new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } });
 
             Container container2 = new Container();
-            XDirectory xDirectory2 = new XDirectory("Dir1");
-            container2.Directories.Add(xDirectory2);
+            container2.Files.Add(new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } });
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
@@ -92,26 +86,24 @@ namespace DustInTheWind.DirectoryCompare.Tests
         }
 
         [Test]
-        public void OnlyInContainer2_contains_the_name_of_the_subdir_if_only_container2_has_one_subdir()
+        public void OnlyInContainer2_contains_the_name_of_the_file_if_only_container2_has_one_file()
         {
             Container container1 = new Container();
 
             Container container2 = new Container();
-            XDirectory xDirectory2 = new XDirectory("Dir1");
-            container2.Directories.Add(xDirectory2);
+            container2.Files.Add(new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } });
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
 
-            Assert.That(comparer.OnlyInContainer2, Is.EqualTo(new[] { "/Dir1/" }));
+            Assert.That(comparer.OnlyInContainer2, Is.EqualTo(new[] { "/File1" }));
         }
 
         [Test]
-        public void OnlyInContainer2_is_empty_if_only_container1_has_one_subdir()
+        public void OnlyInContainer2_is_empty_if_only_container1_has_one_file()
         {
             Container container1 = new Container();
-            XDirectory xDirectory1 = new XDirectory("Dir1");
-            container1.Directories.Add(xDirectory1);
+            container1.Files.Add(new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } });
 
             Container container2 = new Container();
 

@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Spinners;
 using DustInTheWind.DirectoryCompare.Cli.Commands;
+using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
 
 namespace DustInTheWind.DirectoryCompare.Cli
 {
@@ -96,7 +97,8 @@ namespace DustInTheWind.DirectoryCompare.Cli
                         Command = new VerifyDiskCommand
                         {
                             DiskPath = args[1],
-                            FilePath = args[2]
+                            FilePath = args[2],
+                            Exporter = new ConsoleComparationExporter()
                         }
                     };
 
@@ -109,7 +111,8 @@ namespace DustInTheWind.DirectoryCompare.Cli
                         Command = new CompareDisksCommand
                         {
                             Path1 = args[1],
-                            Path2 = args[2]
+                            Path2 = args[2],
+                            Exporter = new ConsoleComparationExporter()
                         }
                     };
 
@@ -119,45 +122,15 @@ namespace DustInTheWind.DirectoryCompare.Cli
                         Command = new CompareFilesCommand
                         {
                             Path1 = args[1],
-                            Path2 = args[2]
+                            Path2 = args[2],
+                            Exporter = args.Count >= 4
+                                ? (IComparationExporter)new FileComparationExporter { ResultsDirectory = args[3] }
+                                : (IComparationExporter)new ConsoleComparationExporter()
                         }
                     };
 
                 default:
                     throw new Exception("Invalid command.");
-            }
-        }
-
-        public static void DisplayResults(ContainerComparer comparer)
-        {
-            Console.WriteLine();
-
-            Console.WriteLine("Files only in container 1:");
-            foreach (string path in comparer.OnlyInContainer1)
-                Console.WriteLine(path);
-
-            Console.WriteLine();
-
-            Console.WriteLine("Files only in container 2:");
-            foreach (string path in comparer.OnlyInContainer2)
-                Console.WriteLine(path);
-
-            Console.WriteLine();
-
-            Console.WriteLine("Different names:");
-            foreach (ItemComparison itemComparison in comparer.DifferentNames)
-            {
-                Console.WriteLine("1 - " + itemComparison.FullName1);
-                Console.WriteLine("2 - " + itemComparison.FullName2);
-            }
-
-            Console.WriteLine();
-
-            Console.WriteLine("Different content:");
-            foreach (ItemComparison itemComparison in comparer.DifferentContent)
-            {
-                Console.WriteLine("1 - " + itemComparison.FullName1);
-                Console.WriteLine("2 - " + itemComparison.FullName2);
             }
         }
     }

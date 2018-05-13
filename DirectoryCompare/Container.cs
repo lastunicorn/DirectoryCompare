@@ -18,6 +18,9 @@ namespace DustInTheWind.DirectoryCompare
 {
     public class Container : XDirectory
     {
+        public string Name { get; set; }
+        public string OriginalPath { get; set; }
+
         public Container()
             : base(string.Empty)
         {

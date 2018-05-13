@@ -14,9 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
+
 namespace DustInTheWind.DirectoryCompare
 {
-    public struct ItemComparison
+    public struct ItemComparison : IEquatable<ItemComparison>
     {
         public string RootPath { get; set; }
 
@@ -27,5 +29,34 @@ namespace DustInTheWind.DirectoryCompare
         public string FullName1 => (RootPath ?? string.Empty) + Item1?.Name;
 
         public string FullName2 => (RootPath ?? string.Empty) + Item2?.Name;
+
+        public override string ToString()
+        {
+            return $"{RootPath} - {Item1} - {Item2}";
+        }
+
+        public bool Equals(ItemComparison other)
+        {
+            return string.Equals(RootPath, other.RootPath) &&
+                   Equals(Item1, other.Item1) &&
+                   Equals(Item2, other.Item2);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            return obj is ItemComparison && Equals((ItemComparison)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = (RootPath != null ? RootPath.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (Item1 != null ? Item1.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (Item2 != null ? Item2.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
     }
 }

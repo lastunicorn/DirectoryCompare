@@ -23,6 +23,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
     {
         public string DiskPath { get; set; }
         public string FilePath { get; set; }
+        public IComparationExporter Exporter { get; set; }
 
         public void Execute()
         {
@@ -35,12 +36,12 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
             Compare(diskReader1.Container, container2);
         }
 
-        private static void Compare(Container container1, Container container2)
+        private void Compare(Container container1, Container container2)
         {
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
 
-            Program.DisplayResults(comparer);
+            Exporter?.Export(comparer);
         }
     }
 }

@@ -16,29 +16,8 @@
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
-    internal class CompareDisksCommand : ICommand
+    internal interface IComparationExporter
     {
-        public string Path1 { get; set; }
-        public string Path2 { get; set; }
-        public IComparationExporter Exporter { get; set; }
-
-        public void Execute()
-        {
-            DiskReader diskReader1 = new DiskReader(Path1);
-            diskReader1.Read();
-
-            DiskReader diskReader2 = new DiskReader(Path2);
-            diskReader2.Read();
-
-            Compare(diskReader1.Container, diskReader2.Container);
-        }
-
-        private void Compare(Container container1, Container container2)
-        {
-            ContainerComparer comparer = new ContainerComparer(container1, container2);
-            comparer.Compare();
-
-            Exporter?.Export(comparer);
-        }
+        void Export(ContainerComparer comparer);
     }
 }

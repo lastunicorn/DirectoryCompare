@@ -36,7 +36,10 @@ namespace DustInTheWind.DirectoryCompare
 
         public void Read()
         {
-            Container = new Container();
+            Container = new Container
+            {
+                OriginalPath = rootPath
+            };
 
             if (Directory.Exists(rootPath))
                 ReadDirectory(Container, rootPath);

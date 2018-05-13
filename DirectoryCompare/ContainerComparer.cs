@@ -22,8 +22,13 @@ namespace DustInTheWind.DirectoryCompare
 {
     public class ContainerComparer
     {
-        private readonly Container container1;
-        private readonly Container container2;
+        public Container Container1 { get; }
+        public Container Container2 { get; }
+
+        public DateTime StartTimeUtc { get; private set; }
+        public DateTime EndTimeUtc { get; private set; }
+        public TimeSpan TotalTime => EndTimeUtc - StartTimeUtc;
+
         private readonly List<string> onlyInContainer1 = new List<string>();
         private readonly List<string> onlyInContainer2 = new List<string>();
         private readonly List<ItemComparison> differentNames = new List<ItemComparison>();
@@ -36,18 +41,27 @@ namespace DustInTheWind.DirectoryCompare
 
         public ContainerComparer(Container container1, Container container2)
         {
-            this.container1 = container1 ?? throw new ArgumentNullException(nameof(container1));
-            this.container2 = container2 ?? throw new ArgumentNullException(nameof(container2));
+            Container1 = container1 ?? throw new ArgumentNullException(nameof(container1));
+            Container2 = container2 ?? throw new ArgumentNullException(nameof(container2));
         }
 
         public void Compare()
         {
-            onlyInContainer1.Clear();
-            onlyInContainer2.Clear();
-            differentNames.Clear();
-            differentContent.Clear();
+            StartTimeUtc = DateTime.UtcNow;
 
-            CompareDirectories(container1, container2, "/");
+            try
+            {
+                onlyInContainer1.Clear();
+                onlyInContainer2.Clear();
+                differentNames.Clear();
+                differentContent.Clear();
+
+                CompareDirectories(Container1, Container2, "/");
+            }
+            finally
+            {
+                EndTimeUtc = DateTime.UtcNow;
+            }
         }
 
         private void CompareDirectories(XDirectory xDirectory1, XDirectory xDirectory2, string rootPath)
@@ -58,30 +72,36 @@ namespace DustInTheWind.DirectoryCompare
 
         private void CompareChildFiles(XDirectory xDirectory1, XDirectory xDirectory2, string rootPath)
         {
-            List<XFile> files1 = xDirectory1.Files.ToList();
-            List<XFile> files2 = xDirectory2.Files.ToList();
+            List<XFile> files1 = xDirectory1.Files;
+            List<XFile> files2 = xDirectory2.Files;
+            List<XFile> onlyInDirectory2 = xDirectory2.Files.ToList();
 
             foreach (XFile xFile1 in files1)
             {
-                XFile xFile2 = files2.FirstOrDefault(x => x.Name == xFile1.Name || AreEqual(x.Hash, xFile1.Hash));
+                List<XFile> xFile2Matches = files2
+                    .Where(x => x.Name == xFile1.Name || AreEqual(x.Hash, xFile1.Hash))
+                    .ToList();
 
-                if (xFile2 == null)
+                if (xFile2Matches.Count == 0)
                 {
                     onlyInContainer1.Add(rootPath + xFile1.Name);
                 }
                 else
                 {
-                    if (xFile1.Name != xFile2.Name)
-                        differentNames.Add(new ItemComparison { RootPath = rootPath, Item1 = xFile1, Item2 = xFile2 });
+                    foreach (XFile xFile2 in xFile2Matches)
+                    {
+                        if (xFile1.Name != xFile2.Name && AreEqual(xFile1.Hash, xFile2.Hash))
+                            differentNames.Add(new ItemComparison { RootPath = rootPath, Item1 = xFile1, Item2 = xFile2 });
 
-                    if (!AreEqual(xFile1.Hash, xFile2.Hash))
-                        differentContent.Add(new ItemComparison { RootPath = rootPath, Item1 = xFile1, Item2 = xFile2 });
+                        if (xFile1.Name == xFile2.Name && !AreEqual(xFile1.Hash, xFile2.Hash))
+                            differentContent.Add(new ItemComparison { RootPath = rootPath, Item1 = xFile1, Item2 = xFile2 });
 
-                    files2.Remove(xFile2);
+                        onlyInDirectory2.Remove(xFile2);
+                    }
                 }
             }
 
-            foreach (XFile xFile2 in files2)
+            foreach (XFile xFile2 in onlyInDirectory2)
             {
                 onlyInContainer2.Add(rootPath + xFile2.Name);
             }
