@@ -37,7 +37,8 @@ namespace DustInTheWind.DirectoryCompare.Cli
 
         public void Info(string format, params object[] arg)
         {
-            string text = string.Format("[{0}] ", DateTime.Now);
+            string text = string.Format(format, arg);
+            text = string.Format("[{0}] {1}", DateTime.Now, text);
 
             streamWriter.Write(text);
             streamWriter.WriteLine(format, arg);

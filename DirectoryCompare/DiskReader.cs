@@ -56,7 +56,6 @@ namespace DustInTheWind.DirectoryCompare
                 using (FileStream stream = File.OpenRead(filePath))
                 {
                     byte[] hash = md5.ComputeHash(stream);
-
                     xDirectory.Files.Add(new XFile { Name = fileName, Hash = hash });
                 }
             }

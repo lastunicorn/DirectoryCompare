@@ -16,8 +16,9 @@
 
 namespace DustInTheWind.DirectoryCompare
 {
-    internal interface IContainerProvider
+    public interface IContainerProvider
     {
         Container Container { get; }
+        void Read();
     }
 }

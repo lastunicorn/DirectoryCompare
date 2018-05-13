@@ -24,7 +24,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
     internal class ReadDiskCommand : ICommand
     {
         private readonly Stopwatch stopwatch;
-        private DiskReader diskReader;
+        private IContainerProvider diskReader;
 
         public ProjectLogger Logger { get; set; }
         public string SourcePath { get; set; }
@@ -37,13 +37,15 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
 
         public void Execute()
         {
+            Logger?.Open();
+
             if (SourcePath == null)
                 throw new Exception("SourcePath was not provided.");
 
             if (!Directory.Exists(SourcePath))
                 throw new Exception("The SourcePath does not exist.");
 
-            diskReader = new DiskReader(SourcePath);
+            diskReader = new DiskReaderAsync(SourcePath);
 
             ScanPath();
             WriteToFile();
@@ -54,6 +56,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
             Logger?.Info("Scanning path: {0}", SourcePath);
 
             stopwatch.Reset();
+            stopwatch.Start();
             diskReader.Read();
             stopwatch.Stop();
 
