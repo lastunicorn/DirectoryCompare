@@ -126,8 +126,8 @@ namespace DustInTheWind.DirectoryCompare
 
         private void CompareChildDirectories(XDirectory xDirectory1, XDirectory xDirectory2, string rootPath)
         {
-            List<XDirectory> subDirectories1 = xDirectory1.Directories.ToList();
-            List<XDirectory> subDirectories2 = xDirectory2.Directories.ToList();
+            List<XDirectory> subDirectories1 = xDirectory1.Directories?.ToList() ?? new List<XDirectory>();
+            List<XDirectory> subDirectories2 = xDirectory2.Directories?.ToList() ?? new List<XDirectory>();
 
             foreach (XDirectory xSubDirectory1 in subDirectories1)
             {

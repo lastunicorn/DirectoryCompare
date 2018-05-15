@@ -49,7 +49,6 @@
     <Compile Include="Commands\CompareDisksCommand.cs" />
     <Compile Include="Commands\CompareFilesCommand.cs" />
     <Compile Include="Commands\IComparisonExporter.cs" />
-    <Compile Include="IProjectLogger.cs" />
     <Compile Include="ProjectLogger.cs" />
     <Compile Include="ResultExporters\ConsoleComparisonExporter.cs" />
     <Compile Include="ContainerView.cs" />

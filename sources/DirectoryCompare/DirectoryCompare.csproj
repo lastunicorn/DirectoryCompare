@@ -41,7 +41,9 @@
     <Compile Include="ContainerComparer.cs" />
     <Compile Include="DiskReader.cs" />
     <Compile Include="DiskReaderAsync.cs" />
+    <Compile Include="ErrorEncounteredEventArgs.cs" />
     <Compile Include="IContainerProvider.cs" />
+    <Compile Include="IProjectLogger.cs" />
     <Compile Include="ItemComparison.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XDirectory.cs" />

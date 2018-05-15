@@ -16,6 +16,7 @@
 
 using System;
 using System.IO;
+using DustInTheWind.ConsoleTools;
 
 namespace DustInTheWind.DirectoryCompare.Cli
 {
@@ -35,15 +36,31 @@ namespace DustInTheWind.DirectoryCompare.Cli
             streamWriter = new StreamWriter(logFilePath);
         }
 
+        public void Close()
+        {
+            streamWriter.Close();
+        }
+
         public void Info(string format, params object[] arg)
         {
             string text = string.Format(format, arg);
-            text = string.Format("[{0}] {1}", DateTime.Now, text);
+            text = string.Format("[{0:yyyy-MM-dd HH:mm:ss.fff}] {1}", DateTime.Now, text);
 
             streamWriter.Write(text);
             streamWriter.WriteLine(format, arg);
 
-            Console.WriteLine(text);
+            CustomConsole.WriteLine(text);
+        }
+
+        public void Error(string format, params object[] arg)
+        {
+            string text = string.Format(format, arg);
+            text = string.Format("[{0:yyyy-MM-dd HH:mm:ss.fff}] {1}", DateTime.Now, text);
+
+            streamWriter.Write(text);
+            streamWriter.WriteLine(format, arg);
+
+            CustomConsole.WriteLineError(text);
         }
 
         public void Dispose()

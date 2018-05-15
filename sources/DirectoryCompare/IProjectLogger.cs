@@ -14,19 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-
-namespace DustInTheWind.DirectoryCompare
+namespace DustInTheWind.DirectoryCompare.Cli
 {
-    public class Container : XDirectory
+    public interface IProjectLogger
     {
-        public string Name { get; set; }
-        public string OriginalPath { get; set; }
-        public DateTime CreationTime { get; set; }
-
-        public Container()
-            : base(string.Empty)
-        {
-        }
+        void Open();
+        void Info(string format, params object[] args);
     }
 }

@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 
@@ -27,6 +28,8 @@ namespace DustInTheWind.DirectoryCompare
 
         public Container Container { get; private set; }
 
+        public event EventHandler<ErrorEncounteredEventArgs> ErrorEncountered;
+
         public DiskReader(string rootPath)
         {
             this.rootPath = rootPath ?? throw new ArgumentNullException(nameof(rootPath));
@@ -38,43 +41,111 @@ namespace DustInTheWind.DirectoryCompare
         {
             Container = new Container
             {
-                OriginalPath = rootPath
+                OriginalPath = rootPath,
+                CreationTime = DateTime.UtcNow
             };
 
-            if (Directory.Exists(rootPath))
+            try
+            {
+                if (!Directory.Exists(rootPath))
+                    throw new Exception(string.Format("The path '{0}' does not exist.", rootPath));
+
                 ReadDirectory(Container, rootPath);
+            }
+            catch (Exception ex)
+            {
+                OnErrorEncountered(new ErrorEncounteredEventArgs(ex, rootPath));
+
+                Container.Error = ex.Message;
+            }
         }
 
         private void ReadDirectory(XDirectory xDirectory, string path)
         {
             string[] filePaths = Directory.GetFiles(path);
 
-            foreach (string filePath in filePaths)
+            if (filePaths.Length > 0)
             {
-                string fileName = Path.GetFileName(filePath);
+                xDirectory.Files = new List<XFile>(filePaths.Length);
 
-                using (FileStream stream = File.OpenRead(filePath))
+                foreach (string filePath in filePaths)
                 {
-                    byte[] hash = md5.ComputeHash(stream);
-                    xDirectory.Files.Add(new XFile { Name = fileName, Hash = hash });
+                    XFile xFile = ProcessFile(filePath);
+                    xDirectory.Files.Add(xFile);
                 }
             }
 
             string[] directoryPaths = Directory.GetDirectories(path);
 
-            foreach (string directoryPath in directoryPaths)
+            if (directoryPaths.Length > 0)
             {
-                string directoryName = Path.GetFileName(directoryPath);
-                XDirectory xSubdirectory = new XDirectory { Name = directoryName };
-                xDirectory.Directories.Add(xSubdirectory);
+                xDirectory.Directories = new List<XDirectory>(directoryPaths.Length);
+
+                foreach (string directoryPath in directoryPaths)
+                {
+                    XDirectory xSubdirectory = ProcessDirectory(directoryPath);
+                    xDirectory.Directories.Add(xSubdirectory);
+                }
+            }
+        }
+
+        private XDirectory ProcessDirectory(string directoryPath)
+        {
+            try
+            {
+                XDirectory xSubdirectory = new XDirectory
+                {
+                    Name = Path.GetFileName(directoryPath)
+                };
 
                 ReadDirectory(xSubdirectory, directoryPath);
+                return xSubdirectory;
+            }
+            catch (Exception ex)
+            {
+                OnErrorEncountered(new ErrorEncounteredEventArgs(ex, directoryPath));
+
+                return new XDirectory
+                {
+                    Name = Path.GetFileName(directoryPath),
+                    Error = ex.Message
+                };
+            }
+        }
+
+        private XFile ProcessFile(string filePath)
+        {
+            try
+            {
+                using (FileStream stream = File.OpenRead(filePath))
+                {
+                    return new XFile
+                    {
+                        Name = Path.GetFileName(filePath),
+                        Hash = md5.ComputeHash(stream)
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                OnErrorEncountered(new ErrorEncounteredEventArgs(ex, filePath));
+
+                return new XFile
+                {
+                    Name = Path.GetFileName(filePath),
+                    Error = ex.Message
+                };
             }
         }
 
         public void Dispose()
         {
             md5?.Dispose();
+        }
+
+        protected virtual void OnErrorEncountered(ErrorEncounteredEventArgs e)
+        {
+            ErrorEncountered?.Invoke(this, e);
         }
     }
 }

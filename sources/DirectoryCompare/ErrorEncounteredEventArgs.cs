@@ -14,11 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.Cli
+using System;
+
+namespace DustInTheWind.DirectoryCompare
 {
-    internal interface IProjectLogger
+    public class ErrorEncounteredEventArgs : EventArgs
     {
-        void Open();
-        void Info(string format, params object[] args);
+        public Exception Exception { get; }
+        public string Path { get; }
+
+        public ErrorEncounteredEventArgs(Exception exception, string path)
+        {
+            Exception = exception ?? throw new ArgumentNullException(nameof(exception));
+            Path = path ?? throw new ArgumentNullException(nameof(path));
+        }
     }
 }

@@ -24,7 +24,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
     internal class ReadDiskCommand : ICommand
     {
         private readonly Stopwatch stopwatch;
-        private IContainerProvider diskReader;
+        private DiskReader diskReader;
 
         public ProjectLogger Logger { get; set; }
         public string SourcePath { get; set; }
@@ -39,16 +39,29 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
         {
             Logger?.Open();
 
-            if (SourcePath == null)
-                throw new Exception("SourcePath was not provided.");
+            try
+            {
+                if (SourcePath == null)
+                    throw new Exception("SourcePath was not provided.");
 
-            if (!Directory.Exists(SourcePath))
-                throw new Exception("The SourcePath does not exist.");
+                if (!Directory.Exists(SourcePath))
+                    throw new Exception("The SourcePath does not exist.");
 
-            diskReader = new DiskReaderAsync(SourcePath);
+                diskReader = new DiskReader(SourcePath);
+                diskReader.ErrorEncountered += HandleDiskReaderErrorEncountered;
 
-            ScanPath();
-            WriteToFile();
+                ScanPath();
+                WriteToFile();
+            }
+            finally
+            {
+                Logger?.Close();
+            }
+        }
+
+        private void HandleDiskReaderErrorEncountered(object sender, ErrorEncounteredEventArgs e)
+        {
+            Logger?.Error("Error while reading path '{0}': {1}", e.Path, e.Exception);
         }
 
         private void ScanPath()
@@ -67,7 +80,11 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
         {
             stopwatch.Start();
 
-            string json = JsonConvert.SerializeObject(diskReader.Container);
+            JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore
+            };
+            string json = JsonConvert.SerializeObject(diskReader.Container, Formatting.None, jsonSerializerSettings);
             File.WriteAllText(DestinationFilePath, json);
 
             stopwatch.Stop();

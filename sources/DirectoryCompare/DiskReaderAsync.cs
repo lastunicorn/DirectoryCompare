@@ -40,58 +40,59 @@ namespace DustInTheWind.DirectoryCompare
         {
             Container = new Container
             {
-                OriginalPath = rootPath
+                OriginalPath = rootPath,
+                CreationTime = DateTime.UtcNow
             };
 
-            if (Directory.Exists(rootPath))
+            if (!Directory.Exists(rootPath))
+                return;
+
+            Task<HashResult> task = Task.Run(() => new HashResult
             {
-                Task<HashResult> task = Task.Run(() => new HashResult
+                XDirectory = Container,
+                XSubdirectory = Container
+            });
+
+            IEnumerable<Task<HashResult>> items = ReadDirectory1(task, rootPath);
+
+            bool isFinished = false;
+
+            Task creatorTask = Task.Run(() =>
+            {
+                foreach (Task<HashResult> item in items)
                 {
-                    XDirectory = Container,
-                    XSubdirectory = Container
-                });
-
-                IEnumerable<Task<HashResult>> items = ReadDirectory1(task, rootPath);
-
-                bool isFinished = false;
-
-                Task creatorTask = Task.Run(() =>
-                {
-                    foreach (Task<HashResult> item in items)
-                    {
-                        while (tasks.Count >= 100)
-                            Thread.Sleep(500);
-
-                        tasks.Enqueue(item);
-                    }
-
-                    isFinished = true;
-                });
-
-                Task consumerTask = Task.Run(() =>
-                {
-                    while (true)
-                    {
-                        while (tasks.TryDequeue(out Task<HashResult> item))
-                        {
-                            item.Wait();
-
-                            if (item.Result.XSubdirectory != null)
-                                item.Result.XDirectory.Directories.Add(item.Result.XSubdirectory);
-
-                            if (item.Result.XFile != null)
-                                item.Result.XDirectory.Files.Add(item.Result.XFile);
-                        }
-
-                        if (isFinished)
-                            break;
-
+                    while (tasks.Count >= 100)
                         Thread.Sleep(500);
-                    }
-                });
 
-                Task.WaitAll(creatorTask, consumerTask);
-            }
+                    tasks.Enqueue(item);
+                }
+
+                isFinished = true;
+            });
+
+            Task consumerTask = Task.Run(() =>
+            {
+                while (true)
+                {
+                    while (tasks.TryDequeue(out Task<HashResult> item))
+                    {
+                        item.Wait();
+
+                        if (item.Result.XSubdirectory != null)
+                            item.Result.XDirectory.Directories.Add(item.Result.XSubdirectory);
+
+                        if (item.Result.XFile != null)
+                            item.Result.XDirectory.Files.Add(item.Result.XFile);
+                    }
+
+                    if (isFinished)
+                        break;
+
+                    Thread.Sleep(500);
+                }
+            });
+
+            Task.WaitAll(creatorTask, consumerTask);
         }
 
         private struct HashResult
@@ -122,7 +123,7 @@ namespace DustInTheWind.DirectoryCompare
             }
         }
 
-        private Task<HashResult> CalulateFileHash(Task<HashResult> xDirectory, string filePath)
+        private static Task<HashResult> CalulateFileHash(Task<HashResult> xDirectory, string filePath)
         {
             return Task.Run(() =>
             {

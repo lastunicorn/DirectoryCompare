@@ -21,6 +21,7 @@ namespace DustInTheWind.DirectoryCompare
     public class XItem : IEquatable<XItem>
     {
         public string Name { get; set; }
+        public string Error { get; set; }
 
         public override string ToString()
         {
