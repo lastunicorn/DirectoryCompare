@@ -1,0 +1,5 @@
+DirectoryCompare
+================
+
+This application is calculating MD5 hashes for a specified directory tree.
+The results are stored in a json file and later can be used to make a comparison with another reading.
