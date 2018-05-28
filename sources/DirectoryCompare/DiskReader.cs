@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 
 namespace DustInTheWind.DirectoryCompare
@@ -27,6 +28,9 @@ namespace DustInTheWind.DirectoryCompare
         private readonly MD5 md5;
 
         public Container Container { get; private set; }
+        public List<string> BlackList { get; set; }
+
+        private List<string> computedBlackList = new List<string>();
 
         public event EventHandler<ErrorEncounteredEventArgs> ErrorEncountered;
 
@@ -39,6 +43,18 @@ namespace DustInTheWind.DirectoryCompare
 
         public void Read()
         {
+            if (BlackList == null)
+                computedBlackList = new List<string>();
+            else
+                computedBlackList = BlackList
+                    .Select(x => Path.IsPathRooted(x) ? x : Path.Combine(rootPath, x))
+                    .ToList();
+
+            Console.WriteLine("Computed black list:");
+
+            foreach (string blackListItem in computedBlackList)
+                Console.WriteLine("- " + blackListItem);
+
             Container = new Container
             {
                 OriginalPath = rootPath,
@@ -62,7 +78,9 @@ namespace DustInTheWind.DirectoryCompare
 
         private void ReadDirectory(XDirectory xDirectory, string path)
         {
-            string[] filePaths = Directory.GetFiles(path);
+            string[] filePaths = Directory.GetFiles(path)
+                .Where(x => !computedBlackList.Contains(x))
+                .ToArray();
 
             if (filePaths.Length > 0)
             {
@@ -75,7 +93,9 @@ namespace DustInTheWind.DirectoryCompare
                 }
             }
 
-            string[] directoryPaths = Directory.GetDirectories(path);
+            string[] directoryPaths = Directory.GetDirectories(path)
+                .Where(x => !computedBlackList.Contains(x))
+                .ToArray();
 
             if (directoryPaths.Length > 0)
             {
@@ -91,15 +111,19 @@ namespace DustInTheWind.DirectoryCompare
 
         private XDirectory ProcessDirectory(string directoryPath)
         {
+            string directoryName = Path.GetFileName(directoryPath);
+
             try
             {
-                XDirectory xSubdirectory = new XDirectory
+                Console.WriteLine(directoryPath);
+
+                XDirectory xDirectory = new XDirectory
                 {
-                    Name = Path.GetFileName(directoryPath)
+                    Name = directoryName
                 };
 
-                ReadDirectory(xSubdirectory, directoryPath);
-                return xSubdirectory;
+                ReadDirectory(xDirectory, directoryPath);
+                return xDirectory;
             }
             catch (Exception ex)
             {
@@ -107,7 +131,7 @@ namespace DustInTheWind.DirectoryCompare
 
                 return new XDirectory
                 {
-                    Name = Path.GetFileName(directoryPath),
+                    Name = directoryName,
                     Error = ex.Message
                 };
             }

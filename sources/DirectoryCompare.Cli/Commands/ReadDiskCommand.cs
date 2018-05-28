@@ -15,8 +15,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using DustInTheWind.DirectoryCompare.JsonSerialization;
 using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
@@ -29,6 +31,8 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
         public ProjectLogger Logger { get; set; }
         public string SourcePath { get; set; }
         public string DestinationFilePath { get; set; }
+
+        public List<string> BlackList { get; set; } = new List<string>();
 
         public ReadDiskCommand()
         {
@@ -46,10 +50,11 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
 
                 if (!Directory.Exists(SourcePath))
                     throw new Exception("The SourcePath does not exist.");
-
+                
                 diskReader = new DiskReader(SourcePath);
+                diskReader.BlackList = BlackList;
                 diskReader.ErrorEncountered += HandleDiskReaderErrorEncountered;
-
+                
                 ScanPath();
                 WriteToFile();
             }
@@ -67,6 +72,14 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
         private void ScanPath()
         {
             Logger?.Info("Scanning path: {0}", SourcePath);
+            Logger?.Info("Results file: {0}", DestinationFilePath);
+            Logger?.Info("Black List:");
+
+            if (BlackList != null)
+                foreach (string blackListItem in BlackList)
+                {
+                    Logger?.Info(blackListItem);
+                }
 
             stopwatch.Reset();
             stopwatch.Start();
@@ -78,16 +91,8 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
 
         private void WriteToFile()
         {
-            stopwatch.Start();
-
-            JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Ignore
-            };
-            string json = JsonConvert.SerializeObject(diskReader.Container, Formatting.None, jsonSerializerSettings);
-            File.WriteAllText(DestinationFilePath, json);
-
-            stopwatch.Stop();
+            JsonFileSerializer serializer = new JsonFileSerializer();
+            serializer.WriteToFile(diskReader.Container, DestinationFilePath);
 
             Logger?.Info("Finished writing container into file: {0}", DestinationFilePath);
         }

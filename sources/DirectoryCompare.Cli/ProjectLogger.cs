@@ -41,24 +41,32 @@ namespace DustInTheWind.DirectoryCompare.Cli
             streamWriter.Close();
         }
 
+        public void Info(string format)
+        {
+            Info(format, new object[0]);
+        }
+
         public void Info(string format, params object[] arg)
         {
-            string text = string.Format(format, arg);
+            string text = arg == null ? format : string.Format(format, arg);
             text = string.Format("[{0:yyyy-MM-dd HH:mm:ss.fff}] {1}", DateTime.Now, text);
 
-            streamWriter.Write(text);
-            streamWriter.WriteLine(format, arg);
+            streamWriter.WriteLine(text);
 
             CustomConsole.WriteLine(text);
         }
 
+        public void Error(string format)
+        {
+            Error(format, new object[0]);
+        }
+
         public void Error(string format, params object[] arg)
         {
-            string text = string.Format(format, arg);
+            string text = arg == null ? format : string.Format(format, arg);
             text = string.Format("[{0:yyyy-MM-dd HH:mm:ss.fff}] {1}", DateTime.Now, text);
 
-            streamWriter.Write(text);
-            streamWriter.WriteLine(format, arg);
+            streamWriter.WriteLine(text);
 
             CustomConsole.WriteLineError(text);
         }

@@ -16,6 +16,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Spinners;
 using DustInTheWind.DirectoryCompare.Cli.Commands;
@@ -39,7 +41,9 @@ namespace DustInTheWind.DirectoryCompare.Cli
 
                 //DisplayArguments(args);
 
-                ICommand command = CreateProject(args);
+                Arguments arguments = new Arguments(args);
+
+                ICommand command = CreateProject(arguments);
                 Spinner.Run(() => { command.Execute(); });
 
                 CustomConsole.WriteLineSuccess("Done");
@@ -60,48 +64,49 @@ namespace DustInTheWind.DirectoryCompare.Cli
             Console.WriteLine();
         }
 
-        private static ICommand CreateProject(IReadOnlyList<string> args)
+        private static ICommand CreateProject(Arguments arguments)
         {
-            if (args.Count == 0)
+            if (string.IsNullOrEmpty(arguments.Command))
                 throw new Exception("Please provide a command name to execute.");
 
-            switch (args[0])
+            switch (arguments.Command)
             {
                 case "read-disk":
                     return new ReadDiskCommand
                     {
                         Logger = new ProjectLogger(),
-                        SourcePath = args[1],
-                        DestinationFilePath = args[2]
+                        SourcePath = arguments[0],
+                        DestinationFilePath = arguments[1],
+                        BlackList = ReadBlackList(arguments[2])
                     };
 
                 case "read-file":
-                    Console.WriteLine("Reading file: " + args[1]);
+                    Console.WriteLine("Reading file: " + arguments[0]);
                     return new ReadFileCommand
                     {
                         Logger = new ProjectLogger(),
-                        FilePath = args[1]
+                        FilePath = arguments[0]
                     };
 
                 case "verify-disk":
-                    Console.WriteLine("Verify path: " + args[1]);
+                    Console.WriteLine("Verify path: " + arguments[0]);
                     return new VerifyDiskCommand
                     {
                         Logger = new ProjectLogger(),
-                        DiskPath = args[1],
-                        FilePath = args[2],
+                        DiskPath = arguments[0],
+                        FilePath = arguments[1],
                         Exporter = new ConsoleComparisonExporter()
                     };
 
                 case "compare-disks":
                     Console.WriteLine("Compare paths:");
-                    Console.WriteLine(args[1]);
-                    Console.WriteLine(args[2]);
+                    Console.WriteLine(arguments[0]);
+                    Console.WriteLine(arguments[1]);
                     return new CompareDisksCommand
                     {
                         Logger = new ProjectLogger(),
-                        Path1 = args[1],
-                        Path2 = args[2],
+                        Path1 = arguments[0],
+                        Path2 = arguments[1],
                         Exporter = new ConsoleComparisonExporter()
                     };
 
@@ -109,16 +114,28 @@ namespace DustInTheWind.DirectoryCompare.Cli
                     return new CompareFilesCommand
                     {
                         Logger = new ProjectLogger(),
-                        Path1 = args[1],
-                        Path2 = args[2],
-                        Exporter = args.Count >= 4
-                            ? (IComparisonExporter)new FileComparisonExporter { ResultsDirectory = args[3] }
+                        Path1 = arguments[0],
+                        Path2 = arguments[1],
+                        Exporter = arguments.Count >= 3
+                            ? (IComparisonExporter)new FileComparisonExporter { ResultsDirectory = arguments[2] }
                             : (IComparisonExporter)new ConsoleComparisonExporter()
                     };
 
                 default:
                     throw new Exception("Invalid command.");
             }
+        }
+
+        private static List<string> ReadBlackList(string filePath)
+        {
+            Console.WriteLine("Reading black list from file: {0}", filePath);
+
+            return File.Exists(filePath)
+                ? File.ReadAllLines(filePath)
+                    .Where(x => !string.IsNullOrEmpty(x))
+                    .Where(x => !x.StartsWith("#"))
+                    .ToList()
+                : new List<string>();
         }
     }
 }
