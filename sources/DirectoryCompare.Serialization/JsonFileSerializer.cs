@@ -16,17 +16,18 @@
 
 using System.Diagnostics;
 using System.IO;
+using DustInTheWind.DirectoryCompare.JsonSerialization;
 using Newtonsoft.Json;
 
-namespace DustInTheWind.DirectoryCompare.JsonSerialization
+namespace DustInTheWind.DirectoryCompare.Serialization
 {
     public class JsonFileSerializer : ISerializer
     {
-        public void WriteToFile(XContainer xContainer, string destinationFilePath)
+        public void WriteToFile(XContainer container, string destinationFilePath)
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
 
-            JsonXContainer jsinXContainer = new JsonXContainer(xContainer);
+            JsonXContainer jsinXContainer = new JsonXContainer(container);
 
             JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings
             {
@@ -44,7 +45,7 @@ namespace DustInTheWind.DirectoryCompare.JsonSerialization
             string json = File.ReadAllText(sourceFilePath);
             JsonXContainer jsonXContainer = JsonConvert.DeserializeObject<JsonXContainer>(json);
 
-            return jsonXContainer.ToXContainer();
+            return jsonXContainer.ToContainer();
         }
     }
 }

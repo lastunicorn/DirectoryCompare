@@ -27,7 +27,7 @@ namespace DustInTheWind.DirectoryCompare
         private readonly string rootPath;
         private readonly MD5 md5;
 
-        public Container Container { get; private set; }
+        public XContainer Container { get; private set; }
         public List<string> BlackList { get; set; }
 
         private List<string> computedBlackList = new List<string>();
@@ -55,7 +55,7 @@ namespace DustInTheWind.DirectoryCompare
             foreach (string blackListItem in computedBlackList)
                 Console.WriteLine("- " + blackListItem);
 
-            Container = new Container
+            Container = new XContainer
             {
                 OriginalPath = rootPath,
                 CreationTime = DateTime.UtcNow

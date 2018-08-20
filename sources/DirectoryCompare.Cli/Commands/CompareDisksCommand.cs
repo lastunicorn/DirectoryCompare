@@ -43,9 +43,9 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
             Compare(diskReader1.Container, diskReader2.Container);
         }
 
-        private void Compare(Container container1, Container container2)
+        private void Compare(XContainer xContainer1, XContainer xContainer2)
         {
-            ContainerComparer comparer = new ContainerComparer(container1, container2);
+            ContainerComparer comparer = new ContainerComparer(xContainer1, xContainer2);
             comparer.Compare();
 
             Exporter?.Export(comparer);

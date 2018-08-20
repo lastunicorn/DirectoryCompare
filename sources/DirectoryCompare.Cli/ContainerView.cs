@@ -20,16 +20,16 @@ namespace DustInTheWind.DirectoryCompare.Cli
 {
     internal class ContainerView
     {
-        private readonly Container container;
+        private readonly XContainer xContainer;
 
-        public ContainerView(Container container)
+        public ContainerView(XContainer xContainer)
         {
-            this.container = container;
+            this.xContainer = xContainer;
         }
 
         public void Display()
         {
-            DisplayDirectory(container, 0);
+            DisplayDirectory(xContainer, 0);
         }
 
         private void DisplayDirectory(XDirectory xDirectory, int index)

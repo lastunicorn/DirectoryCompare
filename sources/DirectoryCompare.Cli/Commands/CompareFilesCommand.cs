@@ -35,19 +35,21 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
         {
             JsonFileSerializer serializer = new JsonFileSerializer();
 
-            //Container container1 = serializer.ReadFromFile(Path1);
-            Container container2 = serializer.ReadFromFile(Path2);
+            // todo: must find a way to dynamically detect the serialization type.
 
-            string json1 = File.ReadAllText(Path1);
-            Container container1 = JsonConvert.DeserializeObject<Container>(json1);
+            XContainer xContainer1 = serializer.ReadFromFile(Path1);
+            XContainer xContainer2 = serializer.ReadFromFile(Path2);
+
+            //string json1 = File.ReadAllText(Path1);
+            //XContainer xContainer1 = JsonConvert.DeserializeObject<XContainer>(json1);
 
             //string json2 = File.ReadAllText(Path2);
             //Container container2 = JsonConvert.DeserializeObject<Container>(json2);
 
-            Compare(container1, container2);
+            Compare(xContainer1, xContainer2);
         }
 
-        private void Compare(Container container1, Container container2)
+        private void Compare(XContainer container1, XContainer container2)
         {
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();

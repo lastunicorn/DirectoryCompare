@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace DustInTheWind.DirectoryCompare.JsonSerialization
+namespace DustInTheWind.DirectoryCompare.Serialization
 {
     internal class JsonXContainer
     {
@@ -39,29 +39,29 @@ namespace DustInTheWind.DirectoryCompare.JsonSerialization
         {
         }
 
-        public JsonXContainer(XContainer xContainer)
+        public JsonXContainer(XContainer container)
         {
-            if (xContainer == null) throw new ArgumentNullException(nameof(xContainer));
+            if (container == null) throw new ArgumentNullException(nameof(container));
 
-            OriginalPath = xContainer.OriginalPath;
-            CreationTime = xContainer.CreationTime;
+            OriginalPath = container.OriginalPath;
+            CreationTime = container.CreationTime;
 
-            if (xContainer.Directories == null)
+            if (container.Directories == null)
                 Directories = null;
             else
-                Directories = xContainer.Directories
+                Directories = container.Directories
                     .Select(x => new JsonXDirectory(x))
                     .ToList();
 
-            if (xContainer.Files == null)
+            if (container.Files == null)
                 Files = null;
             else
-                Files = xContainer.Files
+                Files = container.Files
                     .Select(x => new JsonXFile(x))
                     .ToList();
         }
 
-        public XContainer ToXContainer()
+        public XContainer ToContainer()
         {
             return new XContainer
             {

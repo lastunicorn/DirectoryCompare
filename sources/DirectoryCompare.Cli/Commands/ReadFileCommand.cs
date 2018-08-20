@@ -33,11 +33,11 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
         public void Execute()
         {
             string json = File.ReadAllText(FilePath);
-            Container container = JsonConvert.DeserializeObject<Container>(json);
+            XContainer xContainer = JsonConvert.DeserializeObject<XContainer>(json);
 
             //CustomConsole.WriteLine("Container has {0} directories and {1} files.", container.Directories.Count, container.Files.Count);
 
-            ContainerView containerView = new ContainerView(container);
+            ContainerView containerView = new ContainerView(xContainer);
             containerView.Display();
         }
     }

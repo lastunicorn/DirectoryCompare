@@ -28,7 +28,7 @@ namespace DustInTheWind.DirectoryCompare
     {
         private readonly string rootPath;
 
-        public Container Container { get; private set; }
+        public XContainer Container { get; private set; }
         private readonly ConcurrentQueue<Task<HashResult>> tasks = new ConcurrentQueue<Task<HashResult>>();
 
         public DiskReaderAsync(string rootPath)
@@ -38,7 +38,7 @@ namespace DustInTheWind.DirectoryCompare
 
         public void Read()
         {
-            Container = new Container
+            Container = new XContainer
             {
                 OriginalPath = rootPath,
                 CreationTime = DateTime.UtcNow

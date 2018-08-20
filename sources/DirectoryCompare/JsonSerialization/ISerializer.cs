@@ -14,11 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare
+namespace DustInTheWind.DirectoryCompare.JsonSerialization
 {
-    public interface IContainerProvider
+    public interface ISerializer
     {
-        XContainer Container { get; }
-        void Read();
+        void WriteToFile(XContainer container, string destinationFilePath);
+        XContainer ReadFromFile(string sourceFilePath);
     }
 }

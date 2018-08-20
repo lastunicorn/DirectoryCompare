@@ -22,14 +22,14 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
     [TestFixture]
     public class IdenticalContainersWithTwoDifferentFilesTests
     {
-        private Container container1;
-        private Container container2;
+        private XContainer container1;
+        private XContainer container2;
         private ContainerComparer containerComparer;
 
         [SetUp]
         public void SetUp()
         {
-            container1 = new Container
+            container1 = new XContainer
             {
                 Files = new List<XFile>
                 {
@@ -37,7 +37,7 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
                     new XFile { Name = "File2.txt", Hash = new byte[] { 10, 20, 30 } }
                 }
             };
-            container2 = new Container
+            container2 = new XContainer
             {
                 Files = new List<XFile>
                 {

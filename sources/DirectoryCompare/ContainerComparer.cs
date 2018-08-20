@@ -23,8 +23,8 @@ namespace DustInTheWind.DirectoryCompare
 {
     public class ContainerComparer
     {
-        public Container Container1 { get; }
-        public Container Container2 { get; }
+        public XContainer Container1 { get; }
+        public XContainer Container2 { get; }
 
         public DateTime StartTimeUtc { get; private set; }
         public DateTime EndTimeUtc { get; private set; }
@@ -40,10 +40,10 @@ namespace DustInTheWind.DirectoryCompare
         public IReadOnlyList<ItemComparison> DifferentNames => differentNames;
         public IReadOnlyList<ItemComparison> DifferentContent => differentContent;
 
-        public ContainerComparer(Container container1, Container container2)
+        public ContainerComparer(XContainer xContainer1, XContainer xContainer2)
         {
-            Container1 = container1 ?? throw new ArgumentNullException(nameof(container1));
-            Container2 = container2 ?? throw new ArgumentNullException(nameof(container2));
+            Container1 = xContainer1 ?? throw new ArgumentNullException(nameof(xContainer1));
+            Container2 = xContainer2 ?? throw new ArgumentNullException(nameof(xContainer2));
         }
 
         public void Compare()

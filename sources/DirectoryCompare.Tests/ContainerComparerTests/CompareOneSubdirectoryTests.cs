@@ -26,11 +26,11 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         [Test]
         public void OnlyInContainer1_is_empty_if_both_containers_contain_one_identical_subdir()
         {
-            Container container1 = new Container();
+            XContainer container1 = new XContainer();
             XDirectory xDirectory1 = new XDirectory("Dir1");
             container1.Directories.Add(xDirectory1);
 
-            Container container2 = new Container();
+            XContainer container2 = new XContainer();
             XDirectory xDirectory2 = new XDirectory("Dir1");
             container2.Directories.Add(xDirectory2);
 
@@ -43,11 +43,11 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         [Test]
         public void OnlyInContainer1_contains_the_name_of_the_subdir_if_only_container1_has_one_subdir()
         {
-            Container container1 = new Container();
+            XContainer container1 = new XContainer();
             XDirectory xDirectory1 = new XDirectory("Dir1");
             container1.Directories.Add(xDirectory1);
 
-            Container container2 = new Container();
+            XContainer container2 = new XContainer();
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
@@ -58,9 +58,9 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         [Test]
         public void OnlyInContainer1_is_empty_if_only_container2_has_one_subdir()
         {
-            Container container1 = new Container();
+            XContainer container1 = new XContainer();
 
-            Container container2 = new Container();
+            XContainer container2 = new XContainer();
             XDirectory xDirectory2 = new XDirectory("Dir1");
             container2.Directories.Add(xDirectory2);
 
@@ -77,11 +77,11 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         [Test]
         public void OnlyInContainer2_is_empty_if_both_containers_contain_one_identical_subdir()
         {
-            Container container1 = new Container();
+            XContainer container1 = new XContainer();
             XDirectory xDirectory1 = new XDirectory("Dir1");
             container1.Directories.Add(xDirectory1);
 
-            Container container2 = new Container();
+            XContainer container2 = new XContainer();
             XDirectory xDirectory2 = new XDirectory("Dir1");
             container2.Directories.Add(xDirectory2);
 
@@ -94,9 +94,9 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         [Test]
         public void OnlyInContainer2_contains_the_name_of_the_subdir_if_only_container2_has_one_subdir()
         {
-            Container container1 = new Container();
+            XContainer container1 = new XContainer();
 
-            Container container2 = new Container();
+            XContainer container2 = new XContainer();
             XDirectory xDirectory2 = new XDirectory("Dir1");
             container2.Directories.Add(xDirectory2);
 
@@ -109,11 +109,11 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         [Test]
         public void OnlyInContainer2_is_empty_if_only_container1_has_one_subdir()
         {
-            Container container1 = new Container();
+            XContainer container1 = new XContainer();
             XDirectory xDirectory1 = new XDirectory("Dir1");
             container1.Directories.Add(xDirectory1);
 
-            Container container2 = new Container();
+            XContainer container2 = new XContainer();
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();

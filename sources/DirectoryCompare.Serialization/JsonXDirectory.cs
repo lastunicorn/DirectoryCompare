@@ -19,15 +19,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace DustInTheWind.DirectoryCompare.JsonSerialization
+namespace DustInTheWind.DirectoryCompare.Serialization
 {
-    internal class JsonXContainer
+    internal class JsonXDirectory
     {
-        [JsonProperty("original-path")]
-        public string OriginalPath { get; set; }
-
-        [JsonProperty("creation-time")]
-        public DateTime CreationTime { get; set; }
+        [JsonProperty("n")]
+        public string Name { get; set; }
 
         [JsonProperty("d")]
         public List<JsonXDirectory> Directories { get; set; }
@@ -35,38 +32,36 @@ namespace DustInTheWind.DirectoryCompare.JsonSerialization
         [JsonProperty("f")]
         public List<JsonXFile> Files { get; set; }
 
-        public JsonXContainer()
+        public JsonXDirectory()
         {
         }
 
-        public JsonXContainer(XContainer xContainer)
+        public JsonXDirectory(XDirectory xDirectory)
         {
-            if (xContainer == null) throw new ArgumentNullException(nameof(xContainer));
+            if (xDirectory == null) throw new ArgumentNullException(nameof(xDirectory));
 
-            OriginalPath = xContainer.OriginalPath;
-            CreationTime = xContainer.CreationTime;
+            Name = xDirectory.Name;
 
-            if (xContainer.Directories == null)
+            if (xDirectory.Directories == null)
                 Directories = null;
             else
-                Directories = xContainer.Directories
+                Directories = xDirectory.Directories
                     .Select(x => new JsonXDirectory(x))
                     .ToList();
 
-            if (xContainer.Files == null)
+            if (xDirectory.Files == null)
                 Files = null;
             else
-                Files = xContainer.Files
+                Files = xDirectory.Files
                     .Select(x => new JsonXFile(x))
                     .ToList();
         }
 
-        public XContainer ToXContainer()
+        public XDirectory ToXDirectory()
         {
-            return new XContainer
+            return new XDirectory
             {
-                OriginalPath = OriginalPath,
-                CreationTime = CreationTime,
+                Name = Name,
                 Directories = GetXDirectories(),
                 Files = GetXFiles()
             };

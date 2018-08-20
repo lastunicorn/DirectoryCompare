@@ -14,11 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
+
 namespace DustInTheWind.DirectoryCompare
 {
-    public interface IContainerProvider
+    public class XContainer : XDirectory
     {
-        XContainer Container { get; }
-        void Read();
+        public string OriginalPath { get; set; }
+        public DateTime CreationTime { get; set; }
+
+        public XContainer()
+            : base(string.Empty)
+        {
+        }
     }
 }

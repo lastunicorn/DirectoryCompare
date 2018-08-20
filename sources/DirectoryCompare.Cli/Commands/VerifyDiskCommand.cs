@@ -38,12 +38,12 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
             diskReader1.Read();
 
             string json2 = File.ReadAllText(FilePath);
-            Container container2 = JsonConvert.DeserializeObject<Container>(json2);
+            XContainer xContainer2 = JsonConvert.DeserializeObject<XContainer>(json2);
 
-            Compare(diskReader1.Container, container2);
+            Compare(diskReader1.Container, xContainer2);
         }
 
-        private void Compare(Container container1, Container container2)
+        private void Compare(XContainer container1, XContainer container2)
         {
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
