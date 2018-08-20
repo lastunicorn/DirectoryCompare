@@ -1,5 +1,5 @@
 DirectoryCompare
 ================
 
-This application is calculating MD5 hashes for a specified directory tree.
-The results are stored in a json file and later can be used to make a comparison with another reading.
+This tool can help you detect if the content of a directory has been changed over time.
+It can save hash values of the content in different points in time and, later, compare the snapshots between them.
