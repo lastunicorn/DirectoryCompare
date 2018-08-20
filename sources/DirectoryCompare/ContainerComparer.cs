@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DustInTheWind.DirectoryCompare.Utils;
 
 namespace DustInTheWind.DirectoryCompare
 {
@@ -72,14 +73,14 @@ namespace DustInTheWind.DirectoryCompare
 
         private void CompareChildFiles(XDirectory xDirectory1, XDirectory xDirectory2, string rootPath)
         {
-            List<XFile> files1 = xDirectory1.Files;
-            List<XFile> files2 = xDirectory2.Files;
-            List<XFile> onlyInDirectory2 = xDirectory2.Files.ToList();
+            List<XFile> files1 = xDirectory1.Files ?? new List<XFile>();
+            List<XFile> files2 = xDirectory2.Files ?? new List<XFile>();
+            List<XFile> onlyInDirectory2 = xDirectory2.Files?.ToList() ?? new List<XFile>();
 
             foreach (XFile xFile1 in files1)
             {
                 List<XFile> xFile2Matches = files2
-                    .Where(x => x.Name == xFile1.Name || AreEqual(x.Hash, xFile1.Hash))
+                    .Where(x => x.Name == xFile1.Name || ByteArrayCompare.AreEqual(x.Hash, xFile1.Hash))
                     .ToList();
 
                 if (xFile2Matches.Count == 0)
@@ -90,10 +91,10 @@ namespace DustInTheWind.DirectoryCompare
                 {
                     foreach (XFile xFile2 in xFile2Matches)
                     {
-                        if (xFile1.Name != xFile2.Name && AreEqual(xFile1.Hash, xFile2.Hash))
+                        if (xFile1.Name != xFile2.Name && ByteArrayCompare.AreEqual(xFile1.Hash, xFile2.Hash))
                             differentNames.Add(new ItemComparison { RootPath = rootPath, Item1 = xFile1, Item2 = xFile2 });
 
-                        if (xFile1.Name == xFile2.Name && !AreEqual(xFile1.Hash, xFile2.Hash))
+                        if (xFile1.Name == xFile2.Name && !ByteArrayCompare.AreEqual(xFile1.Hash, xFile2.Hash))
                             differentContent.Add(new ItemComparison { RootPath = rootPath, Item1 = xFile1, Item2 = xFile2 });
 
                         onlyInDirectory2.Remove(xFile2);
@@ -105,23 +106,6 @@ namespace DustInTheWind.DirectoryCompare
             {
                 onlyInContainer2.Add(rootPath + xFile2.Name);
             }
-        }
-
-        private static bool AreEqual(IReadOnlyList<byte> list1, IReadOnlyList<byte> list2)
-        {
-            if (list1 == null || list2 == null)
-                return false;
-
-            if (list1.Count != list2.Count)
-                return false;
-
-            for (int i = 0; i < list1.Count; i++)
-            {
-                if (list1[i] != list2[i])
-                    return false;
-            }
-
-            return true;
         }
 
         private void CompareChildDirectories(XDirectory xDirectory1, XDirectory xDirectory2, string rootPath)

@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
+using DustInTheWind.DirectoryCompare.Utils;
 
 namespace DustInTheWind.DirectoryCompare
 {
@@ -27,7 +27,8 @@ namespace DustInTheWind.DirectoryCompare
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return base.Equals(other) && AreEqual(Hash, other.Hash);
+
+            return base.Equals(other) && ByteArrayCompare.AreEqual(Hash, other.Hash);
         }
 
         public override bool Equals(object obj)
@@ -35,6 +36,7 @@ namespace DustInTheWind.DirectoryCompare
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
+
             return Equals((XFile)obj);
         }
 
@@ -44,23 +46,6 @@ namespace DustInTheWind.DirectoryCompare
             {
                 return (base.GetHashCode() * 397) ^ (Hash != null ? Hash.GetHashCode() : 0);
             }
-        }
-
-        private static bool AreEqual(IReadOnlyList<byte> list1, IReadOnlyList<byte> list2)
-        {
-            if (list1 == null || list2 == null)
-                return false;
-
-            if (list1.Count != list2.Count)
-                return false;
-
-            for (int i = 0; i < list1.Count; i++)
-            {
-                if (list1[i] != list2[i])
-                    return false;
-            }
-
-            return true;
         }
     }
 }

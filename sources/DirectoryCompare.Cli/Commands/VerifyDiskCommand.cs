@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using System.IO;
 using Newtonsoft.Json;
 
@@ -25,6 +26,11 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
         public string DiskPath { get; set; }
         public string FilePath { get; set; }
         public IComparisonExporter Exporter { get; set; }
+
+        public void DisplayInfo()
+        {
+            Console.WriteLine("Verify path: " + DiskPath);
+        }
 
         public void Execute()
         {

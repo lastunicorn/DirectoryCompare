@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.IO;
+using DustInTheWind.DirectoryCompare.JsonSerialization;
 using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
@@ -26,12 +27,22 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
         public string Path2 { get; set; }
         public IComparisonExporter Exporter { get; set; }
 
+        public void DisplayInfo()
+        {
+        }
+
         public void Execute()
         {
+            JsonFileSerializer serializer = new JsonFileSerializer();
+
+            //Container container1 = serializer.ReadFromFile(Path1);
+            Container container2 = serializer.ReadFromFile(Path2);
+
             string json1 = File.ReadAllText(Path1);
-            string json2 = File.ReadAllText(Path2);
             Container container1 = JsonConvert.DeserializeObject<Container>(json1);
-            Container container2 = JsonConvert.DeserializeObject<Container>(json2);
+
+            //string json2 = File.ReadAllText(Path2);
+            //Container container2 = JsonConvert.DeserializeObject<Container>(json2);
 
             Compare(container1, container2);
         }

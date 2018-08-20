@@ -44,6 +44,7 @@ namespace DustInTheWind.DirectoryCompare.Cli
                 Arguments arguments = new Arguments(args);
 
                 ICommand command = CreateProject(arguments);
+                command.DisplayInfo();
                 Spinner.Run(() => { command.Execute(); });
 
                 CustomConsole.WriteLineSuccess("Done");
@@ -81,7 +82,6 @@ namespace DustInTheWind.DirectoryCompare.Cli
                     };
 
                 case "read-file":
-                    Console.WriteLine("Reading file: " + arguments[0]);
                     return new ReadFileCommand
                     {
                         Logger = new ProjectLogger(),
@@ -89,7 +89,6 @@ namespace DustInTheWind.DirectoryCompare.Cli
                     };
 
                 case "verify-disk":
-                    Console.WriteLine("Verify path: " + arguments[0]);
                     return new VerifyDiskCommand
                     {
                         Logger = new ProjectLogger(),
@@ -99,9 +98,6 @@ namespace DustInTheWind.DirectoryCompare.Cli
                     };
 
                 case "compare-disks":
-                    Console.WriteLine("Compare paths:");
-                    Console.WriteLine(arguments[0]);
-                    Console.WriteLine(arguments[1]);
                     return new CompareDisksCommand
                     {
                         Logger = new ProjectLogger(),

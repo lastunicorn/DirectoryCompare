@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using DustInTheWind.DirectoryCompare.JsonSerialization;
-using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
@@ -39,6 +38,10 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
             stopwatch = new Stopwatch();
         }
 
+        public void DisplayInfo()
+        {
+        }
+
         public void Execute()
         {
             Logger?.Open();
@@ -50,11 +53,11 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
 
                 if (!Directory.Exists(SourcePath))
                     throw new Exception("The SourcePath does not exist.");
-                
+
                 diskReader = new DiskReader(SourcePath);
                 diskReader.BlackList = BlackList;
                 diskReader.ErrorEncountered += HandleDiskReaderErrorEncountered;
-                
+
                 ScanPath();
                 WriteToFile();
             }
@@ -77,9 +80,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
 
             if (BlackList != null)
                 foreach (string blackListItem in BlackList)
-                {
                     Logger?.Info(blackListItem);
-                }
 
             stopwatch.Reset();
             stopwatch.Start();

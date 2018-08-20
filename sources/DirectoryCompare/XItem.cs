@@ -32,7 +32,9 @@ namespace DustInTheWind.DirectoryCompare
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return string.Equals(Name, other.Name);
+
+            return string.Equals(Name, other.Name) &&
+                   string.Equals(Error, other.Error);
         }
 
         public override bool Equals(object obj)
@@ -40,12 +42,17 @@ namespace DustInTheWind.DirectoryCompare
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
+
             return Equals((XItem)obj);
         }
 
         public override int GetHashCode()
         {
-            return (Name != null ? Name.GetHashCode() : 0);
+            unchecked
+            {
+                return ((Name != null ? Name.GetHashCode() : 0) * 397) ^
+                       (Error != null ? Error.GetHashCode() : 0);
+            }
         }
     }
 }

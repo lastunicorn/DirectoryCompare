@@ -18,6 +18,7 @@ namespace DustInTheWind.DirectoryCompare.Cli
 {
     internal interface ICommand
     {
+        void DisplayInfo();
         void Execute();
     }
 }

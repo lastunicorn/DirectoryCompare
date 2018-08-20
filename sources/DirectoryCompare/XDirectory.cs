@@ -19,7 +19,7 @@ using System.Collections.Generic;
 
 namespace DustInTheWind.DirectoryCompare
 {
-    public class XDirectory : XItem
+    public class XDirectory : XItem, IEquatable<XDirectory>
     {
         public List<XDirectory> Directories { get; set; }
 
@@ -49,5 +49,37 @@ namespace DustInTheWind.DirectoryCompare
         //{
         //    return GetEnumerator();
         //}
+
+        public bool Equals(XDirectory other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+
+            return base.Equals(other) &&
+                   Equals(Directories, other.Directories) &&
+                   Equals(Files, other.Files);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+
+            return Equals((XDirectory)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = base.GetHashCode();
+
+                hashCode = (hashCode * 397) ^ (Directories != null ? Directories.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (Files != null ? Files.GetHashCode() : 0);
+
+                return hashCode;
+            }
+        }
     }
 }

@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
+
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
     internal class CompareDisksCommand : ICommand
@@ -22,6 +24,13 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
         public string Path1 { get; set; }
         public string Path2 { get; set; }
         public IComparisonExporter Exporter { get; set; }
+
+        public void DisplayInfo()
+        {
+            Console.WriteLine("Compare paths:");
+            Console.WriteLine(Path1);
+            Console.WriteLine(Path2);
+        }
 
         public void Execute()
         {

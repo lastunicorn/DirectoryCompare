@@ -44,5 +44,36 @@ namespace DustInTheWind.DirectoryCompare.JsonSerialization
                     .Select(x => new JsonXFile(x))
                     .ToList();
         }
+
+        public Container ToContainer()
+        {
+            return new Container
+            {
+                OriginalPath = OriginalPath,
+                CreationTime = CreationTime,
+                Directories = GetXDirectories(),
+                Files = GetXFiles()
+            };
+        }
+
+        private List<XDirectory> GetXDirectories()
+        {
+            if (Directories == null)
+                return null;
+
+            return Directories
+                .Select(x => x.ToXDirectory())
+                .ToList();
+        }
+
+        private List<XFile> GetXFiles()
+        {
+            if (Files == null)
+                return null;
+
+            return Files
+                .Select(x => x.ToXFile())
+                .ToList();
+        }
     }
 }

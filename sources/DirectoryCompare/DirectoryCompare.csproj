@@ -53,6 +53,7 @@
     <Compile Include="JsonSerialization\JsonXDirectory.cs" />
     <Compile Include="JsonSerialization\JsonXFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\ByteArrayCompare.cs" />
     <Compile Include="XDirectory.cs" />
     <Compile Include="XFile.cs" />
     <Compile Include="XItem.cs" />

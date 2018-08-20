@@ -22,5 +22,13 @@ namespace DustInTheWind.DirectoryCompare.JsonSerialization
 
             stopwatch.Stop();
         }
+
+        public Container ReadFromFile(string sourceFilePath)
+        {
+            string json = File.ReadAllText(sourceFilePath);
+            JsonXContainer jsonXContainer = JsonConvert.DeserializeObject<JsonXContainer>(json);
+
+            return jsonXContainer.ToContainer();
+        }
     }
 }

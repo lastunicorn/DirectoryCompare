@@ -32,6 +32,10 @@ namespace DustInTheWind.DirectoryCompare.JsonSerialization
         [JsonProperty("f")]
         public List<JsonXFile> Files { get; set; }
 
+        public JsonXDirectory()
+        {
+        }
+
         public JsonXDirectory(XDirectory xDirectory)
         {
             if (xDirectory == null) throw new ArgumentNullException(nameof(xDirectory));
@@ -51,6 +55,36 @@ namespace DustInTheWind.DirectoryCompare.JsonSerialization
                 Files = xDirectory.Files
                     .Select(x => new JsonXFile(x))
                     .ToList();
+        }
+
+        public XDirectory ToXDirectory()
+        {
+            return new XDirectory
+            {
+                Name = Name,
+                Directories = GetXDirectories(),
+                Files = GetXFiles()
+            };
+        }
+
+        private List<XDirectory> GetXDirectories()
+        {
+            if (Directories == null)
+                return null;
+
+            return Directories
+                .Select(x => x.ToXDirectory())
+                .ToList();
+        }
+
+        private List<XFile> GetXFiles()
+        {
+            if (Files == null)
+                return null;
+
+            return Files
+                .Select(x => x.ToXFile())
+                .ToList();
         }
     }
 }

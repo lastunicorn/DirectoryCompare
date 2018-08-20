@@ -27,12 +27,25 @@ namespace DustInTheWind.DirectoryCompare.JsonSerialization
         [JsonProperty("h")]
         public byte[] Hash { get; set; }
 
+        public JsonXFile()
+        {
+        }
+
         public JsonXFile(XFile xFile)
         {
             if (xFile == null) throw new ArgumentNullException(nameof(xFile));
 
             Name = xFile.Name;
             Hash = xFile.Hash;
+        }
+
+        public XFile ToXFile()
+        {
+            return new XFile
+            {
+                Name = Name,
+                Hash = Hash
+            };
         }
     }
 }
