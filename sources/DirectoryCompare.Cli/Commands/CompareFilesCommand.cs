@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.IO;
-using DustInTheWind.DirectoryCompare.JsonSerialization;
+using DustInTheWind.DirectoryCompare.Serialization;
 using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
@@ -37,11 +37,11 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
 
             // todo: must find a way to dynamically detect the serialization type.
 
-            XContainer xContainer1 = serializer.ReadFromFile(Path1);
+            //XContainer xContainer1 = serializer.ReadFromFile(Path1);
             XContainer xContainer2 = serializer.ReadFromFile(Path2);
 
-            //string json1 = File.ReadAllText(Path1);
-            //XContainer xContainer1 = JsonConvert.DeserializeObject<XContainer>(json1);
+            string json1 = File.ReadAllText(Path1);
+            XContainer xContainer1 = JsonConvert.DeserializeObject<XContainer>(json1);
 
             //string json2 = File.ReadAllText(Path2);
             //Container container2 = JsonConvert.DeserializeObject<Container>(json2);

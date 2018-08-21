@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using DustInTheWind.DirectoryCompare.JsonSerialization;
+using DustInTheWind.DirectoryCompare.Serialization;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {

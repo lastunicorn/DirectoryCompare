@@ -19,12 +19,18 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace DustInTheWind.DirectoryCompare.JsonSerialization
+namespace DustInTheWind.DirectoryCompare.Serialization
 {
-    internal class JsonXDirectory
+    internal class JsonXContainer
     {
-        [JsonProperty("n")]
-        public string Name { get; set; }
+        [JsonProperty("serializer")]
+        public SerializerInfo SerializerInfo { get; set; }
+
+        [JsonProperty("original-path")]
+        public string OriginalPath { get; set; }
+
+        [JsonProperty("creation-time")]
+        public DateTime CreationTime { get; set; }
 
         [JsonProperty("d")]
         public List<JsonXDirectory> Directories { get; set; }
@@ -32,36 +38,38 @@ namespace DustInTheWind.DirectoryCompare.JsonSerialization
         [JsonProperty("f")]
         public List<JsonXFile> Files { get; set; }
 
-        public JsonXDirectory()
+        public JsonXContainer()
         {
         }
 
-        public JsonXDirectory(XDirectory xDirectory)
+        public JsonXContainer(XContainer container)
         {
-            if (xDirectory == null) throw new ArgumentNullException(nameof(xDirectory));
+            if (container == null) throw new ArgumentNullException(nameof(container));
 
-            Name = xDirectory.Name;
+            OriginalPath = container.OriginalPath;
+            CreationTime = container.CreationTime;
 
-            if (xDirectory.Directories == null)
+            if (container.Directories == null)
                 Directories = null;
             else
-                Directories = xDirectory.Directories
+                Directories = container.Directories
                     .Select(x => new JsonXDirectory(x))
                     .ToList();
 
-            if (xDirectory.Files == null)
+            if (container.Files == null)
                 Files = null;
             else
-                Files = xDirectory.Files
+                Files = container.Files
                     .Select(x => new JsonXFile(x))
                     .ToList();
         }
 
-        public XDirectory ToXDirectory()
+        public XContainer ToContainer()
         {
-            return new XDirectory
+            return new XContainer
             {
-                Name = Name,
+                OriginalPath = OriginalPath,
+                CreationTime = CreationTime,
                 Directories = GetXDirectories(),
                 Files = GetXFiles()
             };

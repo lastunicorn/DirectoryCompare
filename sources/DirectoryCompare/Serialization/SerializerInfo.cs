@@ -15,37 +15,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using Newtonsoft.Json;
 
-namespace DustInTheWind.DirectoryCompare.JsonSerialization
+namespace DustInTheWind.DirectoryCompare.Serialization
 {
-    internal class JsonXFile
+    internal class SerializerInfo
     {
-        [JsonProperty("n")]
-        public string Name { get; set; }
-
-        [JsonProperty("h")]
-        public byte[] Hash { get; set; }
-
-        public JsonXFile()
-        {
-        }
-
-        public JsonXFile(XFile xFile)
-        {
-            if (xFile == null) throw new ArgumentNullException(nameof(xFile));
-
-            Name = xFile.Name;
-            Hash = xFile.Hash;
-        }
-
-        public XFile ToXFile()
-        {
-            return new XFile
-            {
-                Name = Name,
-                Hash = Hash
-            };
-        }
+        public Guid Id { get; set; }
     }
 }
