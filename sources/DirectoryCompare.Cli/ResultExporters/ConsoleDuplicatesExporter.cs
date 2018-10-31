@@ -14,27 +14,24 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
+using System;
 
-namespace DustInTheWind.DirectoryCompare.Utils
+namespace DustInTheWind.DirectoryCompare.Cli.ResultExporters
 {
-    public static class ByteArrayCompare
+    internal class ConsoleDuplicatesExporter
     {
-        public static bool AreEqual(IReadOnlyList<byte> list1, IReadOnlyList<byte> list2)
+        internal void WriteDuplicate(string path1, string path2, long size)
         {
-            if (list1 == null || list2 == null)
-                return false;
+            Console.WriteLine(path1);
+            Console.WriteLine(path2);
+            Console.WriteLine(size / 1024);
+            Console.WriteLine();
+        }
 
-            if (list1.Count != list2.Count)
-                return false;
-
-            for (int i = 0; i < list1.Count; i++)
-            {
-                if (list1[i] != list2[i])
-                    return false;
-            }
-
-            return true;
+        internal void WriteSummary(int duplicateCount)
+        {
+            Console.WriteLine("Total duplicates: " + duplicateCount);
+            Console.WriteLine();
         }
     }
 }

@@ -117,6 +117,14 @@ namespace DustInTheWind.DirectoryCompare.Cli
                             : (IComparisonExporter)new ConsoleComparisonExporter()
                     };
 
+                case "find-duplicates":
+                    return new FindDuplicatesCommand()
+                    {
+                        Logger = new ProjectLogger(),
+                        Path1 = arguments[0],
+                        Exporter = new ConsoleDuplicatesExporter()
+                    };
+
                 default:
                     throw new Exception("Invalid command.");
             }
