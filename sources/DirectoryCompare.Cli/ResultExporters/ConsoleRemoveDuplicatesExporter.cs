@@ -18,20 +18,17 @@ using System;
 
 namespace DustInTheWind.DirectoryCompare.Cli.ResultExporters
 {
-    internal class ConsoleDuplicatesExporter
+    internal class ConsoleRemoveDuplicatesExporter
     {
-        public void WriteDuplicate(string path1, string path2, long size)
+        public void WriteRemove(string path)
         {
-            Console.WriteLine(path1);
-            Console.WriteLine(path2);
-            Console.WriteLine(size / 1024);
-            Console.WriteLine();
+            Console.WriteLine("removed: {0}", path);
         }
 
-        public void WriteSummary(int duplicateCount, long totalSize)
+        public void WriteSummary(int removedFiles, long removedSize)
         {
-            Console.WriteLine("Total duplicates: " + duplicateCount);
-            Console.WriteLine("Total size: " + totalSize);
+            Console.WriteLine("Total removes: " + removedFiles);
+            Console.WriteLine("Total size: " + removedSize);
             Console.WriteLine();
         }
     }

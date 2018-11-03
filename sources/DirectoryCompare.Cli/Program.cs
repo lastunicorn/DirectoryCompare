@@ -122,7 +122,16 @@ namespace DustInTheWind.DirectoryCompare.Cli
                     {
                         Logger = new ProjectLogger(),
                         Path1 = arguments[0],
-                        Exporter = new ConsoleDuplicatesExporter()
+                        Exporter = new ConsoleDuplicatesExporter(),
+                        CheckFilesExist = arguments.Count > 1 ? bool.Parse(arguments[1]) : false
+                    };
+
+                case "remove-duplicates":
+                    return new RemoveDuplicatesCommand()
+                    {
+                        Logger = new ProjectLogger(),
+                        Path1 = arguments[0],
+                        Exporter = new ConsoleRemoveDuplicatesExporter()
                     };
 
                 default:

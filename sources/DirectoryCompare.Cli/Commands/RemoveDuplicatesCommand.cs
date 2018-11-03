@@ -16,18 +16,18 @@
 
 using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
 using DustInTheWind.DirectoryCompare.Serialization;
+using DustInTheWind.DirectoryCompare.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
-    internal class FindDuplicatesCommand : ICommand
+    internal class RemoveDuplicatesCommand : ICommand
     {
         public ProjectLogger Logger { get; set; }
         public string Path1 { get; set; }
-        public ConsoleDuplicatesExporter Exporter { get; set; }
-        public bool CheckFilesExist { get; set; }
+        public ConsoleRemoveDuplicatesExporter Exporter { get; set; }
 
         public void DisplayInfo()
         {
@@ -41,7 +41,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
             List<Tuple<string, XFile>> files = new List<Tuple<string, XFile>>();
             Read(files, xContainer1, Path.DirectorySeparatorChar.ToString());
 
-            int duplicateCount = 0;
+            int removeCount = 0;
             long totalSize = 0;
 
             for (int i = 0; i < files.Count; i++)
@@ -51,18 +51,38 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
                     Tuple<string, XFile> tuple1 = files[i];
                     Tuple<string, XFile> tuple2 = files[j];
 
-                    Duplicate duplicate = new Duplicate(tuple1, tuple2, CheckFilesExist, xContainer1);
+                    bool areEqual = ByteArrayCompare.AreEqual(tuple1.Item2.Hash, tuple2.Item2.Hash);
 
-                    if(duplicate.AreEqual)
+                    if (areEqual)
                     {
-                        duplicateCount++;
-                        totalSize += duplicate.Size;
-                        Exporter.WriteDuplicate(duplicate.FullPath1, duplicate.FullPath2, duplicate.Size);
+                        string path1 = tuple1.Item1;
+                        string path2 = tuple2.Item1;
+
+                        string fullPath1 = Path.Combine(xContainer1.OriginalPath, path1.Substring(1));
+                        string fullPath2 = Path.Combine(xContainer1.OriginalPath, path2.Substring(1));
+
+                        bool file1Exists = File.Exists(fullPath1);
+                        bool file2Exists = File.Exists(fullPath2);
+
+                        long size = File.Exists(fullPath1)
+                            ? new FileInfo(fullPath1).Length
+                            : File.Exists(fullPath2)
+                                ? new FileInfo(fullPath2).Length
+                                : 0;
+
+                        if (file1Exists && file2Exists)
+                        {
+                            File.Delete(fullPath2);
+                            removeCount++;
+                            Exporter.WriteRemove(fullPath1);
+                        }
+
+                        totalSize += size;
                     }
                 }
             }
 
-            Exporter.WriteSummary(duplicateCount, totalSize);
+            Exporter.WriteSummary(removeCount, totalSize);
         }
 
         private void Read(List<Tuple<string, XFile>> files, XDirectory xDirectory, string parentPath)
