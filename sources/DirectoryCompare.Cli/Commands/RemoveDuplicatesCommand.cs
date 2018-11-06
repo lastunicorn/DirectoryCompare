@@ -15,9 +15,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
-using DustInTheWind.DirectoryCompare.Serialization;
-using DustInTheWind.DirectoryCompare.Utils;
-using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -26,8 +23,10 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
     internal class RemoveDuplicatesCommand : ICommand
     {
         public ProjectLogger Logger { get; set; }
-        public string Path1 { get; set; }
+        public string PathLeft { get; set; }
+        public string PathRight { get; set; }
         public ConsoleRemoveDuplicatesExporter Exporter { get; set; }
+        public FileRemove FileRemove { get; set; }
 
         public void DisplayInfo()
         {
@@ -35,71 +34,48 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
 
         public void Execute()
         {
-            JsonFileSerializer serializer = new JsonFileSerializer();
-            XContainer xContainer1 = serializer.ReadFromFile(Path1);
+            DuplicatesProvider duplicatesProvider = new DuplicatesProvider
+            {
+                PathLeft = PathLeft,
+                PathRight = PathRight,
+                CheckFilesExist = true
+            };
 
-            List<Tuple<string, XFile>> files = new List<Tuple<string, XFile>>();
-            Read(files, xContainer1, Path.DirectorySeparatorChar.ToString());
+            IEnumerable<Duplicate> duplicates = duplicatesProvider.Find();
 
             int removeCount = 0;
             long totalSize = 0;
 
-            for (int i = 0; i < files.Count; i++)
+            foreach (Duplicate duplicate in duplicates)
             {
-                for (int j = i + 1; j < files.Count; j++)
+                if (!duplicate.AreEqual)
+                    continue;
+
+                bool file1Exists = duplicate.File1Exists;
+                bool file2Exists = duplicate.File2Exists;
+
+                if (file1Exists && file2Exists)
                 {
-                    Tuple<string, XFile> tuple1 = files[i];
-                    Tuple<string, XFile> tuple2 = files[j];
-
-                    bool areEqual = ByteArrayCompare.AreEqual(tuple1.Item2.Hash, tuple2.Item2.Hash);
-
-                    if (areEqual)
+                    switch (FileRemove)
                     {
-                        string path1 = tuple1.Item1;
-                        string path2 = tuple2.Item1;
-
-                        string fullPath1 = Path.Combine(xContainer1.OriginalPath, path1.Substring(1));
-                        string fullPath2 = Path.Combine(xContainer1.OriginalPath, path2.Substring(1));
-
-                        bool file1Exists = File.Exists(fullPath1);
-                        bool file2Exists = File.Exists(fullPath2);
-
-                        long size = File.Exists(fullPath1)
-                            ? new FileInfo(fullPath1).Length
-                            : File.Exists(fullPath2)
-                                ? new FileInfo(fullPath2).Length
-                                : 0;
-
-                        if (file1Exists && file2Exists)
-                        {
-                            File.Delete(fullPath2);
+                        case FileRemove.Left:
+                            File.Delete(duplicate.FullPath1);
                             removeCount++;
-                            Exporter.WriteRemove(fullPath1);
-                        }
+                            totalSize += duplicate.Size;
+                            Exporter.WriteRemove(duplicate.FullPath1);
+                            break;
 
-                        totalSize += size;
+                        case FileRemove.Right:
+                            File.Delete(duplicate.FullPath2);
+                            removeCount++;
+                            totalSize += duplicate.Size;
+                            Exporter.WriteRemove(duplicate.FullPath2);
+                            break;
                     }
                 }
             }
 
             Exporter.WriteSummary(removeCount, totalSize);
-        }
-
-        private void Read(List<Tuple<string, XFile>> files, XDirectory xDirectory, string parentPath)
-        {
-            if (xDirectory.Files != null)
-                foreach (XFile xFile in xDirectory.Files)
-                {
-                    string filePath = Path.Combine(parentPath, xFile.Name);
-                    files.Add(new Tuple<string, XFile>(filePath, xFile));
-                }
-
-            if (xDirectory.Directories != null)
-                foreach (XDirectory xSubDirectory in xDirectory.Directories)
-                {
-                    string subdirectoryPath = Path.Combine(parentPath, xSubDirectory.Name);
-                    Read(files, xSubDirectory, subdirectoryPath);
-                }
         }
     }
 }

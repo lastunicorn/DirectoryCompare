@@ -15,17 +15,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
-using DustInTheWind.DirectoryCompare.Serialization;
-using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
+
     internal class FindDuplicatesCommand : ICommand
     {
         public ProjectLogger Logger { get; set; }
-        public string Path1 { get; set; }
+        public string PathLeft { get; set; }
+        public string PathRight { get; set; }
         public ConsoleDuplicatesExporter Exporter { get; set; }
         public bool CheckFilesExist { get; set; }
 
@@ -35,51 +34,29 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
 
         public void Execute()
         {
-            JsonFileSerializer serializer = new JsonFileSerializer();
-            XContainer xContainer1 = serializer.ReadFromFile(Path1);
+            DuplicatesProvider duplicatesProvider = new DuplicatesProvider
+            {
+                PathLeft = PathLeft,
+                PathRight = PathRight,
+                CheckFilesExist = CheckFilesExist
+            };
 
-            List<Tuple<string, XFile>> files = new List<Tuple<string, XFile>>();
-            Read(files, xContainer1, Path.DirectorySeparatorChar.ToString());
+            IEnumerable<Duplicate> duplicates = duplicatesProvider.Find();
 
             int duplicateCount = 0;
             long totalSize = 0;
 
-            for (int i = 0; i < files.Count; i++)
+            foreach (Duplicate duplicate in duplicates)
             {
-                for (int j = i + 1; j < files.Count; j++)
+                if (duplicate.AreEqual)
                 {
-                    Tuple<string, XFile> tuple1 = files[i];
-                    Tuple<string, XFile> tuple2 = files[j];
-
-                    Duplicate duplicate = new Duplicate(tuple1, tuple2, CheckFilesExist, xContainer1);
-
-                    if(duplicate.AreEqual)
-                    {
-                        duplicateCount++;
-                        totalSize += duplicate.Size;
-                        Exporter.WriteDuplicate(duplicate.FullPath1, duplicate.FullPath2, duplicate.Size);
-                    }
+                    duplicateCount++;
+                    totalSize += duplicate.Size;
+                    Exporter.WriteDuplicate(duplicate.FullPath1, duplicate.FullPath2, duplicate.Size);
                 }
             }
 
             Exporter.WriteSummary(duplicateCount, totalSize);
-        }
-
-        private void Read(List<Tuple<string, XFile>> files, XDirectory xDirectory, string parentPath)
-        {
-            if (xDirectory.Files != null)
-                foreach (XFile xFile in xDirectory.Files)
-                {
-                    string filePath = Path.Combine(parentPath, xFile.Name);
-                    files.Add(new Tuple<string, XFile>(filePath, xFile));
-                }
-
-            if (xDirectory.Directories != null)
-                foreach (XDirectory xSubDirectory in xDirectory.Directories)
-                {
-                    string subdirectoryPath = Path.Combine(parentPath, xSubDirectory.Name);
-                    Read(files, xSubDirectory, subdirectoryPath);
-                }
         }
     }
 }

@@ -50,10 +50,12 @@
     <Compile Include="Arguments.cs" />
     <Compile Include="Commands\CompareDisksCommand.cs" />
     <Compile Include="Commands\CompareFilesCommand.cs" />
+    <Compile Include="DuplicatesProvider.cs" />
     <Compile Include="Commands\RemoveDuplicatesCommand.cs" />
     <Compile Include="Commands\FindDuplicatesCommand.cs" />
     <Compile Include="Commands\IComparisonExporter.cs" />
     <Compile Include="Duplicate.cs" />
+    <Compile Include="FileKeep.cs" />
     <Compile Include="ProjectLogger.cs" />
     <Compile Include="ResultExporters\ConsoleComparisonExporter.cs" />
     <Compile Include="ContainerView.cs" />
