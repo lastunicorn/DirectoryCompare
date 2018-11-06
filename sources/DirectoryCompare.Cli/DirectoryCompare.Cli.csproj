@@ -48,6 +48,7 @@
     </Compile>
     <Compile Include="Argument.cs" />
     <Compile Include="Arguments.cs" />
+    <Compile Include="CommandBuilder.cs" />
     <Compile Include="Commands\CompareDisksCommand.cs" />
     <Compile Include="Commands\CompareFilesCommand.cs" />
     <Compile Include="DuplicatesProvider.cs" />
