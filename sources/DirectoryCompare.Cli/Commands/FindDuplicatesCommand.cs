@@ -15,7 +15,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
+using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
@@ -28,8 +30,45 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
         public ConsoleDuplicatesExporter Exporter { get; set; }
         public bool CheckFilesExist { get; set; }
 
+        public string Name => "find-duplicates";
+
         public void DisplayInfo()
         {
+        }
+
+        public void Initialize(Arguments arguments)
+        {
+            Logger = new ProjectLogger();
+
+            if (arguments.Count == 0)
+                throw new Exception("Invalid command parameters.");
+
+            PathLeft = arguments[0];
+
+            if (arguments.Count > 1)
+            {
+                bool isFileRight = File.Exists(arguments[1]);
+
+                if (isFileRight)
+                {
+                    PathRight = arguments[1];
+
+                    if (arguments.Count > 2)
+                        CheckFilesExist = bool.Parse(arguments[2]);
+                }
+                else
+                {
+                    PathRight = null;
+                    CheckFilesExist = bool.Parse(arguments[1]);
+                }
+            }
+            else
+            {
+                PathRight = null;
+                CheckFilesExist = false;
+            }
+
+            Exporter = new ConsoleDuplicatesExporter();
         }
 
         public void Execute()

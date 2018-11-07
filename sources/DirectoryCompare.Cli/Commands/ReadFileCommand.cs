@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using Newtonsoft.Json;
 using System;
 using System.IO;
-using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
@@ -25,9 +25,17 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
         public ProjectLogger Logger { get; set; }
         public string FilePath { get; set; }
 
+        public string Name => "read-file";
+
         public void DisplayInfo()
         {
             Console.WriteLine("Reading file: " + FilePath);
+        }
+
+        public void Initialize(Arguments arguments)
+        {
+            Logger = new ProjectLogger();
+            FilePath = arguments[0];
         }
 
         public void Execute()

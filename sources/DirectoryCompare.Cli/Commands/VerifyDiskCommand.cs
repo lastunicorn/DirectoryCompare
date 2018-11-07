@@ -16,6 +16,7 @@
 
 using System;
 using System.IO;
+using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
 using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
@@ -27,9 +28,19 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
         public string FilePath { get; set; }
         public IComparisonExporter Exporter { get; set; }
 
+        public string Name => "verify-disk";
+
         public void DisplayInfo()
         {
             Console.WriteLine("Verify path: " + DiskPath);
+        }
+
+        public void Initialize(Arguments arguments)
+        {
+            Logger = new ProjectLogger();
+            DiskPath = arguments[0];
+            FilePath = arguments[1];
+            Exporter = new ConsoleComparisonExporter();
         }
 
         public void Execute()

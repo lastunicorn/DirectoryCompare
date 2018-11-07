@@ -14,11 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using DustInTheWind.DirectoryCompare.Serialization;
+using System.Linq;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
@@ -33,6 +34,8 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
 
         public List<string> BlackList { get; set; } = new List<string>();
 
+        public string Name => "read-disk";
+
         public ReadDiskCommand()
         {
             stopwatch = new Stopwatch();
@@ -40,6 +43,26 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
 
         public void DisplayInfo()
         {
+        }
+
+        public void Initialize(Arguments arguments)
+        {
+            Logger = new ProjectLogger();
+            SourcePath = arguments[0];
+            DestinationFilePath = arguments[1];
+            BlackList = ReadBlackList(arguments[2]);
+        }
+
+        private static List<string> ReadBlackList(string filePath)
+        {
+            Console.WriteLine("Reading black list from file: {0}", filePath);
+
+            return File.Exists(filePath)
+                ? File.ReadAllLines(filePath)
+                    .Where(x => !string.IsNullOrEmpty(x))
+                    .Where(x => !x.StartsWith("#"))
+                    .ToList()
+                : new List<string>();
         }
 
         public void Execute()

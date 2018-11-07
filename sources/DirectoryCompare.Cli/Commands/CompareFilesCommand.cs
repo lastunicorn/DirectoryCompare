@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
 using DustInTheWind.DirectoryCompare.Serialization;
 using Newtonsoft.Json;
 using System.IO;
@@ -27,8 +28,20 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
         public string Path2 { get; set; }
         public IComparisonExporter Exporter { get; set; }
 
+        public string Name => "compare-files";
+
         public void DisplayInfo()
         {
+        }
+
+        public void Initialize(Arguments arguments)
+        {
+            Logger = new ProjectLogger();
+            Path1 = arguments[0];
+            Path2 = arguments[1];
+            Exporter = arguments.Count >= 3
+                ? (IComparisonExporter)new FileComparisonExporter { ResultsDirectory = arguments[2] }
+                : (IComparisonExporter)new ConsoleComparisonExporter();
         }
 
         public void Execute()
