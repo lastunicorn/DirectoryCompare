@@ -28,8 +28,6 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
         public string FilePath { get; set; }
         public IComparisonExporter Exporter { get; set; }
 
-        public string Name => "verify-disk";
-
         public void DisplayInfo()
         {
             Console.WriteLine("Verify path: " + DiskPath);

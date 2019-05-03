@@ -30,8 +30,6 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
         public ConsoleDuplicatesExporter Exporter { get; set; }
         public bool CheckFilesExist { get; set; }
 
-        public string Name => "find-duplicates";
-
         public void DisplayInfo()
         {
         }

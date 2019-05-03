@@ -18,7 +18,7 @@ using System.Collections.Generic;
 
 namespace DustInTheWind.DirectoryCompare.Cli
 {
-    internal class Arguments
+    public class Arguments
     {
         public string Command { get; }
 

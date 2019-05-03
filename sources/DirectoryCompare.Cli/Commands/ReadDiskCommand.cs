@@ -34,8 +34,6 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
 
         public List<string> BlackList { get; set; } = new List<string>();
 
-        public string Name => "read-disk";
-
         public ReadDiskCommand()
         {
             stopwatch = new Stopwatch();
