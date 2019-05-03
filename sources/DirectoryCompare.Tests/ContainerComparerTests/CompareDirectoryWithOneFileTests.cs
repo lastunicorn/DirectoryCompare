@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
 {
@@ -28,13 +29,19 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         {
             XContainer container1 = new XContainer();
             XDirectory xDirectory1 = new XDirectory("Dir1");
-            xDirectory1.Files.Add(new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } });
-            container1.Directories.Add(xDirectory1);
+            xDirectory1.Files = new List<XFile>
+            {
+                new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
+            };
+            container1.Directories = new List<XDirectory> { xDirectory1 };
 
             XContainer container2 = new XContainer();
             XDirectory xDirectory2 = new XDirectory("Dir1");
-            xDirectory2.Files.Add(new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } });
-            container2.Directories.Add(xDirectory2);
+            xDirectory2.Files = new List<XFile>
+            {
+                new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
+            };
+            container2.Directories = new List<XDirectory> { xDirectory2 };
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
@@ -47,12 +54,15 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         {
             XContainer container1 = new XContainer();
             XDirectory xDirectory1 = new XDirectory("Dir1");
-            xDirectory1.Files.Add(new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } });
-            container1.Directories.Add(xDirectory1);
+            xDirectory1.Files = new List<XFile>
+            {
+                new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
+            };
+            container1.Directories = new List<XDirectory> { xDirectory1 };
 
             XContainer container2 = new XContainer();
             XDirectory xDirectory2 = new XDirectory("Dir1");
-            container2.Directories.Add(xDirectory2);
+            container2.Directories = new List<XDirectory> { xDirectory2 };
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
@@ -65,12 +75,15 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         {
             XContainer container1 = new XContainer();
             XDirectory xDirectory1 = new XDirectory("Dir1");
-            container1.Directories.Add(xDirectory1);
+            container1.Directories = new List<XDirectory> { xDirectory1 };
 
             XContainer container2 = new XContainer();
             XDirectory xDirectory2 = new XDirectory("Dir1");
-            xDirectory2.Files.Add(new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } });
-            container2.Directories.Add(xDirectory2);
+            xDirectory2.Files = new List<XFile>
+            {
+                new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
+            };
+            container2.Directories = new List<XDirectory> { xDirectory2 };
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
@@ -87,13 +100,19 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         {
             XContainer container1 = new XContainer();
             XDirectory xDirectory1 = new XDirectory("Dir1");
-            xDirectory1.Files.Add(new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } });
-            container1.Directories.Add(xDirectory1);
+            xDirectory1.Files = new List<XFile>
+            {
+                new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
+            };
+            container1.Directories = new List<XDirectory> { xDirectory1 };
 
             XContainer container2 = new XContainer();
             XDirectory xDirectory2 = new XDirectory("Dir1");
-            xDirectory2.Files.Add(new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } });
-            container2.Directories.Add(xDirectory2);
+            xDirectory2.Files = new List<XFile>
+            {
+                new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
+            };
+            container2.Directories = new List<XDirectory> { xDirectory2 };
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
@@ -106,12 +125,15 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         {
             XContainer container1 = new XContainer();
             XDirectory xDirectory1 = new XDirectory("Dir1");
-            container1.Directories.Add(xDirectory1);
+            container1.Directories = new List<XDirectory> { xDirectory1 };
 
             XContainer container2 = new XContainer();
             XDirectory xDirectory2 = new XDirectory("Dir1");
-            xDirectory2.Files.Add(new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } });
-            container2.Directories.Add(xDirectory2);
+            xDirectory2.Files = new List<XFile>
+            {
+                new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
+            };
+            container2.Directories = new List<XDirectory> { xDirectory2 };
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
@@ -124,12 +146,15 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         {
             XContainer container1 = new XContainer();
             XDirectory xDirectory1 = new XDirectory("Dir1");
-            xDirectory1.Files.Add(new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } });
-            container1.Directories.Add(xDirectory1);
+            xDirectory1.Files = new List<XFile>
+            {
+                new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
+            };
+            container1.Directories = new List<XDirectory> { xDirectory1 };
 
             XContainer container2 = new XContainer();
             XDirectory xDirectory2 = new XDirectory("Dir1");
-            container2.Directories.Add(xDirectory2);
+            container2.Directories = new List<XDirectory> { xDirectory2 };
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();

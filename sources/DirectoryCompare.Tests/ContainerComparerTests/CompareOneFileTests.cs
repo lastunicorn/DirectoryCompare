@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
 {
@@ -27,10 +28,16 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         public void OnlyInContainer1_is_empty_if_both_containers_contain_one_identical_file()
         {
             XContainer container1 = new XContainer();
-            container1.Files.Add(new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } });
+            container1.Files = new List<XFile>
+            {
+                new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
+            };
 
             XContainer container2 = new XContainer();
-            container2.Files.Add(new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } });
+            container2.Files = new List<XFile>
+            {
+                new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
+            };
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
@@ -42,7 +49,10 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         public void OnlyInContainer1_contains_the_name_of_the_file_if_only_container1_has_one_file()
         {
             XContainer container1 = new XContainer();
-            container1.Files.Add(new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } });
+            container1.Files = new List<XFile>
+            {
+                new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
+            };
 
             XContainer container2 = new XContainer();
 
@@ -58,7 +68,10 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
             XContainer container1 = new XContainer();
 
             XContainer container2 = new XContainer();
-            container2.Files.Add(new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } });
+            container2.Files = new List<XFile>
+            {
+                new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
+            };
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
@@ -74,10 +87,16 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         public void OnlyInContainer2_is_empty_if_both_containers_contain_one_identical_file()
         {
             XContainer container1 = new XContainer();
-            container1.Files.Add(new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } });
+            container1.Files = new List<XFile>
+            {
+                new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
+            };
 
             XContainer container2 = new XContainer();
-            container2.Files.Add(new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } });
+            container2.Files = new List<XFile>
+            {
+                new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
+            };
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
@@ -91,7 +110,10 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
             XContainer container1 = new XContainer();
 
             XContainer container2 = new XContainer();
-            container2.Files.Add(new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } });
+            container2.Files = new List<XFile>
+            {
+                new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
+            };
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
@@ -103,7 +125,10 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         public void OnlyInContainer2_is_empty_if_only_container1_has_one_file()
         {
             XContainer container1 = new XContainer();
-            container1.Files.Add(new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } });
+            container1.Files = new List<XFile>
+            {
+                new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
+            };
 
             XContainer container2 = new XContainer();
 
