@@ -40,7 +40,9 @@ namespace DustInTheWind.DirectoryCompare.Cli
 
                 Arguments arguments = new Arguments(args);
 
-                ICommand command = CommandBuilder.CreateCommand(arguments);
+                ApplicationCommandCollection commands = new ApplicationCommandCollection();
+
+                ICommand command = commands.SelectCommand(arguments);
                 command.DisplayInfo();
                 Spinner.Run(() => { command.Execute(); });
 

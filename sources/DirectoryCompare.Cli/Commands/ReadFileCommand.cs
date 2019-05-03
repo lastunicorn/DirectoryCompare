@@ -25,8 +25,6 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
         public ProjectLogger Logger { get; set; }
         public string FilePath { get; set; }
 
-        public string Name => "read-file";
-
         public void DisplayInfo()
         {
             Console.WriteLine("Reading file: " + FilePath);

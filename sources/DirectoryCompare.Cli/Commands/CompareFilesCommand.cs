@@ -28,8 +28,6 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
         public string Path2 { get; set; }
         public IComparisonExporter Exporter { get; set; }
 
-        public string Name => "compare-files";
-
         public void DisplayInfo()
         {
         }

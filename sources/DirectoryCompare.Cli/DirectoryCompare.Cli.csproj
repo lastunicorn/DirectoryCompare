@@ -7,7 +7,7 @@
     <ProjectGuid>{1A2BF82B-A566-4D6B-9ADA-3414DD8C12D8}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>DustInTheWind.DirectoryCompare.Cli</RootNamespace>
-    <AssemblyName>DustInTheWind.DirectoryCompare.Cli</AssemblyName>
+    <AssemblyName>DirectoryCompare</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -46,11 +46,10 @@
     <Compile Include="..\AssemblyInfo.Shared.cs">
       <Link>Properties\AssemblyInfo.Shared.cs</Link>
     </Compile>
-    <Compile Include="Argument.cs" />
-    <Compile Include="Arguments.cs" />
-    <Compile Include="CommandBuilder.cs" />
+    <Compile Include="ApplicationCommandCollection.cs" />
     <Compile Include="Commands\CompareDisksCommand.cs" />
     <Compile Include="Commands\CompareFilesCommand.cs" />
+    <Compile Include="Commands\HelpCommand.cs" />
     <Compile Include="DuplicatesProvider.cs" />
     <Compile Include="Commands\RemoveDuplicatesCommand.cs" />
     <Compile Include="Commands\FindDuplicatesCommand.cs" />
@@ -63,7 +62,6 @@
     <Compile Include="ResultExporters\ConsoleRemoveDuplicatesExporter.cs" />
     <Compile Include="ResultExporters\ConsoleDuplicatesExporter.cs" />
     <Compile Include="ResultExporters\FileComparisonExporter.cs" />
-    <Compile Include="ICommand.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -76,6 +74,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ConsoleFramework\ConsoleFramework.csproj">
+      <Project>{6727db3a-f9c4-4057-ba2a-228ac6ee4676}</Project>
+      <Name>ConsoleFramework</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DirectoryCompare\DirectoryCompare.csproj">
       <Project>{27EAA312-EC92-41EA-B854-00B5C9F2FC7B}</Project>
       <Name>DirectoryCompare</Name>

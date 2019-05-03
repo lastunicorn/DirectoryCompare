@@ -27,10 +27,6 @@ namespace DustInTheWind.DirectoryCompare.Cli
         public string PathRight { get; set; }
         public bool CheckFilesExist { get; set; }
 
-        public void DisplayInfo()
-        {
-        }
-
         public IEnumerable<Duplicate> Find()
         {
             JsonFileSerializer serializer = new JsonFileSerializer();

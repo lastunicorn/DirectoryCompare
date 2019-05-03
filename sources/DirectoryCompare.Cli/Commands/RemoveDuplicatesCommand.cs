@@ -29,8 +29,6 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
         public ConsoleRemoveDuplicatesExporter Exporter { get; set; }
         public FileRemove FileRemove { get; set; }
 
-        public string Name => "remove-duplicates";
-
         public void DisplayInfo()
         {
         }

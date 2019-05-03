@@ -26,8 +26,6 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
         public string Path2 { get; set; }
         public IComparisonExporter Exporter { get; set; }
 
-        public string Name => "compare-disks";
-
         public void DisplayInfo()
         {
             Console.WriteLine("Compare paths:");
