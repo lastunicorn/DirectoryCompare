@@ -29,6 +29,7 @@ namespace DustInTheWind.DirectoryCompare.Cli
             Commands.Add("compare-files", new CompareFilesCommand());
             Commands.Add("find-duplicates", new FindDuplicatesCommand());
             Commands.Add("remove-duplicates", new RemoveDuplicatesCommand());
+            Commands.Add("help", new HelpCommand(this));
         }
     }
 }

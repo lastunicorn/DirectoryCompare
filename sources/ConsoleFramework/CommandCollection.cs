@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace DustInTheWind.DirectoryCompare.Cli
 {
-    public class CommandCollection
+    public class CommandCollection : IEnumerable<KeyValuePair<string, ICommand>>
     {
         protected readonly Dictionary<string, ICommand> Commands = new Dictionary<string, ICommand>();
 
@@ -30,6 +31,16 @@ namespace DustInTheWind.DirectoryCompare.Cli
             command.Initialize(arguments);
 
             return command;
+        }
+
+        public IEnumerator<KeyValuePair<string, ICommand>> GetEnumerator()
+        {
+            return Commands.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }
