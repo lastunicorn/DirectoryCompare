@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.Serialization
 {
@@ -59,30 +59,32 @@ namespace DustInTheWind.DirectoryCompare.Serialization
 
         public XDirectory ToXDirectory()
         {
-            return new XDirectory
+            XDirectory directory = new XDirectory
             {
-                Name = Name,
-                Directories = GetXDirectories(),
-                Files = GetXFiles()
+                Name = Name
             };
+
+            List<XDirectory> directories = GetXDirectories();
+            if (directories != null)
+                directory.Directories.AddRange(directories);
+
+            List<XFile> files = GetXFiles();
+            if (files != null)
+                directory.Files = files;
+
+            return directory;
         }
 
         private List<XDirectory> GetXDirectories()
         {
-            if (Directories == null)
-                return null;
-
-            return Directories
+            return Directories?
                 .Select(x => x.ToXDirectory())
                 .ToList();
         }
 
         private List<XFile> GetXFiles()
         {
-            if (Files == null)
-                return null;
-
-            return Files
+            return Files?
                 .Select(x => x.ToXFile())
                 .ToList();
         }

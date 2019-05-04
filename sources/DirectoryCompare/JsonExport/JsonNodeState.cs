@@ -14,18 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using DustInTheWind.DirectoryCompare.Utils;
-
-namespace DustInTheWind.DirectoryCompare
+namespace DustInTheWind.DirectoryCompare.JsonExport
 {
-    public class DiskReaderStartingEventArgs : EventArgs
+    internal enum JsonNodeState
     {
-        public PathCollection BlackList { get; }
-
-        public DiskReaderStartingEventArgs(PathCollection blackList)
-        {
-            BlackList = blackList;
-        }
+        NotOpened = 0,
+        Opened,
+        Closed
     }
 }

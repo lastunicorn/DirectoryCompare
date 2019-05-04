@@ -17,13 +17,21 @@
 using System;
 using System.Collections.Generic;
 
-namespace DustInTheWind.DirectoryCompare
+namespace DustInTheWind.DirectoryCompare.InMemoryExport
 {
     public class ContainerBuilder
     {
         private readonly Stack<XDirectory> directoryStack = new Stack<XDirectory>();
 
         public XContainer Container { get; }
+
+        public ContainerBuilder()
+        {
+            Container = new XContainer
+            {
+                CreationTime = DateTime.UtcNow
+            };
+        }
 
         public ContainerBuilder(string path)
         {
@@ -32,6 +40,11 @@ namespace DustInTheWind.DirectoryCompare
                 CreationTime = DateTime.UtcNow,
                 OriginalPath = path
             };
+        }
+
+        public void SetOriginalPath(string originalPath)
+        {
+            Container.OriginalPath = originalPath;
         }
 
         public void Add(XFile xFile)

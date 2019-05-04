@@ -18,6 +18,7 @@ using Newtonsoft.Json;
 using System;
 using System.IO;
 using DirectoryCompare.CliFramework;
+using DustInTheWind.DirectoryCompare.Serialization;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
@@ -39,8 +40,12 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
 
         public void Execute()
         {
-            string json = File.ReadAllText(FilePath);
-            XContainer xContainer = JsonConvert.DeserializeObject<XContainer>(json);
+
+            JsonFileSerializer jsonFileSerializer = new JsonFileSerializer();
+            XContainer xContainer = jsonFileSerializer.ReadFromFile(FilePath);
+
+            //string json = File.ReadAllText(FilePath);
+            //XContainer xContainer = JsonConvert.DeserializeObject<XContainer>(json);
 
             //CustomConsole.WriteLine("Container has {0} directories and {1} files.", container.Directories.Count, container.Files.Count);
 

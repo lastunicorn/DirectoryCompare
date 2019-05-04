@@ -18,24 +18,25 @@ using DustInTheWind.DirectoryCompare.DiskCrawling;
 using System;
 using System.IO;
 using System.Security.Cryptography;
+using DustInTheWind.DirectoryCompare.Utils;
 
 namespace DustInTheWind.DirectoryCompare
 {
-    public sealed class DiskReader : IContainerProvider, IDisposable
+    public sealed class DiskReader : IDisposable
     {
         private readonly string rootPath;
+        private readonly IDiskExport diskExport;
         private readonly MD5 md5;
-        private ContainerBuilder containerBuilder;
 
-        public XContainer Container => containerBuilder?.Container;
         public PathCollection BlackList { get; } = new PathCollection();
 
         public event EventHandler<ErrorEncounteredEventArgs> ErrorEncountered;
         public event EventHandler<DiskReaderStartingEventArgs> Starting;
 
-        public DiskReader(string rootPath)
+        public DiskReader(string rootPath, IDiskExport diskExport)
         {
             this.rootPath = rootPath ?? throw new ArgumentNullException(nameof(rootPath));
+            this.diskExport = diskExport ?? throw new ArgumentNullException(nameof(diskExport));
 
             md5 = MD5.Create();
         }
@@ -46,7 +47,7 @@ namespace DustInTheWind.DirectoryCompare
 
             OnStarting(new DiskReaderStartingEventArgs(rootedBlackList));
 
-            containerBuilder = new ContainerBuilder(rootPath);
+            diskExport.Open(rootPath);
 
             DiskCrawler diskCrawler = new DiskCrawler(rootPath, rootedBlackList);
 
@@ -74,6 +75,8 @@ namespace DustInTheWind.DirectoryCompare
                         throw new ArgumentOutOfRangeException();
                 }
             }
+
+            diskExport.Close();
         }
 
         private void AddDirectory(CrawlerStep crawlerStep)
@@ -81,12 +84,12 @@ namespace DustInTheWind.DirectoryCompare
             string directoryName = Path.GetFileName(crawlerStep.Path);
             XDirectory xDirectory = new XDirectory(directoryName);
 
-            containerBuilder.AddAndOpen(xDirectory);
+            diskExport.OpenNewDirectory(xDirectory);
         }
 
         private void CloseDirectory()
         {
-            containerBuilder.CloseDirectory();
+            diskExport.CloseDirectory();
         }
 
         private void AddFile(CrawlerStep crawlerStep)
@@ -109,7 +112,7 @@ namespace DustInTheWind.DirectoryCompare
                 xFile.Error = ex.Message;
             }
 
-            containerBuilder.Add(xFile);
+            diskExport.Add(xFile);
         }
 
         private void ProcessError(CrawlerStep crawlerStep)
@@ -122,7 +125,7 @@ namespace DustInTheWind.DirectoryCompare
                 Error = crawlerStep.Exception.Message
             };
 
-            containerBuilder.Add(xDirectory);
+            diskExport.Add(xDirectory);
         }
 
         public void Dispose()

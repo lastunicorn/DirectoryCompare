@@ -19,6 +19,7 @@ using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using DustInTheWind.DirectoryCompare.InMemoryExport;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
@@ -44,14 +45,15 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
 
         public void Execute()
         {
-            DiskReader diskReader1 = new DiskReader(DiskPath);
+            ContainerDiskExport containerDiskExport = new ContainerDiskExport();
+            DiskReader diskReader1 = new DiskReader(DiskPath, containerDiskExport);
             diskReader1.Starting += HandleDiskReaderStarting;
             diskReader1.Read();
 
             string json2 = File.ReadAllText(FilePath);
             XContainer xContainer2 = JsonConvert.DeserializeObject<XContainer>(json2);
 
-            Compare(diskReader1.Container, xContainer2);
+            Compare(containerDiskExport.Container, xContainer2);
         }
 
         private void HandleDiskReaderStarting(object sender, DiskReaderStartingEventArgs e)

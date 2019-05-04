@@ -15,17 +15,35 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using Newtonsoft.Json;
 
-namespace DustInTheWind.DirectoryCompare
+namespace DustInTheWind.DirectoryCompare.JsonExport
 {
-    public class XContainer : XDirectory
+    internal class JsonContainerExport : JsonDirectoryExport
     {
+        public Guid Id { get; set; }
         public string OriginalPath { get; set; }
-        public DateTime CreationTime { get; set; }
 
-        public XContainer()
-            : base(string.Empty)
+        public JsonContainerExport(JsonTextWriter jsonTextWriter)
+            :base(jsonTextWriter)
         {
+        }
+
+        protected override void DoOpen(XDirectory xDirectory)
+        {
+            Writer.WriteStartObject();
+
+            Writer.WritePropertyName("serializer");
+            Writer.WriteStartObject();
+            Writer.WritePropertyName("id");
+            Writer.WriteValue(Id);
+            Writer.WriteEndObject();
+
+            Writer.WritePropertyName("original-path");
+            Writer.WriteValue(OriginalPath);
+
+            Writer.WritePropertyName("creation-time");
+            Writer.WriteValue(DateTime.UtcNow);
         }
     }
 }

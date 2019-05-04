@@ -19,7 +19,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using DirectoryCompare.CliFramework;
+using DustInTheWind.DirectoryCompare.JsonExport;
 using DustInTheWind.DirectoryCompare.Serialization;
+using DustInTheWind.DirectoryCompare.Utils;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
@@ -77,7 +79,8 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
                 if (!Directory.Exists(SourcePath))
                     throw new Exception("The SourcePath does not exist.");
 
-                diskReader = new DiskReader(SourcePath);
+                JsonDiskExport jsonDiskExport = new JsonDiskExport(new StreamWriter(DestinationFilePath));
+                diskReader = new DiskReader(SourcePath, jsonDiskExport);
                 diskReader.Starting += HandleDiskReaderStarting;
                 diskReader.BlackList.AddRange(BlackList);
                 diskReader.ErrorEncountered += HandleDiskReaderErrorEncountered;
@@ -124,8 +127,8 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
 
         private void WriteToFile()
         {
-            JsonFileSerializer serializer = new JsonFileSerializer();
-            serializer.WriteToFile(diskReader.Container, DestinationFilePath);
+            //JsonFileSerializer serializer = new JsonFileSerializer();
+            //serializer.WriteToFile(containerDiskExport.Container, DestinationFilePath);
 
             Logger?.Info("Finished writing container into file: {0}", DestinationFilePath);
         }

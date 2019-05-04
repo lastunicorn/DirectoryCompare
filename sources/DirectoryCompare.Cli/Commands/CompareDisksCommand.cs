@@ -14,9 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DirectoryCompare.CliFramework;
 using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
 using System;
-using DirectoryCompare.CliFramework;
+using DustInTheWind.DirectoryCompare.InMemoryExport;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
@@ -44,15 +45,17 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
 
         public void Execute()
         {
-            DiskReader diskReader1 = new DiskReader(Path1);
+            ContainerDiskExport containerDiskExport1 = new ContainerDiskExport();
+            DiskReader diskReader1 = new DiskReader(Path1, containerDiskExport1);
             diskReader1.Starting += HandleDiskReaderStarting;
             diskReader1.Read();
 
-            DiskReader diskReader2 = new DiskReader(Path2);
+            ContainerDiskExport containerDiskExport2 = new ContainerDiskExport();
+            DiskReader diskReader2 = new DiskReader(Path2, containerDiskExport2);
             diskReader2.Starting += HandleDiskReaderStarting;
             diskReader2.Read();
 
-            Compare(diskReader1.Container, diskReader2.Container);
+            Compare(containerDiskExport1.Container, containerDiskExport2.Container);
         }
 
         private void HandleDiskReaderStarting(object sender, DiskReaderStartingEventArgs e)
