@@ -14,25 +14,24 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.DiskCrawling;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 
 namespace DustInTheWind.DirectoryCompare
 {
-    public class DiskReader : IContainerProvider, IDisposable
+    public sealed class DiskReader : IContainerProvider, IDisposable
     {
         private readonly string rootPath;
         private readonly MD5 md5;
+        private DirectoryStack directoryStack;
 
         public XContainer Container { get; private set; }
-        public List<string> BlackList { get; set; }
-
-        private List<string> computedBlackList = new List<string>();
+        public PathCollection BlackList { get; } = new PathCollection();
 
         public event EventHandler<ErrorEncounteredEventArgs> ErrorEncountered;
+        public event EventHandler<DiskReaderStartingEventArgs> Starting;
 
         public DiskReader(string rootPath)
         {
@@ -43,123 +42,107 @@ namespace DustInTheWind.DirectoryCompare
 
         public void Read()
         {
-            if (BlackList == null)
-                computedBlackList = new List<string>();
-            else
-                computedBlackList = BlackList
-                    .Select(x => Path.IsPathRooted(x) ? x : Path.Combine(rootPath, x))
-                    .ToList();
+            PathCollection rootedBlackList = BlackList.ToAbsolutePaths(rootPath);
 
-            Console.WriteLine("Computed black list:");
+            OnStarting(new DiskReaderStartingEventArgs(rootedBlackList));
+            
+            directoryStack = new DirectoryStack();
 
-            foreach (string blackListItem in computedBlackList)
-                Console.WriteLine("- " + blackListItem);
+            DiskCrawler diskCrawler = new DiskCrawler(rootPath, rootedBlackList);
 
-            Container = new XContainer
+            foreach (CrawlerStep crawlerStep in diskCrawler)
             {
-                OriginalPath = rootPath,
-                CreationTime = DateTime.UtcNow
+                switch (crawlerStep.Action)
+                {
+                    case CrawlerAction.DirectoryOpened:
+                        AddDirectory(crawlerStep);
+                        break;
+
+                    case CrawlerAction.DirectoryClosed:
+                        CloseDirectory();
+                        break;
+
+                    case CrawlerAction.FileFound:
+                        AddFile(crawlerStep);
+                        break;
+
+                    case CrawlerAction.Error:
+                        ProcessError(crawlerStep);
+                        break;
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+
+            CreateContainer();
+        }
+
+        private void AddDirectory(CrawlerStep crawlerStep)
+        {
+            string directoryName = Path.GetFileName(crawlerStep.Path);
+            XDirectory xDirectory = new XDirectory(directoryName);
+
+            if (directoryStack.HasDirectory)
+                directoryStack.AddToCurrentDirectory(xDirectory);
+
+            directoryStack.Add(xDirectory);
+        }
+
+        private void CloseDirectory()
+        {
+            directoryStack.RemoveLast();
+        }
+
+        private void AddFile(CrawlerStep crawlerStep)
+        {
+            XFile xFile = new XFile
+            {
+                Name = Path.GetFileName(crawlerStep.Path)
             };
 
             try
             {
-                if (!Directory.Exists(rootPath))
-                    throw new Exception(string.Format("The path '{0}' does not exist.", rootPath));
-
-                ReadDirectory(Container, rootPath);
-            }
-            catch (Exception ex)
-            {
-                OnErrorEncountered(new ErrorEncounteredEventArgs(ex, rootPath));
-
-                Container.Error = ex.Message;
-            }
-        }
-
-        private void ReadDirectory(XDirectory xDirectory, string path)
-        {
-            string[] filePaths = Directory.GetFiles(path)
-                .Where(x => !computedBlackList.Contains(x))
-                .ToArray();
-
-            if (filePaths.Length > 0)
-            {
-                xDirectory.Files = new List<XFile>(filePaths.Length);
-
-                foreach (string filePath in filePaths)
+                using (FileStream stream = File.OpenRead(crawlerStep.Path))
                 {
-                    XFile xFile = ProcessFile(filePath);
-                    xDirectory.Files.Add(xFile);
-                }
-            }
-
-            string[] directoryPaths = Directory.GetDirectories(path)
-                .Where(x => !computedBlackList.Contains(x))
-                .ToArray();
-
-            if (directoryPaths.Length > 0)
-            {
-                xDirectory.Directories = new List<XDirectory>(directoryPaths.Length);
-
-                foreach (string directoryPath in directoryPaths)
-                {
-                    XDirectory xSubdirectory = ProcessDirectory(directoryPath);
-                    xDirectory.Directories.Add(xSubdirectory);
-                }
-            }
-        }
-
-        private XDirectory ProcessDirectory(string directoryPath)
-        {
-            string directoryName = Path.GetFileName(directoryPath);
-
-            try
-            {
-                Console.WriteLine(directoryPath);
-
-                XDirectory xDirectory = new XDirectory
-                {
-                    Name = directoryName
-                };
-
-                ReadDirectory(xDirectory, directoryPath);
-                return xDirectory;
-            }
-            catch (Exception ex)
-            {
-                OnErrorEncountered(new ErrorEncounteredEventArgs(ex, directoryPath));
-
-                return new XDirectory
-                {
-                    Name = directoryName,
-                    Error = ex.Message
-                };
-            }
-        }
-
-        private XFile ProcessFile(string filePath)
-        {
-            try
-            {
-                using (FileStream stream = File.OpenRead(filePath))
-                {
-                    return new XFile
-                    {
-                        Name = Path.GetFileName(filePath),
-                        Hash = md5.ComputeHash(stream)
-                    };
+                    xFile.Hash = md5.ComputeHash(stream);
                 }
             }
             catch (Exception ex)
             {
-                OnErrorEncountered(new ErrorEncounteredEventArgs(ex, filePath));
-
-                return new XFile
-                {
-                    Name = Path.GetFileName(filePath),
-                    Error = ex.Message
-                };
+                OnErrorEncountered(new ErrorEncounteredEventArgs(ex, crawlerStep.Path));
+                xFile.Error = ex.Message;
             }
+
+            directoryStack.AddToCurrentDirectory(xFile);
+        }
+
+        private void ProcessError(CrawlerStep crawlerStep)
+        {
+            OnErrorEncountered(new ErrorEncounteredEventArgs(crawlerStep.Exception, crawlerStep.Path));
+
+            XDirectory xDirectory = new XDirectory
+            {
+                Name = Path.GetFileName(crawlerStep.Path),
+                Error = crawlerStep.Exception.Message
+            };
+
+            directoryStack.AddToCurrentDirectory(xDirectory);
+        }
+
+        private void CreateContainer()
+        {
+            XDirectory lastDirectory = directoryStack.LastRemoved;
+
+            Container = new XContainer
+            {
+                OriginalPath = rootPath,
+                CreationTime = DateTime.UtcNow,
+                Name = lastDirectory.Name,
+                Files = lastDirectory.Files,
+                Directories = lastDirectory.Directories,
+                Error = lastDirectory.Error
+            };
         }
 
         public void Dispose()
@@ -167,9 +150,14 @@ namespace DustInTheWind.DirectoryCompare
             md5?.Dispose();
         }
 
-        protected virtual void OnErrorEncountered(ErrorEncounteredEventArgs e)
+        private void OnErrorEncountered(ErrorEncounteredEventArgs e)
         {
             ErrorEncountered?.Invoke(this, e);
+        }
+
+        private void OnStarting(DiskReaderStartingEventArgs e)
+        {
+            Starting?.Invoke(this, e);
         }
     }
 }

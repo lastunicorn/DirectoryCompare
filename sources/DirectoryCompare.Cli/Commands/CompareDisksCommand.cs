@@ -45,12 +45,22 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
         public void Execute()
         {
             DiskReader diskReader1 = new DiskReader(Path1);
+            diskReader1.Starting += HandleDiskReaderStarting;
             diskReader1.Read();
 
             DiskReader diskReader2 = new DiskReader(Path2);
+            diskReader2.Starting += HandleDiskReaderStarting;
             diskReader2.Read();
 
             Compare(diskReader1.Container, diskReader2.Container);
+        }
+
+        private void HandleDiskReaderStarting(object sender, DiskReaderStartingEventArgs e)
+        {
+            Console.WriteLine("Computed black list:");
+
+            foreach (string blackListItem in e.BlackList)
+                Console.WriteLine("- " + blackListItem);
         }
 
         private void Compare(XContainer xContainer1, XContainer xContainer2)

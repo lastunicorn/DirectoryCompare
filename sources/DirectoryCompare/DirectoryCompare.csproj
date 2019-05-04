@@ -40,15 +40,22 @@
     <Compile Include="..\AssemblyInfo.Shared.cs">
       <Link>Properties\AssemblyInfo.Shared.cs</Link>
     </Compile>
+    <Compile Include="DirectoryStack.cs" />
+    <Compile Include="DiskCrawling\CrawlerAction.cs" />
+    <Compile Include="DiskCrawling\CrawlerStep.cs" />
+    <Compile Include="DiskCrawling\DirectoryCrawler.cs" />
+    <Compile Include="DiskReader.cs" />
+    <Compile Include="DiskReaderStartingEventArgs.cs" />
+    <Compile Include="PathCollection.cs" />
     <Compile Include="Serialization\ISerializer.cs" />
     <Compile Include="Serialization\JsonFileSerializer.cs" />
     <Compile Include="Serialization\JsonXContainer.cs" />
     <Compile Include="Serialization\JsonXDirectory.cs" />
     <Compile Include="Serialization\JsonXFile.cs" />
     <Compile Include="Serialization\SerializerInfo.cs" />
+    <Compile Include="DiskCrawling\DiskCrawler.cs" />
     <Compile Include="XContainer.cs" />
     <Compile Include="ContainerComparer.cs" />
-    <Compile Include="DiskReader.cs" />
     <Compile Include="DiskReaderAsync.cs" />
     <Compile Include="ErrorEncounteredEventArgs.cs" />
     <Compile Include="IContainerProvider.cs" />

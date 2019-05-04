@@ -14,11 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.IO;
 using DirectoryCompare.CliFramework;
 using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
 using Newtonsoft.Json;
+using System;
+using System.IO;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
@@ -45,12 +45,21 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
         public void Execute()
         {
             DiskReader diskReader1 = new DiskReader(DiskPath);
+            diskReader1.Starting += HandleDiskReaderStarting;
             diskReader1.Read();
 
             string json2 = File.ReadAllText(FilePath);
             XContainer xContainer2 = JsonConvert.DeserializeObject<XContainer>(json2);
 
             Compare(diskReader1.Container, xContainer2);
+        }
+
+        private void HandleDiskReaderStarting(object sender, DiskReaderStartingEventArgs e)
+        {
+            Console.WriteLine("Computed black list:");
+
+            foreach (string blackListItem in e.BlackList)
+                Console.WriteLine("- " + blackListItem);
         }
 
         private void Compare(XContainer container1, XContainer container2)

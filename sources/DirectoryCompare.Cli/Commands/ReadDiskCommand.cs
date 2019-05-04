@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DirectoryCompare.CliFramework;
 using DustInTheWind.DirectoryCompare.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using DirectoryCompare.CliFramework;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
@@ -33,7 +33,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
         public string SourcePath { get; set; }
         public string DestinationFilePath { get; set; }
 
-        public List<string> BlackList { get; set; } = new List<string>();
+        public PathCollection BlackList { get; set; } = new PathCollection();
 
         public ReadDiskCommand()
         {
@@ -52,16 +52,18 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
             BlackList = ReadBlackList(arguments[2]);
         }
 
-        private static List<string> ReadBlackList(string filePath)
+        private static PathCollection ReadBlackList(string filePath)
         {
             Console.WriteLine("Reading black list from file: {0}", filePath);
 
-            return File.Exists(filePath)
+            string[] list = File.Exists(filePath)
                 ? File.ReadAllLines(filePath)
                     .Where(x => !string.IsNullOrEmpty(x))
                     .Where(x => !x.StartsWith("#"))
-                    .ToList()
-                : new List<string>();
+                    .ToArray()
+                : new string[0];
+
+            return new PathCollection(list);
         }
 
         public void Execute()
@@ -77,7 +79,8 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
                     throw new Exception("The SourcePath does not exist.");
 
                 diskReader = new DiskReader(SourcePath);
-                diskReader.BlackList = BlackList;
+                diskReader.Starting += HandleDiskReaderStarting;
+                diskReader.BlackList.AddRange(BlackList);
                 diskReader.ErrorEncountered += HandleDiskReaderErrorEncountered;
 
                 ScanPath();
@@ -87,6 +90,14 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
             {
                 Logger?.Close();
             }
+        }
+
+        private void HandleDiskReaderStarting(object sender, DiskReaderStartingEventArgs e)
+        {
+            Console.WriteLine("Computed black list:");
+
+            foreach (string blackListItem in e.BlackList)
+                Console.WriteLine("- " + blackListItem);
         }
 
         private void HandleDiskReaderErrorEncountered(object sender, ErrorEncounteredEventArgs e)

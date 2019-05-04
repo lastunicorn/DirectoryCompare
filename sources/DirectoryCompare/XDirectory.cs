@@ -21,9 +21,9 @@ namespace DustInTheWind.DirectoryCompare
 {
     public class XDirectory : XItem, IEquatable<XDirectory>
     {
-        public List<XDirectory> Directories { get; set; }
+        public List<XDirectory> Directories { get; set; } = new List<XDirectory>();
 
-        public List<XFile> Files { get; set; }
+        public List<XFile> Files { get; set; } = new List<XFile>();
 
         public XDirectory()
         {
