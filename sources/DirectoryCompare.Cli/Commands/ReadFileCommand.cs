@@ -17,6 +17,7 @@
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using DirectoryCompare.CliFramework;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {

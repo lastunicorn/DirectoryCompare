@@ -1,46 +1,90 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿// DirectoryCompare
+// Copyright (C) 2017 Dust in the Wind
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.Cli
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using DirectoryCompare.CliFramework.Commands;
+
+namespace DirectoryCompare.CliFramework
 {
-    public class CommandCollection : IEnumerable<KeyValuePair<string, ICommand>>
+    public class CommandCollection : Collection<CommandCollectionItem>
     {
-        protected readonly Dictionary<string, ICommand> Commands = new Dictionary<string, ICommand>();
-
         public void Add(string key, ICommand command)
         {
-            if (key == null) throw new ArgumentNullException(nameof(key));
-            if (command == null) throw new ArgumentNullException(nameof(command));
+            Add(new CommandCollectionItem(key, command));
+        }
 
-            if (Commands.ContainsKey(key))
-                throw new ArgumentException("There is another command with the same key.", nameof(key));
+        protected override void InsertItem(int index, CommandCollectionItem item)
+        {
+            if (this.Any(x => x.Key == item.Key))
+                throw new ArgumentException("There is another command with the same key.", nameof(item.Key));
 
-            Commands.Add(key, command);
+            base.InsertItem(index, item);
+        }
+
+        public bool Contains(string commandKey)
+        {
+            return commandKey != null && this.Any(x => x.Key == commandKey);
+        }
+
+        public bool Contains(ICommand command)
+        {
+            return command != null && this.Any(x => x.Command == command);
         }
 
         public ICommand SelectCommand(Arguments arguments)
         {
+            ICommand command;
+
             if (string.IsNullOrEmpty(arguments.Command))
-                throw new Exception("Please provide a command name to execute.");
+            {
+                command = Items
+                    .Select(x => x.Command)
+                    .OfType<HelpCommand>()
+                    .FirstOrDefault();
 
-            if (!Commands.ContainsKey(arguments.Command))
-                throw new Exception("Invalid command.");
+                if (command == null)
+                    throw new ConsoleFrameworkException("Please provide a command name to execute.");
+            }
+            else
+            {
+                if (!Contains(arguments.Command))
+                    throw new ConsoleFrameworkException("Invalid command.");
 
-            ICommand command = Commands[arguments.Command];
+                command = this[arguments.Command];
+            }
+
             command.Initialize(arguments);
 
             return command;
         }
 
-        public IEnumerator<KeyValuePair<string, ICommand>> GetEnumerator()
+        public ICommand this[string commandKey]
         {
-            return Commands.GetEnumerator();
-        }
+            get
+            {
+                if (commandKey == null)
+                    return null;
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
+                return Items
+                    .Where(x => x.Key == commandKey)
+                    .Select(x => x.Command)
+                    .FirstOrDefault();
+            }
         }
     }
 }

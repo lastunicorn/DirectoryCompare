@@ -46,16 +46,15 @@
     <Compile Include="..\AssemblyInfo.Shared.cs">
       <Link>Properties\AssemblyInfo.Shared.cs</Link>
     </Compile>
-    <Compile Include="ApplicationCommandCollection.cs" />
     <Compile Include="Commands\CompareDisksCommand.cs" />
     <Compile Include="Commands\CompareFilesCommand.cs" />
-    <Compile Include="Commands\HelpCommand.cs" />
+    <Compile Include="ConsoleApplication.cs" />
     <Compile Include="DuplicatesProvider.cs" />
     <Compile Include="Commands\RemoveDuplicatesCommand.cs" />
     <Compile Include="Commands\FindDuplicatesCommand.cs" />
     <Compile Include="Commands\IComparisonExporter.cs" />
     <Compile Include="Duplicate.cs" />
-    <Compile Include="FileKeep.cs" />
+    <Compile Include="FileRemove.cs" />
     <Compile Include="ProjectLogger.cs" />
     <Compile Include="ResultExporters\ConsoleComparisonExporter.cs" />
     <Compile Include="ContainerView.cs" />
@@ -63,7 +62,6 @@
     <Compile Include="ResultExporters\ConsoleDuplicatesExporter.cs" />
     <Compile Include="ResultExporters\FileComparisonExporter.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Commands\ReadDiskCommand.cs" />
     <Compile Include="Commands\ReadFileCommand.cs" />

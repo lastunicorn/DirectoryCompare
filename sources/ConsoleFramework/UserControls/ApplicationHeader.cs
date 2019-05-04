@@ -14,12 +14,23 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DirectoryCompare.CliFramework
+using System;
+using System.Reflection;
+using DustInTheWind.ConsoleTools;
+
+namespace DirectoryCompare.CliFramework.UserControls
 {
-    public interface ICommand
+    public class ApplicationHeader
     {
-        void DisplayInfo();
-        void Initialize(Arguments arguments);
-        void Execute();
+        public void Display()
+        {
+            Assembly assembly = Assembly.GetEntryAssembly();
+            AssemblyName assemblyName = assembly?.GetName();
+            Version version = assemblyName?.Version;
+
+            CustomConsole.WriteLine($"Directory Compare ver {version?.ToString(3)}");
+            CustomConsole.WriteLine(new string('=', 79));
+            CustomConsole.WriteLine();
+        }
     }
 }

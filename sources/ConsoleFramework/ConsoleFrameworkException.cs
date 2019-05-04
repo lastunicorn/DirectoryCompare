@@ -14,22 +14,26 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Cli.Commands;
+using System;
+using System.Runtime.Serialization;
 
-namespace DustInTheWind.DirectoryCompare.Cli
+namespace DirectoryCompare.CliFramework
 {
-    internal class ApplicationCommandCollection : CommandCollection
+    public class ConsoleFrameworkException : Exception
     {
-        public ApplicationCommandCollection()
+        public ConsoleFrameworkException(string message)
+            : base(message)
         {
-            Commands.Add("read-disk", new ReadDiskCommand());
-            Commands.Add("read-file", new ReadFileCommand());
-            Commands.Add("verify-disk", new VerifyDiskCommand());
-            Commands.Add("compare-disks", new CompareDisksCommand());
-            Commands.Add("compare-files", new CompareFilesCommand());
-            Commands.Add("find-duplicates", new FindDuplicatesCommand());
-            Commands.Add("remove-duplicates", new RemoveDuplicatesCommand());
-            Commands.Add("help", new HelpCommand(this));
+        }
+
+        public ConsoleFrameworkException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
+
+        protected ConsoleFrameworkException(SerializationInfo serializationInfo, StreamingContext streamingContext)
+            : base(serializationInfo, streamingContext)
+        {
         }
     }
 }

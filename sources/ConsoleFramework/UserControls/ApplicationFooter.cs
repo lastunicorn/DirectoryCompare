@@ -14,17 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.Cli
-{
-    internal class Project
-    {
-        public IProjectLogger Logger { get; set; }
-        public ICommand Command { get; set; }
+using DustInTheWind.ConsoleTools;
 
-        public void Run()
+namespace DirectoryCompare.CliFramework.UserControls
+{
+    public class ApplicationFooter
+    {
+        public void Display()
         {
-            Logger?.Info("Project started.");
-            Command?.Execute();
+            CustomConsole.WriteLine();
+            CustomConsole.WriteLineSuccess("Bye!");
         }
     }
 }

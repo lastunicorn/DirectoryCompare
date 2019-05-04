@@ -16,7 +16,7 @@
 
 using System;
 
-namespace DustInTheWind.DirectoryCompare.Cli
+namespace DirectoryCompare.CliFramework
 {
     public class Argument
     {

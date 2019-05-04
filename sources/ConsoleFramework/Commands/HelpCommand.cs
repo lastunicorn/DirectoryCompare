@@ -17,10 +17,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DirectoryCompare.CliFramework.UserControls;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Commands
+namespace DirectoryCompare.CliFramework.Commands
 {
-    internal class HelpCommand : ICommand
+    public class HelpCommand : ICommand
     {
         private readonly CommandCollection commandCollection;
 
@@ -31,7 +32,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
 
         public void DisplayInfo()
         {
-            Console.WriteLine("Displays information about the available commands");
+            Console.WriteLine("Displays information about the available commands.");
         }
 
         public void Initialize(Arguments arguments)
@@ -40,16 +41,19 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
 
         public void Execute()
         {
-            IEnumerable<IGrouping<ICommand, KeyValuePair<string, ICommand>>> commandsGrouped = commandCollection.GroupBy(x => x.Value);
+            IEnumerable<IGrouping<ICommand, CommandCollectionItem>> commandsGrouped = commandCollection.GroupBy(x => x.Command);
 
-            foreach (IGrouping<ICommand, KeyValuePair<string, ICommand>> group in commandsGrouped)
+            UsageControl usageControl = new UsageControl
             {
-                string commandNames = GetCommandNames(group);
-                Console.WriteLine(commandNames);
-            }
+                CommandNames = commandsGrouped
+                    .Select(GetCommandNames)
+                    .ToList()
+            };
+
+            usageControl.Display();
         }
 
-        private static string GetCommandNames(IEnumerable<KeyValuePair<string, ICommand>> group)
+        private static string GetCommandNames(IEnumerable<CommandCollectionItem> group)
         {
             IEnumerable<string> commandNames = group.Select(x => x.Key);
             return string.Join(", ", commandNames);

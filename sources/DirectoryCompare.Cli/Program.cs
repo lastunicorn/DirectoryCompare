@@ -15,13 +15,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools;
-using DustInTheWind.ConsoleTools.Spinners;
 using System;
-using System.Collections.Generic;
 
 namespace DustInTheWind.DirectoryCompare.Cli
 {
-
     internal class Program
     {
         private static void Main(string[] args)
@@ -36,32 +33,15 @@ namespace DustInTheWind.DirectoryCompare.Cli
                 //args = new[] { "compare-disks", @"c:\temp1", @"c:\temp2" };
                 //args = new[] { "compare-files", @"c:\temp\file1.json", @"c:\temp\file2.json" };
 
-                //DisplayArguments(args);
+                ConsoleApplication consoleApplication = new ConsoleApplication();
+                consoleApplication.Initialize();
 
-                Arguments arguments = new Arguments(args);
-
-                ApplicationCommandCollection commands = new ApplicationCommandCollection();
-
-                ICommand command = commands.SelectCommand(arguments);
-                command.DisplayInfo();
-                Spinner.Run(() => { command.Execute(); });
-
-                CustomConsole.WriteLineSuccess("Done");
+                consoleApplication.Run(args);
             }
             catch (Exception ex)
             {
                 CustomConsole.WriteLineError(ex);
             }
-        }
-
-        private static void DisplayArguments(IEnumerable<string> args)
-        {
-            Console.WriteLine("Arguments:");
-
-            foreach (string arg in args)
-                Console.WriteLine(arg);
-
-            Console.WriteLine();
         }
     }
 }

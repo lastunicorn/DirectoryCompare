@@ -14,12 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
+
 namespace DirectoryCompare.CliFramework
 {
-    public interface ICommand
+    public class CommandCollectionItem
     {
-        void DisplayInfo();
-        void Initialize(Arguments arguments);
-        void Execute();
+        public string Key { get; }
+        public ICommand Command { get; }
+
+        public CommandCollectionItem(string key, ICommand command)
+        {
+            Key = key ?? throw new ArgumentNullException(nameof(key));
+            Command = command ?? throw new ArgumentNullException(nameof(command));
+        }
     }
 }

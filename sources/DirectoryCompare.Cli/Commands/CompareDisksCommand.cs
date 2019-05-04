@@ -16,6 +16,7 @@
 
 using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
 using System;
+using DirectoryCompare.CliFramework;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
