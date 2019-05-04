@@ -25,9 +25,9 @@ namespace DustInTheWind.DirectoryCompare
     {
         private readonly string rootPath;
         private readonly MD5 md5;
-        private DirectoryStack directoryStack;
+        private ContainerBuilder containerBuilder;
 
-        public XContainer Container { get; private set; }
+        public XContainer Container => containerBuilder?.Container;
         public PathCollection BlackList { get; } = new PathCollection();
 
         public event EventHandler<ErrorEncounteredEventArgs> ErrorEncountered;
@@ -45,8 +45,8 @@ namespace DustInTheWind.DirectoryCompare
             PathCollection rootedBlackList = BlackList.ToAbsolutePaths(rootPath);
 
             OnStarting(new DiskReaderStartingEventArgs(rootedBlackList));
-            
-            directoryStack = new DirectoryStack();
+
+            containerBuilder = new ContainerBuilder(rootPath);
 
             DiskCrawler diskCrawler = new DiskCrawler(rootPath, rootedBlackList);
 
@@ -74,8 +74,6 @@ namespace DustInTheWind.DirectoryCompare
                         throw new ArgumentOutOfRangeException();
                 }
             }
-
-            CreateContainer();
         }
 
         private void AddDirectory(CrawlerStep crawlerStep)
@@ -83,15 +81,12 @@ namespace DustInTheWind.DirectoryCompare
             string directoryName = Path.GetFileName(crawlerStep.Path);
             XDirectory xDirectory = new XDirectory(directoryName);
 
-            if (directoryStack.HasDirectory)
-                directoryStack.AddToCurrentDirectory(xDirectory);
-
-            directoryStack.Add(xDirectory);
+            containerBuilder.AddAndOpen(xDirectory);
         }
 
         private void CloseDirectory()
         {
-            directoryStack.RemoveLast();
+            containerBuilder.CloseDirectory();
         }
 
         private void AddFile(CrawlerStep crawlerStep)
@@ -114,7 +109,7 @@ namespace DustInTheWind.DirectoryCompare
                 xFile.Error = ex.Message;
             }
 
-            directoryStack.AddToCurrentDirectory(xFile);
+            containerBuilder.Add(xFile);
         }
 
         private void ProcessError(CrawlerStep crawlerStep)
@@ -127,22 +122,7 @@ namespace DustInTheWind.DirectoryCompare
                 Error = crawlerStep.Exception.Message
             };
 
-            directoryStack.AddToCurrentDirectory(xDirectory);
-        }
-
-        private void CreateContainer()
-        {
-            XDirectory lastDirectory = directoryStack.LastRemoved;
-
-            Container = new XContainer
-            {
-                OriginalPath = rootPath,
-                CreationTime = DateTime.UtcNow,
-                Name = lastDirectory.Name,
-                Files = lastDirectory.Files,
-                Directories = lastDirectory.Directories,
-                Error = lastDirectory.Error
-            };
+            containerBuilder.Add(xDirectory);
         }
 
         public void Dispose()

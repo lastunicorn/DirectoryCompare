@@ -27,5 +27,10 @@ namespace DustInTheWind.DirectoryCompare
             : base(string.Empty)
         {
         }
+
+        public static void Load()
+        {
+
+        }
     }
 }
