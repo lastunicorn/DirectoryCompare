@@ -26,20 +26,6 @@ namespace DustInTheWind.DirectoryCompare.DiskCrawling
         public long DirectoryCount { get; private set; }
         public Exception Exception { get; private set; }
 
-        //public CrawlerStep(CrawlerAction action, string itemName)
-        //{
-        //    Action = action;
-        //    Path = itemName;
-        //    Error = null;
-        //}
-
-        //public CrawlerStep(Exception ex)
-        //{
-        //    Action = CrawlerAction.Error;
-        //    Path = null;
-        //    Error = ex;
-        //}
-
         public static CrawlerStep DirectoryOpened(string directoryPath, long fileCount, long directoryCount)
         {
             return new CrawlerStep
