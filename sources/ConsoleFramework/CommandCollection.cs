@@ -46,11 +46,11 @@ namespace DirectoryCompare.CliFramework
             return command != null && this.Any(x => x.Command == command);
         }
 
-        public ICommand SelectCommand(Arguments arguments)
+        public ICommand SelectCommand(string commandName)
         {
             ICommand command;
 
-            if (string.IsNullOrEmpty(arguments.Command))
+            if (string.IsNullOrEmpty(commandName))
             {
                 command = Items
                     .Select(x => x.Command)
@@ -62,13 +62,11 @@ namespace DirectoryCompare.CliFramework
             }
             else
             {
-                if (!Contains(arguments.Command))
+                if (!Contains(commandName))
                     throw new ConsoleFrameworkException("Invalid command.");
 
-                command = this[arguments.Command];
+                command = this[commandName];
             }
-
-            command.Initialize(arguments);
 
             return command;
         }

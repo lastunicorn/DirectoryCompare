@@ -21,8 +21,9 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
+using DustInTheWind.DirectoryCompare.Entities;
 
-namespace DustInTheWind.DirectoryCompare
+namespace DustInTheWind.DirectoryCompare.DiskAnalysing
 {
     public class DiskReaderAsync : IContainerProvider
     {

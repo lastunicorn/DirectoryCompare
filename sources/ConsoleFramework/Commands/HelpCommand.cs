@@ -25,21 +25,14 @@ namespace DirectoryCompare.CliFramework.Commands
     {
         private readonly CommandCollection commandCollection;
 
+        public string Description => "Displays information about the available commands.";
+
         public HelpCommand(CommandCollection commandCollection)
         {
             this.commandCollection = commandCollection ?? throw new ArgumentNullException(nameof(commandCollection));
         }
 
-        public void DisplayInfo()
-        {
-            Console.WriteLine("Displays information about the available commands.");
-        }
-
-        public void Initialize(Arguments arguments)
-        {
-        }
-
-        public void Execute()
+        public void Execute(Arguments arguments)
         {
             IEnumerable<IGrouping<ICommand, CommandCollectionItem>> commandsGrouped = commandCollection.GroupBy(x => x.Command);
 

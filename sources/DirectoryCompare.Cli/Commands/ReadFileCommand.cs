@@ -14,43 +14,38 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using Newtonsoft.Json;
-using System;
-using System.IO;
 using DirectoryCompare.CliFramework;
-using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
+using DustInTheWind.DirectoryCompare.Application.HashFile;
+using MediatR;
+using System;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
     internal class ReadFileCommand : ICommand
     {
-        public ProjectLogger Logger { get; set; }
-        public string FilePath { get; set; }
+        private readonly IMediator mediator;
 
-        public void DisplayInfo()
+        public string Description => "Displays the content of a json hash files";
+
+        public ReadFileCommand(IMediator mediator)
         {
-            Console.WriteLine("Reading file: " + FilePath);
+            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        public void Initialize(Arguments arguments)
+        public void Execute(Arguments arguments)
         {
-            Logger = new ProjectLogger();
-            FilePath = arguments[0];
+            ReadFileRequest request = CreateRequest(arguments);
+            mediator.Send(request);
         }
 
-        public void Execute()
+        private static ReadFileRequest CreateRequest(Arguments arguments)
         {
+            string filePath = arguments[0];
 
-            JsonFileSerializer jsonFileSerializer = new JsonFileSerializer();
-            HContainer hContainer = jsonFileSerializer.ReadFromFile(FilePath);
-
-            //string json = File.ReadAllText(FilePath);
-            //HContainer hContainer = JsonConvert.DeserializeObject<HContainer>(json);
-
-            //CustomConsole.WriteLine("Container has {0} directories and {1} files.", container.Directories.Count, container.Files.Count);
-
-            ContainerView containerView = new ContainerView(hContainer);
-            containerView.Display();
+            return new ReadFileRequest
+            {
+                FilePath = filePath
+            };
         }
     }
 }

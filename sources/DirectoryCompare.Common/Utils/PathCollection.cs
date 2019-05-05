@@ -19,7 +19,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 
-namespace DustInTheWind.DirectoryCompare.Utils
+namespace DustInTheWind.DirectoryCompare.Common.Utils
 {
     public class PathCollection : Collection<string>
     {

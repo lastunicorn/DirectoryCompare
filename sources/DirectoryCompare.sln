@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.JsonHashes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.Common", "DirectoryCompare.Common\DirectoryCompare.Common.csproj", "{05E21912-332C-4C16-A590-2BBF65A1FB7C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.Application", "DirectoryComapre.Application\DirectoryCompare.Application.csproj", "{4803E289-ED56-4872-9BA8-7001041E615B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{05E21912-332C-4C16-A590-2BBF65A1FB7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05E21912-332C-4C16-A590-2BBF65A1FB7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05E21912-332C-4C16-A590-2BBF65A1FB7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4803E289-ED56-4872-9BA8-7001041E615B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4803E289-ED56-4872-9BA8-7001041E615B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4803E289-ED56-4872-9BA8-7001041E615B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4803E289-ED56-4872-9BA8-7001041E615B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -32,13 +32,30 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Core.4.2.0\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
     <Reference Include="DustInTheWind.ConsoleTools, Version=0.5.2.40177, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ConsoleTools.0.5.2\lib\net45\DustInTheWind.ConsoleTools.dll</HintPath>
     </Reference>
+    <Reference Include="MediatR, Version=7.0.0.0, Culture=neutral, PublicKeyToken=bb9a41a5e8aaa7e2, processorArchitecture=MSIL">
+      <HintPath>..\packages\MediatR.7.0.0\lib\net461\MediatR.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Extensions.Conventions, Version=3.3.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.Extensions.Conventions.3.3.0\lib\net45\Ninject.Extensions.Conventions.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Extensions.Factory, Version=3.3.2.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.Extensions.Factory.3.3.2\lib\net45\Ninject.Extensions.Factory.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
@@ -47,24 +64,22 @@
     </Compile>
     <Compile Include="Commands\CompareDisksCommand.cs" />
     <Compile Include="Commands\CompareFilesCommand.cs" />
+    <Compile Include="ContravariantBindingResolver.cs" />
     <Compile Include="ConsoleApplication.cs" />
-    <Compile Include="DuplicatesProvider.cs" />
     <Compile Include="Commands\RemoveDuplicatesCommand.cs" />
     <Compile Include="Commands\FindDuplicatesCommand.cs" />
-    <Compile Include="Commands\IComparisonExporter.cs" />
-    <Compile Include="Duplicate.cs" />
-    <Compile Include="FileRemove.cs" />
     <Compile Include="ProjectLogger.cs" />
-    <Compile Include="ResultExporters\ConsoleComparisonExporter.cs" />
     <Compile Include="ContainerView.cs" />
-    <Compile Include="ResultExporters\ConsoleRemoveDuplicatesExporter.cs" />
-    <Compile Include="ResultExporters\ConsoleDuplicatesExporter.cs" />
-    <Compile Include="ResultExporters\FileComparisonExporter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Commands\ReadDiskCommand.cs" />
     <Compile Include="Commands\ReadFileCommand.cs" />
     <Compile Include="Commands\VerifyDiskCommand.cs" />
+    <Compile Include="ResultExporters\ConsoleComparisonExporter.cs" />
+    <Compile Include="ResultExporters\ConsoleContainerExporter.cs" />
+    <Compile Include="ResultExporters\ConsoleDuplicatesExporter.cs" />
+    <Compile Include="ResultExporters\ConsoleRemoveDuplicatesExporter.cs" />
+    <Compile Include="ResultExporters\FileComparisonExporter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -74,6 +89,10 @@
     <ProjectReference Include="..\ConsoleFramework\ConsoleFramework.csproj">
       <Project>{6727db3a-f9c4-4057-ba2a-228ac6ee4676}</Project>
       <Name>ConsoleFramework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DirectoryComapre.Application\DirectoryCompare.Application.csproj">
+      <Project>{4803E289-ED56-4872-9BA8-7001041E615B}</Project>
+      <Name>DirectoryCompare.Application</Name>
     </ProjectReference>
     <ProjectReference Include="..\DirectoryCompare.Common\DirectoryCompare.Common.csproj">
       <Project>{05e21912-332c-4c16-a590-2bbf65a1fb7c}</Project>

@@ -17,7 +17,7 @@
 using System;
 using System.IO;
 using DustInTheWind.ConsoleTools;
-using DustInTheWind.DirectoryCompare.Cli.Commands;
+using DustInTheWind.DirectoryCompare.Application;
 
 namespace DustInTheWind.DirectoryCompare.Cli.ResultExporters
 {
@@ -28,7 +28,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.ResultExporters
         public void Export(ContainerComparer comparer)
         {
             if (string.IsNullOrWhiteSpace(ResultsDirectory))
-                throw new Exception("Cannot export comparation result. No file name was provided.");
+                throw new Exception("Cannot export comparison result. No file name was provided.");
 
             string exportDirectoryPath = CreateExportDirectory();
 

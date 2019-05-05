@@ -18,7 +18,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using DustInTheWind.DirectoryCompare.Utils;
+using DustInTheWind.DirectoryCompare.Common.Utils;
 
 namespace DustInTheWind.DirectoryCompare.DiskCrawling
 {

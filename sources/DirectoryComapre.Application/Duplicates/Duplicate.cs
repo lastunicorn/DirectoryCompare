@@ -14,11 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Utils;
 using System;
 using System.IO;
+using DustInTheWind.DirectoryCompare.Common.Utils;
+using DustInTheWind.DirectoryCompare.Entities;
 
-namespace DustInTheWind.DirectoryCompare.Cli
+namespace DustInTheWind.DirectoryCompare.Application.Duplicates
 {
     internal class Duplicate
     {

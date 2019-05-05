@@ -14,10 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.Cli.Commands
+using MediatR;
+
+namespace DustInTheWind.DirectoryCompare.Application.Compare
 {
-    internal interface IComparisonExporter
+    public class CompareDisksRequest : IRequest
     {
-        void Export(ContainerComparer comparer);
+        public string Path1 { get; set; }
+        public string Path2 { get; set; }
+        public IComparisonExporter Exporter { get; set; }
     }
 }

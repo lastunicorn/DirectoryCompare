@@ -15,10 +15,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using DustInTheWind.DirectoryCompare.Application.Duplicates;
 
 namespace DustInTheWind.DirectoryCompare.Cli.ResultExporters
 {
-    internal class ConsoleRemoveDuplicatesExporter
+    internal class ConsoleRemoveDuplicatesExporter : IRemoveDuplicatesExporter
     {
         public void WriteRemove(string path)
         {

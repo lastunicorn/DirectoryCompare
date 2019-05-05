@@ -17,9 +17,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using DustInTheWind.DirectoryCompare.Entities;
 using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
 
-namespace DustInTheWind.DirectoryCompare.Cli
+namespace DustInTheWind.DirectoryCompare.Application.Duplicates
 {
     internal class DuplicatesProvider
     {

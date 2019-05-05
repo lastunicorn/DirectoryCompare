@@ -14,13 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.DiskCrawling;
 using System;
 using System.IO;
 using System.Security.Cryptography;
-using DustInTheWind.DirectoryCompare.Utils;
+using DustInTheWind.DirectoryCompare.Common.Utils;
+using DustInTheWind.DirectoryCompare.DiskCrawling;
+using DustInTheWind.DirectoryCompare.Entities;
 
-namespace DustInTheWind.DirectoryCompare
+namespace DustInTheWind.DirectoryCompare.DiskAnalysing
 {
     public sealed class DiskReader : IDisposable
     {

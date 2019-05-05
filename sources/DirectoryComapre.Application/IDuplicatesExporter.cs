@@ -14,11 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.Cli
+namespace DustInTheWind.DirectoryCompare.Application
 {
-    internal enum FileRemove
+    public interface IDuplicatesExporter
     {
-        Left,
-        Right
+        void WriteDuplicate(string path1, string path2, long size);
+        void WriteSummary(int duplicateCount, long totalSize);
     }
 }

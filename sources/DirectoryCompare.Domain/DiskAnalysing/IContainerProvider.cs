@@ -14,7 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare
+using DustInTheWind.DirectoryCompare.Entities;
+
+namespace DustInTheWind.DirectoryCompare.DiskAnalysing
 {
     public interface IContainerProvider
     {

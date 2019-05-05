@@ -16,7 +16,7 @@
 
 using System.Collections.Generic;
 
-namespace DustInTheWind.DirectoryCompare.Utils
+namespace DustInTheWind.DirectoryCompare.Common.Utils
 {
     public static class ByteArrayCompare
     {

@@ -14,62 +14,42 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DirectoryCompare.CliFramework;
-using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
-using Newtonsoft.Json;
 using System;
-using System.IO;
-using DustInTheWind.DirectoryCompare.InMemoryExport;
+using DirectoryCompare.CliFramework;
+using DustInTheWind.DirectoryCompare.Application.Disk;
+using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
+using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
     internal class VerifyDiskCommand : ICommand
     {
-        public ProjectLogger Logger { get; set; }
-        public string DiskPath { get; set; }
-        public string FilePath { get; set; }
-        public IComparisonExporter Exporter { get; set; }
+        private readonly IMediator mediator;
 
-        public void DisplayInfo()
+        public string Description => string.Empty;
+
+        public VerifyDiskCommand(IMediator mediator)
         {
-            Console.WriteLine("Verify path: " + DiskPath);
+            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        public void Initialize(Arguments arguments)
+        public void Execute(Arguments arguments)
         {
-            Logger = new ProjectLogger();
-            DiskPath = arguments[0];
-            FilePath = arguments[1];
-            Exporter = new ConsoleComparisonExporter();
+            VerifyDiskRequest request = CreateRequest(arguments);
+            mediator.Send(request);
         }
 
-        public void Execute()
+        private static VerifyDiskRequest CreateRequest(Arguments arguments)
         {
-            ContainerDiskExport containerDiskExport = new ContainerDiskExport();
-            DiskReader diskReader1 = new DiskReader(DiskPath, containerDiskExport);
-            diskReader1.Starting += HandleDiskReaderStarting;
-            diskReader1.Read();
+            string diskPath = arguments[0];
+            string filePath = arguments[1];
 
-            string json2 = File.ReadAllText(FilePath);
-            HContainer hContainer2 = JsonConvert.DeserializeObject<HContainer>(json2);
-
-            Compare(containerDiskExport.Container, hContainer2);
-        }
-
-        private void HandleDiskReaderStarting(object sender, DiskReaderStartingEventArgs e)
-        {
-            Console.WriteLine("Computed black list:");
-
-            foreach (string blackListItem in e.BlackList)
-                Console.WriteLine("- " + blackListItem);
-        }
-
-        private void Compare(HContainer container1, HContainer container2)
-        {
-            ContainerComparer comparer = new ContainerComparer(container1, container2);
-            comparer.Compare();
-
-            Exporter?.Export(comparer);
+            return new VerifyDiskRequest
+            {
+                DiskPath = diskPath,
+                FilePath = filePath,
+                Exporter = new ConsoleComparisonExporter()
+            };
         }
     }
 }

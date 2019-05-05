@@ -17,7 +17,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DustInTheWind.DirectoryCompare.Utils;
+using DustInTheWind.DirectoryCompare.Common.Utils;
+using DustInTheWind.DirectoryCompare.Entities;
 
 namespace DustInTheWind.DirectoryCompare
 {

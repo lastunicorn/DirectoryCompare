@@ -14,32 +14,40 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using DirectoryCompare.CliFramework;
+using DustInTheWind.DirectoryCompare.Application.Duplicates;
+using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
+using MediatR;
+using System;
+using System.IO;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
     internal class RemoveDuplicatesCommand : ICommand
     {
-        public ProjectLogger Logger { get; set; }
-        public string PathLeft { get; set; }
-        public string PathRight { get; set; }
-        public ConsoleRemoveDuplicatesExporter Exporter { get; set; }
-        public FileRemove FileRemove { get; set; }
+        private readonly IMediator mediator;
 
-        public void DisplayInfo()
+        public string Description => string.Empty;
+
+        public RemoveDuplicatesCommand(IMediator mediator)
         {
+            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        public void Initialize(Arguments arguments)
+        public void Execute(Arguments arguments)
+        {
+            RemoveDuplicatesRequest request = CreateRequest(arguments);
+            mediator.Send(request);
+        }
+
+        private static RemoveDuplicatesRequest CreateRequest(Arguments arguments)
         {
             if (arguments.Count == 0)
                 throw new Exception("Invalid command parameters.");
 
-            PathLeft = arguments[0];
+            string pathLeft = arguments[0];
+            string pathRight;
+            FileRemove fileRemove;
 
             if (arguments.Count > 1)
             {
@@ -47,71 +55,30 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
 
                 if (isFileRight)
                 {
-                    PathRight = arguments[1];
-
-                    if (arguments.Count > 2)
-                        FileRemove = (FileRemove)Enum.Parse(typeof(FileRemove), arguments[2]);
+                    pathRight = arguments[1];
+                    fileRemove = arguments.Count > 2
+                        ? (FileRemove)Enum.Parse(typeof(FileRemove), arguments[2])
+                        : FileRemove.Left;
                 }
                 else
                 {
-                    PathRight = null;
-                    FileRemove = (FileRemove)Enum.Parse(typeof(FileRemove), arguments[1]);
+                    pathRight = null;
+                    fileRemove = (FileRemove)Enum.Parse(typeof(FileRemove), arguments[1]);
                 }
             }
             else
             {
-                PathRight = null;
-                FileRemove = FileRemove.Right;
+                pathRight = null;
+                fileRemove = FileRemove.Right;
             }
 
-            Logger = new ProjectLogger();
-            Exporter = new ConsoleRemoveDuplicatesExporter();
-        }
-
-        public void Execute()
-        {
-            DuplicatesProvider duplicatesProvider = new DuplicatesProvider
+            return new RemoveDuplicatesRequest
             {
-                PathLeft = PathLeft,
-                PathRight = PathRight,
-                CheckFilesExist = true
+                PathLeft = pathLeft,
+                PathRight = pathRight,
+                Exporter = new ConsoleRemoveDuplicatesExporter(),
+                FileRemove = fileRemove
             };
-
-            IEnumerable<Duplicate> duplicates = duplicatesProvider.Find();
-
-            int removeCount = 0;
-            long totalSize = 0;
-
-            foreach (Duplicate duplicate in duplicates)
-            {
-                if (!duplicate.AreEqual)
-                    continue;
-
-                bool file1Exists = duplicate.File1Exists;
-                bool file2Exists = duplicate.File2Exists;
-
-                if (file1Exists && file2Exists)
-                {
-                    switch (FileRemove)
-                    {
-                        case FileRemove.Left:
-                            File.Delete(duplicate.FullPath1);
-                            removeCount++;
-                            totalSize += duplicate.Size;
-                            Exporter.WriteRemove(duplicate.FullPath1);
-                            break;
-
-                        case FileRemove.Right:
-                            File.Delete(duplicate.FullPath2);
-                            removeCount++;
-                            totalSize += duplicate.Size;
-                            Exporter.WriteRemove(duplicate.FullPath2);
-                            break;
-                    }
-                }
-            }
-
-            Exporter.WriteSummary(removeCount, totalSize);
         }
     }
 }

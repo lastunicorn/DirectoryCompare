@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using DustInTheWind.DirectoryCompare.Entities;
 
 namespace DustInTheWind.DirectoryCompare.InMemoryExport
 {

@@ -49,7 +49,22 @@ namespace DustInTheWind.DirectoryCompare.Cli
         public void Info(string format, params object[] arg)
         {
             string text = arg == null ? format : string.Format(format, arg);
-            text = string.Format("[{0:yyyy-MM-dd HH:mm:ss.fff}] {1}", DateTime.Now, text);
+            text = string.Format("[{0:yyyy-MM-dd HH:mm:ss.fff}] INFO {1}", DateTime.Now, text);
+
+            streamWriter.WriteLine(text);
+
+            CustomConsole.WriteLine(text);
+        }
+
+        public void Warn(string format)
+        {
+            Warn(format, new object[0]);
+        }
+
+        public void Warn(string format, params object[] arg)
+        {
+            string text = arg == null ? format : string.Format(format, arg);
+            text = string.Format("[{0:yyyy-MM-dd HH:mm:ss.fff}] WARN {1}", DateTime.Now, text);
 
             streamWriter.WriteLine(text);
 
@@ -64,7 +79,7 @@ namespace DustInTheWind.DirectoryCompare.Cli
         public void Error(string format, params object[] arg)
         {
             string text = arg == null ? format : string.Format(format, arg);
-            text = string.Format("[{0:yyyy-MM-dd HH:mm:ss.fff}] {1}", DateTime.Now, text);
+            text = string.Format("[{0:yyyy-MM-dd HH:mm:ss.fff}] ERROR {1}", DateTime.Now, text);
 
             streamWriter.WriteLine(text);
 

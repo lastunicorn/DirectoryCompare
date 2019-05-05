@@ -18,8 +18,7 @@ namespace DirectoryCompare.CliFramework
 {
     public interface ICommand
     {
-        void DisplayInfo();
-        void Initialize(Arguments arguments);
-        void Execute();
+        string Description { get; }
+        void Execute(Arguments arguments);
     }
 }

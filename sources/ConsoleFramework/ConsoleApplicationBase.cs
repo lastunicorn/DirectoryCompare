@@ -15,10 +15,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DirectoryCompare.CliFramework.Commands;
+using DirectoryCompare.CliFramework.UserControls;
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Spinners;
 using System;
-using DirectoryCompare.CliFramework.UserControls;
 
 namespace DirectoryCompare.CliFramework
 {
@@ -74,12 +74,12 @@ namespace DirectoryCompare.CliFramework
 
                 Arguments arguments = new Arguments(args);
 
-                ICommand command = commands.SelectCommand(arguments);
+                ICommand command = commands.SelectCommand(arguments.Command);
 
                 if (UseSpinner)
-                    Spinner.Run(command.Execute);
+                    Spinner.Run(() => command.Execute(arguments));
                 else
-                    command.Execute();
+                    command.Execute(arguments);
             }
             catch (Exception ex)
             {

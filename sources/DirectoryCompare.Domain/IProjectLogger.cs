@@ -19,6 +19,12 @@ namespace DustInTheWind.DirectoryCompare
     public interface IProjectLogger
     {
         void Open();
-        void Info(string format, params object[] args);
+        void Close();
+        void Info(string format);
+        void Info(string format, params object[] arg);
+        void Warn(string format);
+        void Warn(string format, params object[] arg);
+        void Error(string format);
+        void Error(string format, params object[] arg);
     }
 }

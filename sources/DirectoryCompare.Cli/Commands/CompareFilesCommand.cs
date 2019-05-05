@@ -14,57 +14,46 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
 using DirectoryCompare.CliFramework;
-using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
+using DustInTheWind.DirectoryCompare.Application;
+using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
+using MediatR;
+using System;
+using DustInTheWind.DirectoryCompare.Application.Compare;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
     internal class CompareFilesCommand : ICommand
     {
-        public ProjectLogger Logger { get; set; }
-        public string Path1 { get; set; }
-        public string Path2 { get; set; }
-        public IComparisonExporter Exporter { get; set; }
+        private readonly IMediator mediator;
 
-        public void DisplayInfo()
+        public string Description => "Compares two json hash files.";
+
+        public CompareFilesCommand(IMediator mediator)
         {
+            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        public void Initialize(Arguments arguments)
+        public void Execute(Arguments arguments)
         {
-            Logger = new ProjectLogger();
-            Path1 = arguments[0];
-            Path2 = arguments[1];
-            Exporter = arguments.Count >= 3
+            CompareDisksRequest request = CreateRequest(arguments);
+            mediator.Send(request);
+        }
+
+        private static CompareDisksRequest CreateRequest(Arguments arguments)
+        {
+            string path1 = arguments[0];
+            string path2 = arguments[1];
+            IComparisonExporter exporter = arguments.Count >= 3
                 ? (IComparisonExporter)new FileComparisonExporter { ResultsDirectory = arguments[2] }
                 : (IComparisonExporter)new ConsoleComparisonExporter();
-        }
 
-        public void Execute()
-        {
-            JsonFileSerializer serializer = new JsonFileSerializer();
-
-            // todo: must find a way to dynamically detect the serialization type.
-
-            HContainer hContainer1 = serializer.ReadFromFile(Path1);
-            HContainer hContainer2 = serializer.ReadFromFile(Path2);
-
-            //string json1 = File.ReadAllText(Path1);
-            //HContainer hContainer1 = JsonConvert.DeserializeObject<HContainer>(json1);
-
-            //string json2 = File.ReadAllText(Path2);
-            //Container container2 = JsonConvert.DeserializeObject<Container>(json2);
-
-            Compare(hContainer1, hContainer2);
-        }
-
-        private void Compare(HContainer container1, HContainer container2)
-        {
-            ContainerComparer comparer = new ContainerComparer(container1, container2);
-            comparer.Compare();
-
-            Exporter?.Export(comparer);
+            return new CompareDisksRequest
+            {
+                Path1 = path1,
+                Path2 = path2,
+                Exporter = exporter
+            };
         }
     }
 }

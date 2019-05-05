@@ -16,62 +16,40 @@
 
 using DirectoryCompare.CliFramework;
 using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
+using MediatR;
 using System;
-using DustInTheWind.DirectoryCompare.InMemoryExport;
+using DustInTheWind.DirectoryCompare.Application.Compare;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
     internal class CompareDisksCommand : ICommand
     {
-        public ProjectLogger Logger { get; set; }
-        public string Path1 { get; set; }
-        public string Path2 { get; set; }
-        public IComparisonExporter Exporter { get; set; }
+        private readonly IMediator mediator;
 
-        public void DisplayInfo()
+        public string Description => "Compares two physical paths on disk.";
+
+        public CompareDisksCommand(IMediator mediator)
         {
-            Console.WriteLine("Compare paths:");
-            Console.WriteLine(Path1);
-            Console.WriteLine(Path2);
+            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        public void Initialize(Arguments arguments)
+        public void Execute(Arguments arguments)
         {
-            Logger = new ProjectLogger();
-            Path1 = arguments[0];
-            Path2 = arguments[1];
-            Exporter = new ConsoleComparisonExporter();
+            CompareDisksRequest request = CreateRequest(arguments);
+            mediator.Send(request);
         }
 
-        public void Execute()
+        private static CompareDisksRequest CreateRequest(Arguments arguments)
         {
-            ContainerDiskExport containerDiskExport1 = new ContainerDiskExport();
-            DiskReader diskReader1 = new DiskReader(Path1, containerDiskExport1);
-            diskReader1.Starting += HandleDiskReaderStarting;
-            diskReader1.Read();
+            string path1 = arguments[0];
+            string path2 = arguments[1];
 
-            ContainerDiskExport containerDiskExport2 = new ContainerDiskExport();
-            DiskReader diskReader2 = new DiskReader(Path2, containerDiskExport2);
-            diskReader2.Starting += HandleDiskReaderStarting;
-            diskReader2.Read();
-
-            Compare(containerDiskExport1.Container, containerDiskExport2.Container);
-        }
-
-        private void HandleDiskReaderStarting(object sender, DiskReaderStartingEventArgs e)
-        {
-            Console.WriteLine("Computed black list:");
-
-            foreach (string blackListItem in e.BlackList)
-                Console.WriteLine("- " + blackListItem);
-        }
-
-        private void Compare(HContainer hContainer1, HContainer hContainer2)
-        {
-            ContainerComparer comparer = new ContainerComparer(hContainer1, hContainer2);
-            comparer.Compare();
-
-            Exporter?.Export(comparer);
+            return new CompareDisksRequest
+            {
+                Path1 = path1,
+                Path2 = path2,
+                Exporter = new ConsoleComparisonExporter()
+            };
         }
     }
 }

@@ -14,35 +14,40 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using DirectoryCompare.CliFramework;
+using DustInTheWind.DirectoryCompare.Application.Duplicates;
+using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
+using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
-
     internal class FindDuplicatesCommand : ICommand
     {
-        public ProjectLogger Logger { get; set; }
-        public string PathLeft { get; set; }
-        public string PathRight { get; set; }
-        public ConsoleDuplicatesExporter Exporter { get; set; }
-        public bool CheckFilesExist { get; set; }
+        private readonly IMediator mediator;
 
-        public void DisplayInfo()
+        public string Description => string.Empty;
+
+        public FindDuplicatesCommand(IMediator mediator)
         {
+            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        public void Initialize(Arguments arguments)
+        public void Execute(Arguments arguments)
         {
-            Logger = new ProjectLogger();
+            FindDuplicatesRequest request = CreateRequest(arguments);
+            mediator.Send(request);
+        }
 
+        private static FindDuplicatesRequest CreateRequest(Arguments arguments)
+        {
             if (arguments.Count == 0)
                 throw new Exception("Invalid command parameters.");
 
-            PathLeft = arguments[0];
+            string pathLeft = arguments[0];
+            string pathRight;
+            bool checkFilesExist;
 
             if (arguments.Count > 1)
             {
@@ -50,51 +55,28 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
 
                 if (isFileRight)
                 {
-                    PathRight = arguments[1];
-
-                    if (arguments.Count > 2)
-                        CheckFilesExist = bool.Parse(arguments[2]);
+                    pathRight = arguments[1];
+                    checkFilesExist = arguments.Count > 2 && bool.Parse(arguments[2]);
                 }
                 else
                 {
-                    PathRight = null;
-                    CheckFilesExist = bool.Parse(arguments[1]);
+                    pathRight = null;
+                    checkFilesExist = bool.Parse(arguments[1]);
                 }
             }
             else
             {
-                PathRight = null;
-                CheckFilesExist = false;
+                pathRight = null;
+                checkFilesExist = false;
             }
 
-            Exporter = new ConsoleDuplicatesExporter();
-        }
-
-        public void Execute()
-        {
-            DuplicatesProvider duplicatesProvider = new DuplicatesProvider
+            return new FindDuplicatesRequest
             {
-                PathLeft = PathLeft,
-                PathRight = PathRight,
-                CheckFilesExist = CheckFilesExist
+                PathLeft = pathLeft,
+                PathRight = pathRight,
+                Exporter = new ConsoleDuplicatesExporter(),
+                CheckFilesExist = checkFilesExist
             };
-
-            IEnumerable<Duplicate> duplicates = duplicatesProvider.Find();
-
-            int duplicateCount = 0;
-            long totalSize = 0;
-
-            foreach (Duplicate duplicate in duplicates)
-            {
-                if (duplicate.AreEqual)
-                {
-                    duplicateCount++;
-                    totalSize += duplicate.Size;
-                    Exporter.WriteDuplicate(duplicate.FullPath1, duplicate.FullPath2, duplicate.Size);
-                }
-            }
-
-            Exporter.WriteSummary(duplicateCount, totalSize);
         }
     }
 }
