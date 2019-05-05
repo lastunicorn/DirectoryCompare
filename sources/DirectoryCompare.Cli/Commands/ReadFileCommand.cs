@@ -35,7 +35,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
         public void Execute(Arguments arguments)
         {
             ReadFileRequest request = CreateRequest(arguments);
-            mediator.Send(request);
+            mediator.Send(request).Wait();
         }
 
         private static ReadFileRequest CreateRequest(Arguments arguments)

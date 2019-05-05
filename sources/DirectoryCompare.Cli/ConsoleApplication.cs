@@ -14,10 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using DirectoryCompare.CliFramework;
 using DustInTheWind.DirectoryCompare.Application;
 using DustInTheWind.DirectoryCompare.Application.Disk;
 using DustInTheWind.DirectoryCompare.Cli.Commands;
+using FluentValidation;
 using MediatR;
 using Ninject;
 using Ninject.Extensions.Conventions;
@@ -47,9 +49,10 @@ namespace DustInTheWind.DirectoryCompare.Cli
             dependencyContainer.Components.Add<IBindingResolver, ContravariantBindingResolver>();
             dependencyContainer.Bind(x => x.FromAssemblyContaining<IMediator>().SelectAllClasses().BindDefaultInterface());
             dependencyContainer.Bind(x => x.FromAssemblyContaining<ReadDiskRequest>().SelectAllClasses().InheritedFrom(typeof(IRequestHandler<,>)).BindAllInterfaces());
+            dependencyContainer.Bind(x => x.FromAssemblyContaining<ReadDiskRequestValidator>().SelectAllClasses().InheritedFrom(typeof(AbstractValidator<>)).BindDefaultInterfaces());
 
             dependencyContainer.Bind(typeof(IPipelineBehavior<,>)).To(typeof(RequestPerformanceBehaviour<,>));
-            //dependencyContainer.Bind(typeof(IPipelineBehavior<,>)).To(typeof(RequestValidationBehavior<,>));
+            dependencyContainer.Bind(typeof(IPipelineBehavior<,>)).To(typeof(RequestValidationBehavior<,>));
 
             dependencyContainer.Bind<ServiceFactory>().ToMethod(x => t => x.Kernel.TryGet(t));
 
@@ -96,6 +99,12 @@ namespace DustInTheWind.DirectoryCompare.Cli
             logger.Close();
 
             base.OnExit();
+        }
+
+        protected override void OnError(Exception ex)
+        {
+            IProjectLogger logger = dependencyContainer.Get<IProjectLogger>();
+            logger.Error(ex.ToString());
         }
     }
 }

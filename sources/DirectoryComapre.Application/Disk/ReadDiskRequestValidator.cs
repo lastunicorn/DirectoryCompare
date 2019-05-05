@@ -20,8 +20,10 @@ namespace DustInTheWind.DirectoryCompare.Application.Disk
 {
     public class ReadDiskRequestValidator : AbstractValidator<ReadDiskRequest>
     {
-        public string SourcePath { get; set; }
-        public string DestinationFilePath { get; set; }
-        public string BlackListFilePath { get; set; }
+        public ReadDiskRequestValidator()
+        {
+            RuleFor(x => x.SourcePath).Empty();
+            RuleFor(x => x.DestinationFilePath).NotEmpty();
+        }
     }
 }

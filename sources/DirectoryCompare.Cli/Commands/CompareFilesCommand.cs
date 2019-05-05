@@ -37,7 +37,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
         public void Execute(Arguments arguments)
         {
             CompareDisksRequest request = CreateRequest(arguments);
-            mediator.Send(request);
+            mediator.Send(request).Wait();
         }
 
         private static CompareDisksRequest CreateRequest(Arguments arguments)
