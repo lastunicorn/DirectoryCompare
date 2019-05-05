@@ -22,7 +22,7 @@ namespace DustInTheWind.DirectoryCompare.Application.Disk
     {
         public ReadDiskRequestValidator()
         {
-            RuleFor(x => x.SourcePath).Empty();
+            RuleFor(x => x.SourcePath).NotEmpty();
             RuleFor(x => x.DestinationFilePath).NotEmpty();
         }
     }
