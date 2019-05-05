@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.Cli.Tests"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleFramework", "ConsoleFramework\ConsoleFramework.csproj", "{6727DB3A-F9C4-4057-BA2A-228AC6EE4676}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.JsonHashesFile", "DirectoryCompare.JsonHashesFile\DirectoryCompare.JsonHashesFile.csproj", "{DEF896B7-F822-4414-A2DF-1C37A50490ED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{6727DB3A-F9C4-4057-BA2A-228AC6EE4676}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6727DB3A-F9C4-4057-BA2A-228AC6EE4676}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6727DB3A-F9C4-4057-BA2A-228AC6EE4676}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEF896B7-F822-4414-A2DF-1C37A50490ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEF896B7-F822-4414-A2DF-1C37A50490ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEF896B7-F822-4414-A2DF-1C37A50490ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEF896B7-F822-4414-A2DF-1C37A50490ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

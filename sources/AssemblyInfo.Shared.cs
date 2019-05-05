@@ -1,5 +1,5 @@
 ﻿// DirectoryCompare
-// Copyright (C) 2017 Dust in the Wind
+// Copyright (C) 2017-2019 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ using System.Reflection;
 
 [assembly: AssemblyCompany("Dust in the Wind")]
 [assembly: AssemblyProduct("Directory Compare")]
-[assembly: AssemblyCopyright("Copyright © Dust in the Wind 2018")]
+[assembly: AssemblyCopyright("Copyright © Dust in the Wind 2017-2019")]
 [assembly: AssemblyTrademark("")]
 
 // Version information for an assembly consists of the following four values:

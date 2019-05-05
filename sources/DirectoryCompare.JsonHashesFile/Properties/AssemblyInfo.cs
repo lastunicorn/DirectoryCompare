@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DirectoryCompare.Cli.Tests")]
+[assembly: AssemblyTitle("DirectoryCompare.JsonHashesFile")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCulture("")]
@@ -31,4 +31,4 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("36d9a449-2750-43a3-8926-93f66e0b7a04")]
+[assembly: Guid("def896b7-f822-4414-a2df-1c37a50490ed")]

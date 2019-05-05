@@ -1,5 +1,5 @@
 ﻿// DirectoryCompare
-// Copyright (C) 2017 Dust in the Wind
+// Copyright (C) 2017-2019 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,8 +16,6 @@
 
 using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
 using DustInTheWind.DirectoryCompare.Serialization;
-using Newtonsoft.Json;
-using System.IO;
 using DirectoryCompare.CliFramework;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
@@ -49,11 +47,11 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
 
             // todo: must find a way to dynamically detect the serialization type.
 
-            //XContainer xContainer1 = serializer.ReadFromFile(Path1);
+            XContainer xContainer1 = serializer.ReadFromFile(Path1);
             XContainer xContainer2 = serializer.ReadFromFile(Path2);
 
-            string json1 = File.ReadAllText(Path1);
-            XContainer xContainer1 = JsonConvert.DeserializeObject<XContainer>(json1);
+            //string json1 = File.ReadAllText(Path1);
+            //XContainer xContainer1 = JsonConvert.DeserializeObject<XContainer>(json1);
 
             //string json2 = File.ReadAllText(Path2);
             //Container container2 = JsonConvert.DeserializeObject<Container>(json2);
