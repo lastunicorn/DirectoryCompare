@@ -32,12 +32,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DustInTheWind.ConsoleTools, Version=0.2.0.37841, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ConsoleTools.0.3.0\lib\net461\DustInTheWind.ConsoleTools.dll</HintPath>
+    <Reference Include="DustInTheWind.ConsoleTools, Version=0.5.2.40177, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ConsoleTools.0.5.2\lib\net45\DustInTheWind.ConsoleTools.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Build.Framework" />
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -76,9 +75,17 @@
       <Project>{6727db3a-f9c4-4057-ba2a-228ac6ee4676}</Project>
       <Name>ConsoleFramework</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DirectoryCompare\DirectoryCompare.csproj">
-      <Project>{27EAA312-EC92-41EA-B854-00B5C9F2FC7B}</Project>
-      <Name>DirectoryCompare</Name>
+    <ProjectReference Include="..\DirectoryCompare.Common\DirectoryCompare.Common.csproj">
+      <Project>{05e21912-332c-4c16-a590-2bbf65a1fb7c}</Project>
+      <Name>DirectoryCompare.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj">
+      <Project>{27eaa312-ec92-41ea-b854-00b5c9f2fc7b}</Project>
+      <Name>DirectoryCompare.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DirectoryCompare.JsonHashesFile\DirectoryCompare.JsonHashesFile.csproj">
+      <Project>{def896b7-f822-4414-a2df-1c37a50490ed}</Project>
+      <Name>DirectoryCompare.JsonHashesFile</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -22,27 +22,27 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
     [TestFixture]
     public class IdenticalContainersWithSameFileTwiceTests
     {
-        private XContainer container1;
-        private XContainer container2;
+        private HContainer container1;
+        private HContainer container2;
         private ContainerComparer containerComparer;
 
         [SetUp]
         public void SetUp()
         {
-            container1 = new XContainer
+            container1 = new HContainer
             {
-                Files = new List<XFile>
+                Files = new List<HFile>
                 {
-                    new XFile { Name = "File1.txt", Hash = new byte[] { 1, 2, 3 } },
-                    new XFile { Name = "File2.txt", Hash = new byte[] { 1, 2, 3 } }
+                    new HFile { Name = "File1.txt", Hash = new byte[] { 1, 2, 3 } },
+                    new HFile { Name = "File2.txt", Hash = new byte[] { 1, 2, 3 } }
                 }
             };
-            container2 = new XContainer
+            container2 = new HContainer
             {
-                Files = new List<XFile>
+                Files = new List<HFile>
                 {
-                    new XFile { Name = "File1.txt", Hash = new byte[] { 1, 2, 3 } },
-                    new XFile { Name = "File2.txt", Hash = new byte[] { 1, 2, 3 } }
+                    new HFile { Name = "File1.txt", Hash = new byte[] { 1, 2, 3 } },
+                    new HFile { Name = "File2.txt", Hash = new byte[] { 1, 2, 3 } }
                 }
             };
             containerComparer = new ContainerComparer(container1, container2);
@@ -82,14 +82,14 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
                 new ItemComparison
                 {
                     RootPath = "/",
-                    Item1 = new XFile { Name = "File1.txt", Hash = new byte[] { 1, 2, 3 } },
-                    Item2 = new XFile { Name = "File2.txt", Hash = new byte[] { 1, 2, 3 } }
+                    Item1 = new HFile { Name = "File1.txt", Hash = new byte[] { 1, 2, 3 } },
+                    Item2 = new HFile { Name = "File2.txt", Hash = new byte[] { 1, 2, 3 } }
                 },
                 new ItemComparison
                 {
                     RootPath = "/",
-                    Item1 = new XFile { Name = "File2.txt", Hash = new byte[] { 1, 2, 3 } },
-                    Item2 = new XFile { Name = "File1.txt", Hash = new byte[] { 1, 2, 3 } }
+                    Item1 = new HFile { Name = "File2.txt", Hash = new byte[] { 1, 2, 3 } },
+                    Item2 = new HFile { Name = "File1.txt", Hash = new byte[] { 1, 2, 3 } }
                 }
             }));
         }

@@ -22,11 +22,11 @@ namespace DustInTheWind.DirectoryCompare.Cli
 {
     internal class Duplicate
     {
-        private readonly Tuple<string, XFile> tuple1;
-        private readonly Tuple<string, XFile> tuple2;
+        private readonly Tuple<string, HFile> tuple1;
+        private readonly Tuple<string, HFile> tuple2;
         private readonly bool checkFilesExist;
-        private readonly XContainer xContainer1;
-        private readonly XContainer xContainer2;
+        private readonly HContainer hContainer1;
+        private readonly HContainer hContainer2;
         private bool? areEqual;
 
         public bool AreEqual
@@ -46,13 +46,13 @@ namespace DustInTheWind.DirectoryCompare.Cli
         public bool File1Exists { get; private set; }
         public bool File2Exists { get; private set; }
 
-        public Duplicate(Tuple<string, XFile> tuple1, Tuple<string, XFile> tuple2, bool checkFilesExist, XContainer xContainer1, XContainer xContainer2)
+        public Duplicate(Tuple<string, HFile> tuple1, Tuple<string, HFile> tuple2, bool checkFilesExist, HContainer hContainer1, HContainer hContainer2)
         {
             this.tuple1 = tuple1 ?? throw new ArgumentNullException(nameof(tuple1));
             this.tuple2 = tuple2 ?? throw new ArgumentNullException(nameof(tuple2));
             this.checkFilesExist = checkFilesExist;
-            this.xContainer1 = xContainer1 ?? throw new ArgumentNullException(nameof(xContainer1));
-            this.xContainer2 = xContainer2 ?? throw new ArgumentNullException(nameof(xContainer2));
+            this.hContainer1 = hContainer1 ?? throw new ArgumentNullException(nameof(hContainer1));
+            this.hContainer2 = hContainer2 ?? throw new ArgumentNullException(nameof(hContainer2));
         }
 
         private void CalculateEquality()
@@ -66,8 +66,8 @@ namespace DustInTheWind.DirectoryCompare.Cli
                 string path1 = tuple1.Item1;
                 string path2 = tuple2.Item1;
 
-                FullPath1 = Path.Combine(xContainer1.OriginalPath, path1.Substring(1));
-                FullPath2 = Path.Combine(xContainer2.OriginalPath, path2.Substring(1));
+                FullPath1 = Path.Combine(hContainer1.OriginalPath, path1.Substring(1));
+                FullPath2 = Path.Combine(hContainer2.OriginalPath, path2.Substring(1));
 
                 File1Exists = File.Exists(FullPath1);
                 File2Exists = File.Exists(FullPath2);

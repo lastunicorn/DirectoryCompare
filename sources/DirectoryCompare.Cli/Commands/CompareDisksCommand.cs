@@ -66,9 +66,9 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
                 Console.WriteLine("- " + blackListItem);
         }
 
-        private void Compare(XContainer xContainer1, XContainer xContainer2)
+        private void Compare(HContainer hContainer1, HContainer hContainer2)
         {
-            ContainerComparer comparer = new ContainerComparer(xContainer1, xContainer2);
+            ContainerComparer comparer = new ContainerComparer(hContainer1, hContainer2);
             comparer.Compare();
 
             Exporter?.Export(comparer);

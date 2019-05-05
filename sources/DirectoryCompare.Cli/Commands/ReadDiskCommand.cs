@@ -19,8 +19,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using DirectoryCompare.CliFramework;
-using DustInTheWind.DirectoryCompare.JsonExport;
-using DustInTheWind.DirectoryCompare.Serialization;
+using DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport;
 using DustInTheWind.DirectoryCompare.Utils;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands

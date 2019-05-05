@@ -31,17 +31,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DustInTheWind.ConsoleTools, Version=0.2.0.37841, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ConsoleTools.0.3.0\lib\net461\DustInTheWind.ConsoleTools.dll</HintPath>
+    <Reference Include="DustInTheWind.ConsoleTools, Version=0.5.2.40177, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ConsoleTools.0.5.2\lib\net45\DustInTheWind.ConsoleTools.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\AssemblyInfo.Shared.cs">

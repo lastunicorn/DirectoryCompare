@@ -27,21 +27,21 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         [Test]
         public void OnlyInContainer1_is_empty_if_both_containers_contain_one_identical_file_in_same_dir()
         {
-            XContainer container1 = new XContainer();
-            XDirectory xDirectory1 = new XDirectory("Dir1");
-            xDirectory1.Files = new List<XFile>
+            HContainer container1 = new HContainer();
+            HDirectory hDirectory1 = new HDirectory("Dir1");
+            hDirectory1.Files = new List<HFile>
             {
-                new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
+                new HFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
             };
-            container1.Directories = new List<XDirectory> { xDirectory1 };
+            container1.Directories = new List<HDirectory> { hDirectory1 };
 
-            XContainer container2 = new XContainer();
-            XDirectory xDirectory2 = new XDirectory("Dir1");
-            xDirectory2.Files = new List<XFile>
+            HContainer container2 = new HContainer();
+            HDirectory hDirectory2 = new HDirectory("Dir1");
+            hDirectory2.Files = new List<HFile>
             {
-                new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
+                new HFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
             };
-            container2.Directories = new List<XDirectory> { xDirectory2 };
+            container2.Directories = new List<HDirectory> { hDirectory2 };
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
@@ -52,17 +52,17 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         [Test]
         public void OnlyInContainer1_contains_the_name_of_the_file_if_only_container1_has_one_file_in_dir()
         {
-            XContainer container1 = new XContainer();
-            XDirectory xDirectory1 = new XDirectory("Dir1");
-            xDirectory1.Files = new List<XFile>
+            HContainer container1 = new HContainer();
+            HDirectory hDirectory1 = new HDirectory("Dir1");
+            hDirectory1.Files = new List<HFile>
             {
-                new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
+                new HFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
             };
-            container1.Directories = new List<XDirectory> { xDirectory1 };
+            container1.Directories = new List<HDirectory> { hDirectory1 };
 
-            XContainer container2 = new XContainer();
-            XDirectory xDirectory2 = new XDirectory("Dir1");
-            container2.Directories = new List<XDirectory> { xDirectory2 };
+            HContainer container2 = new HContainer();
+            HDirectory hDirectory2 = new HDirectory("Dir1");
+            container2.Directories = new List<HDirectory> { hDirectory2 };
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
@@ -73,17 +73,17 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         [Test]
         public void OnlyInContainer1_is_empty_if_only_container2_has_one_file_in_dir()
         {
-            XContainer container1 = new XContainer();
-            XDirectory xDirectory1 = new XDirectory("Dir1");
-            container1.Directories = new List<XDirectory> { xDirectory1 };
+            HContainer container1 = new HContainer();
+            HDirectory hDirectory1 = new HDirectory("Dir1");
+            container1.Directories = new List<HDirectory> { hDirectory1 };
 
-            XContainer container2 = new XContainer();
-            XDirectory xDirectory2 = new XDirectory("Dir1");
-            xDirectory2.Files = new List<XFile>
+            HContainer container2 = new HContainer();
+            HDirectory hDirectory2 = new HDirectory("Dir1");
+            hDirectory2.Files = new List<HFile>
             {
-                new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
+                new HFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
             };
-            container2.Directories = new List<XDirectory> { xDirectory2 };
+            container2.Directories = new List<HDirectory> { hDirectory2 };
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
@@ -98,21 +98,21 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         [Test]
         public void OnlyInContainer2_is_empty_if_both_containers_contain_one_identical_file_in_same_dir()
         {
-            XContainer container1 = new XContainer();
-            XDirectory xDirectory1 = new XDirectory("Dir1");
-            xDirectory1.Files = new List<XFile>
+            HContainer container1 = new HContainer();
+            HDirectory hDirectory1 = new HDirectory("Dir1");
+            hDirectory1.Files = new List<HFile>
             {
-                new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
+                new HFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
             };
-            container1.Directories = new List<XDirectory> { xDirectory1 };
+            container1.Directories = new List<HDirectory> { hDirectory1 };
 
-            XContainer container2 = new XContainer();
-            XDirectory xDirectory2 = new XDirectory("Dir1");
-            xDirectory2.Files = new List<XFile>
+            HContainer container2 = new HContainer();
+            HDirectory hDirectory2 = new HDirectory("Dir1");
+            hDirectory2.Files = new List<HFile>
             {
-                new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
+                new HFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
             };
-            container2.Directories = new List<XDirectory> { xDirectory2 };
+            container2.Directories = new List<HDirectory> { hDirectory2 };
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
@@ -123,17 +123,17 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         [Test]
         public void OnlyInContainer2_contains_the_name_of_the_file_if_only_container2_has_one_file_in_dir()
         {
-            XContainer container1 = new XContainer();
-            XDirectory xDirectory1 = new XDirectory("Dir1");
-            container1.Directories = new List<XDirectory> { xDirectory1 };
+            HContainer container1 = new HContainer();
+            HDirectory hDirectory1 = new HDirectory("Dir1");
+            container1.Directories = new List<HDirectory> { hDirectory1 };
 
-            XContainer container2 = new XContainer();
-            XDirectory xDirectory2 = new XDirectory("Dir1");
-            xDirectory2.Files = new List<XFile>
+            HContainer container2 = new HContainer();
+            HDirectory hDirectory2 = new HDirectory("Dir1");
+            hDirectory2.Files = new List<HFile>
             {
-                new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
+                new HFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
             };
-            container2.Directories = new List<XDirectory> { xDirectory2 };
+            container2.Directories = new List<HDirectory> { hDirectory2 };
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
@@ -144,17 +144,17 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         [Test]
         public void OnlyInContainer2_is_empty_if_only_container1_has_one_file_in_dir()
         {
-            XContainer container1 = new XContainer();
-            XDirectory xDirectory1 = new XDirectory("Dir1");
-            xDirectory1.Files = new List<XFile>
+            HContainer container1 = new HContainer();
+            HDirectory hDirectory1 = new HDirectory("Dir1");
+            hDirectory1.Files = new List<HFile>
             {
-                new XFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
+                new HFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
             };
-            container1.Directories = new List<XDirectory> { xDirectory1 };
+            container1.Directories = new List<HDirectory> { hDirectory1 };
 
-            XContainer container2 = new XContainer();
-            XDirectory xDirectory2 = new XDirectory("Dir1");
-            container2.Directories = new List<XDirectory> { xDirectory2 };
+            HContainer container2 = new HContainer();
+            HDirectory hDirectory2 = new HDirectory("Dir1");
+            container2.Directories = new List<HDirectory> { hDirectory2 };
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();

@@ -51,9 +51,9 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
             diskReader1.Read();
 
             string json2 = File.ReadAllText(FilePath);
-            XContainer xContainer2 = JsonConvert.DeserializeObject<XContainer>(json2);
+            HContainer hContainer2 = JsonConvert.DeserializeObject<HContainer>(json2);
 
-            Compare(containerDiskExport.Container, xContainer2);
+            Compare(containerDiskExport.Container, hContainer2);
         }
 
         private void HandleDiskReaderStarting(object sender, DiskReaderStartingEventArgs e)
@@ -64,7 +64,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
                 Console.WriteLine("- " + blackListItem);
         }
 
-        private void Compare(XContainer container1, XContainer container2)
+        private void Compare(HContainer container1, HContainer container2)
         {
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();

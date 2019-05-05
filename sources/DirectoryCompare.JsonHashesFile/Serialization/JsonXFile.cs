@@ -15,35 +15,37 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using Newtonsoft.Json;
 
-namespace DustInTheWind.DirectoryCompare.Cli
+namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
 {
-    internal class ContainerView
+    internal class JsonXFile
     {
-        private readonly HContainer hContainer;
+        [JsonProperty("n")]
+        public string Name { get; set; }
 
-        public ContainerView(HContainer hContainer)
+        [JsonProperty("h")]
+        public byte[] Hash { get; set; }
+
+        public JsonXFile()
         {
-            this.hContainer = hContainer;
         }
 
-        public void Display()
+        public JsonXFile(HFile xFile)
         {
-            DisplayDirectory(hContainer, 0);
+            if (xFile == null) throw new ArgumentNullException(nameof(xFile));
+
+            Name = xFile.Name;
+            Hash = xFile.Hash;
         }
 
-        private void DisplayDirectory(HDirectory hDirectory, int index)
+        public HFile ToHFile()
         {
-            string indent = new string(' ', index);
-
-            foreach (HDirectory xSubdirectory in hDirectory.Directories)
+            return new HFile
             {
-                Console.WriteLine(indent + xSubdirectory.Name);
-                DisplayDirectory(xSubdirectory, index + 1);
-            }
-
-            foreach (HFile xFile in hDirectory.Files)
-                Console.WriteLine(indent + xFile.Name);
+                Name = Name,
+                Hash = Hash
+            };
         }
     }
 }

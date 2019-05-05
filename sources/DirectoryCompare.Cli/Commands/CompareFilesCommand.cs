@@ -15,8 +15,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
-using DustInTheWind.DirectoryCompare.Serialization;
 using DirectoryCompare.CliFramework;
+using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
@@ -47,19 +47,19 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
 
             // todo: must find a way to dynamically detect the serialization type.
 
-            XContainer xContainer1 = serializer.ReadFromFile(Path1);
-            XContainer xContainer2 = serializer.ReadFromFile(Path2);
+            HContainer hContainer1 = serializer.ReadFromFile(Path1);
+            HContainer hContainer2 = serializer.ReadFromFile(Path2);
 
             //string json1 = File.ReadAllText(Path1);
-            //XContainer xContainer1 = JsonConvert.DeserializeObject<XContainer>(json1);
+            //HContainer hContainer1 = JsonConvert.DeserializeObject<HContainer>(json1);
 
             //string json2 = File.ReadAllText(Path2);
             //Container container2 = JsonConvert.DeserializeObject<Container>(json2);
 
-            Compare(xContainer1, xContainer2);
+            Compare(hContainer1, hContainer2);
         }
 
-        private void Compare(XContainer container1, XContainer container2)
+        private void Compare(HContainer container1, HContainer container2)
         {
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
