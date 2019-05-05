@@ -14,61 +14,56 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using DustInTheWind.DirectoryCompare.Common.Utils;
 using DustInTheWind.DirectoryCompare.DiskAnalysing;
 using DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport;
 using MediatR;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 
 namespace DustInTheWind.DirectoryCompare.Application.Disk
 {
     public class ReadDiskRequestHandler : RequestHandler<ReadDiskRequest>
     {
+        private readonly IProjectLogger logger;
         private PathCollection blackList = new PathCollection();
 
-        public IProjectLogger Logger { get; set; }
+        public ReadDiskRequestHandler(IProjectLogger logger)
+        {
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
 
         protected override void Handle(ReadDiskRequest request)
         {
-            Logger?.Open();
-
             blackList = ReadBlackList(request.BlackListFilePath);
 
-            try
-            {
-                if (request.SourcePath == null)
-                    throw new Exception("SourcePath was not provided.");
+            if (request.SourcePath == null)
+                throw new Exception("SourcePath was not provided.");
 
-                if (!Directory.Exists(request.SourcePath))
-                    throw new Exception("The SourcePath does not exist.");
+            if (!Directory.Exists(request.SourcePath))
+                throw new Exception("The SourcePath does not exist.");
 
-                Logger?.Info("Scanning path: {0}", request.SourcePath);
-                Logger?.Info("Results file: {0}", request.DestinationFilePath);
-                Logger?.Info("Black List:");
+            logger.Info("Scanning path: {0}", request.SourcePath);
+            logger.Info("Results file: {0}", request.DestinationFilePath);
+            logger.Info("Black List:");
 
-                if (blackList != null)
-                    foreach (string blackListItem in blackList)
-                        Logger?.Info(blackListItem);
+            if (blackList != null)
+                foreach (string blackListItem in blackList)
+                    logger.Info(blackListItem);
 
-                JsonDiskExport jsonDiskExport = new JsonDiskExport(new StreamWriter(request.DestinationFilePath));
-                DiskReader diskReader = new DiskReader(request.SourcePath, jsonDiskExport);
-                diskReader.Starting += HandleDiskReaderStarting;
-                diskReader.BlackList.AddRange(blackList);
-                diskReader.ErrorEncountered += HandleDiskReaderErrorEncountered;
+            JsonDiskExport jsonDiskExport = new JsonDiskExport(new StreamWriter(request.DestinationFilePath));
+            DiskReader diskReader = new DiskReader(request.SourcePath, jsonDiskExport);
+            diskReader.Starting += HandleDiskReaderStarting;
+            diskReader.BlackList.AddRange(blackList);
+            diskReader.ErrorEncountered += HandleDiskReaderErrorEncountered;
 
-                Stopwatch stopwatch = Stopwatch.StartNew();
-                diskReader.Read();
-                stopwatch.Stop();
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            diskReader.Read();
+            stopwatch.Stop();
 
-                Logger?.Info("Finished scanning path {0}", stopwatch.Elapsed);
-            }
-            finally
-            {
-                Logger?.Close();
-            }
+            logger.Info("Finished scanning path {0}", stopwatch.Elapsed);
         }
 
         private static PathCollection ReadBlackList(string filePath)
@@ -95,7 +90,7 @@ namespace DustInTheWind.DirectoryCompare.Application.Disk
 
         private void HandleDiskReaderErrorEncountered(object sender, ErrorEncounteredEventArgs e)
         {
-            Logger?.Error("Error while reading path '{0}': {1}", e.Path, e.Exception);
+            logger.Error("Error while reading path '{0}': {1}", e.Path, e.Exception);
         }
     }
 }

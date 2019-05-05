@@ -20,10 +20,11 @@ using DustInTheWind.ConsoleTools;
 
 namespace DustInTheWind.DirectoryCompare.Cli
 {
-    internal class ProjectLogger : IProjectLogger, IDisposable
+    internal sealed class ProjectLogger : IProjectLogger, IDisposable
     {
         private readonly string basePath;
         private StreamWriter streamWriter;
+        private bool isDisposed;
 
         public ProjectLogger()
         {
@@ -32,63 +33,97 @@ namespace DustInTheWind.DirectoryCompare.Cli
 
         public void Open()
         {
+            if (isDisposed)
+                throw new ObjectDisposedException(nameof(ProjectLogger));
+
             string logFilePath = Path.Combine(basePath, string.Format("{0:yyyy MM dd HHmmss}.log", DateTime.UtcNow));
             streamWriter = new StreamWriter(logFilePath);
         }
 
         public void Close()
         {
-            streamWriter.Close();
+            if (isDisposed)
+                throw new ObjectDisposedException(nameof(ProjectLogger));
+
+            streamWriter?.Flush();
+            streamWriter?.Close();
+            streamWriter = null;
         }
 
         public void Info(string format)
         {
+            if (isDisposed)
+                throw new ObjectDisposedException(nameof(ProjectLogger));
+
             Info(format, new object[0]);
         }
 
         public void Info(string format, params object[] arg)
         {
+            if (isDisposed)
+                throw new ObjectDisposedException(nameof(ProjectLogger));
+
             string text = arg == null ? format : string.Format(format, arg);
             text = string.Format("[{0:yyyy-MM-dd HH:mm:ss.fff}] INFO {1}", DateTime.Now, text);
 
-            streamWriter.WriteLine(text);
+            streamWriter?.WriteLine(text);
 
             CustomConsole.WriteLine(text);
         }
 
         public void Warn(string format)
         {
+            if (isDisposed)
+                throw new ObjectDisposedException(nameof(ProjectLogger));
+
             Warn(format, new object[0]);
         }
 
         public void Warn(string format, params object[] arg)
         {
+            if (isDisposed)
+                throw new ObjectDisposedException(nameof(ProjectLogger));
+
             string text = arg == null ? format : string.Format(format, arg);
             text = string.Format("[{0:yyyy-MM-dd HH:mm:ss.fff}] WARN {1}", DateTime.Now, text);
 
-            streamWriter.WriteLine(text);
+            streamWriter?.WriteLine(text);
 
             CustomConsole.WriteLine(text);
         }
 
         public void Error(string format)
         {
+            if (isDisposed)
+                throw new ObjectDisposedException(nameof(ProjectLogger));
+
             Error(format, new object[0]);
         }
 
         public void Error(string format, params object[] arg)
         {
+            if (isDisposed)
+                throw new ObjectDisposedException(nameof(ProjectLogger));
+
             string text = arg == null ? format : string.Format(format, arg);
             text = string.Format("[{0:yyyy-MM-dd HH:mm:ss.fff}] ERROR {1}", DateTime.Now, text);
 
-            streamWriter.WriteLine(text);
+            streamWriter?.WriteLine(text);
 
             CustomConsole.WriteLineError(text);
         }
 
         public void Dispose()
         {
+            if (isDisposed)
+                return;
+
+            streamWriter?.Flush();
+            streamWriter?.Close();
             streamWriter?.Dispose();
+            streamWriter = null;
+
+            isDisposed = true;
         }
     }
 }

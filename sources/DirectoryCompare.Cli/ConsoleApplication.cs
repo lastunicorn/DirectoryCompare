@@ -27,28 +27,38 @@ namespace DustInTheWind.DirectoryCompare.Cli
 {
     internal class ConsoleApplication : ConsoleApplicationBase
     {
+        private readonly StandardKernel dependencyContainer;
         private readonly IMediator mediator;
 
         public ConsoleApplication()
         {
+            dependencyContainer = BuildDependencyContainer();
+            ConfigureDependencyContainer();
             mediator = BuildMediator();
         }
 
-        private static IMediator BuildMediator()
+        private static StandardKernel BuildDependencyContainer()
         {
-            StandardKernel kernel = new StandardKernel();
-            kernel.Components.Add<IBindingResolver, ContravariantBindingResolver>();
-            kernel.Bind(x => x.FromAssemblyContaining<IMediator>().SelectAllClasses().BindDefaultInterface());
-            kernel.Bind(x => x.FromAssemblyContaining<ReadDiskRequest>().SelectAllClasses().InheritedFrom(typeof(IRequestHandler<,>)).BindAllInterfaces());
+            return new StandardKernel();
+        }
 
-            kernel.Bind<IProjectLogger>().To<ProjectLogger>();
+        private IMediator BuildMediator()
+        {
+            dependencyContainer.Components.Add<IBindingResolver, ContravariantBindingResolver>();
+            dependencyContainer.Bind(x => x.FromAssemblyContaining<IMediator>().SelectAllClasses().BindDefaultInterface());
+            dependencyContainer.Bind(x => x.FromAssemblyContaining<ReadDiskRequest>().SelectAllClasses().InheritedFrom(typeof(IRequestHandler<,>)).BindAllInterfaces());
 
-            kernel.Bind(typeof(IPipelineBehavior<,>)).To(typeof(RequestPerformanceBehaviour<,>));
-            //kernel.Bind(typeof(IPipelineBehavior<,>)).To(typeof(RequestValidationBehavior<,>));
+            dependencyContainer.Bind(typeof(IPipelineBehavior<,>)).To(typeof(RequestPerformanceBehaviour<,>));
+            //dependencyContainer.Bind(typeof(IPipelineBehavior<,>)).To(typeof(RequestValidationBehavior<,>));
 
-            kernel.Bind<ServiceFactory>().ToMethod(x => t => x.Kernel.TryGet(t));
+            dependencyContainer.Bind<ServiceFactory>().ToMethod(x => t => x.Kernel.TryGet(t));
 
-            return kernel.Get<IMediator>();
+            return dependencyContainer.Get<IMediator>();
+        }
+
+        private void ConfigureDependencyContainer()
+        {
+            dependencyContainer.Bind<IProjectLogger>().To<ProjectLogger>().InSingletonScope();
         }
 
         protected override CommandCollection CreateCommands()
@@ -70,6 +80,22 @@ namespace DustInTheWind.DirectoryCompare.Cli
                 { "find-duplicates", new FindDuplicatesCommand(mediator) },
                 { "remove-duplicates", new RemoveDuplicatesCommand(mediator) }
             };
+        }
+
+        protected override void OnStart()
+        {
+            IProjectLogger logger = dependencyContainer.Get<IProjectLogger>();
+            logger.Open();
+
+            base.OnStart();
+        }
+
+        protected override void OnExit()
+        {
+            IProjectLogger logger = dependencyContainer.Get<IProjectLogger>();
+            logger.Close();
+
+            base.OnExit();
         }
     }
 }
