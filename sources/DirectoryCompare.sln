@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.Tests", "D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.Domain", "DirectoryCompare.Domain\DirectoryCompare.Domain.csproj", "{27EAA312-EC92-41EA-B854-00B5C9F2FC7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.Cli.Tests", "DirectoryCompare.Cli.Tests\DirectoryCompare.Cli.Tests.csproj", "{36D9A449-2750-43A3-8926-93F66E0B7A04}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleFramework", "ConsoleFramework\ConsoleFramework.csproj", "{6727DB3A-F9C4-4057-BA2A-228AC6EE4676}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.JsonHashesFile", "DirectoryCompare.JsonHashesFile\DirectoryCompare.JsonHashesFile.csproj", "{DEF896B7-F822-4414-A2DF-1C37A50490ED}"
@@ -37,10 +35,6 @@ Global
 		{27EAA312-EC92-41EA-B854-00B5C9F2FC7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27EAA312-EC92-41EA-B854-00B5C9F2FC7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27EAA312-EC92-41EA-B854-00B5C9F2FC7B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{36D9A449-2750-43A3-8926-93F66E0B7A04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{36D9A449-2750-43A3-8926-93F66E0B7A04}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{36D9A449-2750-43A3-8926-93F66E0B7A04}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{36D9A449-2750-43A3-8926-93F66E0B7A04}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6727DB3A-F9C4-4057-BA2A-228AC6EE4676}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6727DB3A-F9C4-4057-BA2A-228AC6EE4676}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6727DB3A-F9C4-4057-BA2A-228AC6EE4676}.Release|Any CPU.ActiveCfg = Release|Any CPU
