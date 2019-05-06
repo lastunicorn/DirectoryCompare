@@ -45,7 +45,6 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
             if (arguments.Count == 0)
                 throw new Exception("Invalid command parameters.");
 
-            string pathLeft = arguments[0];
             string pathRight;
             bool checkFilesExist;
 
@@ -72,7 +71,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
 
             return new FindDuplicatesRequest
             {
-                PathLeft = pathLeft,
+                PathLeft = arguments[0],
                 PathRight = pathRight,
                 Exporter = new ConsoleDuplicatesExporter(),
                 CheckFilesExist = checkFilesExist

@@ -51,7 +51,7 @@ namespace DustInTheWind.DirectoryCompare.Application.Duplicates
             }
         }
 
-        private void Read(List<Tuple<string, HFile>> files, HDirectory hDirectory, string parentPath)
+        private static void Read(ICollection<Tuple<string, HFile>> files, HDirectory hDirectory, string parentPath)
         {
             if (hDirectory.Files != null)
                 foreach (HFile xFile in hDirectory.Files)

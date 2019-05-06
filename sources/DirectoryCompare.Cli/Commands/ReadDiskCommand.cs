@@ -17,7 +17,7 @@
 using DirectoryCompare.CliFramework;
 using MediatR;
 using System;
-using DustInTheWind.DirectoryCompare.Application.Disk;
+using DustInTheWind.DirectoryCompare.Application.TimePoint;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
@@ -34,21 +34,17 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
 
         public void Execute(Arguments arguments)
         {
-            ReadDiskRequest request = CreateRequest(arguments);
+            CreateTimePointRequest request = CreateRequest(arguments);
             mediator.Send(request).Wait();
         }
 
-        private static ReadDiskRequest CreateRequest(Arguments arguments)
+        private static CreateTimePointRequest CreateRequest(Arguments arguments)
         {
-            string sourcePath = arguments[0];
-            string destinationFilePath = arguments[1];
-            string blackListFilePath = arguments[2];
-
-            return new ReadDiskRequest
+            return new CreateTimePointRequest
             {
-                SourcePath = sourcePath,
-                DestinationFilePath = destinationFilePath,
-                BlackListFilePath = blackListFilePath
+                SourcePath = arguments[0],
+                DestinationFilePath = arguments[1],
+                BlackListFilePath = arguments[2]
             };
         }
     }

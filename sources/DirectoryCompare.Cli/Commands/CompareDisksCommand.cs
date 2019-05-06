@@ -41,13 +41,10 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
 
         private static CompareDisksRequest CreateRequest(Arguments arguments)
         {
-            string path1 = arguments[0];
-            string path2 = arguments[1];
-
             return new CompareDisksRequest
             {
-                Path1 = path1,
-                Path2 = path2,
+                Path1 = arguments[0],
+                Path2 = arguments[1],
                 Exporter = new ConsoleComparisonExporter()
             };
         }

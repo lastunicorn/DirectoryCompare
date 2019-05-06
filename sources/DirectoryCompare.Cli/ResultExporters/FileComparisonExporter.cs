@@ -18,6 +18,7 @@ using System;
 using System.IO;
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.DirectoryCompare.Application;
+using DustInTheWind.DirectoryCompare.Application.Compare;
 
 namespace DustInTheWind.DirectoryCompare.Cli.ResultExporters
 {

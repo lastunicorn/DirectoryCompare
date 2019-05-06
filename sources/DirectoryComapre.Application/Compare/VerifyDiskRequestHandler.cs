@@ -21,7 +21,7 @@ using DustInTheWind.DirectoryCompare.InMemoryExport;
 using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.Disk
+namespace DustInTheWind.DirectoryCompare.Application.Compare
 {
     public class VerifyDiskRequestHandler : RequestHandler<VerifyDiskRequest>
     {

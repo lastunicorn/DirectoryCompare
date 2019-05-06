@@ -16,6 +16,7 @@
 
 using System;
 using DustInTheWind.DirectoryCompare.DiskAnalysis;
+using DustInTheWind.DirectoryCompare.InMemoryExport;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.Compare

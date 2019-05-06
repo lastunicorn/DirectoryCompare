@@ -18,16 +18,14 @@ using DustInTheWind.DirectoryCompare.Entities;
 using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.HashFile
+namespace DustInTheWind.DirectoryCompare.Application.TimePoint
 {
-    public class ReadFileRequestHandler : RequestHandler<ReadFileRequest>
+    public class GetTimePointRequestHandler : RequestHandler<GetTimePointRequest, HContainer>
     {
-        protected override void Handle(ReadFileRequest request)
+        protected override HContainer Handle(GetTimePointRequest request)
         {
             JsonFileSerializer jsonFileSerializer = new JsonFileSerializer();
-            HContainer hContainer = jsonFileSerializer.ReadFromFile(request.FilePath);
-
-            request.Exporter.Export(hContainer);
+            return jsonFileSerializer.ReadFromFile(request.FilePath);
         }
     }
 }

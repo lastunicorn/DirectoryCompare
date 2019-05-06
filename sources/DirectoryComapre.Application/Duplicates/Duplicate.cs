@@ -86,17 +86,11 @@ namespace DustInTheWind.DirectoryCompare.Application.Duplicates
                     this.areEqual = true;
 
                     if (File1Exists)
-                    {
                         Size = new FileInfo(FullPath1).Length;
-                    }
                     else if (File2Exists)
-                    {
                         Size = new FileInfo(FullPath2).Length;
-                    }
                     else
-                    {
                         Size = 0;
-                    }
                 }
             }
             else

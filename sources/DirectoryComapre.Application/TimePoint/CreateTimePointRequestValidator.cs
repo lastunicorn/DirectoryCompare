@@ -14,13 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using MediatR;
+using FluentValidation;
 
-namespace DustInTheWind.DirectoryCompare.Application.HashFile
+namespace DustInTheWind.DirectoryCompare.Application.TimePoint
 {
-    public class ReadFileRequest : IRequest
+    public class CreateTimePointRequestValidator : AbstractValidator<CreateTimePointRequest>
     {
-        public string FilePath { get; set; }
-        public IContainerExporter Exporter { get; set; }
+        public CreateTimePointRequestValidator()
+        {
+            RuleFor(x => x.SourcePath).NotEmpty();
+            RuleFor(x => x.DestinationFilePath).NotEmpty();
+        }
     }
 }

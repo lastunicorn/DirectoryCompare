@@ -57,12 +57,12 @@
     <Compile Include="Compare\CompareDisksRequest.cs" />
     <Compile Include="Compare\CompareDisksRequestHandler.cs" />
     <Compile Include="Compare\CompareFilesRequestHandler.cs" />
-    <Compile Include="Disk\ReadDiskRequestValidator.cs" />
-    <Compile Include="Disk\VerifyDiskRequestValidator.cs" />
+    <Compile Include="TimePoint\CreateTimePointRequestValidator.cs" />
+    <Compile Include="Compare\VerifyDiskRequestValidator.cs" />
     <Compile Include="RequestPerformanceBehaviour.cs" />
     <Compile Include="RequestValidationBehavior.cs" />
-    <Compile Include="Disk\VerifyDiskRequest.cs" />
-    <Compile Include="Disk\VerifyDiskRequestHandler.cs" />
+    <Compile Include="Compare\VerifyDiskRequest.cs" />
+    <Compile Include="Compare\VerifyDiskRequestHandler.cs" />
     <Compile Include="Duplicates\Duplicate.cs" />
     <Compile Include="Duplicates\DuplicatesProvider.cs" />
     <Compile Include="Duplicates\FileRemove.cs" />
@@ -71,15 +71,14 @@
     <Compile Include="Duplicates\IRemoveDuplicatesExporter.cs" />
     <Compile Include="Duplicates\RemoveDuplicatesRequest.cs" />
     <Compile Include="Duplicates\RemoveDuplicatesRequestHandler.cs" />
-    <Compile Include="IContainerExporter.cs" />
-    <Compile Include="HashFile\ReadFileRequest.cs" />
-    <Compile Include="HashFile\ReadFileRequestHandler.cs" />
-    <Compile Include="IComparisonExporter.cs" />
+    <Compile Include="TimePoint\GetTimePointRequest.cs" />
+    <Compile Include="TimePoint\GetTimePointRequestHandler.cs" />
+    <Compile Include="Compare\IComparisonExporter.cs" />
     <Compile Include="Compare\CompareFilesRequest.cs" />
-    <Compile Include="IDuplicatesExporter.cs" />
-    <Compile Include="Disk\ReadDiskRequestHandler.cs" />
+    <Compile Include="Duplicates\IDuplicatesExporter.cs" />
+    <Compile Include="TimePoint\CreateTimePointRequestHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Disk\ReadDiskRequest.cs" />
+    <Compile Include="TimePoint\CreateTimePointRequest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DirectoryCompare.Common\DirectoryCompare.Common.csproj">

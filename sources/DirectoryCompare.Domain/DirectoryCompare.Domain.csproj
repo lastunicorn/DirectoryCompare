@@ -40,6 +40,7 @@
     <Compile Include="Entities\HContainer.cs" />
     <Compile Include="ContainerComparer.cs" />
     <Compile Include="IDiskExport.cs" />
+    <Compile Include="InMemoryExport\ContainerDiskExport.cs" />
     <Compile Include="IProjectLogger.cs" />
     <Compile Include="ItemComparison.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -48,9 +49,7 @@
     <Compile Include="Entities\HFile.cs" />
     <Compile Include="Entities\HItem.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DiskAnalyzing\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\DirectoryCompare.Common\DirectoryCompare.Common.csproj">
       <Project>{05E21912-332C-4C16-A590-2BBF65A1FB7C}</Project>

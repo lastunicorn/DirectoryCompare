@@ -14,28 +14,28 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Common.Utils;
-using DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport;
-using MediatR;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using DustInTheWind.DirectoryCompare.Common.Utils;
 using DustInTheWind.DirectoryCompare.DiskAnalysis;
+using DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport;
+using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.Disk
+namespace DustInTheWind.DirectoryCompare.Application.TimePoint
 {
-    public class ReadDiskRequestHandler : RequestHandler<ReadDiskRequest>
+    public class CreateTimePointRequestHandler : RequestHandler<CreateTimePointRequest>
     {
         private readonly IProjectLogger logger;
         private PathCollection blackList = new PathCollection();
 
-        public ReadDiskRequestHandler(IProjectLogger logger)
+        public CreateTimePointRequestHandler(IProjectLogger logger)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        protected override void Handle(ReadDiskRequest request)
+        protected override void Handle(CreateTimePointRequest request)
         {
             blackList = ReadBlackList(request.BlackListFilePath);
 

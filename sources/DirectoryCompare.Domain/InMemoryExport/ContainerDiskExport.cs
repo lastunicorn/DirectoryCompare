@@ -15,9 +15,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.Entities;
-using DustInTheWind.DirectoryCompare.InMemoryExport;
 
-namespace DustInTheWind.DirectoryCompare.DiskAnalysis
+namespace DustInTheWind.DirectoryCompare.InMemoryExport
 {
     public class ContainerDiskExport : IDiskExport
     {

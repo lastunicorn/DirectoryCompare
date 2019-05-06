@@ -16,9 +16,9 @@
 
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.Disk
+namespace DustInTheWind.DirectoryCompare.Application.TimePoint
 {
-    public class ReadDiskRequest : IRequest
+    public class CreateTimePointRequest : IRequest
     {
         public string SourcePath { get; set; }
         public string DestinationFilePath { get; set; }

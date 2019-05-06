@@ -14,10 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DirectoryCompare.CliFramework;
-using DustInTheWind.DirectoryCompare.Application.HashFile;
-using MediatR;
 using System;
+using DirectoryCompare.CliFramework;
+using DustInTheWind.DirectoryCompare.Application.TimePoint;
+using DustInTheWind.DirectoryCompare.Entities;
+using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
@@ -34,17 +35,18 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
 
         public void Execute(Arguments arguments)
         {
-            ReadFileRequest request = CreateRequest(arguments);
-            mediator.Send(request).Wait();
+            GetTimePointRequest request = CreateRequest(arguments);
+            HContainer container = mediator.Send(request).Result;
+
+            ContainerView containerView = new ContainerView(container);
+            containerView.Display();
         }
 
-        private static ReadFileRequest CreateRequest(Arguments arguments)
+        private static GetTimePointRequest CreateRequest(Arguments arguments)
         {
-            string filePath = arguments[0];
-
-            return new ReadFileRequest
+            return new GetTimePointRequest
             {
-                FilePath = filePath
+                FilePath = arguments[0]
             };
         }
     }

@@ -38,7 +38,6 @@
     <Compile Include="..\AssemblyInfo.Shared.cs">
       <Link>Properties\AssemblyInfo.Shared.cs</Link>
     </Compile>
-    <Compile Include="ContainerDiskExport.cs" />
     <Compile Include="DiskCrawling\CrawlerAction.cs" />
     <Compile Include="DiskCrawling\CrawlerStep.cs" />
     <Compile Include="DiskCrawling\DirectoryCrawler.cs" />

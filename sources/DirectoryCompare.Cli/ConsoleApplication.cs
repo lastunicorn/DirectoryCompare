@@ -17,7 +17,7 @@
 using System;
 using DirectoryCompare.CliFramework;
 using DustInTheWind.DirectoryCompare.Application;
-using DustInTheWind.DirectoryCompare.Application.Disk;
+using DustInTheWind.DirectoryCompare.Application.TimePoint;
 using DustInTheWind.DirectoryCompare.Cli.Commands;
 using FluentValidation;
 using MediatR;
@@ -48,8 +48,8 @@ namespace DustInTheWind.DirectoryCompare.Cli
         {
             dependencyContainer.Components.Add<IBindingResolver, ContravariantBindingResolver>();
             dependencyContainer.Bind(x => x.FromAssemblyContaining<IMediator>().SelectAllClasses().BindDefaultInterface());
-            dependencyContainer.Bind(x => x.FromAssemblyContaining<ReadDiskRequest>().SelectAllClasses().InheritedFrom(typeof(IRequestHandler<,>)).BindAllInterfaces());
-            dependencyContainer.Bind(x => x.FromAssemblyContaining<ReadDiskRequestValidator>().SelectAllClasses().InheritedFrom(typeof(AbstractValidator<>)).BindDefaultInterfaces());
+            dependencyContainer.Bind(x => x.FromAssemblyContaining<CreateTimePointRequest>().SelectAllClasses().InheritedFrom(typeof(IRequestHandler<,>)).BindAllInterfaces());
+            dependencyContainer.Bind(x => x.FromAssemblyContaining<CreateTimePointRequestValidator>().SelectAllClasses().InheritedFrom(typeof(AbstractValidator<>)).BindDefaultInterfaces());
 
             dependencyContainer.Bind(typeof(IPipelineBehavior<,>)).To(typeof(RequestPerformanceBehaviour<,>));
             dependencyContainer.Bind(typeof(IPipelineBehavior<,>)).To(typeof(RequestValidationBehavior<,>));

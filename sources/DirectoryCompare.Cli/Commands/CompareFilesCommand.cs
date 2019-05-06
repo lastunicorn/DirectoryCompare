@@ -42,17 +42,13 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
 
         private static CompareDisksRequest CreateRequest(Arguments arguments)
         {
-            string path1 = arguments[0];
-            string path2 = arguments[1];
-            IComparisonExporter exporter = arguments.Count >= 3
-                ? (IComparisonExporter)new FileComparisonExporter { ResultsDirectory = arguments[2] }
-                : (IComparisonExporter)new ConsoleComparisonExporter();
-
             return new CompareDisksRequest
             {
-                Path1 = path1,
-                Path2 = path2,
-                Exporter = exporter
+                Path1 = arguments[0],
+                Path2 = arguments[1],
+                Exporter = arguments.Count >= 3
+                    ? (IComparisonExporter)new FileComparisonExporter { ResultsDirectory = arguments[2] }
+                    : (IComparisonExporter)new ConsoleComparisonExporter()
             };
         }
     }

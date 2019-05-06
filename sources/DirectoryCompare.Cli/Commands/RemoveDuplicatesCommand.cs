@@ -45,7 +45,6 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
             if (arguments.Count == 0)
                 throw new Exception("Invalid command parameters.");
 
-            string pathLeft = arguments[0];
             string pathRight;
             FileRemove fileRemove;
 
@@ -74,7 +73,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
 
             return new RemoveDuplicatesRequest
             {
-                PathLeft = pathLeft,
+                PathLeft = arguments[0],
                 PathRight = pathRight,
                 Exporter = new ConsoleRemoveDuplicatesExporter(),
                 FileRemove = fileRemove

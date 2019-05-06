@@ -16,7 +16,7 @@
 
 using System;
 using DirectoryCompare.CliFramework;
-using DustInTheWind.DirectoryCompare.Application.Disk;
+using DustInTheWind.DirectoryCompare.Application.Compare;
 using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
 using MediatR;
 
@@ -41,13 +41,10 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
 
         private static VerifyDiskRequest CreateRequest(Arguments arguments)
         {
-            string diskPath = arguments[0];
-            string filePath = arguments[1];
-
             return new VerifyDiskRequest
             {
-                DiskPath = diskPath,
-                FilePath = filePath,
+                DiskPath = arguments[0],
+                FilePath = arguments[1],
                 Exporter = new ConsoleComparisonExporter()
             };
         }
