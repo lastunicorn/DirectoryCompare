@@ -18,10 +18,10 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 using DustInTheWind.DirectoryCompare.Common.Utils;
-using DustInTheWind.DirectoryCompare.DiskCrawling;
+using DustInTheWind.DirectoryCompare.DiskAnalysis.DiskCrawling;
 using DustInTheWind.DirectoryCompare.Entities;
 
-namespace DustInTheWind.DirectoryCompare.DiskAnalysing
+namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 {
     public sealed class DiskReader : IDisposable
     {

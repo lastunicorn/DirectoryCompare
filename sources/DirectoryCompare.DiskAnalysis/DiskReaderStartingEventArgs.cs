@@ -17,7 +17,7 @@
 using System;
 using DustInTheWind.DirectoryCompare.Common.Utils;
 
-namespace DustInTheWind.DirectoryCompare.DiskAnalysing
+namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 {
     public class DiskReaderStartingEventArgs : EventArgs
     {

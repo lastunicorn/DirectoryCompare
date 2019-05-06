@@ -58,6 +58,7 @@
     <Compile Include="Compare\CompareDisksRequestHandler.cs" />
     <Compile Include="Compare\CompareFilesRequestHandler.cs" />
     <Compile Include="Disk\ReadDiskRequestValidator.cs" />
+    <Compile Include="Disk\VerifyDiskRequestValidator.cs" />
     <Compile Include="RequestPerformanceBehaviour.cs" />
     <Compile Include="RequestValidationBehavior.cs" />
     <Compile Include="Disk\VerifyDiskRequest.cs" />
@@ -84,6 +85,10 @@
     <ProjectReference Include="..\DirectoryCompare.Common\DirectoryCompare.Common.csproj">
       <Project>{05E21912-332C-4C16-A590-2BBF65A1FB7C}</Project>
       <Name>DirectoryCompare.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DirectoryCompare.DiskAnalysis\DirectoryCompare.DiskAnalysis.csproj">
+      <Project>{243D8C53-4B1C-4D78-BA62-B0C8900C4801}</Project>
+      <Name>DirectoryCompare.DiskAnalysis</Name>
     </ProjectReference>
     <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj">
       <Project>{27EAA312-EC92-41EA-B854-00B5C9F2FC7B}</Project>

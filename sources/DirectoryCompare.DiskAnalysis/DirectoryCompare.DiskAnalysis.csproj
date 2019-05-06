@@ -4,13 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{27EAA312-EC92-41EA-B854-00B5C9F2FC7B}</ProjectGuid>
+    <ProjectGuid>{243D8C53-4B1C-4D78-BA62-B0C8900C4801}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DustInTheWind.DirectoryCompare</RootNamespace>
-    <AssemblyName>DustInTheWind.DirectoryCompare</AssemblyName>
+    <RootNamespace>DustInTheWind.DirectoryCompare.DiskAnalysis</RootNamespace>
+    <AssemblyName>DustInTheWind.DirectoryCompare.DiskAnalysis</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <Deterministic>false</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -37,24 +38,24 @@
     <Compile Include="..\AssemblyInfo.Shared.cs">
       <Link>Properties\AssemblyInfo.Shared.cs</Link>
     </Compile>
-    <Compile Include="Entities\HContainer.cs" />
-    <Compile Include="ContainerComparer.cs" />
-    <Compile Include="IDiskExport.cs" />
-    <Compile Include="IProjectLogger.cs" />
-    <Compile Include="ItemComparison.cs" />
+    <Compile Include="ContainerDiskExport.cs" />
+    <Compile Include="DiskCrawling\CrawlerAction.cs" />
+    <Compile Include="DiskCrawling\CrawlerStep.cs" />
+    <Compile Include="DiskCrawling\DirectoryCrawler.cs" />
+    <Compile Include="DiskCrawling\DiskCrawler.cs" />
+    <Compile Include="DiskReader.cs" />
+    <Compile Include="DiskReaderStartingEventArgs.cs" />
+    <Compile Include="ErrorEncounteredEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Entities\HDirectory.cs" />
-    <Compile Include="InMemoryExport\ContainerBuilder.cs" />
-    <Compile Include="Entities\HFile.cs" />
-    <Compile Include="Entities\HItem.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DiskAnalyzing\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DirectoryCompare.Common\DirectoryCompare.Common.csproj">
-      <Project>{05E21912-332C-4C16-A590-2BBF65A1FB7C}</Project>
+      <Project>{05e21912-332c-4c16-a590-2bbf65a1fb7c}</Project>
       <Name>DirectoryCompare.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj">
+      <Project>{27eaa312-ec92-41ea-b854-00b5c9f2fc7b}</Project>
+      <Name>DirectoryCompare.Domain</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -15,8 +15,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.Entities;
+using DustInTheWind.DirectoryCompare.InMemoryExport;
 
-namespace DustInTheWind.DirectoryCompare.InMemoryExport
+namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 {
     public class ContainerDiskExport : IDiskExport
     {
@@ -34,9 +35,9 @@ namespace DustInTheWind.DirectoryCompare.InMemoryExport
             containerBuilder.SetOriginalPath(originalPath);
         }
 
-        public void OpenNewDirectory(HDirectory hDirectory)
+        public void OpenNewDirectory(HDirectory directory)
         {
-            containerBuilder.AddAndOpen(hDirectory);
+            containerBuilder.AddAndOpen(directory);
         }
 
         public void CloseDirectory()
@@ -44,14 +45,14 @@ namespace DustInTheWind.DirectoryCompare.InMemoryExport
             containerBuilder.CloseDirectory();
         }
 
-        public void Add(HFile hFile)
+        public void Add(HFile file)
         {
-            containerBuilder.Add(hFile);
+            containerBuilder.Add(file);
         }
 
-        public void Add(HDirectory hDirectory)
+        public void Add(HDirectory directory)
         {
-            containerBuilder.Add(hDirectory);
+            containerBuilder.Add(directory);
         }
 
         public void Close()

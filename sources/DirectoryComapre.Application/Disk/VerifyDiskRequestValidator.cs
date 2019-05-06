@@ -14,13 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.DiskCrawling
+using FluentValidation;
+
+namespace DustInTheWind.DirectoryCompare.Application.Disk
 {
-    internal enum CrawlerAction
+    public class VerifyDiskRequestValidator : AbstractValidator<VerifyDiskRequest>
     {
-        DirectoryOpened,
-        DirectoryClosed,
-        FileFound,
-        Error
+        public VerifyDiskRequestValidator()
+        {
+            RuleFor(x => x.DiskPath).NotEmpty();
+            RuleFor(x => x.FilePath).NotEmpty();
+            RuleFor(x => x.Exporter).NotNull();
+        }
     }
 }

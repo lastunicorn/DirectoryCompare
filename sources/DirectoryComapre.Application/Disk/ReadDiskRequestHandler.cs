@@ -15,13 +15,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.Common.Utils;
-using DustInTheWind.DirectoryCompare.DiskAnalysing;
 using DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport;
 using MediatR;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using DustInTheWind.DirectoryCompare.DiskAnalysis;
 
 namespace DustInTheWind.DirectoryCompare.Application.Disk
 {

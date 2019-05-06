@@ -48,16 +48,16 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
             };
         }
 
-        public void OpenNewDirectory(HDirectory xDirectory)
+        public void OpenNewDirectory(HDirectory directory)
         {
             if (stack.Count == 0)
             {
-                jsonContainerExport.Open(xDirectory);
+                jsonContainerExport.Open(directory);
                 stack.Push(jsonContainerExport);
             }
             else
             {
-                JsonDirectoryExport jsonDirectoryExport = stack.Peek().OpenNewDirectory(xDirectory);
+                JsonDirectoryExport jsonDirectoryExport = stack.Peek().OpenNewDirectory(directory);
                 stack.Push(jsonDirectoryExport);
             }
         }
@@ -68,14 +68,14 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
             jsonDirectoryExport.CloseDirectory();
         }
 
-        public void Add(HFile xFile)
+        public void Add(HFile file)
         {
-            stack.Peek().Add(xFile);
+            stack.Peek().Add(file);
         }
 
-        public void Add(HDirectory xDirectory)
+        public void Add(HDirectory directory)
         {
-            JsonDirectoryExport jsonDirectoryExport = stack.Peek().OpenNewDirectory(xDirectory);
+            JsonDirectoryExport jsonDirectoryExport = stack.Peek().OpenNewDirectory(directory);
             jsonDirectoryExport.CloseDirectory();
         }
 

@@ -14,17 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Entities;
+using System;
 
-namespace DustInTheWind.DirectoryCompare
+namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 {
-    public interface IDiskExport
+    public class ErrorEncounteredEventArgs : EventArgs
     {
-        void Open(string originalPath);
-        void OpenNewDirectory(HDirectory directory);
-        void CloseDirectory();
-        void Add(HFile file);
-        void Add(HDirectory directory);
-        void Close();
+        public Exception Exception { get; }
+        public string Path { get; }
+
+        public ErrorEncounteredEventArgs(Exception exception, string path)
+        {
+            Exception = exception ?? throw new ArgumentNullException(nameof(exception));
+            Path = path ?? throw new ArgumentNullException(nameof(path));
+        }
     }
 }
