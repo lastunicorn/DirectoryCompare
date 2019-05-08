@@ -14,10 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.Application.Compare
+namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 {
-    public interface IComparisonExporter
+    public interface IDiskAnalyzer
     {
-        void Export(SnapshotComparer comparer);
     }
 }

@@ -14,10 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.Application.Compare
+using DustInTheWind.DirectoryCompare.Entities;
+using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
+using MediatR;
+
+namespace DustInTheWind.DirectoryCompare.Application.Snapshots
 {
-    public interface IComparisonExporter
+    public class GetSnapshotRequestHandler : RequestHandler<GetSnapshotRequest, Snapshot>
     {
-        void Export(SnapshotComparer comparer);
+        protected override Snapshot Handle(GetSnapshotRequest request)
+        {
+            SnapshotJsonFile file = SnapshotJsonFile.Load(request.FilePath);
+            return file.Snapshot;
+        }
     }
 }

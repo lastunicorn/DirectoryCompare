@@ -23,18 +23,6 @@ using DustInTheWind.DirectoryCompare.Entities;
 
 namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 {
-    public interface IDiskAnalyzer
-    {
-    }
-
-    public class DiskAnalyzer : IDiskAnalyzer
-    {
-        public void AnalyzePath(string path, IDiskAnalysisExport diskAnalysisExport)
-        {
-
-        }
-    }
-
     public sealed class DiskReader : IDisposable
     {
         private readonly string rootPath;

@@ -16,7 +16,6 @@
 
 using System;
 using DustInTheWind.DirectoryCompare.DiskAnalysis;
-using DustInTheWind.DirectoryCompare.InMemoryExport;
 using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
 using MediatR;
 
@@ -26,14 +25,14 @@ namespace DustInTheWind.DirectoryCompare.Application.Compare
     {
         protected override void Handle(VerifyDiskRequest request)
         {
-            ContainerDiskAnalysisExport containerDiskAnalysisExport = new ContainerDiskAnalysisExport();
-            DiskReader diskReader1 = new DiskReader(request.DiskPath, containerDiskAnalysisExport);
+            SnapshotDiskAnalysisExport snapshotDiskAnalysisExport1 = new SnapshotDiskAnalysisExport();
+            DiskReader diskReader1 = new DiskReader(request.DiskPath, snapshotDiskAnalysisExport1);
             diskReader1.Starting += HandleDiskReaderStarting;
             diskReader1.Read();
 
-            TimePointJsonFile file2 = TimePointJsonFile.Load(request.FilePath);
+            SnapshotJsonFile file2 = SnapshotJsonFile.Load(request.FilePath);
 
-            ContainerComparer comparer = new ContainerComparer(containerDiskAnalysisExport.Container, file2.Container);
+            SnapshotComparer comparer = new SnapshotComparer(snapshotDiskAnalysisExport1.Snapshot, file2.Snapshot);
             comparer.Compare();
 
             request.Exporter?.Export(comparer);

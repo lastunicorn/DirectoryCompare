@@ -14,67 +14,66 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
 using DustInTheWind.DirectoryCompare.Entities;
 using NUnit.Framework;
 
-namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
+namespace DustInTheWind.DirectoryCompare.Tests.SnapshotComparerTests
 {
     [TestFixture]
-    public class IdenticalContainersWithSameFileTwiceTests
+    public class IdenticalSnapshotsWithSameFileTwiceTests
     {
-        private HContainer container1;
-        private HContainer container2;
-        private ContainerComparer containerComparer;
+        private Snapshot snapshot1;
+        private Snapshot snapshot2;
+        private SnapshotComparer snapshotComparer;
 
         [SetUp]
         public void SetUp()
         {
-            container1 = new HContainer();
-            container1.Files.AddRange(new[]
+            snapshot1 = new Snapshot();
+            snapshot1.Files.AddRange(new[]
             {
                 new HFile { Name = "File1.txt", Hash = new byte[] { 1, 2, 3 } },
                 new HFile { Name = "File2.txt", Hash = new byte[] { 1, 2, 3 } }
             });
-            container2 = new HContainer();
-            container2.Files.AddRange(new[]
+            snapshot2 = new Snapshot();
+            snapshot2.Files.AddRange(new[]
             {
                 new HFile { Name = "File1.txt", Hash = new byte[] { 1, 2, 3 } },
                 new HFile { Name = "File2.txt", Hash = new byte[] { 1, 2, 3 } }
             });
-            containerComparer = new ContainerComparer(container1, container2);
+            snapshotComparer = new SnapshotComparer(snapshot1, snapshot2);
         }
 
         [Test]
-        public void OnlyInContainer1_is_empty()
+        public void OnlyInSnapshot1_is_empty()
         {
-            containerComparer.Compare();
+            snapshotComparer.Compare();
 
-            Assert.That(containerComparer.OnlyInContainer1, Is.Empty);
+            Assert.That(snapshotComparer.OnlyInSnapshot1, Is.Empty);
         }
 
         [Test]
-        public void OnlyInContainer2_is_empty()
+        public void OnlyInSnapshot2_is_empty()
         {
-            containerComparer.Compare();
+            snapshotComparer.Compare();
 
-            Assert.That(containerComparer.OnlyInContainer2, Is.Empty);
+            Assert.That(snapshotComparer.OnlyInSnapshot2, Is.Empty);
         }
 
         [Test]
         public void DifferentContent_is_empty()
         {
-            containerComparer.Compare();
+            snapshotComparer.Compare();
 
-            Assert.That(containerComparer.DifferentContent, Is.Empty);
+            Assert.That(snapshotComparer.DifferentContent, Is.Empty);
         }
 
         [Test]
         public void DifferentNames_contains_data()
         {
-            containerComparer.Compare();
+            snapshotComparer.Compare();
 
-            Assert.That(containerComparer.DifferentNames, Is.EqualTo(new[]
+            Assert.That(snapshotComparer.DifferentNames, Is.EqualTo(new[]
             {
                 new ItemComparison
                 {

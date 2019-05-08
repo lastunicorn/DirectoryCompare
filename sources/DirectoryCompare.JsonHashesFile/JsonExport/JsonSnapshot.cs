@@ -20,13 +20,13 @@ using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
 {
-    internal sealed class JsonContainer : JsonDirectory
+    internal sealed class JsonSnapshot : JsonDirectory
     {
         public Guid Id { get; set; }
 
         public string OriginalPath { get; set; }
 
-        public JsonContainer(JsonTextWriter jsonTextWriter)
+        public JsonSnapshot(JsonTextWriter jsonTextWriter)
             : base(jsonTextWriter)
         {
         }

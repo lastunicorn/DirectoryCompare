@@ -17,7 +17,7 @@
 using System;
 using DirectoryCompare.CliFramework;
 using DustInTheWind.DirectoryCompare.Application;
-using DustInTheWind.DirectoryCompare.Application.TimePoint;
+using DustInTheWind.DirectoryCompare.Application.Snapshots;
 using DustInTheWind.DirectoryCompare.Cli.Commands;
 using FluentValidation;
 using MediatR;
@@ -48,8 +48,8 @@ namespace DustInTheWind.DirectoryCompare.Cli
         {
             dependencyContainer.Components.Add<IBindingResolver, ContravariantBindingResolver>();
             dependencyContainer.Bind(x => x.FromAssemblyContaining<IMediator>().SelectAllClasses().BindDefaultInterface());
-            dependencyContainer.Bind(x => x.FromAssemblyContaining<CreateTimePointRequest>().SelectAllClasses().InheritedFrom(typeof(IRequestHandler<,>)).BindAllInterfaces());
-            dependencyContainer.Bind(x => x.FromAssemblyContaining<CreateTimePointRequestValidator>().SelectAllClasses().InheritedFrom(typeof(AbstractValidator<>)).BindDefaultInterfaces());
+            dependencyContainer.Bind(x => x.FromAssemblyContaining<CreateSnapshotRequest>().SelectAllClasses().InheritedFrom(typeof(IRequestHandler<,>)).BindAllInterfaces());
+            dependencyContainer.Bind(x => x.FromAssemblyContaining<CreateSnapshotRequestValidator>().SelectAllClasses().InheritedFrom(typeof(AbstractValidator<>)).BindDefaultInterfaces());
 
             dependencyContainer.Bind(typeof(IPipelineBehavior<,>)).To(typeof(RequestPerformanceBehaviour<,>));
             dependencyContainer.Bind(typeof(IPipelineBehavior<,>)).To(typeof(RequestValidationBehavior<,>));
@@ -66,20 +66,17 @@ namespace DustInTheWind.DirectoryCompare.Cli
 
         protected override CommandCollection CreateCommands()
         {
-            ReadDiskCommand readDiskCommand = new ReadDiskCommand(mediator);
-            ReadFileCommand readFileCommand = new ReadFileCommand(mediator);
+            CreateSnapshotCommand createSnapshotCommand = new CreateSnapshotCommand(mediator);
+            ViewSnapshotCommand viewSnapshotCommand = new ViewSnapshotCommand(mediator);
             VerifyDiskCommand verifyDiskCommand = new VerifyDiskCommand(mediator);
 
             return new CommandCollection
             {
-                { "read-disk", readDiskCommand },
-                { "read", readDiskCommand },
-                { "read-file", readFileCommand },
-                { "view", readFileCommand },
-                { "verify-disk", verifyDiskCommand },
-                { "check", verifyDiskCommand },
-                { "compare-disks", new CompareDisksCommand(mediator) },
-                { "compare-files", new CompareFilesCommand(mediator) },
+                { "snapshot", createSnapshotCommand },
+                { "view-snapshot", viewSnapshotCommand },
+                { "verify-path", verifyDiskCommand },
+                { "compare-paths", new ComparePathsCommand(mediator) },
+                { "compare-snapshots", new CompareSnapshotsCommand(mediator) },
                 { "find-duplicates", new FindDuplicatesCommand(mediator) },
                 { "remove-duplicates", new RemoveDuplicatesCommand(mediator) }
             };

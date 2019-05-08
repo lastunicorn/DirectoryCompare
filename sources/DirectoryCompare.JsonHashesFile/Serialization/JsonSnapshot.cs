@@ -22,7 +22,7 @@ using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
 {
-    internal class JsonXContainer
+    internal class JsonSnapshot
     {
         [JsonProperty("serializer")]
         public SerializerInfo SerializerInfo { get; set; }
@@ -34,52 +34,52 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
         public DateTime CreationTime { get; set; }
 
         [JsonProperty("d")]
-        public List<JsonXDirectory> Directories { get; set; }
+        public List<JsonDirectory> Directories { get; set; }
 
         [JsonProperty("f")]
-        public List<JsonXFile> Files { get; set; }
+        public List<JsonFile> Files { get; set; }
 
-        public JsonXContainer()
+        public JsonSnapshot()
         {
         }
 
-        public JsonXContainer(HContainer container)
+        public JsonSnapshot(Snapshot snapshot)
         {
-            if (container == null) throw new ArgumentNullException(nameof(container));
+            if (snapshot == null) throw new ArgumentNullException(nameof(snapshot));
 
-            OriginalPath = container.OriginalPath;
-            CreationTime = container.CreationTime;
+            OriginalPath = snapshot.OriginalPath;
+            CreationTime = snapshot.CreationTime;
 
-            if (container.Directories == null)
+            if (snapshot.Directories == null)
                 Directories = null;
             else
-                Directories = container.Directories
-                    .Select(x => new JsonXDirectory(x))
+                Directories = snapshot.Directories
+                    .Select(x => new JsonDirectory(x))
                     .ToList();
 
-            if (container.Files == null)
+            if (snapshot.Files == null)
                 Files = null;
             else
-                Files = container.Files
-                    .Select(x => new JsonXFile(x))
+                Files = snapshot.Files
+                    .Select(x => new JsonFile(x))
                     .ToList();
         }
 
-        public HContainer ToContainer()
+        public Snapshot ToSnapshot()
         {
-            HContainer container = new HContainer
+            Snapshot snapshot = new Snapshot
             {
                 OriginalPath = OriginalPath,
                 CreationTime = CreationTime
             };
 
             IEnumerable<HDirectory> newDirectories = GetHDirectories();
-            container.Directories.AddRange(newDirectories);
+            snapshot.Directories.AddRange(newDirectories);
 
             IEnumerable<HFile> newFiles = GetHFiles();
-            container.Files.AddRange(newFiles);
+            snapshot.Files.AddRange(newFiles);
 
-            return container;
+            return snapshot;
         }
 
         private IEnumerable<HDirectory> GetHDirectories()

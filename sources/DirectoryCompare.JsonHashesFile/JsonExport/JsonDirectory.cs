@@ -48,20 +48,13 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
             Writer.WriteValue(directory.Name);
         }
 
-        public void WriteFile(HFile xFile)
+        public void WriteFile(HFile file)
         {
             WriteEndDirectoriesArray();
             WriteStartFilesArray();
 
-            Writer.WriteStartObject();
-
-            Writer.WritePropertyName("n");
-            Writer.WriteValue(xFile.Name);
-
-            Writer.WritePropertyName("h");
-            Writer.WriteValue(xFile.Hash);
-
-            Writer.WriteEndObject();
+            JsonFile jsonFile = new JsonFile(Writer);
+            jsonFile.Write(file);
         }
 
         private void WriteStartFilesArray()
@@ -95,7 +88,7 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
             filesPropertyNodeState = JsonNodeState.Closed;
         }
 
-        public JsonDirectory OpenNewDirectory(HDirectory directory)
+        public JsonDirectory WriteStartDirectory(HDirectory directory)
         {
             WriteEndFilesArray();
             WriteStartDirectoriesArray();
@@ -137,7 +130,7 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
             directoriesNodeState = JsonNodeState.Closed;
         }
 
-        public void CloseDirectory()
+        public void WriteEnd()
         {
             WriteEndFilesArray();
             WriteEndDirectoriesArray();

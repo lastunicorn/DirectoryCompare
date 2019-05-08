@@ -18,7 +18,7 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.Compare
 {
-    public class CompareDisksRequest : IRequest
+    public class CompareSnapshotsRequest : IRequest
     {
         public string Path1 { get; set; }
         public string Path2 { get; set; }

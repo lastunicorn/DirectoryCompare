@@ -22,23 +22,23 @@ namespace DustInTheWind.DirectoryCompare.Cli.ResultExporters
 {
     internal class ConsoleComparisonExporter : IComparisonExporter
     {
-        public void Export(ContainerComparer comparer)
+        public void Export(SnapshotComparer comparer)
         {
             DisplayResults(comparer);
         }
 
-        public static void DisplayResults(ContainerComparer comparer)
+        public static void DisplayResults(SnapshotComparer comparer)
         {
             Console.WriteLine();
 
-            Console.WriteLine("Files only in container 1:");
-            foreach (string path in comparer.OnlyInContainer1)
+            Console.WriteLine("Files only in snapshot 1:");
+            foreach (string path in comparer.OnlyInSnapshot1)
                 Console.WriteLine(path);
 
             Console.WriteLine();
 
-            Console.WriteLine("Files only in container 2:");
-            foreach (string path in comparer.OnlyInContainer2)
+            Console.WriteLine("Files only in snapshot 2:");
+            foreach (string path in comparer.OnlyInSnapshot2)
                 Console.WriteLine(path);
 
             Console.WriteLine();

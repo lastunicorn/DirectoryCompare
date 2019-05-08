@@ -37,10 +37,10 @@
     <Compile Include="..\AssemblyInfo.Shared.cs">
       <Link>Properties\AssemblyInfo.Shared.cs</Link>
     </Compile>
-    <Compile Include="Entities\HContainer.cs" />
-    <Compile Include="ContainerComparer.cs" />
+    <Compile Include="Entities\Snapshot.cs" />
+    <Compile Include="SnapshotComparer.cs" />
     <Compile Include="IDiskAnalysisExport.cs" />
-    <Compile Include="InMemoryExport\ContainerDiskAnalysisExport.cs" />
+    <Compile Include="ContainerDiskAnalysisExport.cs" />
     <Compile Include="IProjectLogger.cs" />
     <Compile Include="ItemComparison.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

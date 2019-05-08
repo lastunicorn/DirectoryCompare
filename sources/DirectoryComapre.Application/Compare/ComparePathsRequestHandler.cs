@@ -16,26 +16,25 @@
 
 using System;
 using DustInTheWind.DirectoryCompare.DiskAnalysis;
-using DustInTheWind.DirectoryCompare.InMemoryExport;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.Compare
 {
-    public class CompareDisksRequestHandler : RequestHandler<CompareDisksRequest>
+    public class ComparePathsRequestHandler : RequestHandler<ComparePathsRequest>
     {
-        protected override void Handle(CompareDisksRequest request)
+        protected override void Handle(ComparePathsRequest request)
         {
-            ContainerDiskAnalysisExport containerDiskAnalysisExport1 = new ContainerDiskAnalysisExport();
-            DiskReader diskReader1 = new DiskReader(request.Path1, containerDiskAnalysisExport1);
+            SnapshotDiskAnalysisExport snapshotDiskAnalysisExport1 = new SnapshotDiskAnalysisExport();
+            DiskReader diskReader1 = new DiskReader(request.Path1, snapshotDiskAnalysisExport1);
             diskReader1.Starting += HandleDiskReaderStarting;
             diskReader1.Read();
 
-            ContainerDiskAnalysisExport containerDiskAnalysisExport2 = new ContainerDiskAnalysisExport();
-            DiskReader diskReader2 = new DiskReader(request.Path2, containerDiskAnalysisExport2);
+            SnapshotDiskAnalysisExport snapshotDiskAnalysisExport2 = new SnapshotDiskAnalysisExport();
+            DiskReader diskReader2 = new DiskReader(request.Path2, snapshotDiskAnalysisExport2);
             diskReader2.Starting += HandleDiskReaderStarting;
             diskReader2.Read();
 
-            ContainerComparer comparer = new ContainerComparer(containerDiskAnalysisExport1.Container, containerDiskAnalysisExport2.Container);
+            SnapshotComparer comparer = new SnapshotComparer(snapshotDiskAnalysisExport1.Snapshot, snapshotDiskAnalysisExport2.Snapshot);
             comparer.Compare();
 
             request.Exporter.Export(comparer);

@@ -26,7 +26,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.ResultExporters
     {
         public string ResultsDirectory { get; set; }
 
-        public void Export(ContainerComparer comparer)
+        public void Export(SnapshotComparer comparer)
         {
             if (string.IsNullOrWhiteSpace(ResultsDirectory))
                 throw new Exception("Cannot export comparison result. No file name was provided.");
@@ -34,8 +34,8 @@ namespace DustInTheWind.DirectoryCompare.Cli.ResultExporters
             string exportDirectoryPath = CreateExportDirectory();
 
             ExportInfoFile(comparer, exportDirectoryPath);
-            ExportOnlyInContainer1(comparer, exportDirectoryPath);
-            ExportOnlyInContainer2(comparer, exportDirectoryPath);
+            ExportOnlyInSnapshot1(comparer, exportDirectoryPath);
+            ExportOnlyInSnapshot2(comparer, exportDirectoryPath);
             ExportContentDifferentName(comparer, exportDirectoryPath);
             ExportSameNameDifferentContent(comparer, exportDirectoryPath);
 
@@ -60,14 +60,14 @@ namespace DustInTheWind.DirectoryCompare.Cli.ResultExporters
             return exportDirectoryPath;
         }
 
-        private static void ExportInfoFile(ContainerComparer comparer, string exportDirectoryPath)
+        private static void ExportInfoFile(SnapshotComparer comparer, string exportDirectoryPath)
         {
             string filePath = Path.Combine(exportDirectoryPath, "info.txt");
 
             using (StreamWriter streamWriter = new StreamWriter(filePath))
             {
-                streamWriter.WriteLine("Container 1: {0}", comparer.Container1.OriginalPath);
-                streamWriter.WriteLine("Container 2: {0}", comparer.Container2.OriginalPath);
+                streamWriter.WriteLine("Snapshot 1: {0}", comparer.Snapshot1.OriginalPath);
+                streamWriter.WriteLine("Snapshot 2: {0}", comparer.Snapshot2.OriginalPath);
 
                 streamWriter.WriteLine();
 
@@ -77,50 +77,50 @@ namespace DustInTheWind.DirectoryCompare.Cli.ResultExporters
             }
         }
 
-        private static void ExportOnlyInContainer1(ContainerComparer comparer, string exportDirectoryPath)
+        private static void ExportOnlyInSnapshot1(SnapshotComparer comparer, string exportDirectoryPath)
         {
-            string filePath = Path.Combine(exportDirectoryPath, "only-in-container1.txt");
+            string filePath = Path.Combine(exportDirectoryPath, "only-in-snapshot1.txt");
 
             using (StreamWriter streamWriter = new StreamWriter(filePath))
             {
-                streamWriter.WriteLine("Container 1: {0}", comparer.Container1.OriginalPath);
-                streamWriter.WriteLine("Container 2: {0}", comparer.Container2.OriginalPath);
+                streamWriter.WriteLine("Snapshot 1: {0}", comparer.Snapshot1.OriginalPath);
+                streamWriter.WriteLine("Snapshot 2: {0}", comparer.Snapshot2.OriginalPath);
 
                 streamWriter.WriteLine();
 
-                streamWriter.WriteLine("Files only in container 1:");
-                foreach (string path in comparer.OnlyInContainer1)
+                streamWriter.WriteLine("Files only in snapshot 1:");
+                foreach (string path in comparer.OnlyInSnapshot1)
                     streamWriter.WriteLine(path);
             }
         }
 
-        private static void ExportOnlyInContainer2(ContainerComparer comparer, string exportDirectoryPath)
+        private static void ExportOnlyInSnapshot2(SnapshotComparer comparer, string exportDirectoryPath)
         {
-            string filePath = Path.Combine(exportDirectoryPath, "only-in-container2.txt");
+            string filePath = Path.Combine(exportDirectoryPath, "only-in-snapshot2.txt");
 
             using (StreamWriter streamWriter = new StreamWriter(filePath))
             {
-                streamWriter.WriteLine("Container 1: {0}", comparer.Container1.OriginalPath);
-                streamWriter.WriteLine("Container 2: {0}", comparer.Container2.OriginalPath);
+                streamWriter.WriteLine("Snapshot 1: {0}", comparer.Snapshot1.OriginalPath);
+                streamWriter.WriteLine("Snapshot 2: {0}", comparer.Snapshot2.OriginalPath);
 
                 streamWriter.WriteLine();
 
-                streamWriter.WriteLine("Files only in container 2:");
-                foreach (string path in comparer.OnlyInContainer2)
+                streamWriter.WriteLine("Files only in snapshot 2:");
+                foreach (string path in comparer.OnlyInSnapshot2)
                     streamWriter.WriteLine(path);
 
                 streamWriter.WriteLine();
             }
         }
 
-        private static void ExportContentDifferentName(ContainerComparer comparer, string exportDirectoryPath)
+        private static void ExportContentDifferentName(SnapshotComparer comparer, string exportDirectoryPath)
         {
             string filePath = Path.Combine(exportDirectoryPath, "same-content-different-name.txt");
 
             using (StreamWriter streamWriter = new StreamWriter(filePath))
             {
-                streamWriter.WriteLine("Container 1: {0}", comparer.Container1.OriginalPath);
-                streamWriter.WriteLine("Container 2: {0}", comparer.Container2.OriginalPath);
+                streamWriter.WriteLine("Snapshot 1: {0}", comparer.Snapshot1.OriginalPath);
+                streamWriter.WriteLine("Snapshot 2: {0}", comparer.Snapshot2.OriginalPath);
 
                 streamWriter.WriteLine();
 
@@ -133,14 +133,14 @@ namespace DustInTheWind.DirectoryCompare.Cli.ResultExporters
             }
         }
 
-        private static void ExportSameNameDifferentContent(ContainerComparer comparer, string exportDirectoryPath)
+        private static void ExportSameNameDifferentContent(SnapshotComparer comparer, string exportDirectoryPath)
         {
             string filePath = Path.Combine(exportDirectoryPath, "same-name-different-content.txt");
 
             using (StreamWriter streamWriter = new StreamWriter(filePath))
             {
-                streamWriter.WriteLine("Container 1: {0}", comparer.Container1.OriginalPath);
-                streamWriter.WriteLine("Container 2: {0}", comparer.Container2.OriginalPath);
+                streamWriter.WriteLine("Snapshot 1: {0}", comparer.Snapshot1.OriginalPath);
+                streamWriter.WriteLine("Snapshot 2: {0}", comparer.Snapshot2.OriginalPath);
 
                 streamWriter.WriteLine();
 

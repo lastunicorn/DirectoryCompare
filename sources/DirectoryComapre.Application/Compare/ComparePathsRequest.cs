@@ -16,12 +16,12 @@
 
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.TimePoint
+namespace DustInTheWind.DirectoryCompare.Application.Compare
 {
-    public class CreateTimePointRequest : IRequest
+    public class ComparePathsRequest : IRequest
     {
-        public string SourcePath { get; set; }
-        public string DestinationFilePath { get; set; }
-        public string BlackListFilePath { get; set; }
+        public string Path1 { get; set; }
+        public string Path2 { get; set; }
+        public IComparisonExporter Exporter { get; set; }
     }
 }

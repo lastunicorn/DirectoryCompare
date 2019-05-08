@@ -15,7 +15,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DirectoryCompare.CliFramework;
-using DustInTheWind.DirectoryCompare.Application;
 using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
 using MediatR;
 using System;
@@ -23,32 +22,30 @@ using DustInTheWind.DirectoryCompare.Application.Compare;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
-    internal class CompareFilesCommand : ICommand
+    internal class ComparePathsCommand : ICommand
     {
         private readonly IMediator mediator;
 
-        public string Description => "Compares two json hash files.";
+        public string Description => "Compares two physical paths on disk.";
 
-        public CompareFilesCommand(IMediator mediator)
+        public ComparePathsCommand(IMediator mediator)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         public void Execute(Arguments arguments)
         {
-            CompareDisksRequest request = CreateRequest(arguments);
+            ComparePathsRequest request = CreateRequest(arguments);
             mediator.Send(request).Wait();
         }
 
-        private static CompareDisksRequest CreateRequest(Arguments arguments)
+        private static ComparePathsRequest CreateRequest(Arguments arguments)
         {
-            return new CompareDisksRequest
+            return new ComparePathsRequest
             {
                 Path1 = arguments[0],
                 Path2 = arguments[1],
-                Exporter = arguments.Count >= 3
-                    ? (IComparisonExporter)new FileComparisonExporter { ResultsDirectory = arguments[2] }
-                    : (IComparisonExporter)new ConsoleComparisonExporter()
+                Exporter = new ConsoleComparisonExporter()
             };
         }
     }

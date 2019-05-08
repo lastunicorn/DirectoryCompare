@@ -22,22 +22,22 @@ using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
 {
-    internal class JsonXDirectory
+    internal class JsonDirectory
     {
         [JsonProperty("n")]
         public string Name { get; set; }
 
         [JsonProperty("d")]
-        public List<JsonXDirectory> Directories { get; set; }
+        public List<JsonDirectory> Directories { get; set; }
 
         [JsonProperty("f")]
-        public List<JsonXFile> Files { get; set; }
+        public List<JsonFile> Files { get; set; }
 
-        public JsonXDirectory()
+        public JsonDirectory()
         {
         }
 
-        public JsonXDirectory(HDirectory xDirectory)
+        public JsonDirectory(HDirectory xDirectory)
         {
             if (xDirectory == null) throw new ArgumentNullException(nameof(xDirectory));
 
@@ -47,14 +47,14 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
                 Directories = null;
             else
                 Directories = xDirectory.Directories
-                    .Select(x => new JsonXDirectory(x))
+                    .Select(x => new JsonDirectory(x))
                     .ToList();
 
             if (xDirectory.Files == null)
                 Files = null;
             else
                 Files = xDirectory.Files
-                    .Select(x => new JsonXFile(x))
+                    .Select(x => new JsonFile(x))
                     .ToList();
         }
 

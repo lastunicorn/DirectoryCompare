@@ -16,37 +16,38 @@
 
 using System;
 using DirectoryCompare.CliFramework;
-using DustInTheWind.DirectoryCompare.Application.TimePoint;
-using DustInTheWind.DirectoryCompare.Entities;
+using DustInTheWind.DirectoryCompare.Application.Compare;
+using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
-    internal class ReadFileCommand : ICommand
+    internal class CompareSnapshotsCommand : ICommand
     {
         private readonly IMediator mediator;
 
-        public string Description => "Displays the content of a json hash files";
+        public string Description => "Compares two json hash files.";
 
-        public ReadFileCommand(IMediator mediator)
+        public CompareSnapshotsCommand(IMediator mediator)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         public void Execute(Arguments arguments)
         {
-            GetTimePointRequest request = CreateRequest(arguments);
-            HContainer container = mediator.Send(request).Result;
-
-            ContainerView containerView = new ContainerView(container);
-            containerView.Display();
+            CompareSnapshotsRequest request = CreateRequest(arguments);
+            mediator.Send(request).Wait();
         }
 
-        private static GetTimePointRequest CreateRequest(Arguments arguments)
+        private static CompareSnapshotsRequest CreateRequest(Arguments arguments)
         {
-            return new GetTimePointRequest
+            return new CompareSnapshotsRequest
             {
-                FilePath = arguments[0]
+                Path1 = arguments[0],
+                Path2 = arguments[1],
+                Exporter = arguments.Count >= 3
+                    ? (IComparisonExporter)new FileComparisonExporter { ResultsDirectory = arguments[2] }
+                    : (IComparisonExporter)new ConsoleComparisonExporter()
             };
         }
     }

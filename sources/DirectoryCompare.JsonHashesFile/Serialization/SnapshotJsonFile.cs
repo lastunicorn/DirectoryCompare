@@ -22,17 +22,17 @@ using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
 {
-    public class TimePointJsonFile
+    public class SnapshotJsonFile
     {
         public Guid Id => new Guid("9E93055D-7BDE-4F55-B340-DD5A4880D96E");
 
-        public HContainer Container { get; private set; }
+        public Snapshot Snapshot { get; private set; }
 
         public void Save(string destinationFilePath)
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
 
-            JsonXContainer jsonXContainer = new JsonXContainer(Container)
+            JsonSnapshot jsonSnapshot = new JsonSnapshot(Snapshot)
             {
                 SerializerInfo = new SerializerInfo
                 {
@@ -46,23 +46,23 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
                 Formatting = Formatting.Indented
             };
 
-            string json = JsonConvert.SerializeObject(jsonXContainer, jsonSerializerSettings);
+            string json = JsonConvert.SerializeObject(jsonSnapshot, jsonSerializerSettings);
             File.WriteAllText(destinationFilePath, json);
 
             stopwatch.Stop();
         }
 
-        public static TimePointJsonFile Load(string sourceFilePath)
+        public static SnapshotJsonFile Load(string sourceFilePath)
         {
             using (StreamReader streamReader = File.OpenText(sourceFilePath))
             using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
             {
                 JsonSerializer serializer = new JsonSerializer();
-                JsonXContainer jsonXContainer = (JsonXContainer)serializer.Deserialize(jsonTextReader, typeof(JsonXContainer));
+                JsonSnapshot jsonSnapshot = (JsonSnapshot)serializer.Deserialize(jsonTextReader, typeof(JsonSnapshot));
 
-                return new TimePointJsonFile
+                return new SnapshotJsonFile
                 {
-                    Container = jsonXContainer.ToContainer()
+                    Snapshot = jsonSnapshot.ToSnapshot()
                 };
             }
         }

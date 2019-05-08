@@ -15,17 +15,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.Entities;
-using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.TimePoint
+namespace DustInTheWind.DirectoryCompare.Application.Snapshots
 {
-    public class GetTimePointRequestHandler : RequestHandler<GetTimePointRequest, HContainer>
+    public class GetSnapshotRequest : IRequest<Snapshot>
     {
-        protected override HContainer Handle(GetTimePointRequest request)
-        {
-            TimePointJsonFile file = TimePointJsonFile.Load(request.FilePath);
-            return file.Container;
-        }
+        public string FilePath { get; set; }
     }
 }

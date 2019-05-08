@@ -16,37 +16,35 @@
 
 using System;
 using DustInTheWind.DirectoryCompare.Entities;
-using Newtonsoft.Json;
 
-namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
+namespace DustInTheWind.DirectoryCompare.Cli
 {
-    internal class JsonXFile
+    internal class SnapshotView
     {
-        [JsonProperty("n")]
-        public string Name { get; set; }
+        private readonly Snapshot snapshot;
 
-        [JsonProperty("h")]
-        public byte[] Hash { get; set; }
-
-        public JsonXFile()
+        public SnapshotView(Snapshot snapshot)
         {
+            this.snapshot = snapshot;
         }
 
-        public JsonXFile(HFile xFile)
+        public void Display()
         {
-            if (xFile == null) throw new ArgumentNullException(nameof(xFile));
-
-            Name = xFile.Name;
-            Hash = xFile.Hash;
+            DisplayDirectory(snapshot, 0);
         }
 
-        public HFile ToHFile()
+        private void DisplayDirectory(HDirectory hDirectory, int index)
         {
-            return new HFile
+            string indent = new string(' ', index);
+
+            foreach (HDirectory xSubdirectory in hDirectory.Directories)
             {
-                Name = Name,
-                Hash = Hash
-            };
+                Console.WriteLine(indent + xSubdirectory.Name);
+                DisplayDirectory(xSubdirectory, index + 1);
+            }
+
+            foreach (HFile xFile in hDirectory.Files)
+                Console.WriteLine(indent + xFile.Name);
         }
     }
 }

@@ -18,17 +18,17 @@ using System;
 using System.Collections.Generic;
 using DustInTheWind.DirectoryCompare.Entities;
 
-namespace DustInTheWind.DirectoryCompare.InMemoryExport
+namespace DustInTheWind.DirectoryCompare
 {
-    public class ContainerDiskAnalysisExport : IDiskAnalysisExport
+    public class SnapshotDiskAnalysisExport : IDiskAnalysisExport
     {
         private readonly Stack<HDirectory> directoryStack = new Stack<HDirectory>();
 
-        public HContainer Container { get; }
+        public Snapshot Snapshot { get; }
 
-        public ContainerDiskAnalysisExport()
+        public SnapshotDiskAnalysisExport()
         {
-            Container = new HContainer
+            Snapshot = new Snapshot
             {
                 CreationTime = DateTime.UtcNow
             };
@@ -36,7 +36,7 @@ namespace DustInTheWind.DirectoryCompare.InMemoryExport
 
         public void Open(string originalPath)
         {
-            Container.OriginalPath = originalPath;
+            Snapshot.OriginalPath = originalPath;
         }
 
         public void OpenNewDirectory(HDirectory directory)
@@ -53,7 +53,7 @@ namespace DustInTheWind.DirectoryCompare.InMemoryExport
         public void Add(HFile file)
         {
             if (directoryStack.Count == 0)
-                throw new Exception("There is no directory added.");
+                throw new Exception("There is no directory added that can be used as parent for this file.");
 
             HDirectory topDirectory = directoryStack.Peek();
             topDirectory.Files.Add(file);
@@ -63,10 +63,10 @@ namespace DustInTheWind.DirectoryCompare.InMemoryExport
         {
             if (directoryStack.Count == 0)
             {
-                Container.Name = directory.Name;
-                Container.Files.AddRange(directory.Files);
-                Container.Directories.AddRange(directory.Directories);
-                Container.Error = directory.Error;
+                Snapshot.Name = directory.Name;
+                Snapshot.Files.AddRange(directory.Files);
+                Snapshot.Directories.AddRange(directory.Directories);
+                Snapshot.Error = directory.Error;
             }
             else
             {

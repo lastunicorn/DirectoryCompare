@@ -14,22 +14,39 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
-using MediatR;
+using System;
+using DustInTheWind.DirectoryCompare.Entities;
+using Newtonsoft.Json;
 
-namespace DustInTheWind.DirectoryCompare.Application.Compare
+namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
 {
-    public class CompareFilesRequestHandler : RequestHandler<CompareFilesRequest>
+    internal class JsonFile
     {
-        protected override void Handle(CompareFilesRequest request)
+        [JsonProperty("n")]
+        public string Name { get; set; }
+
+        [JsonProperty("h")]
+        public byte[] Hash { get; set; }
+
+        public JsonFile()
         {
-            TimePointJsonFile file1 = TimePointJsonFile.Load(request.Path1);
-            TimePointJsonFile file2 = TimePointJsonFile.Load(request.Path2);
+        }
 
-            ContainerComparer comparer = new ContainerComparer(file1.Container, file2.Container);
-            comparer.Compare();
+        public JsonFile(HFile file)
+        {
+            if (file == null) throw new ArgumentNullException(nameof(file));
 
-            request.Exporter?.Export(comparer);
+            Name = file.Name;
+            Hash = file.Hash;
+        }
+
+        public HFile ToHFile()
+        {
+            return new HFile
+            {
+                Name = Name,
+                Hash = Hash
+            };
         }
     }
 }

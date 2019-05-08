@@ -17,149 +17,149 @@
 using DustInTheWind.DirectoryCompare.Entities;
 using NUnit.Framework;
 
-namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
+namespace DustInTheWind.DirectoryCompare.Tests.SnapshotComparerTests
 {
     [TestFixture]
     public class CompareDirectoryWithOneFileTests
     {
-        #region OnlyInContainer1
+        #region OnlyInSnapshot1
 
         [Test]
-        public void OnlyInContainer1_is_empty_if_both_containers_contain_one_identical_file_in_same_dir()
+        public void OnlyInSnapshot1_is_empty_if_both_snapshotss_contain_one_identical_file_in_same_dir()
         {
-            HContainer container1 = new HContainer();
+            Snapshot snapshot1 = new Snapshot();
             HDirectory hDirectory1 = new HDirectory("Dir1");
             hDirectory1.Files.AddRange(new[]
             {
                 new HFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
             });
-            container1.Directories.AddRange(new[] { hDirectory1 });
+            snapshot1.Directories.AddRange(new[] { hDirectory1 });
 
-            HContainer container2 = new HContainer();
+            Snapshot snapshot2 = new Snapshot();
             HDirectory hDirectory2 = new HDirectory("Dir1");
             hDirectory2.Files.AddRange(new[]
             {
                 new HFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
             });
-            container2.Directories.AddRange(new[] { hDirectory2 });
+            snapshot2.Directories.AddRange(new[] { hDirectory2 });
 
-            ContainerComparer comparer = new ContainerComparer(container1, container2);
+            SnapshotComparer comparer = new SnapshotComparer(snapshot1, snapshot2);
             comparer.Compare();
 
-            Assert.That(comparer.OnlyInContainer1, Is.EqualTo(new string[0]));
+            Assert.That(comparer.OnlyInSnapshot1, Is.EqualTo(new string[0]));
         }
 
         [Test]
-        public void OnlyInContainer1_contains_the_name_of_the_file_if_only_container1_has_one_file_in_dir()
+        public void OnlyInSnapshot1_contains_the_name_of_the_file_if_only_snapshot1_has_one_file_in_dir()
         {
-            HContainer container1 = new HContainer();
+            Snapshot snapshot1 = new Snapshot();
             HDirectory hDirectory1 = new HDirectory("Dir1");
             hDirectory1.Files.AddRange(new[]
             {
                 new HFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
             });
-            container1.Directories.AddRange(new[] { hDirectory1 });
+            snapshot1.Directories.AddRange(new[] { hDirectory1 });
 
-            HContainer container2 = new HContainer();
+            Snapshot snapshot2 = new Snapshot();
             HDirectory hDirectory2 = new HDirectory("Dir1");
-            container2.Directories.AddRange(new[] { hDirectory2 });
+            snapshot2.Directories.AddRange(new[] { hDirectory2 });
 
-            ContainerComparer comparer = new ContainerComparer(container1, container2);
+            SnapshotComparer comparer = new SnapshotComparer(snapshot1, snapshot2);
             comparer.Compare();
 
-            Assert.That(comparer.OnlyInContainer1, Is.EqualTo(new[] { "/Dir1/File1" }));
+            Assert.That(comparer.OnlyInSnapshot1, Is.EqualTo(new[] { "/Dir1/File1" }));
         }
 
         [Test]
-        public void OnlyInContainer1_is_empty_if_only_container2_has_one_file_in_dir()
+        public void OnlyInSnapshot1_is_empty_if_only_snapshot2_has_one_file_in_dir()
         {
-            HContainer container1 = new HContainer();
+            Snapshot snapshot1 = new Snapshot();
             HDirectory hDirectory1 = new HDirectory("Dir1");
-            container1.Directories.AddRange(new[] { hDirectory1 });
+            snapshot1.Directories.AddRange(new[] { hDirectory1 });
 
-            HContainer container2 = new HContainer();
+            Snapshot snapshot2 = new Snapshot();
             HDirectory hDirectory2 = new HDirectory("Dir1");
             hDirectory2.Files.AddRange(new[]
             {
                 new HFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
             });
-            container2.Directories.AddRange(new[] { hDirectory2 });
+            snapshot2.Directories.AddRange(new[] { hDirectory2 });
 
-            ContainerComparer comparer = new ContainerComparer(container1, container2);
+            SnapshotComparer comparer = new SnapshotComparer(snapshot1, snapshot2);
             comparer.Compare();
 
-            Assert.That(comparer.OnlyInContainer1, Is.EqualTo(new string[0]));
+            Assert.That(comparer.OnlyInSnapshot1, Is.EqualTo(new string[0]));
         }
 
         #endregion
 
-        #region OnlyInContainer2
+        #region OnlyInSnapshot2
 
         [Test]
-        public void OnlyInContainer2_is_empty_if_both_containers_contain_one_identical_file_in_same_dir()
+        public void OnlyInSnapshot2_is_empty_if_both_snapshots_contain_one_identical_file_in_same_dir()
         {
-            HContainer container1 = new HContainer();
+            Snapshot snapshot1 = new Snapshot();
             HDirectory hDirectory1 = new HDirectory("Dir1");
             hDirectory1.Files.AddRange(new[]
             {
                 new HFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
             });
-            container1.Directories.AddRange(new[] { hDirectory1 });
+            snapshot1.Directories.AddRange(new[] { hDirectory1 });
 
-            HContainer container2 = new HContainer();
+            Snapshot snapshot2 = new Snapshot();
             HDirectory hDirectory2 = new HDirectory("Dir1");
             hDirectory2.Files.AddRange(new[]
             {
                 new HFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
             });
-            container2.Directories.AddRange(new[] { hDirectory2 });
+            snapshot2.Directories.AddRange(new[] { hDirectory2 });
 
-            ContainerComparer comparer = new ContainerComparer(container1, container2);
+            SnapshotComparer comparer = new SnapshotComparer(snapshot1, snapshot2);
             comparer.Compare();
 
-            Assert.That(comparer.OnlyInContainer2, Is.EqualTo(new string[0]));
+            Assert.That(comparer.OnlyInSnapshot2, Is.EqualTo(new string[0]));
         }
 
         [Test]
-        public void OnlyInContainer2_contains_the_name_of_the_file_if_only_container2_has_one_file_in_dir()
+        public void OnlyInSnapshot2_contains_the_name_of_the_file_if_only_snapshot2_has_one_file_in_dir()
         {
-            HContainer container1 = new HContainer();
+            Snapshot snapshot1 = new Snapshot();
             HDirectory hDirectory1 = new HDirectory("Dir1");
-            container1.Directories.AddRange(new[] { hDirectory1 });
+            snapshot1.Directories.AddRange(new[] { hDirectory1 });
 
-            HContainer container2 = new HContainer();
+            Snapshot snapshot2 = new Snapshot();
             HDirectory hDirectory2 = new HDirectory("Dir1");
             hDirectory2.Files.AddRange(new[]
             {
                 new HFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
             });
-            container2.Directories.AddRange(new[] { hDirectory2 });
+            snapshot2.Directories.AddRange(new[] { hDirectory2 });
 
-            ContainerComparer comparer = new ContainerComparer(container1, container2);
+            SnapshotComparer comparer = new SnapshotComparer(snapshot1, snapshot2);
             comparer.Compare();
 
-            Assert.That(comparer.OnlyInContainer2, Is.EqualTo(new[] { "/Dir1/File1" }));
+            Assert.That(comparer.OnlyInSnapshot2, Is.EqualTo(new[] { "/Dir1/File1" }));
         }
 
         [Test]
-        public void OnlyInContainer2_is_empty_if_only_container1_has_one_file_in_dir()
+        public void OnlyInSnapshot2_is_empty_if_only_snapshot1_has_one_file_in_dir()
         {
-            HContainer container1 = new HContainer();
+            Snapshot snapshot1 = new Snapshot();
             HDirectory hDirectory1 = new HDirectory("Dir1");
             hDirectory1.Files.AddRange(new[]
             {
                 new HFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
             });
-            container1.Directories.AddRange(new[] { hDirectory1 });
+            snapshot1.Directories.AddRange(new[] { hDirectory1 });
 
-            HContainer container2 = new HContainer();
+            Snapshot snapshot2 = new Snapshot();
             HDirectory hDirectory2 = new HDirectory("Dir1");
-            container2.Directories.AddRange(new[] { hDirectory2 });
+            snapshot2.Directories.AddRange(new[] { hDirectory2 });
 
-            ContainerComparer comparer = new ContainerComparer(container1, container2);
+            SnapshotComparer comparer = new SnapshotComparer(snapshot1, snapshot2);
             comparer.Compare();
 
-            Assert.That(comparer.OnlyInContainer2, Is.EqualTo(new string[0]));
+            Assert.That(comparer.OnlyInSnapshot2, Is.EqualTo(new string[0]));
         }
 
         #endregion

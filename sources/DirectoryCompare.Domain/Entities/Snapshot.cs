@@ -14,13 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Entities;
-using MediatR;
+using System;
 
-namespace DustInTheWind.DirectoryCompare.Application.TimePoint
+namespace DustInTheWind.DirectoryCompare.Entities
 {
-    public class GetTimePointRequest : IRequest<HContainer>
+    public class Snapshot : HDirectory
     {
-        public string FilePath { get; set; }
+        public string OriginalPath { get; set; }
+
+        public DateTime CreationTime { get; set; }
+
+        public Snapshot()
+            : base(string.Empty)
+        {
+        }
     }
 }

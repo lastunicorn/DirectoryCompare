@@ -23,19 +23,19 @@ using DustInTheWind.DirectoryCompare.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.TimePoint
+namespace DustInTheWind.DirectoryCompare.Application.Snapshots
 {
-    public class CreateTimePointRequestHandler : RequestHandler<CreateTimePointRequest>
+    public class CreateSnapshotRequestHandler : RequestHandler<CreateSnapshotRequest>
     {
         private readonly IProjectLogger logger;
         private PathCollection blackList = new PathCollection();
 
-        public CreateTimePointRequestHandler(IProjectLogger logger)
+        public CreateSnapshotRequestHandler(IProjectLogger logger)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        protected override void Handle(CreateTimePointRequest request)
+        protected override void Handle(CreateSnapshotRequest request)
         {
             blackList = ReadBlackList(request.BlackListFilePath);
 

@@ -30,23 +30,23 @@ namespace DustInTheWind.DirectoryCompare.Application.Duplicates
 
         public IEnumerable<Duplicate> Find()
         {
-            TimePointJsonFile fileLeft = TimePointJsonFile.Load(PathLeft);
+            SnapshotJsonFile fileLeft = SnapshotJsonFile.Load(PathLeft);
 
             List<Tuple<string, HFile>> filesLeft = new List<Tuple<string, HFile>>();
-            Read(filesLeft, fileLeft.Container, Path.DirectorySeparatorChar.ToString());
+            Read(filesLeft, fileLeft.Snapshot, Path.DirectorySeparatorChar.ToString());
 
             if (PathRight == null)
             {
-                return FindDuplicates(filesLeft, fileLeft.Container);
+                return FindDuplicates(filesLeft, fileLeft.Snapshot);
             }
             else
             {
-                TimePointJsonFile fileRight = TimePointJsonFile.Load(PathRight);
+                SnapshotJsonFile fileRight = SnapshotJsonFile.Load(PathRight);
 
                 List<Tuple<string, HFile>> filesRight = new List<Tuple<string, HFile>>();
-                Read(filesRight, fileRight.Container, Path.DirectorySeparatorChar.ToString());
+                Read(filesRight, fileRight.Snapshot, Path.DirectorySeparatorChar.ToString());
 
-                return FindDuplicates(filesLeft, filesRight, fileLeft.Container, fileRight.Container);
+                return FindDuplicates(filesLeft, filesRight, fileLeft.Snapshot, fileRight.Snapshot);
             }
         }
 
@@ -67,7 +67,7 @@ namespace DustInTheWind.DirectoryCompare.Application.Duplicates
                 }
         }
 
-        private IEnumerable<Duplicate> FindDuplicates(List<Tuple<string, HFile>> files, HContainer hContainer)
+        private IEnumerable<Duplicate> FindDuplicates(List<Tuple<string, HFile>> files, Snapshot snapshot)
         {
             for (int i = 0; i < files.Count; i++)
             {
@@ -76,12 +76,12 @@ namespace DustInTheWind.DirectoryCompare.Application.Duplicates
                     Tuple<string, HFile> tupleLeft = files[i];
                     Tuple<string, HFile> tupleRight = files[j];
 
-                    yield return new Duplicate(tupleLeft, tupleRight, CheckFilesExist, hContainer, hContainer);
+                    yield return new Duplicate(tupleLeft, tupleRight, CheckFilesExist, snapshot, snapshot);
                 }
             }
         }
 
-        private IEnumerable<Duplicate> FindDuplicates(List<Tuple<string, HFile>> filesLeft, List<Tuple<string, HFile>> filesRight, HContainer hContainerLeft, HContainer hContainerRight)
+        private IEnumerable<Duplicate> FindDuplicates(List<Tuple<string, HFile>> filesLeft, List<Tuple<string, HFile>> filesRight, Snapshot snapshotLeft, Snapshot snapshotRight)
         {
             for (int i = 0; i < filesLeft.Count; i++)
             {
@@ -90,7 +90,7 @@ namespace DustInTheWind.DirectoryCompare.Application.Duplicates
                     Tuple<string, HFile> tupleLeft = filesLeft[i];
                     Tuple<string, HFile> tupleRight = filesRight[j];
 
-                    yield return new Duplicate(tupleLeft, tupleRight, CheckFilesExist, hContainerLeft, hContainerRight);
+                    yield return new Duplicate(tupleLeft, tupleRight, CheckFilesExist, snapshotLeft, snapshotRight);
                 }
             }
         }

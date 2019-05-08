@@ -25,7 +25,7 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
     public class JsonDiskAnalysisExport : IDiskAnalysisExport
     {
         private readonly Stack<JsonDirectory> directoryStack = new Stack<JsonDirectory>();
-        private JsonContainer jsonContainer;
+        private JsonSnapshot jsonSnapshot;
 
         private readonly JsonTextWriter jsonTextWriter;
 
@@ -41,7 +41,7 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
 
         public void Open(string originalPath)
         {
-            jsonContainer = new JsonContainer(jsonTextWriter)
+            jsonSnapshot = new JsonSnapshot(jsonTextWriter)
             {
                 Id = Id,
                 OriginalPath = originalPath
@@ -52,13 +52,13 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
         {
             if (directoryStack.Count == 0)
             {
-                jsonContainer.WriteStart(directory);
-                directoryStack.Push(jsonContainer);
+                jsonSnapshot.WriteStart(directory);
+                directoryStack.Push(jsonSnapshot);
             }
             else
             {
                 JsonDirectory topDirectory = directoryStack.Peek();
-                JsonDirectory newDirectory = topDirectory.OpenNewDirectory(directory);
+                JsonDirectory newDirectory = topDirectory.WriteStartDirectory(directory);
                 directoryStack.Push(newDirectory);
             }
         }
@@ -66,7 +66,7 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
         public void CloseDirectory()
         {
             JsonDirectory topDirectory = directoryStack.Pop();
-            topDirectory.CloseDirectory();
+            topDirectory.WriteEnd();
         }
 
         public void Add(HFile file)
@@ -78,8 +78,8 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
         public void Add(HDirectory directory)
         {
             JsonDirectory topDirectory = directoryStack.Peek();
-            JsonDirectory newDirectory = topDirectory.OpenNewDirectory(directory);
-            newDirectory.CloseDirectory();
+            JsonDirectory newDirectory = topDirectory.WriteStartDirectory(directory);
+            newDirectory.WriteEnd();
         }
 
         public void Close()

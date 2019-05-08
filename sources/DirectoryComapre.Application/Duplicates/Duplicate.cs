@@ -26,8 +26,8 @@ namespace DustInTheWind.DirectoryCompare.Application.Duplicates
         private readonly Tuple<string, HFile> tuple1;
         private readonly Tuple<string, HFile> tuple2;
         private readonly bool checkFilesExist;
-        private readonly HContainer hContainer1;
-        private readonly HContainer hContainer2;
+        private readonly Snapshot snapshot1;
+        private readonly Snapshot snapshot2;
         private bool? areEqual;
 
         public bool AreEqual
@@ -47,13 +47,13 @@ namespace DustInTheWind.DirectoryCompare.Application.Duplicates
         public bool File1Exists { get; private set; }
         public bool File2Exists { get; private set; }
 
-        public Duplicate(Tuple<string, HFile> tuple1, Tuple<string, HFile> tuple2, bool checkFilesExist, HContainer hContainer1, HContainer hContainer2)
+        public Duplicate(Tuple<string, HFile> tuple1, Tuple<string, HFile> tuple2, bool checkFilesExist, Snapshot snapshot1, Snapshot snapshot2)
         {
             this.tuple1 = tuple1 ?? throw new ArgumentNullException(nameof(tuple1));
             this.tuple2 = tuple2 ?? throw new ArgumentNullException(nameof(tuple2));
             this.checkFilesExist = checkFilesExist;
-            this.hContainer1 = hContainer1 ?? throw new ArgumentNullException(nameof(hContainer1));
-            this.hContainer2 = hContainer2 ?? throw new ArgumentNullException(nameof(hContainer2));
+            this.snapshot1 = snapshot1 ?? throw new ArgumentNullException(nameof(snapshot1));
+            this.snapshot2 = snapshot2 ?? throw new ArgumentNullException(nameof(snapshot2));
         }
 
         private void CalculateEquality()
@@ -67,8 +67,8 @@ namespace DustInTheWind.DirectoryCompare.Application.Duplicates
                 string path1 = tuple1.Item1;
                 string path2 = tuple2.Item1;
 
-                FullPath1 = Path.Combine(hContainer1.OriginalPath, path1.Substring(1));
-                FullPath2 = Path.Combine(hContainer2.OriginalPath, path2.Substring(1));
+                FullPath1 = Path.Combine(snapshot1.OriginalPath, path1.Substring(1));
+                FullPath2 = Path.Combine(snapshot2.OriginalPath, path2.Substring(1));
 
                 File1Exists = File.Exists(FullPath1);
                 File2Exists = File.Exists(FullPath2);

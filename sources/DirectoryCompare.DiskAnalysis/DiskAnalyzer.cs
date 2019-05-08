@@ -14,19 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-
-namespace DustInTheWind.DirectoryCompare.Entities
+namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 {
-    public class HContainer : HDirectory
+    public class DiskAnalyzer : IDiskAnalyzer
     {
-        public string OriginalPath { get; set; }
-
-        public DateTime CreationTime { get; set; }
-
-        public HContainer()
-            : base(string.Empty)
+        public void AnalyzePath(string path, IDiskAnalysisExport diskAnalysisExport)
         {
+
         }
     }
 }

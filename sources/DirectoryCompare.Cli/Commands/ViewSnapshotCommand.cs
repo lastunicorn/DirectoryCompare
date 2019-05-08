@@ -14,37 +14,39 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DirectoryCompare.CliFramework;
-using MediatR;
 using System;
-using DustInTheWind.DirectoryCompare.Application.TimePoint;
+using DirectoryCompare.CliFramework;
+using DustInTheWind.DirectoryCompare.Application.Snapshots;
+using DustInTheWind.DirectoryCompare.Entities;
+using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
-    internal class ReadDiskCommand : ICommand
+    internal class ViewSnapshotCommand : ICommand
     {
         private readonly IMediator mediator;
 
-        public string Description => string.Empty;
+        public string Description => "Displays the content of a json hash files";
 
-        public ReadDiskCommand(IMediator mediator)
+        public ViewSnapshotCommand(IMediator mediator)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         public void Execute(Arguments arguments)
         {
-            CreateTimePointRequest request = CreateRequest(arguments);
-            mediator.Send(request).Wait();
+            GetSnapshotRequest request = CreateRequest(arguments);
+            Snapshot snapshot = mediator.Send(request).Result;
+
+            SnapshotView snapshotView = new SnapshotView(snapshot);
+            snapshotView.Display();
         }
 
-        private static CreateTimePointRequest CreateRequest(Arguments arguments)
+        private static GetSnapshotRequest CreateRequest(Arguments arguments)
         {
-            return new CreateTimePointRequest
+            return new GetSnapshotRequest
             {
-                SourcePath = arguments[0],
-                DestinationFilePath = arguments[1],
-                BlackListFilePath = arguments[2]
+                FilePath = arguments[0]
             };
         }
     }

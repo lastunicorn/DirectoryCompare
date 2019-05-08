@@ -15,37 +15,36 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DirectoryCompare.CliFramework;
-using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
 using MediatR;
 using System;
-using DustInTheWind.DirectoryCompare.Application.Compare;
+using DustInTheWind.DirectoryCompare.Application.Snapshots;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
-    internal class CompareDisksCommand : ICommand
+    internal class CreateSnapshotCommand : ICommand
     {
         private readonly IMediator mediator;
 
-        public string Description => "Compares two physical paths on disk.";
+        public string Description => string.Empty;
 
-        public CompareDisksCommand(IMediator mediator)
+        public CreateSnapshotCommand(IMediator mediator)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         public void Execute(Arguments arguments)
         {
-            CompareDisksRequest request = CreateRequest(arguments);
+            CreateSnapshotRequest request = CreateRequest(arguments);
             mediator.Send(request).Wait();
         }
 
-        private static CompareDisksRequest CreateRequest(Arguments arguments)
+        private static CreateSnapshotRequest CreateRequest(Arguments arguments)
         {
-            return new CompareDisksRequest
+            return new CreateSnapshotRequest
             {
-                Path1 = arguments[0],
-                Path2 = arguments[1],
-                Exporter = new ConsoleComparisonExporter()
+                SourcePath = arguments[0],
+                DestinationFilePath = arguments[1],
+                BlackListFilePath = arguments[2]
             };
         }
     }
