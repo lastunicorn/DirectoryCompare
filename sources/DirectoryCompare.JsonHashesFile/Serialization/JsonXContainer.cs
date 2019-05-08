@@ -67,16 +67,22 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
 
         public HContainer ToContainer()
         {
-            return new HContainer
+            HContainer container = new HContainer
             {
                 OriginalPath = OriginalPath,
-                CreationTime = CreationTime,
-                Directories = GetHDirectories(),
-                Files = GetHFiles()
+                CreationTime = CreationTime
             };
+
+            IEnumerable<HDirectory> newDirectories = GetHDirectories();
+            container.Directories.AddRange(newDirectories);
+
+            IEnumerable<HFile> newFiles = GetHFiles();
+            container.Files.AddRange(newFiles);
+
+            return container;
         }
 
-        private List<HDirectory> GetHDirectories()
+        private IEnumerable<HDirectory> GetHDirectories()
         {
             if (Directories == null)
                 return null;
@@ -86,7 +92,7 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
                 .ToList();
         }
 
-        private List<HFile> GetHFiles()
+        private IEnumerable<HFile> GetHFiles()
         {
             if (Files == null)
                 return null;

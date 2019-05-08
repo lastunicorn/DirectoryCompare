@@ -22,15 +22,17 @@ using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
 {
-    public class JsonFileSerializer : ISerializer
+    public class TimePointJsonFile
     {
         public Guid Id => new Guid("9E93055D-7BDE-4F55-B340-DD5A4880D96E");
 
-        public void WriteToFile(HContainer container, string destinationFilePath)
+        public HContainer Container { get; private set; }
+
+        public void Save(string destinationFilePath)
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
 
-            JsonXContainer jsonXContainer = new JsonXContainer(container)
+            JsonXContainer jsonXContainer = new JsonXContainer(Container)
             {
                 SerializerInfo = new SerializerInfo
                 {
@@ -50,7 +52,7 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
             stopwatch.Stop();
         }
 
-        public HContainer ReadFromFile(string sourceFilePath)
+        public static TimePointJsonFile Load(string sourceFilePath)
         {
             using (StreamReader streamReader = File.OpenText(sourceFilePath))
             using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
@@ -58,7 +60,10 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
                 JsonSerializer serializer = new JsonSerializer();
                 JsonXContainer jsonXContainer = (JsonXContainer)serializer.Deserialize(jsonTextReader, typeof(JsonXContainer));
 
-                return jsonXContainer.ToContainer();
+                return new TimePointJsonFile
+                {
+                    Container = jsonXContainer.ToContainer()
+                };
             }
         }
 

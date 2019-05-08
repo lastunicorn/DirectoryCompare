@@ -22,16 +22,16 @@ using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
 {
-    public class JsonDiskExport : IDiskExport
+    public class JsonDiskAnalysisExport : IDiskAnalysisExport
     {
+        private readonly Stack<JsonDirectory> directoryStack = new Stack<JsonDirectory>();
+        private JsonContainer jsonContainer;
+
         private readonly JsonTextWriter jsonTextWriter;
 
         public Guid Id => new Guid("9E93055D-7BDE-4F55-B340-DD5A4880D96E");
 
-        private readonly Stack<JsonDirectoryExport> stack = new Stack<JsonDirectoryExport>();
-        private JsonContainerExport jsonContainerExport;
-
-        public JsonDiskExport(TextWriter textWriter)
+        public JsonDiskAnalysisExport(TextWriter textWriter)
         {
             jsonTextWriter = new JsonTextWriter(textWriter)
             {
@@ -41,7 +41,7 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
 
         public void Open(string originalPath)
         {
-            jsonContainerExport = new JsonContainerExport(jsonTextWriter)
+            jsonContainer = new JsonContainer(jsonTextWriter)
             {
                 Id = Id,
                 OriginalPath = originalPath
@@ -50,33 +50,36 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
 
         public void OpenNewDirectory(HDirectory directory)
         {
-            if (stack.Count == 0)
+            if (directoryStack.Count == 0)
             {
-                jsonContainerExport.Open(directory);
-                stack.Push(jsonContainerExport);
+                jsonContainer.WriteStart(directory);
+                directoryStack.Push(jsonContainer);
             }
             else
             {
-                JsonDirectoryExport jsonDirectoryExport = stack.Peek().OpenNewDirectory(directory);
-                stack.Push(jsonDirectoryExport);
+                JsonDirectory topDirectory = directoryStack.Peek();
+                JsonDirectory newDirectory = topDirectory.OpenNewDirectory(directory);
+                directoryStack.Push(newDirectory);
             }
         }
 
         public void CloseDirectory()
         {
-            JsonDirectoryExport jsonDirectoryExport = stack.Pop();
-            jsonDirectoryExport.CloseDirectory();
+            JsonDirectory topDirectory = directoryStack.Pop();
+            topDirectory.CloseDirectory();
         }
 
         public void Add(HFile file)
         {
-            stack.Peek().Add(file);
+            JsonDirectory topDirectory = directoryStack.Peek();
+            topDirectory.WriteFile(file);
         }
 
         public void Add(HDirectory directory)
         {
-            JsonDirectoryExport jsonDirectoryExport = stack.Peek().OpenNewDirectory(directory);
-            jsonDirectoryExport.CloseDirectory();
+            JsonDirectory topDirectory = directoryStack.Peek();
+            JsonDirectory newDirectory = topDirectory.OpenNewDirectory(directory);
+            newDirectory.CloseDirectory();
         }
 
         public void Close()

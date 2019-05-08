@@ -30,22 +30,18 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         [SetUp]
         public void SetUp()
         {
-            container1 = new HContainer
+            container1 = new HContainer();
+            container1.Files.AddRange(new[]
             {
-                Files = new List<HFile>
-                {
-                    new HFile { Name = "File1.txt", Hash = new byte[] { 1, 2, 3 } },
-                    new HFile { Name = "File2.txt", Hash = new byte[] { 1, 2, 3 } }
-                }
-            };
-            container2 = new HContainer
+                new HFile { Name = "File1.txt", Hash = new byte[] { 1, 2, 3 } },
+                new HFile { Name = "File2.txt", Hash = new byte[] { 1, 2, 3 } }
+            });
+            container2 = new HContainer();
+            container2.Files.AddRange(new[]
             {
-                Files = new List<HFile>
-                {
-                    new HFile { Name = "File1.txt", Hash = new byte[] { 1, 2, 3 } },
-                    new HFile { Name = "File2.txt", Hash = new byte[] { 1, 2, 3 } }
-                }
-            };
+                new HFile { Name = "File1.txt", Hash = new byte[] { 1, 2, 3 } },
+                new HFile { Name = "File2.txt", Hash = new byte[] { 1, 2, 3 } }
+            });
             containerComparer = new ContainerComparer(container1, container2);
         }
 

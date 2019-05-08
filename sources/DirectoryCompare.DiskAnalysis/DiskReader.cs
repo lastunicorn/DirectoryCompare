@@ -23,10 +23,22 @@ using DustInTheWind.DirectoryCompare.Entities;
 
 namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 {
+    public interface IDiskAnalyzer
+    {
+    }
+
+    public class DiskAnalyzer : IDiskAnalyzer
+    {
+        public void AnalyzePath(string path, IDiskAnalysisExport diskAnalysisExport)
+        {
+
+        }
+    }
+
     public sealed class DiskReader : IDisposable
     {
         private readonly string rootPath;
-        private readonly IDiskExport diskExport;
+        private readonly IDiskAnalysisExport diskAnalysisExport;
         private readonly MD5 md5;
 
         public PathCollection BlackList { get; } = new PathCollection();
@@ -34,10 +46,10 @@ namespace DustInTheWind.DirectoryCompare.DiskAnalysis
         public event EventHandler<ErrorEncounteredEventArgs> ErrorEncountered;
         public event EventHandler<DiskReaderStartingEventArgs> Starting;
 
-        public DiskReader(string rootPath, IDiskExport diskExport)
+        public DiskReader(string rootPath, IDiskAnalysisExport diskAnalysisExport)
         {
             this.rootPath = rootPath ?? throw new ArgumentNullException(nameof(rootPath));
-            this.diskExport = diskExport ?? throw new ArgumentNullException(nameof(diskExport));
+            this.diskAnalysisExport = diskAnalysisExport ?? throw new ArgumentNullException(nameof(diskAnalysisExport));
 
             md5 = MD5.Create();
         }
@@ -48,7 +60,7 @@ namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 
             OnStarting(new DiskReaderStartingEventArgs(rootedBlackList));
 
-            diskExport.Open(rootPath);
+            diskAnalysisExport.Open(rootPath);
 
             DiskCrawler diskCrawler = new DiskCrawler(rootPath, rootedBlackList);
 
@@ -77,7 +89,7 @@ namespace DustInTheWind.DirectoryCompare.DiskAnalysis
                 }
             }
 
-            diskExport.Close();
+            diskAnalysisExport.Close();
         }
 
         private void AddDirectory(CrawlerStep crawlerStep)
@@ -85,12 +97,12 @@ namespace DustInTheWind.DirectoryCompare.DiskAnalysis
             string directoryName = Path.GetFileName(crawlerStep.Path);
             HDirectory hDirectory = new HDirectory(directoryName);
 
-            diskExport.OpenNewDirectory(hDirectory);
+            diskAnalysisExport.OpenNewDirectory(hDirectory);
         }
 
         private void CloseDirectory()
         {
-            diskExport.CloseDirectory();
+            diskAnalysisExport.CloseDirectory();
         }
 
         private void AddFile(CrawlerStep crawlerStep)
@@ -103,9 +115,7 @@ namespace DustInTheWind.DirectoryCompare.DiskAnalysis
             try
             {
                 using (FileStream stream = File.OpenRead(crawlerStep.Path))
-                {
                     hFile.Hash = md5.ComputeHash(stream);
-                }
             }
             catch (Exception ex)
             {
@@ -113,7 +123,7 @@ namespace DustInTheWind.DirectoryCompare.DiskAnalysis
                 hFile.Error = ex.Message;
             }
 
-            diskExport.Add(hFile);
+            diskAnalysisExport.Add(hFile);
         }
 
         private void ProcessError(CrawlerStep crawlerStep)
@@ -126,7 +136,7 @@ namespace DustInTheWind.DirectoryCompare.DiskAnalysis
                 Error = crawlerStep.Exception.Message
             };
 
-            diskExport.Add(hDirectory);
+            diskAnalysisExport.Add(hDirectory);
         }
 
         public void Dispose()

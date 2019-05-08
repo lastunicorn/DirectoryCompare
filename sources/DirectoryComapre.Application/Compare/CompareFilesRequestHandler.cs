@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Entities;
 using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
 using MediatR;
 
@@ -24,20 +23,10 @@ namespace DustInTheWind.DirectoryCompare.Application.Compare
     {
         protected override void Handle(CompareFilesRequest request)
         {
-            JsonFileSerializer serializer = new JsonFileSerializer();
+            TimePointJsonFile file1 = TimePointJsonFile.Load(request.Path1);
+            TimePointJsonFile file2 = TimePointJsonFile.Load(request.Path2);
 
-            // todo: must find a way to dynamically detect the serialization type.
-
-            HContainer hContainer1 = serializer.ReadFromFile(request.Path1);
-            HContainer hContainer2 = serializer.ReadFromFile(request.Path2);
-
-            //string json1 = File.ReadAllText(Path1);
-            //HContainer hContainer1 = JsonConvert.DeserializeObject<HContainer>(json1);
-
-            //string json2 = File.ReadAllText(Path2);
-            //Container container2 = JsonConvert.DeserializeObject<Container>(json2);
-
-            ContainerComparer comparer = new ContainerComparer(hContainer1, hContainer2);
+            ContainerComparer comparer = new ContainerComparer(file1.Container, file2.Container);
             comparer.Compare();
 
             request.Exporter?.Export(comparer);

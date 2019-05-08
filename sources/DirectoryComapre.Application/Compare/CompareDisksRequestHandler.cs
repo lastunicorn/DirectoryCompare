@@ -25,17 +25,17 @@ namespace DustInTheWind.DirectoryCompare.Application.Compare
     {
         protected override void Handle(CompareDisksRequest request)
         {
-            ContainerDiskExport containerDiskExport1 = new ContainerDiskExport();
-            DiskReader diskReader1 = new DiskReader(request.Path1, containerDiskExport1);
+            ContainerDiskAnalysisExport containerDiskAnalysisExport1 = new ContainerDiskAnalysisExport();
+            DiskReader diskReader1 = new DiskReader(request.Path1, containerDiskAnalysisExport1);
             diskReader1.Starting += HandleDiskReaderStarting;
             diskReader1.Read();
 
-            ContainerDiskExport containerDiskExport2 = new ContainerDiskExport();
-            DiskReader diskReader2 = new DiskReader(request.Path2, containerDiskExport2);
+            ContainerDiskAnalysisExport containerDiskAnalysisExport2 = new ContainerDiskAnalysisExport();
+            DiskReader diskReader2 = new DiskReader(request.Path2, containerDiskAnalysisExport2);
             diskReader2.Starting += HandleDiskReaderStarting;
             diskReader2.Read();
 
-            ContainerComparer comparer = new ContainerComparer(containerDiskExport1.Container, containerDiskExport2.Container);
+            ContainerComparer comparer = new ContainerComparer(containerDiskAnalysisExport1.Container, containerDiskAnalysisExport2.Container);
             comparer.Compare();
 
             request.Exporter.Export(comparer);

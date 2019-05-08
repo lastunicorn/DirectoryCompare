@@ -29,12 +29,16 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         public void OnlyInContainer1_is_empty_if_both_containers_contain_one_identical_subdir()
         {
             HContainer container1 = new HContainer();
-            HDirectory hDirectory1 = new HDirectory("Dir1");
-            container1.Directories = new List<HDirectory> { hDirectory1 };
+            container1.Directories.AddRange(new[]
+            {
+                new HDirectory("Dir1")
+            });
 
             HContainer container2 = new HContainer();
-            HDirectory hDirectory2 = new HDirectory("Dir1");
-            container2.Directories = new List<HDirectory> { hDirectory2 };
+            container2.Directories.AddRange(new[]
+            {
+                new HDirectory("Dir1")
+            });
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
@@ -46,8 +50,10 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         public void OnlyInContainer1_contains_the_name_of_the_subdir_if_only_container1_has_one_subdir()
         {
             HContainer container1 = new HContainer();
-            HDirectory hDirectory1 = new HDirectory("Dir1");
-            container1.Directories = new List<HDirectory> { hDirectory1 };
+            container1.Directories.AddRange(new[]
+            {
+                new HDirectory("Dir1")
+            });
 
             HContainer container2 = new HContainer();
 
@@ -63,8 +69,10 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
             HContainer container1 = new HContainer();
 
             HContainer container2 = new HContainer();
-            HDirectory hDirectory2 = new HDirectory("Dir1");
-            container2.Directories = new List<HDirectory> { hDirectory2 };
+            container2.Directories.AddRange(new[]
+            {
+                new HDirectory("Dir1")
+            });
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
@@ -80,12 +88,16 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         public void OnlyInContainer2_is_empty_if_both_containers_contain_one_identical_subdir()
         {
             HContainer container1 = new HContainer();
-            HDirectory hDirectory1 = new HDirectory("Dir1");
-            container1.Directories = new List<HDirectory> { hDirectory1 };
+            container1.Directories.AddRange(new[]
+            {
+                new HDirectory("Dir1")
+            });
 
             HContainer container2 = new HContainer();
-            HDirectory hDirectory2 = new HDirectory("Dir1");
-            container2.Directories = new List<HDirectory> { hDirectory2 };
+            container2.Directories.AddRange(new[]
+            {
+                new HDirectory("Dir1")
+            });
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
@@ -99,8 +111,10 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
             HContainer container1 = new HContainer();
 
             HContainer container2 = new HContainer();
-            HDirectory hDirectory2 = new HDirectory("Dir1");
-            container2.Directories = new List<HDirectory> { hDirectory2 };
+            container2.Directories.AddRange(new[]
+            {
+                new HDirectory("Dir1")
+            });
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
@@ -112,8 +126,10 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         public void OnlyInContainer2_is_empty_if_only_container1_has_one_subdir()
         {
             HContainer container1 = new HContainer();
-            HDirectory hDirectory1 = new HDirectory("Dir1");
-            container1.Directories = new List<HDirectory> { hDirectory1 };
+            container1.Directories.AddRange(new[]
+            {
+                new HDirectory("Dir1")
+            });
 
             HContainer container2 = new HContainer();
 

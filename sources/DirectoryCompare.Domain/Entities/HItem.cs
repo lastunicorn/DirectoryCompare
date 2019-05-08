@@ -21,6 +21,7 @@ namespace DustInTheWind.DirectoryCompare.Entities
     public class HItem : IEquatable<HItem>
     {
         public string Name { get; set; }
+
         public string Error { get; set; }
 
         public override string ToString()

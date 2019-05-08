@@ -20,17 +20,18 @@ using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
 {
-    internal class JsonContainerExport : JsonDirectoryExport
+    internal sealed class JsonContainer : JsonDirectory
     {
         public Guid Id { get; set; }
+
         public string OriginalPath { get; set; }
 
-        public JsonContainerExport(JsonTextWriter jsonTextWriter)
-            :base(jsonTextWriter)
+        public JsonContainer(JsonTextWriter jsonTextWriter)
+            : base(jsonTextWriter)
         {
         }
 
-        protected override void DoOpen(HDirectory xDirectory)
+        protected override void WriteStartDirectoryInternal(HDirectory directory)
         {
             Writer.WriteStartObject();
 

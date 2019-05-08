@@ -15,15 +15,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace DustInTheWind.DirectoryCompare.Entities
 {
-    public class HDirectory : HItem, IEquatable<HDirectory>
+    public class HDirectory : HItem, IEquatable<HDirectory>, IEnumerable<HItem>
     {
-        public List<HDirectory> Directories { get; set; } = new List<HDirectory>();
+        public List<HDirectory> Directories { get; } = new List<HDirectory>();
 
-        public List<HFile> Files { get; set; } = new List<HFile>();
+        public List<HFile> Files { get; } = new List<HFile>();
 
         public HDirectory()
         {
@@ -34,21 +35,21 @@ namespace DustInTheWind.DirectoryCompare.Entities
             Name = name ?? throw new ArgumentNullException(nameof(name));
         }
 
-        //public IEnumerator<HItem> GetEnumerator()
-        //{
-        //    if (Files != null)
-        //        foreach (HFile xFile in Files)
-        //            yield return xFile;
+        public IEnumerator<HItem> GetEnumerator()
+        {
+            if (Files != null)
+                foreach (HFile file in Files)
+                    yield return file;
 
-        //    if (Directories != null)
-        //        foreach (HDirectory xDirectory in Directories)
-        //            yield return xDirectory;
-        //}
+            if (Directories != null)
+                foreach (HDirectory directory in Directories)
+                    yield return directory;
+        }
 
-        //IEnumerator IEnumerable.GetEnumerator()
-        //{
-        //    return GetEnumerator();
-        //}
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
 
         public bool Equals(HDirectory other)
         {

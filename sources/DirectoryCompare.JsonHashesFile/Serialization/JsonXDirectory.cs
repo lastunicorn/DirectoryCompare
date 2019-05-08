@@ -71,7 +71,7 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
 
             List<HFile> files = GetHFiles();
             if (files != null)
-                directory.Files = files;
+                directory.Files.AddRange(files);
 
             return directory;
         }

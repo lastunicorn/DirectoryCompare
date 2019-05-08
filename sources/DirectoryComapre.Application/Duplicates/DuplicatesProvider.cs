@@ -30,24 +30,23 @@ namespace DustInTheWind.DirectoryCompare.Application.Duplicates
 
         public IEnumerable<Duplicate> Find()
         {
-            JsonFileSerializer serializer = new JsonFileSerializer();
-            HContainer hContainerLeft = serializer.ReadFromFile(PathLeft);
+            TimePointJsonFile fileLeft = TimePointJsonFile.Load(PathLeft);
 
             List<Tuple<string, HFile>> filesLeft = new List<Tuple<string, HFile>>();
-            Read(filesLeft, hContainerLeft, Path.DirectorySeparatorChar.ToString());
+            Read(filesLeft, fileLeft.Container, Path.DirectorySeparatorChar.ToString());
 
             if (PathRight == null)
             {
-                return FindDuplicates(filesLeft, hContainerLeft);
+                return FindDuplicates(filesLeft, fileLeft.Container);
             }
             else
             {
-                HContainer hContainerRight = serializer.ReadFromFile(PathRight);
+                TimePointJsonFile fileRight = TimePointJsonFile.Load(PathRight);
 
                 List<Tuple<string, HFile>> filesRight = new List<Tuple<string, HFile>>();
-                Read(filesRight, hContainerRight, Path.DirectorySeparatorChar.ToString());
+                Read(filesRight, fileRight.Container, Path.DirectorySeparatorChar.ToString());
 
-                return FindDuplicates(filesLeft, filesRight, hContainerLeft, hContainerRight);
+                return FindDuplicates(filesLeft, filesRight, fileLeft.Container, fileRight.Container);
             }
         }
 

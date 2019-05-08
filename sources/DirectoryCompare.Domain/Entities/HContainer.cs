@@ -21,6 +21,7 @@ namespace DustInTheWind.DirectoryCompare.Entities
     public class HContainer : HDirectory
     {
         public string OriginalPath { get; set; }
+
         public DateTime CreationTime { get; set; }
 
         public HContainer()

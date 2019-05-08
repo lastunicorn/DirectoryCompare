@@ -24,8 +24,8 @@ namespace DustInTheWind.DirectoryCompare.Application.TimePoint
     {
         protected override HContainer Handle(GetTimePointRequest request)
         {
-            JsonFileSerializer jsonFileSerializer = new JsonFileSerializer();
-            return jsonFileSerializer.ReadFromFile(request.FilePath);
+            TimePointJsonFile file = TimePointJsonFile.Load(request.FilePath);
+            return file.Container;
         }
     }
 }

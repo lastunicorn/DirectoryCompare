@@ -53,17 +53,20 @@ namespace DustInTheWind.DirectoryCompare.Application.TimePoint
                 foreach (string blackListItem in blackList)
                     logger.Info(blackListItem);
 
-            JsonDiskExport jsonDiskExport = new JsonDiskExport(new StreamWriter(request.DestinationFilePath));
-            DiskReader diskReader = new DiskReader(request.SourcePath, jsonDiskExport);
-            diskReader.Starting += HandleDiskReaderStarting;
-            diskReader.BlackList.AddRange(blackList);
-            diskReader.ErrorEncountered += HandleDiskReaderErrorEncountered;
+            using (StreamWriter streamWriter = new StreamWriter(request.DestinationFilePath))
+            {
+                JsonDiskAnalysisExport jsonDiskAnalysisExport = new JsonDiskAnalysisExport(streamWriter);
+                DiskReader diskReader = new DiskReader(request.SourcePath, jsonDiskAnalysisExport);
+                diskReader.Starting += HandleDiskReaderStarting;
+                diskReader.BlackList.AddRange(blackList);
+                diskReader.ErrorEncountered += HandleDiskReaderErrorEncountered;
 
-            Stopwatch stopwatch = Stopwatch.StartNew();
-            diskReader.Read();
-            stopwatch.Stop();
+                Stopwatch stopwatch = Stopwatch.StartNew();
+                diskReader.Read();
+                stopwatch.Stop();
 
-            logger.Info("Finished scanning path {0}", stopwatch.Elapsed);
+                logger.Info("Finished scanning path {0}", stopwatch.Elapsed);
+            }
         }
 
         private static PathCollection ReadBlackList(string filePath)

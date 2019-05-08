@@ -16,11 +16,15 @@
 
 using DustInTheWind.DirectoryCompare.Entities;
 
-namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
+namespace DustInTheWind.DirectoryCompare
 {
-    public interface ISerializer
+    public interface IDiskAnalysisExport
     {
-        void WriteToFile(HContainer container, string destinationFilePath);
-        HContainer ReadFromFile(string sourceFilePath);
+        void Open(string originalPath);
+        void OpenNewDirectory(HDirectory directory);
+        void CloseDirectory();
+        void Add(HFile file);
+        void Add(HDirectory directory);
+        void Close();
     }
 }

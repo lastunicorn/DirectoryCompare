@@ -14,9 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using NUnit.Framework;
-using System.Collections.Generic;
 using DustInTheWind.DirectoryCompare.Entities;
+using NUnit.Framework;
 
 namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
 {
@@ -30,19 +29,19 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         {
             HContainer container1 = new HContainer();
             HDirectory hDirectory1 = new HDirectory("Dir1");
-            hDirectory1.Files = new List<HFile>
+            hDirectory1.Files.AddRange(new[]
             {
                 new HFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
-            };
-            container1.Directories = new List<HDirectory> { hDirectory1 };
+            });
+            container1.Directories.AddRange(new[] { hDirectory1 });
 
             HContainer container2 = new HContainer();
             HDirectory hDirectory2 = new HDirectory("Dir1");
-            hDirectory2.Files = new List<HFile>
+            hDirectory2.Files.AddRange(new[]
             {
                 new HFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
-            };
-            container2.Directories = new List<HDirectory> { hDirectory2 };
+            });
+            container2.Directories.AddRange(new[] { hDirectory2 });
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
@@ -55,15 +54,15 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         {
             HContainer container1 = new HContainer();
             HDirectory hDirectory1 = new HDirectory("Dir1");
-            hDirectory1.Files = new List<HFile>
+            hDirectory1.Files.AddRange(new[]
             {
                 new HFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
-            };
-            container1.Directories = new List<HDirectory> { hDirectory1 };
+            });
+            container1.Directories.AddRange(new[] { hDirectory1 });
 
             HContainer container2 = new HContainer();
             HDirectory hDirectory2 = new HDirectory("Dir1");
-            container2.Directories = new List<HDirectory> { hDirectory2 };
+            container2.Directories.AddRange(new[] { hDirectory2 });
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
@@ -76,15 +75,15 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         {
             HContainer container1 = new HContainer();
             HDirectory hDirectory1 = new HDirectory("Dir1");
-            container1.Directories = new List<HDirectory> { hDirectory1 };
+            container1.Directories.AddRange(new[] { hDirectory1 });
 
             HContainer container2 = new HContainer();
             HDirectory hDirectory2 = new HDirectory("Dir1");
-            hDirectory2.Files = new List<HFile>
+            hDirectory2.Files.AddRange(new[]
             {
                 new HFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
-            };
-            container2.Directories = new List<HDirectory> { hDirectory2 };
+            });
+            container2.Directories.AddRange(new[] { hDirectory2 });
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
@@ -101,19 +100,19 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         {
             HContainer container1 = new HContainer();
             HDirectory hDirectory1 = new HDirectory("Dir1");
-            hDirectory1.Files = new List<HFile>
+            hDirectory1.Files.AddRange(new[]
             {
                 new HFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
-            };
-            container1.Directories = new List<HDirectory> { hDirectory1 };
+            });
+            container1.Directories.AddRange(new[] { hDirectory1 });
 
             HContainer container2 = new HContainer();
             HDirectory hDirectory2 = new HDirectory("Dir1");
-            hDirectory2.Files = new List<HFile>
+            hDirectory2.Files.AddRange(new[]
             {
                 new HFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
-            };
-            container2.Directories = new List<HDirectory> { hDirectory2 };
+            });
+            container2.Directories.AddRange(new[] { hDirectory2 });
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
@@ -126,15 +125,15 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         {
             HContainer container1 = new HContainer();
             HDirectory hDirectory1 = new HDirectory("Dir1");
-            container1.Directories = new List<HDirectory> { hDirectory1 };
+            container1.Directories.AddRange(new[] { hDirectory1 });
 
             HContainer container2 = new HContainer();
             HDirectory hDirectory2 = new HDirectory("Dir1");
-            hDirectory2.Files = new List<HFile>
+            hDirectory2.Files.AddRange(new[]
             {
                 new HFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
-            };
-            container2.Directories = new List<HDirectory> { hDirectory2 };
+            });
+            container2.Directories.AddRange(new[] { hDirectory2 });
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
@@ -147,15 +146,15 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         {
             HContainer container1 = new HContainer();
             HDirectory hDirectory1 = new HDirectory("Dir1");
-            hDirectory1.Files = new List<HFile>
+            hDirectory1.Files.AddRange(new[]
             {
                 new HFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
-            };
-            container1.Directories = new List<HDirectory> { hDirectory1 };
+            });
+            container1.Directories.AddRange(new[] { hDirectory1 });
 
             HContainer container2 = new HContainer();
             HDirectory hDirectory2 = new HDirectory("Dir1");
-            container2.Directories = new List<HDirectory> { hDirectory2 };
+            container2.Directories.AddRange(new[] { hDirectory2 });
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();

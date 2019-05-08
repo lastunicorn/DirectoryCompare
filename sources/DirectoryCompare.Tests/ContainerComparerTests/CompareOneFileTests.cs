@@ -29,16 +29,16 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         public void OnlyInContainer1_is_empty_if_both_containers_contain_one_identical_file()
         {
             HContainer container1 = new HContainer();
-            container1.Files = new List<HFile>
+            container1.Files.AddRange(new[]
             {
                 new HFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
-            };
+            });
 
             HContainer container2 = new HContainer();
-            container2.Files = new List<HFile>
+            container2.Files.AddRange(new[]
             {
                 new HFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
-            };
+            });
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
@@ -50,10 +50,10 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         public void OnlyInContainer1_contains_the_name_of_the_file_if_only_container1_has_one_file()
         {
             HContainer container1 = new HContainer();
-            container1.Files = new List<HFile>
+            container1.Files.AddRange(new[]
             {
                 new HFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
-            };
+            });
 
             HContainer container2 = new HContainer();
 
@@ -69,10 +69,10 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
             HContainer container1 = new HContainer();
 
             HContainer container2 = new HContainer();
-            container2.Files = new List<HFile>
+            container2.Files.AddRange(new[]
             {
                 new HFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
-            };
+            });
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
@@ -88,16 +88,16 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         public void OnlyInContainer2_is_empty_if_both_containers_contain_one_identical_file()
         {
             HContainer container1 = new HContainer();
-            container1.Files = new List<HFile>
+            container1.Files.AddRange(new[]
             {
                 new HFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
-            };
+            });
 
             HContainer container2 = new HContainer();
-            container2.Files = new List<HFile>
+            container2.Files.AddRange(new[]
             {
                 new HFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
-            };
+            });
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
@@ -111,10 +111,10 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
             HContainer container1 = new HContainer();
 
             HContainer container2 = new HContainer();
-            container2.Files = new List<HFile>
+            container2.Files.AddRange(new[]
             {
                 new HFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
-            };
+            });
 
             ContainerComparer comparer = new ContainerComparer(container1, container2);
             comparer.Compare();
@@ -126,10 +126,10 @@ namespace DustInTheWind.DirectoryCompare.Tests.ContainerComparerTests
         public void OnlyInContainer2_is_empty_if_only_container1_has_one_file()
         {
             HContainer container1 = new HContainer();
-            container1.Files = new List<HFile>
+            container1.Files.AddRange(new[]
             {
                 new HFile { Name = "File1", Hash = new byte[] { 0x01, 0x02, 0x03 } }
-            };
+            });
 
             HContainer container2 = new HContainer();
 
