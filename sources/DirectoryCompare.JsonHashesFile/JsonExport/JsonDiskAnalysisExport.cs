@@ -46,13 +46,26 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
                 Id = Id,
                 OriginalPath = originalPath
             };
+
+            jsonSnapshot.WriteStart();
+        }
+
+        public void Open(Snapshot snapshot)
+        {
+            jsonSnapshot = new JsonSnapshot(jsonTextWriter)
+            {
+                Id = Id,
+                OriginalPath = snapshot.OriginalPath,
+                CreationTime = snapshot.CreationTime
+            };
+
+            jsonSnapshot.WriteStart();
         }
 
         public void OpenNewDirectory(HDirectory directory)
         {
             if (directoryStack.Count == 0)
             {
-                jsonSnapshot.WriteStart(directory);
                 directoryStack.Push(jsonSnapshot);
             }
             else
@@ -84,7 +97,8 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
 
         public void Close()
         {
-            jsonTextWriter.Close();
+            //jsonSnapshot.WriteEnd();
+            jsonTextWriter.Flush();
         }
     }
 }

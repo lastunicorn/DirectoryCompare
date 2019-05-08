@@ -26,12 +26,14 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
 
         public string OriginalPath { get; set; }
 
+        public DateTime CreationTime { get; set; }
+
         public JsonSnapshot(JsonTextWriter jsonTextWriter)
             : base(jsonTextWriter)
         {
         }
 
-        protected override void WriteStartDirectoryInternal(HDirectory directory)
+        public void WriteStart()
         {
             Writer.WriteStartObject();
 
@@ -45,7 +47,11 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
             Writer.WriteValue(OriginalPath);
 
             Writer.WritePropertyName("creation-time");
-            Writer.WriteValue(DateTime.UtcNow);
+            Writer.WriteValue(CreationTime);
+        }
+
+        protected override void WriteStartDirectoryInternal(HDirectory directory)
+        {
         }
     }
 }

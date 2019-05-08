@@ -43,6 +43,7 @@
     <Compile Include="..\AssemblyInfo.Shared.cs">
       <Link>Properties\AssemblyInfo.Shared.cs</Link>
     </Compile>
+    <Compile Include="Serialization\SnapshotJsonFileTests.cs" />
     <Compile Include="SnapshotComparerTests\CompareOneSubdirectoryTests.cs" />
     <Compile Include="SnapshotComparerTests\CompareDirectoryWithOneFileTests.cs" />
     <Compile Include="SnapshotComparerTests\IdenticalContainersWithTwoDifferentFilesTests.cs" />
@@ -57,6 +58,10 @@
     <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj">
       <Project>{27EAA312-EC92-41EA-B854-00B5C9F2FC7B}</Project>
       <Name>DirectoryCompare.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DirectoryCompare.JsonHashesFile\DirectoryCompare.JsonHashesFile.csproj">
+      <Project>{DEF896B7-F822-4414-A2DF-1C37A50490ED}</Project>
+      <Name>DirectoryCompare.JsonHashesFile</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
