@@ -70,6 +70,23 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
             }
         }
 
+        public static SnapshotJsonFile Load1(string sourceFilePath)
+        {
+            using (StreamReader streamReader = File.OpenText(sourceFilePath))
+            using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
+            {
+                SnapshotBuilder snapshotBuilder = new SnapshotBuilder();
+
+                JsonSerializer serializer = new JsonSerializer();
+                JsonSnapshot jsonSnapshot = (JsonSnapshot)serializer.Deserialize(jsonTextReader, typeof(JsonSnapshot));
+
+                return new SnapshotJsonFile
+                {
+                    Snapshot = jsonSnapshot.ToSnapshot()
+                };
+            }
+        }
+
         ///// <summary>
         ///// Searches for the first property. It must be "ver" and contain the text "1.0".
         ///// </summary>

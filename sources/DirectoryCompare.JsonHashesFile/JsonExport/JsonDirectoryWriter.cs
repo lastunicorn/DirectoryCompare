@@ -20,32 +20,32 @@ using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
 {
-    internal class JsonDirectory
+    internal class JsonDirectoryWriter
     {
         protected JsonTextWriter Writer { get; }
 
         private JsonNodeState directoriesNodeState;
         private JsonNodeState filesPropertyNodeState;
 
-        public JsonDirectory(JsonTextWriter jsonTextWriter)
+        public JsonDirectoryWriter(JsonTextWriter jsonTextWriter)
         {
             Writer = jsonTextWriter ?? throw new ArgumentNullException(nameof(jsonTextWriter));
         }
 
-        public void WriteStart(HDirectory directory)
+        public void WriteStart(string directoryName)
         {
-            WriteStartDirectoryInternal(directory);
+            WriteStartDirectoryInternal(directoryName);
 
             directoriesNodeState = JsonNodeState.NotOpened;
             filesPropertyNodeState = JsonNodeState.NotOpened;
         }
 
-        protected virtual void WriteStartDirectoryInternal(HDirectory directory)
+        protected virtual void WriteStartDirectoryInternal(string directoryName)
         {
             Writer.WriteStartObject();
 
             Writer.WritePropertyName("n");
-            Writer.WriteValue(directory.Name);
+            Writer.WriteValue(directoryName);
         }
 
         public void WriteFile(HFile file)
@@ -53,8 +53,8 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
             WriteEndDirectoriesArray();
             WriteStartFilesArray();
 
-            JsonFile jsonFile = new JsonFile(Writer);
-            jsonFile.Write(file);
+            JsonFileWriter jsonFileWriter = new JsonFileWriter(Writer);
+            jsonFileWriter.Write(file);
         }
 
         private void WriteStartFilesArray()
@@ -88,15 +88,15 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
             filesPropertyNodeState = JsonNodeState.Closed;
         }
 
-        public JsonDirectory WriteStartDirectory(HDirectory directory)
+        public JsonDirectoryWriter WriteStartDirectory(string directoryName)
         {
             WriteEndFilesArray();
             WriteStartDirectoriesArray();
 
-            JsonDirectory jsonDirectory = new JsonDirectory(Writer);
-            jsonDirectory.WriteStart(directory);
+            JsonDirectoryWriter jsonDirectoryWriter = new JsonDirectoryWriter(Writer);
+            jsonDirectoryWriter.WriteStart(directoryName);
 
-            return jsonDirectory;
+            return jsonDirectoryWriter;
         }
 
         private void WriteStartDirectoriesArray()

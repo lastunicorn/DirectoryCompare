@@ -41,9 +41,10 @@
     <Compile Include="..\AssemblyInfo.Shared.cs">
       <Link>Properties\AssemblyInfo.Shared.cs</Link>
     </Compile>
-    <Compile Include="JsonExport\JsonFile.cs" />
-    <Compile Include="JsonExport\JsonSnapshot.cs" />
-    <Compile Include="JsonExport\JsonDirectory.cs" />
+    <Compile Include="JsonExport\JsonFileWriter.cs" />
+    <Compile Include="JsonExport\JsonSnapshotReader.cs" />
+    <Compile Include="JsonExport\JsonSnapshotWriter.cs" />
+    <Compile Include="JsonExport\JsonDirectoryWriter.cs" />
     <Compile Include="JsonExport\JsonDiskAnalysisExport.cs" />
     <Compile Include="JsonExport\JsonNodeState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -18,77 +18,73 @@ using System;
 using System.Collections.Generic;
 using DustInTheWind.DirectoryCompare.Entities;
 
-namespace DustInTheWind.DirectoryCompare.InMemoryExport
+namespace DustInTheWind.DirectoryCompare
 {
-    public class ContainerBuilder
+    public class SnapshotBuilder
     {
         private readonly Stack<HDirectory> directoryStack = new Stack<HDirectory>();
 
-        public HContainer Container { get; }
+        public Snapshot Snapshot { get; }
 
-        public ContainerBuilder()
+        public SnapshotBuilder()
         {
-            Container = new HContainer
+            Snapshot = new Snapshot
             {
                 CreationTime = DateTime.UtcNow
             };
         }
 
-        public ContainerBuilder(string path)
-        {
-            Container = new HContainer
-            {
-                CreationTime = DateTime.UtcNow,
-                OriginalPath = path
-            };
-        }
-
         public void SetOriginalPath(string originalPath)
         {
-            Container.OriginalPath = originalPath;
+            Snapshot.OriginalPath = originalPath;
         }
 
-        public void Add(HFile hFile)
+        public void SetCreationTime(DateTime creationTime)
+        {
+            Snapshot.CreationTime = creationTime;
+        }
+
+        public void Add(HFile file)
         {
             if (directoryStack.Count == 0)
                 throw new Exception("There is no directory added.");
 
             HDirectory topDirectory = directoryStack.Peek();
-            topDirectory.Files.Add(hFile);
+            topDirectory.Files.Add(file);
         }
 
-        public void Add(HDirectory hDirectory)
+        public void Add(HDirectory directory)
         {
             if (directoryStack.Count == 0)
             {
-                Container.Name = hDirectory.Name;
-                Container.Files = hDirectory.Files;
-                Container.Directories = hDirectory.Directories;
-                Container.Error = hDirectory.Error;
+                Snapshot.Name = directory.Name;
+                Snapshot.Files.AddRange(directory.Files);
+                Snapshot.Directories.AddRange(directory.Directories);
+                Snapshot.Error = directory.Error;
             }
             else
             {
                 HDirectory topDirectory = directoryStack.Peek();
-                topDirectory.Directories.Add(hDirectory);
+                topDirectory.Directories.Add(directory);
             }
         }
 
-        public void AddAndOpen(HDirectory hDirectory)
+        public void AddAndOpen(HDirectory directory)
         {
             if (directoryStack.Count == 0)
             {
-                Container.Name = hDirectory.Name;
-                Container.Files = hDirectory.Files;
-                Container.Directories = hDirectory.Directories;
-                Container.Error = hDirectory.Error;
+                Snapshot.Name = directory.Name;
+                Snapshot.Files.AddRange(directory.Files);
+                Snapshot.Directories.AddRange(directory.Directories);
+                Snapshot.Error = directory.Error;
             }
             else
             {
                 HDirectory topDirectory = directoryStack.Peek();
-                topDirectory.Directories.Add(hDirectory);
+                topDirectory.Directories.Add(directory);
             }
 
-            directoryStack.Push(hDirectory);
+            directoryStack.Push(directory);
         }
 
         public void CloseDirectory()

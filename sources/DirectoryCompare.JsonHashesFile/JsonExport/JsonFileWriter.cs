@@ -4,11 +4,11 @@ using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
 {
-    internal class JsonFile
+    internal class JsonFileWriter
     {
         protected JsonTextWriter Writer { get; }
 
-        public JsonFile(JsonTextWriter jsonTextWriter)
+        public JsonFileWriter(JsonTextWriter jsonTextWriter)
         {
             Writer = jsonTextWriter ?? throw new ArgumentNullException(nameof(jsonTextWriter));
         }

@@ -15,12 +15,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using DustInTheWind.DirectoryCompare.Entities;
 using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
 {
-    internal sealed class JsonSnapshot : JsonDirectory
+    internal sealed class JsonSnapshotWriter : JsonDirectoryWriter
     {
         public Guid Id { get; set; }
 
@@ -28,7 +27,7 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
 
         public DateTime CreationTime { get; set; }
 
-        public JsonSnapshot(JsonTextWriter jsonTextWriter)
+        public JsonSnapshotWriter(JsonTextWriter jsonTextWriter)
             : base(jsonTextWriter)
         {
         }
@@ -37,11 +36,8 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
         {
             Writer.WriteStartObject();
 
-            Writer.WritePropertyName("serializer");
-            Writer.WriteStartObject();
-            Writer.WritePropertyName("id");
+            Writer.WritePropertyName("serializer-id");
             Writer.WriteValue(Id);
-            Writer.WriteEndObject();
 
             Writer.WritePropertyName("original-path");
             Writer.WriteValue(OriginalPath);
@@ -50,7 +46,7 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
             Writer.WriteValue(CreationTime);
         }
 
-        protected override void WriteStartDirectoryInternal(HDirectory directory)
+        protected override void WriteStartDirectoryInternal(string directoryName)
         {
         }
     }
