@@ -24,6 +24,8 @@ namespace DustInTheWind.DirectoryCompare.Entities
 
         public string Error { get; set; }
 
+        public HItem Parent { get; set; }
+
         public override string ToString()
         {
             return Name;

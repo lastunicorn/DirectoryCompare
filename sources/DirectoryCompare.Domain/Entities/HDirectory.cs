@@ -22,17 +22,21 @@ namespace DustInTheWind.DirectoryCompare.Entities
 {
     public class HDirectory : HItem, IEquatable<HDirectory>, IEnumerable<HItem>
     {
-        public List<HDirectory> Directories { get; } = new List<HDirectory>();
+        public HItemCollection<HDirectory> Directories { get; }
 
-        public List<HFile> Files { get; } = new List<HFile>();
+        public HItemCollection<HFile> Files { get; }
 
         public HDirectory()
         {
+            Directories = new HItemCollection<HDirectory>(this);
+            Files = new HItemCollection<HFile>(this);
         }
 
         public HDirectory(string name)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
+            Directories = new HItemCollection<HDirectory>(this);
+            Files = new HItemCollection<HFile>(this);
         }
 
         public IEnumerator<HItem> GetEnumerator()

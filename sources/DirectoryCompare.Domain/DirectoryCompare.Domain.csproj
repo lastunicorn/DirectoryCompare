@@ -45,6 +45,7 @@
     <Compile Include="DiskAnalysis\ErrorEncounteredEventArgs.cs" />
     <Compile Include="DiskAnalysis\IDiskAnalyzer.cs" />
     <Compile Include="DiskAnalysis\IDiskAnalyzerFactory.cs" />
+    <Compile Include="Entities\HItemCollection.cs" />
     <Compile Include="SnapshotBuilder.cs" />
     <Compile Include="Entities\Snapshot.cs" />
     <Compile Include="Comparison\SnapshotComparer.cs" />

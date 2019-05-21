@@ -69,8 +69,8 @@ namespace DustInTheWind.DirectoryCompare.Comparison
 
         private void CompareChildFiles(HDirectory directory1, HDirectory directory2, string rootPath)
         {
-            List<HFile> files1 = directory1.Files;
-            List<HFile> files2 = directory2.Files;
+            HItemCollection<HFile> files1 = directory1.Files;
+            HItemCollection<HFile> files2 = directory2.Files;
             List<HFile> onlyInDirectory2 = files2.ToList();
 
             foreach (HFile file1 in files1)
