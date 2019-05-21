@@ -54,15 +54,15 @@
     <Compile Include="..\AssemblyInfo.Shared.cs">
       <Link>Properties\AssemblyInfo.Shared.cs</Link>
     </Compile>
-    <Compile Include="Compare\ComparePathsRequest.cs" />
-    <Compile Include="Compare\ComparePathsRequestHandler.cs" />
-    <Compile Include="Compare\CompareSnapshotsRequestHandler.cs" />
+    <Compile Include="Comparison\ComparePathsRequest.cs" />
+    <Compile Include="Comparison\ComparePathsRequestHandler.cs" />
+    <Compile Include="Comparison\CompareSnapshotsRequestHandler.cs" />
     <Compile Include="Snapshots\CreateSnapshotRequestValidator.cs" />
-    <Compile Include="Compare\VerifyDiskRequestValidator.cs" />
+    <Compile Include="Comparison\VerifyDiskRequestValidator.cs" />
     <Compile Include="RequestPerformanceBehaviour.cs" />
     <Compile Include="RequestValidationBehavior.cs" />
-    <Compile Include="Compare\VerifyDiskRequest.cs" />
-    <Compile Include="Compare\VerifyDiskRequestHandler.cs" />
+    <Compile Include="Comparison\VerifyDiskRequest.cs" />
+    <Compile Include="Comparison\VerifyDiskRequestHandler.cs" />
     <Compile Include="Duplication\FindDuplicatesRequest.cs" />
     <Compile Include="Duplication\FindDuplicatesRequestHandler.cs" />
     <Compile Include="Duplication\IRemoveDuplicatesExporter.cs" />
@@ -70,8 +70,8 @@
     <Compile Include="Duplication\RemoveDuplicatesRequestHandler.cs" />
     <Compile Include="Snapshots\GetSnapshotRequest.cs" />
     <Compile Include="Snapshots\GetSnapshotRequestHandler.cs" />
-    <Compile Include="Compare\IComparisonExporter.cs" />
-    <Compile Include="Compare\CompareSnapshotsRequest.cs" />
+    <Compile Include="Comparison\IComparisonExporter.cs" />
+    <Compile Include="Comparison\CompareSnapshotsRequest.cs" />
     <Compile Include="Duplication\IDuplicatesExporter.cs" />
     <Compile Include="Snapshots\CreateSnapshotRequestHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

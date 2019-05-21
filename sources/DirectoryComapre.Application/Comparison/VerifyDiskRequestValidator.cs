@@ -16,7 +16,7 @@
 
 using FluentValidation;
 
-namespace DustInTheWind.DirectoryCompare.Application.Compare
+namespace DustInTheWind.DirectoryCompare.Application.Comparison
 {
     public class VerifyDiskRequestValidator : AbstractValidator<VerifyDiskRequest>
     {
