@@ -15,6 +15,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
+using DustInTheWind.DirectoryCompare.Comparison;
+using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.Duplication
@@ -23,19 +25,25 @@ namespace DustInTheWind.DirectoryCompare.Application.Duplication
     {
         protected override void Handle(FindDuplicatesRequest request)
         {
-            DuplicatesProvider duplicatesProvider = new DuplicatesProvider
+            SnapshotJsonFile fileLeft = SnapshotJsonFile.Load(request.PathLeft);
+            SnapshotJsonFile fileRight = null;
+
+            if (request.PathRight != null)
+                fileRight = SnapshotJsonFile.Load(request.PathRight);
+
+            FileDuplicates fileDuplicates = new FileDuplicates
             {
-                PathLeft = request.PathLeft,
-                PathRight = request.PathRight,
+                SnapshotLeft = fileLeft.Snapshot,
+                SnapshotRight = fileRight?.Snapshot,
                 CheckFilesExist = request.CheckFilesExist
             };
 
-            IEnumerable<Duplicate> duplicates = duplicatesProvider.Find();
+            IEnumerable<FileDuplicate> duplicates = fileDuplicates.Compare();
 
             int duplicateCount = 0;
             long totalSize = 0;
 
-            foreach (Duplicate duplicate in duplicates)
+            foreach (FileDuplicate duplicate in duplicates)
             {
                 if (duplicate.AreEqual)
                 {

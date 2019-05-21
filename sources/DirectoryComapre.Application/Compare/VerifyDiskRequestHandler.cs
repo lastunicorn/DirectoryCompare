@@ -15,7 +15,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using DustInTheWind.DirectoryCompare.Comparison;
 using DustInTheWind.DirectoryCompare.DiskAnalysis;
+using DustInTheWind.DirectoryCompare.Entities;
 using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
 using MediatR;
 
@@ -32,21 +34,30 @@ namespace DustInTheWind.DirectoryCompare.Application.Compare
 
         protected override void Handle(VerifyDiskRequest request)
         {
-            AnalysisRequest analysisRequest1 = new AnalysisRequest
-            {
-                RootPath = request.DiskPath
-            };
-            SnapshotDiskAnalysisExport snapshotDiskAnalysisExport1 = new SnapshotDiskAnalysisExport();
-            IDiskAnalyzer diskReader1 = diskAnalyzerFactory.Create(analysisRequest1, snapshotDiskAnalysisExport1);
-            diskReader1.Starting += HandleDiskReaderStarting;
-            diskReader1.Read();
+            Snapshot snapshot1 = ReadPath(request.DiskPath);
 
             SnapshotJsonFile file2 = SnapshotJsonFile.Load(request.FilePath);
+            Snapshot snapshot2 = file2.Snapshot;
 
-            SnapshotComparer comparer = new SnapshotComparer(snapshotDiskAnalysisExport1.Snapshot, file2.Snapshot);
+            SnapshotComparer comparer = new SnapshotComparer(snapshot1, snapshot2);
             comparer.Compare();
 
             request.Exporter?.Export(comparer);
+        }
+
+        private Snapshot ReadPath(string path)
+        {
+            AnalysisRequest analysisRequest = new AnalysisRequest
+            {
+                RootPath = path
+            };
+
+            SnapshotDiskAnalysisExport snapshotDiskAnalysisExport = new SnapshotDiskAnalysisExport();
+            IDiskAnalyzer diskReader = diskAnalyzerFactory.Create(analysisRequest, snapshotDiskAnalysisExport);
+            diskReader.Starting += HandleDiskReaderStarting;
+            diskReader.Read();
+
+            return snapshotDiskAnalysisExport.Snapshot;
         }
 
         private static void HandleDiskReaderStarting(object sender, DiskReaderStartingEventArgs e)

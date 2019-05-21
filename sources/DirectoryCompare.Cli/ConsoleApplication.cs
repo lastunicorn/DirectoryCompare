@@ -20,6 +20,7 @@ using DustInTheWind.DirectoryCompare.Application;
 using DustInTheWind.DirectoryCompare.Application.Snapshots;
 using DustInTheWind.DirectoryCompare.Cli.Commands;
 using DustInTheWind.DirectoryCompare.DiskAnalysis;
+using DustInTheWind.DirectoryCompare.Logging;
 using FluentValidation;
 using MediatR;
 using Ninject;

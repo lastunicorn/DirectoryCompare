@@ -20,7 +20,7 @@ using System.Linq;
 using DustInTheWind.DirectoryCompare.Common.Utils;
 using DustInTheWind.DirectoryCompare.Entities;
 
-namespace DustInTheWind.DirectoryCompare
+namespace DustInTheWind.DirectoryCompare.Comparison
 {
     public class SnapshotComparer
     {
@@ -41,10 +41,10 @@ namespace DustInTheWind.DirectoryCompare
         public IReadOnlyList<ItemComparison> DifferentNames => differentNames;
         public IReadOnlyList<ItemComparison> DifferentContent => differentContent;
 
-        public SnapshotComparer(Snapshot hSnapshot1, Snapshot hSnapshot2)
+        public SnapshotComparer(Snapshot snapshot1, Snapshot snapshot2)
         {
-            Snapshot1 = hSnapshot1 ?? throw new ArgumentNullException(nameof(hSnapshot1));
-            Snapshot2 = hSnapshot2 ?? throw new ArgumentNullException(nameof(hSnapshot2));
+            Snapshot1 = snapshot1 ?? throw new ArgumentNullException(nameof(snapshot1));
+            Snapshot2 = snapshot2 ?? throw new ArgumentNullException(nameof(snapshot2));
         }
 
         public void Compare()

@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using DustInTheWind.DirectoryCompare.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Entities;
 using Newtonsoft.Json;
 

@@ -21,7 +21,9 @@ namespace DustInTheWind.DirectoryCompare.Application.Compare
     public class VerifyDiskRequest : IRequest
     {
         public string DiskPath { get; set; }
+
         public string FilePath { get; set; }
+
         public IComparisonExporter Exporter { get; set; }
     }
 }

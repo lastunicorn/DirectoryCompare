@@ -16,6 +16,8 @@
 
 using System.Collections.Generic;
 using System.IO;
+using DustInTheWind.DirectoryCompare.Comparison;
+using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.Duplication
@@ -24,19 +26,25 @@ namespace DustInTheWind.DirectoryCompare.Application.Duplication
     {
         protected override void Handle(RemoveDuplicatesRequest request)
         {
-            DuplicatesProvider duplicatesProvider = new DuplicatesProvider
+            SnapshotJsonFile fileLeft = SnapshotJsonFile.Load(request.PathLeft);
+            SnapshotJsonFile fileRight = null;
+
+            if (request.PathRight != null)
+                fileRight = SnapshotJsonFile.Load(request.PathRight);
+
+            FileDuplicates fileDuplicates = new FileDuplicates
             {
-                PathLeft = request.PathLeft,
-                PathRight = request.PathRight,
+                SnapshotLeft = fileLeft.Snapshot,
+                SnapshotRight = fileRight?.Snapshot,
                 CheckFilesExist = true
             };
 
-            IEnumerable<Duplicate> duplicates = duplicatesProvider.Find();
+            IEnumerable<FileDuplicate> duplicates = fileDuplicates.Compare();
 
             int removeCount = 0;
             long totalSize = 0;
 
-            foreach (Duplicate duplicate in duplicates)
+            foreach (FileDuplicate duplicate in duplicates)
             {
                 if (!duplicate.AreEqual)
                     continue;

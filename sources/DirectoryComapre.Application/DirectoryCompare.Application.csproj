@@ -57,9 +57,6 @@
     <Compile Include="Compare\ComparePathsRequest.cs" />
     <Compile Include="Compare\ComparePathsRequestHandler.cs" />
     <Compile Include="Compare\CompareSnapshotsRequestHandler.cs" />
-    <Compile Include="Duplication\ComparisonSide.cs" />
-    <Compile Include="Duplication\Duplicate.cs" />
-    <Compile Include="Duplication\DuplicatesProvider.cs" />
     <Compile Include="Snapshots\CreateSnapshotRequestValidator.cs" />
     <Compile Include="Compare\VerifyDiskRequestValidator.cs" />
     <Compile Include="RequestPerformanceBehaviour.cs" />

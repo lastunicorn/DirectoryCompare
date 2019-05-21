@@ -18,35 +18,32 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using DustInTheWind.DirectoryCompare.Entities;
-using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
 
-namespace DustInTheWind.DirectoryCompare.Application.Duplication
+namespace DustInTheWind.DirectoryCompare.Comparison
 {
-    internal class DuplicatesProvider
+    public class FileDuplicates
     {
-        public string PathLeft { get; set; }
-        public string PathRight { get; set; }
+        public Snapshot SnapshotLeft { get; set; }
+
+        public Snapshot SnapshotRight { get; set; }
+
         public bool CheckFilesExist { get; set; }
 
-        public IEnumerable<Duplicate> Find()
+        public IEnumerable<FileDuplicate> Compare()
         {
-            SnapshotJsonFile fileLeft = SnapshotJsonFile.Load(PathLeft);
-
             List<Tuple<string, HFile>> filesLeft = new List<Tuple<string, HFile>>();
-            Read(filesLeft, fileLeft.Snapshot, Path.DirectorySeparatorChar.ToString());
+            Read(filesLeft, SnapshotLeft, Path.DirectorySeparatorChar.ToString());
 
-            if (PathRight == null)
+            if (SnapshotRight == null)
             {
-                return FindDuplicates(filesLeft, fileLeft.Snapshot);
+                return FindDuplicates(filesLeft, SnapshotLeft);
             }
             else
             {
-                SnapshotJsonFile fileRight = SnapshotJsonFile.Load(PathRight);
-
                 List<Tuple<string, HFile>> filesRight = new List<Tuple<string, HFile>>();
-                Read(filesRight, fileRight.Snapshot, Path.DirectorySeparatorChar.ToString());
+                Read(filesRight, SnapshotRight, Path.DirectorySeparatorChar.ToString());
 
-                return FindDuplicates(filesLeft, filesRight, fileLeft.Snapshot, fileRight.Snapshot);
+                return FindDuplicates(filesLeft, filesRight, SnapshotLeft, SnapshotRight);
             }
         }
 
@@ -67,7 +64,7 @@ namespace DustInTheWind.DirectoryCompare.Application.Duplication
                 }
         }
 
-        private IEnumerable<Duplicate> FindDuplicates(List<Tuple<string, HFile>> files, Snapshot snapshot)
+        private IEnumerable<FileDuplicate> FindDuplicates(IReadOnlyList<Tuple<string, HFile>> files, Snapshot snapshot)
         {
             for (int i = 0; i < files.Count; i++)
             {
@@ -76,12 +73,12 @@ namespace DustInTheWind.DirectoryCompare.Application.Duplication
                     Tuple<string, HFile> tupleLeft = files[i];
                     Tuple<string, HFile> tupleRight = files[j];
 
-                    yield return new Duplicate(tupleLeft, tupleRight, CheckFilesExist, snapshot, snapshot);
+                    yield return new FileDuplicate(tupleLeft, tupleRight, CheckFilesExist, snapshot, snapshot);
                 }
             }
         }
 
-        private IEnumerable<Duplicate> FindDuplicates(List<Tuple<string, HFile>> filesLeft, List<Tuple<string, HFile>> filesRight, Snapshot snapshotLeft, Snapshot snapshotRight)
+        private IEnumerable<FileDuplicate> FindDuplicates(IReadOnlyList<Tuple<string, HFile>> filesLeft, IReadOnlyList<Tuple<string, HFile>> filesRight, Snapshot snapshotLeft, Snapshot snapshotRight)
         {
             for (int i = 0; i < filesLeft.Count; i++)
             {
@@ -90,7 +87,7 @@ namespace DustInTheWind.DirectoryCompare.Application.Duplication
                     Tuple<string, HFile> tupleLeft = filesLeft[i];
                     Tuple<string, HFile> tupleRight = filesRight[j];
 
-                    yield return new Duplicate(tupleLeft, tupleRight, CheckFilesExist, snapshotLeft, snapshotRight);
+                    yield return new FileDuplicate(tupleLeft, tupleRight, CheckFilesExist, snapshotLeft, snapshotRight);
                 }
             }
         }

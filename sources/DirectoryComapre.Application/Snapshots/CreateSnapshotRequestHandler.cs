@@ -21,6 +21,7 @@ using System.Linq;
 using DustInTheWind.DirectoryCompare.Common.Utils;
 using DustInTheWind.DirectoryCompare.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport;
+using DustInTheWind.DirectoryCompare.Logging;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.Snapshots

@@ -14,22 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Entities;
-
-namespace DustInTheWind.DirectoryCompare
+namespace DustInTheWind.DirectoryCompare.Logging
 {
-    public interface IDiskAnalysisExport
+    public interface IProjectLogger
     {
-        void Open(string originalPath);
-
-        void Add(HFile file);
-
-        void Add(HDirectory directory);
-
-        void AddAndOpen(HDirectory directory);
-
-        void CloseDirectory();
-
+        void Open();
         void Close();
+        void Info(string format);
+        void Info(string format, params object[] arg);
+        void Warn(string format);
+        void Warn(string format, params object[] arg);
+        void Error(string format);
+        void Error(string format, params object[] arg);
     }
 }

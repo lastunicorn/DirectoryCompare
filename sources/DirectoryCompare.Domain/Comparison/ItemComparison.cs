@@ -17,7 +17,7 @@
 using System;
 using DustInTheWind.DirectoryCompare.Entities;
 
-namespace DustInTheWind.DirectoryCompare
+namespace DustInTheWind.DirectoryCompare.Comparison
 {
     public struct ItemComparison : IEquatable<ItemComparison>
     {

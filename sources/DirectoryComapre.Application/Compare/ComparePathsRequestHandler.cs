@@ -15,7 +15,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using DustInTheWind.DirectoryCompare.Comparison;
 using DustInTheWind.DirectoryCompare.DiskAnalysis;
+using DustInTheWind.DirectoryCompare.Entities;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.Compare
@@ -31,28 +33,28 @@ namespace DustInTheWind.DirectoryCompare.Application.Compare
 
         protected override void Handle(ComparePathsRequest request)
         {
-            AnalysisRequest analysisRequest1 = new AnalysisRequest
-            {
-                RootPath = request.Path1
-            };
-            SnapshotDiskAnalysisExport snapshotDiskAnalysisExport1 = new SnapshotDiskAnalysisExport();
-            IDiskAnalyzer diskReader1 = diskAnalyzerFactory.Create(analysisRequest1, snapshotDiskAnalysisExport1);
-            diskReader1.Starting += HandleDiskReaderStarting;
-            diskReader1.Read();
+            Snapshot snapshot1 = ReadPath(request.Path1);
+            Snapshot snapshot2 = ReadPath(request.Path2);
 
-            AnalysisRequest analysisRequest2 = new AnalysisRequest
-            {
-                RootPath = request.Path2
-            };
-            SnapshotDiskAnalysisExport snapshotDiskAnalysisExport2 = new SnapshotDiskAnalysisExport();
-            IDiskAnalyzer diskReader2 = diskAnalyzerFactory.Create(analysisRequest2, snapshotDiskAnalysisExport2);
-            diskReader2.Starting += HandleDiskReaderStarting;
-            diskReader2.Read();
-
-            SnapshotComparer comparer = new SnapshotComparer(snapshotDiskAnalysisExport1.Snapshot, snapshotDiskAnalysisExport2.Snapshot);
+            SnapshotComparer comparer = new SnapshotComparer(snapshot1, snapshot2);
             comparer.Compare();
 
             request.Exporter.Export(comparer);
+        }
+
+        private Snapshot ReadPath(string path)
+        {
+            AnalysisRequest analysisRequest = new AnalysisRequest
+            {
+                RootPath = path
+            };
+
+            SnapshotDiskAnalysisExport snapshotDiskAnalysisExport = new SnapshotDiskAnalysisExport();
+            IDiskAnalyzer diskReader = diskAnalyzerFactory.Create(analysisRequest, snapshotDiskAnalysisExport);
+            diskReader.Starting += HandleDiskReaderStarting;
+            diskReader.Read();
+
+            return snapshotDiskAnalysisExport.Snapshot;
         }
 
         private static void HandleDiskReaderStarting(object sender, DiskReaderStartingEventArgs e)

@@ -17,6 +17,7 @@
 using System;
 using System.IO;
 using DustInTheWind.ConsoleTools;
+using DustInTheWind.DirectoryCompare.Logging;
 
 namespace DustInTheWind.DirectoryCompare.Cli
 {

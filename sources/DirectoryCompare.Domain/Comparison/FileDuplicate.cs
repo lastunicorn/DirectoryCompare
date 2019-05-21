@@ -19,9 +19,9 @@ using System.IO;
 using DustInTheWind.DirectoryCompare.Common.Utils;
 using DustInTheWind.DirectoryCompare.Entities;
 
-namespace DustInTheWind.DirectoryCompare.Application.Duplication
+namespace DustInTheWind.DirectoryCompare.Comparison
 {
-    internal class Duplicate
+    public class FileDuplicate
     {
         private readonly Tuple<string, HFile> tuple1;
         private readonly Tuple<string, HFile> tuple2;
@@ -47,7 +47,7 @@ namespace DustInTheWind.DirectoryCompare.Application.Duplication
         public bool File1Exists { get; private set; }
         public bool File2Exists { get; private set; }
 
-        public Duplicate(Tuple<string, HFile> tuple1, Tuple<string, HFile> tuple2, bool checkFilesExist, Snapshot snapshot1, Snapshot snapshot2)
+        public FileDuplicate(Tuple<string, HFile> tuple1, Tuple<string, HFile> tuple2, bool checkFilesExist, Snapshot snapshot1, Snapshot snapshot2)
         {
             this.tuple1 = tuple1 ?? throw new ArgumentNullException(nameof(tuple1));
             this.tuple2 = tuple2 ?? throw new ArgumentNullException(nameof(tuple2));
