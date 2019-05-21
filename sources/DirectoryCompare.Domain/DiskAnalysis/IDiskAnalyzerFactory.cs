@@ -1,4 +1,4 @@
-﻿namespace DustInTheWind.DirectoryCompare.Application.DiskAnalysis
+﻿namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 {
     public interface IDiskAnalyzerFactory
     {

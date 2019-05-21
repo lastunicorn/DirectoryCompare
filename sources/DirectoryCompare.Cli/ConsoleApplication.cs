@@ -17,7 +17,6 @@
 using System;
 using DirectoryCompare.CliFramework;
 using DustInTheWind.DirectoryCompare.Application;
-using DustInTheWind.DirectoryCompare.Application.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Application.Snapshots;
 using DustInTheWind.DirectoryCompare.Cli.Commands;
 using DustInTheWind.DirectoryCompare.DiskAnalysis;

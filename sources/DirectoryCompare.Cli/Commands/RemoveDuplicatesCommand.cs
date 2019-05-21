@@ -46,7 +46,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
                 throw new Exception("Invalid command parameters.");
 
             string pathRight;
-            FileRemove fileRemove;
+            ComparisonSide fileToRemove;
 
             if (arguments.Count > 1)
             {
@@ -55,20 +55,20 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
                 if (isFileRight)
                 {
                     pathRight = arguments[1];
-                    fileRemove = arguments.Count > 2
-                        ? (FileRemove)Enum.Parse(typeof(FileRemove), arguments[2])
-                        : FileRemove.Left;
+                    fileToRemove = arguments.Count > 2
+                        ? (ComparisonSide)Enum.Parse(typeof(ComparisonSide), arguments[2])
+                        : ComparisonSide.Left;
                 }
                 else
                 {
                     pathRight = null;
-                    fileRemove = (FileRemove)Enum.Parse(typeof(FileRemove), arguments[1]);
+                    fileToRemove = (ComparisonSide)Enum.Parse(typeof(ComparisonSide), arguments[1]);
                 }
             }
             else
             {
                 pathRight = null;
-                fileRemove = FileRemove.Right;
+                fileToRemove = ComparisonSide.Right;
             }
 
             return new RemoveDuplicatesRequest
@@ -76,7 +76,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
                 PathLeft = arguments[0],
                 PathRight = pathRight,
                 Exporter = new ConsoleRemoveDuplicatesExporter(),
-                FileRemove = fileRemove
+                FileToRemove = fileToRemove
             };
         }
     }

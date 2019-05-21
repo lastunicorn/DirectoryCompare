@@ -17,15 +17,15 @@
 using System;
 using DustInTheWind.DirectoryCompare.Common.Utils;
 
-namespace DustInTheWind.DirectoryCompare.Application.DiskAnalysis
+namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 {
-    public interface IDiskAnalyzer
+    public class DiskReaderStartingEventArgs : EventArgs
     {
-        PathCollection BlackList { get; set; }
+        public PathCollection BlackList { get; }
 
-        event EventHandler<ErrorEncounteredEventArgs> ErrorEncountered;
-        event EventHandler<DiskReaderStartingEventArgs> Starting;
-
-        void Read();
+        public DiskReaderStartingEventArgs(PathCollection blackList)
+        {
+            BlackList = blackList;
+        }
     }
 }

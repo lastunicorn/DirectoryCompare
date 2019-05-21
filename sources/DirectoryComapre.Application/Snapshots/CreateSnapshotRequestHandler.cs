@@ -18,8 +18,8 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using DustInTheWind.DirectoryCompare.Application.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Common.Utils;
+using DustInTheWind.DirectoryCompare.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport;
 using MediatR;
 

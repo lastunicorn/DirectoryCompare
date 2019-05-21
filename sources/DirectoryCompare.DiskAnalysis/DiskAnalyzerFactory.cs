@@ -1,5 +1,4 @@
 ﻿using DustInTheWind.DirectoryCompare.Application;
-using DustInTheWind.DirectoryCompare.Application.DiskAnalysis;
 
 namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 {

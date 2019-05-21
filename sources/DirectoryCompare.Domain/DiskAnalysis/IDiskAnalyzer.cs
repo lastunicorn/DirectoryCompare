@@ -14,11 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.Application.Duplication
+using System;
+using DustInTheWind.DirectoryCompare.Common.Utils;
+
+namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 {
-    public enum FileRemove
+    public interface IDiskAnalyzer
     {
-        Left,
-        Right
+        PathCollection BlackList { get; set; }
+
+        event EventHandler<ErrorEncounteredEventArgs> ErrorEncountered;
+        event EventHandler<DiskReaderStartingEventArgs> Starting;
+
+        void Read();
     }
 }

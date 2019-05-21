@@ -46,16 +46,16 @@ namespace DustInTheWind.DirectoryCompare.Application.Duplication
 
                 if (file1Exists && file2Exists)
                 {
-                    switch (request.FileRemove)
+                    switch (request.FileToRemove)
                     {
-                        case FileRemove.Left:
+                        case ComparisonSide.Left:
                             File.Delete(duplicate.FullPath1);
                             removeCount++;
                             totalSize += duplicate.Size;
                             request.Exporter.WriteRemove(duplicate.FullPath1);
                             break;
 
-                        case FileRemove.Right:
+                        case ComparisonSide.Right:
                             File.Delete(duplicate.FullPath2);
                             removeCount++;
                             totalSize += duplicate.Size;

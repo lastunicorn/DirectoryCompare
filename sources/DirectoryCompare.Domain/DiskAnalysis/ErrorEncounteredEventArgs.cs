@@ -16,7 +16,7 @@
 
 using System;
 
-namespace DustInTheWind.DirectoryCompare.Application.DiskAnalysis
+namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 {
     public class ErrorEncounteredEventArgs : EventArgs
     {

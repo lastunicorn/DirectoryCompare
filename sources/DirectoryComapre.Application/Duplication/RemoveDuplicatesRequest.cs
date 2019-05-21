@@ -18,11 +18,14 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.Duplication
 {
-    public class RemoveDuplicatesRequest: IRequest
+    public class RemoveDuplicatesRequest : IRequest
     {
         public string PathLeft { get; set; }
+
         public string PathRight { get; set; }
+
         public IRemoveDuplicatesExporter Exporter { get; set; }
-        public FileRemove FileRemove { get; set; }
+
+        public ComparisonSide FileToRemove { get; set; }
     }
 }

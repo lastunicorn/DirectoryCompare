@@ -1,6 +1,6 @@
 ﻿using DustInTheWind.DirectoryCompare.Common.Utils;
 
-namespace DustInTheWind.DirectoryCompare.Application.DiskAnalysis
+namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 {
     public class AnalysisRequest
     {

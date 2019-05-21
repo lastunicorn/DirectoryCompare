@@ -37,6 +37,11 @@
     <Compile Include="..\AssemblyInfo.Shared.cs">
       <Link>Properties\AssemblyInfo.Shared.cs</Link>
     </Compile>
+    <Compile Include="DiskAnalysis\AnalysisRequest.cs" />
+    <Compile Include="DiskAnalysis\DiskReaderStartingEventArgs.cs" />
+    <Compile Include="DiskAnalysis\ErrorEncounteredEventArgs.cs" />
+    <Compile Include="DiskAnalysis\IDiskAnalyzer.cs" />
+    <Compile Include="DiskAnalysis\IDiskAnalyzerFactory.cs" />
     <Compile Include="SnapshotBuilder.cs" />
     <Compile Include="Entities\Snapshot.cs" />
     <Compile Include="SnapshotComparer.cs" />
@@ -49,7 +54,9 @@
     <Compile Include="Entities\HFile.cs" />
     <Compile Include="Entities\HItem.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Comparison\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DirectoryCompare.Common\DirectoryCompare.Common.csproj">
       <Project>{05E21912-332C-4C16-A590-2BBF65A1FB7C}</Project>

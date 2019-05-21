@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using DustInTheWind.DirectoryCompare.Application.DiskAnalysis;
+using DustInTheWind.DirectoryCompare.DiskAnalysis;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.Compare
