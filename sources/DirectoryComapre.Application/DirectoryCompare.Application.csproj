@@ -54,28 +54,33 @@
     <Compile Include="..\AssemblyInfo.Shared.cs">
       <Link>Properties\AssemblyInfo.Shared.cs</Link>
     </Compile>
+    <Compile Include="DiskAnalysis\AnalysisRequest.cs" />
     <Compile Include="Compare\ComparePathsRequest.cs" />
     <Compile Include="Compare\ComparePathsRequestHandler.cs" />
     <Compile Include="Compare\CompareSnapshotsRequestHandler.cs" />
+    <Compile Include="DiskAnalysis\DiskReaderStartingEventArgs.cs" />
+    <Compile Include="DiskAnalysis\ErrorEncounteredEventArgs.cs" />
+    <Compile Include="DiskAnalysis\IDiskAnalyzer.cs" />
+    <Compile Include="DiskAnalysis\IDiskAnalyzerFactory.cs" />
     <Compile Include="Snapshots\CreateSnapshotRequestValidator.cs" />
     <Compile Include="Compare\VerifyDiskRequestValidator.cs" />
     <Compile Include="RequestPerformanceBehaviour.cs" />
     <Compile Include="RequestValidationBehavior.cs" />
     <Compile Include="Compare\VerifyDiskRequest.cs" />
     <Compile Include="Compare\VerifyDiskRequestHandler.cs" />
-    <Compile Include="Duplicates\Duplicate.cs" />
-    <Compile Include="Duplicates\DuplicatesProvider.cs" />
-    <Compile Include="Duplicates\FileRemove.cs" />
-    <Compile Include="Duplicates\FindDuplicatesRequest.cs" />
-    <Compile Include="Duplicates\FindDuplicatesRequestHandler.cs" />
-    <Compile Include="Duplicates\IRemoveDuplicatesExporter.cs" />
-    <Compile Include="Duplicates\RemoveDuplicatesRequest.cs" />
-    <Compile Include="Duplicates\RemoveDuplicatesRequestHandler.cs" />
+    <Compile Include="Duplication\Duplicate.cs" />
+    <Compile Include="Duplication\DuplicatesProvider.cs" />
+    <Compile Include="Duplication\FileRemove.cs" />
+    <Compile Include="Duplication\FindDuplicatesRequest.cs" />
+    <Compile Include="Duplication\FindDuplicatesRequestHandler.cs" />
+    <Compile Include="Duplication\IRemoveDuplicatesExporter.cs" />
+    <Compile Include="Duplication\RemoveDuplicatesRequest.cs" />
+    <Compile Include="Duplication\RemoveDuplicatesRequestHandler.cs" />
     <Compile Include="Snapshots\GetSnapshotRequest.cs" />
     <Compile Include="Snapshots\GetSnapshotRequestHandler.cs" />
     <Compile Include="Compare\IComparisonExporter.cs" />
     <Compile Include="Compare\CompareSnapshotsRequest.cs" />
-    <Compile Include="Duplicates\IDuplicatesExporter.cs" />
+    <Compile Include="Duplication\IDuplicatesExporter.cs" />
     <Compile Include="Snapshots\CreateSnapshotRequestHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Snapshots\CreateSnapshotRequest.cs" />
@@ -84,10 +89,6 @@
     <ProjectReference Include="..\DirectoryCompare.Common\DirectoryCompare.Common.csproj">
       <Project>{05E21912-332C-4C16-A590-2BBF65A1FB7C}</Project>
       <Name>DirectoryCompare.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DirectoryCompare.DiskAnalysis\DirectoryCompare.DiskAnalysis.csproj">
-      <Project>{243D8C53-4B1C-4D78-BA62-B0C8900C4801}</Project>
-      <Name>DirectoryCompare.DiskAnalysis</Name>
     </ProjectReference>
     <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj">
       <Project>{27EAA312-EC92-41EA-B854-00B5C9F2FC7B}</Project>

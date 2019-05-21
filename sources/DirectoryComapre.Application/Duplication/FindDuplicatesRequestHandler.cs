@@ -17,7 +17,7 @@
 using System.Collections.Generic;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.Duplicates
+namespace DustInTheWind.DirectoryCompare.Application.Duplication
 {
     public class FindDuplicatesRequestHandler : RequestHandler<FindDuplicatesRequest>
     {

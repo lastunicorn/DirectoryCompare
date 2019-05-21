@@ -14,19 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-
-namespace DustInTheWind.DirectoryCompare.DiskAnalysis
+namespace DustInTheWind.DirectoryCompare.Application.Duplication
 {
-    public class ErrorEncounteredEventArgs : EventArgs
+    public interface IRemoveDuplicatesExporter
     {
-        public Exception Exception { get; }
-        public string Path { get; }
-
-        public ErrorEncounteredEventArgs(Exception exception, string path)
-        {
-            Exception = exception ?? throw new ArgumentNullException(nameof(exception));
-            Path = path ?? throw new ArgumentNullException(nameof(path));
-        }
+        void WriteRemove(string path);
+        void WriteSummary(int removedFiles, long removedSize);
     }
 }

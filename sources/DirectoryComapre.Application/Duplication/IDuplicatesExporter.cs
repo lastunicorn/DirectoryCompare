@@ -14,9 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.DiskAnalysis
+namespace DustInTheWind.DirectoryCompare.Application.Duplication
 {
-    public interface IDiskAnalyzer
+    public interface IDuplicatesExporter
     {
+        void WriteDuplicate(string path1, string path2, long size);
+        void WriteSummary(int duplicateCount, long totalSize);
     }
 }

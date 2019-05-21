@@ -20,7 +20,7 @@ using System.IO;
 using DustInTheWind.DirectoryCompare.Entities;
 using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
 
-namespace DustInTheWind.DirectoryCompare.Application.Duplicates
+namespace DustInTheWind.DirectoryCompare.Application.Duplication
 {
     internal class DuplicatesProvider
     {

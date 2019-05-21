@@ -106,6 +106,10 @@
       <Project>{05e21912-332c-4c16-a590-2bbf65a1fb7c}</Project>
       <Name>DirectoryCompare.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DirectoryCompare.DiskAnalysis\DirectoryCompare.DiskAnalysis.csproj">
+      <Project>{243d8c53-4b1c-4d78-ba62-b0c8900c4801}</Project>
+      <Name>DirectoryCompare.DiskAnalysis</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj">
       <Project>{27eaa312-ec92-41ea-b854-00b5c9f2fc7b}</Project>
       <Name>DirectoryCompare.Domain</Name>

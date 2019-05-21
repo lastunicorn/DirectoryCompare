@@ -17,7 +17,7 @@
 using System;
 using System.IO;
 using DirectoryCompare.CliFramework;
-using DustInTheWind.DirectoryCompare.Application.Duplicates;
+using DustInTheWind.DirectoryCompare.Application.Duplication;
 using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
 using MediatR;
 

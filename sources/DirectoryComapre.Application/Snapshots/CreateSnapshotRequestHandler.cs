@@ -18,8 +18,8 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using DustInTheWind.DirectoryCompare.Application.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Common.Utils;
-using DustInTheWind.DirectoryCompare.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport;
 using MediatR;
 
@@ -28,11 +28,13 @@ namespace DustInTheWind.DirectoryCompare.Application.Snapshots
     public class CreateSnapshotRequestHandler : RequestHandler<CreateSnapshotRequest>
     {
         private readonly IProjectLogger logger;
+        private readonly IDiskAnalyzerFactory diskAnalyzerFactory;
         private PathCollection blackList = new PathCollection();
 
-        public CreateSnapshotRequestHandler(IProjectLogger logger)
+        public CreateSnapshotRequestHandler(IProjectLogger logger, IDiskAnalyzerFactory diskAnalyzerFactory)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.diskAnalyzerFactory = diskAnalyzerFactory ?? throw new ArgumentNullException(nameof(diskAnalyzerFactory));
         }
 
         protected override void Handle(CreateSnapshotRequest request)
@@ -55,14 +57,18 @@ namespace DustInTheWind.DirectoryCompare.Application.Snapshots
 
             using (StreamWriter streamWriter = new StreamWriter(request.DestinationFilePath))
             {
+                AnalysisRequest analysisRequest = new AnalysisRequest
+                {
+                    RootPath = request.SourcePath
+                };
                 JsonDiskAnalysisExport jsonDiskAnalysisExport = new JsonDiskAnalysisExport(streamWriter);
-                DiskReader diskReader = new DiskReader(request.SourcePath, jsonDiskAnalysisExport);
-                diskReader.Starting += HandleDiskReaderStarting;
-                diskReader.BlackList.AddRange(blackList);
-                diskReader.ErrorEncountered += HandleDiskReaderErrorEncountered;
+                IDiskAnalyzer diskAnalyzer = diskAnalyzerFactory.Create(analysisRequest, jsonDiskAnalysisExport);
+                diskAnalyzer.Starting += HandleDiskReaderStarting;
+                diskAnalyzer.BlackList = blackList;
+                diskAnalyzer.ErrorEncountered += HandleDiskReaderErrorEncountered;
 
                 Stopwatch stopwatch = Stopwatch.StartNew();
-                diskReader.Read();
+                diskAnalyzer.Read();
                 stopwatch.Stop();
 
                 logger.Info("Finished scanning path {0}", stopwatch.Elapsed);

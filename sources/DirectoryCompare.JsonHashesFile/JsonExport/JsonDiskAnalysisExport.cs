@@ -63,7 +63,7 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
             jsonSnapshotWriter.WriteStart();
         }
 
-        public void OpenNewDirectory(HDirectory directory)
+        public void AddAndOpen(HDirectory directory)
         {
             if (directoryStack.Count == 0)
             {

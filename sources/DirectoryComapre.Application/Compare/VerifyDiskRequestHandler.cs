@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using DustInTheWind.DirectoryCompare.DiskAnalysis;
+using DustInTheWind.DirectoryCompare.Application.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
 using MediatR;
 
@@ -23,10 +23,21 @@ namespace DustInTheWind.DirectoryCompare.Application.Compare
 {
     public class VerifyDiskRequestHandler : RequestHandler<VerifyDiskRequest>
     {
+        private readonly IDiskAnalyzerFactory diskAnalyzerFactory;
+
+        public VerifyDiskRequestHandler(IDiskAnalyzerFactory diskAnalyzerFactory)
+        {
+            this.diskAnalyzerFactory = diskAnalyzerFactory ?? throw new ArgumentNullException(nameof(diskAnalyzerFactory));
+        }
+
         protected override void Handle(VerifyDiskRequest request)
         {
+            AnalysisRequest analysisRequest1 = new AnalysisRequest
+            {
+                RootPath = request.DiskPath
+            };
             SnapshotDiskAnalysisExport snapshotDiskAnalysisExport1 = new SnapshotDiskAnalysisExport();
-            DiskReader diskReader1 = new DiskReader(request.DiskPath, snapshotDiskAnalysisExport1);
+            IDiskAnalyzer diskReader1 = diskAnalyzerFactory.Create(analysisRequest1, snapshotDiskAnalysisExport1);
             diskReader1.Starting += HandleDiskReaderStarting;
             diskReader1.Read();
 

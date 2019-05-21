@@ -14,11 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using MediatR;
 using System.Collections.Generic;
 using System.IO;
+using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.Duplicates
+namespace DustInTheWind.DirectoryCompare.Application.Duplication
 {
     public class RemoveDuplicatesRequestHandler : RequestHandler<RemoveDuplicatesRequest>
     {

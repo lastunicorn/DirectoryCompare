@@ -14,13 +14,134 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
+using System.IO;
+using System.Security.Cryptography;
+using DustInTheWind.DirectoryCompare.Application;
+using DustInTheWind.DirectoryCompare.Application.DiskAnalysis;
+using DustInTheWind.DirectoryCompare.Common.Utils;
+using DustInTheWind.DirectoryCompare.DiskAnalysis.DiskCrawling;
+using DustInTheWind.DirectoryCompare.Entities;
+
 namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 {
-    public class DiskAnalyzer : IDiskAnalyzer
+    public sealed class DiskAnalyzer : IDiskAnalyzer, IDisposable
     {
-        public void AnalyzePath(string path, IDiskAnalysisExport diskAnalysisExport)
-        {
+        private readonly string rootPath;
+        private readonly IDiskAnalysisExport diskAnalysisExport;
+        private readonly MD5 md5;
 
+        public PathCollection BlackList { get; set; }
+
+        public event EventHandler<ErrorEncounteredEventArgs> ErrorEncountered;
+        public event EventHandler<DiskReaderStartingEventArgs> Starting;
+
+        public DiskAnalyzer(string rootPath, IDiskAnalysisExport diskAnalysisExport)
+        {
+            this.rootPath = rootPath ?? throw new ArgumentNullException(nameof(rootPath));
+            this.diskAnalysisExport = diskAnalysisExport ?? throw new ArgumentNullException(nameof(diskAnalysisExport));
+
+            md5 = MD5.Create();
+        }
+
+        public void Read()
+        {
+            PathCollection rootedBlackList = BlackList?.ToAbsolutePaths(rootPath) ?? new PathCollection();
+
+            OnStarting(new DiskReaderStartingEventArgs(rootedBlackList));
+
+            diskAnalysisExport.Open(rootPath);
+
+            DiskCrawler diskCrawler = new DiskCrawler(rootPath, rootedBlackList);
+
+            foreach (CrawlerStep crawlerStep in diskCrawler)
+            {
+                switch (crawlerStep.Action)
+                {
+                    case CrawlerAction.DirectoryOpened:
+                        AddDirectory(crawlerStep);
+                        break;
+
+                    case CrawlerAction.DirectoryClosed:
+                        CloseDirectory();
+                        break;
+
+                    case CrawlerAction.FileFound:
+                        AddFile(crawlerStep);
+                        break;
+
+                    case CrawlerAction.Error:
+                        ProcessError(crawlerStep);
+                        break;
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+
+            diskAnalysisExport.Close();
+        }
+
+        private void AddDirectory(CrawlerStep crawlerStep)
+        {
+            string directoryName = Path.GetFileName(crawlerStep.Path);
+            HDirectory hDirectory = new HDirectory(directoryName);
+
+            diskAnalysisExport.AddAndOpen(hDirectory);
+        }
+
+        private void CloseDirectory()
+        {
+            diskAnalysisExport.CloseDirectory();
+        }
+
+        private void AddFile(CrawlerStep crawlerStep)
+        {
+            HFile hFile = new HFile
+            {
+                Name = Path.GetFileName(crawlerStep.Path)
+            };
+
+            try
+            {
+                using (FileStream stream = File.OpenRead(crawlerStep.Path))
+                    hFile.Hash = md5.ComputeHash(stream);
+            }
+            catch (Exception ex)
+            {
+                OnErrorEncountered(new ErrorEncounteredEventArgs(ex, crawlerStep.Path));
+                hFile.Error = ex.Message;
+            }
+
+            diskAnalysisExport.Add(hFile);
+        }
+
+        private void ProcessError(CrawlerStep crawlerStep)
+        {
+            OnErrorEncountered(new ErrorEncounteredEventArgs(crawlerStep.Exception, crawlerStep.Path));
+
+            HDirectory hDirectory = new HDirectory
+            {
+                Name = Path.GetFileName(crawlerStep.Path),
+                Error = crawlerStep.Exception.Message
+            };
+
+            diskAnalysisExport.Add(hDirectory);
+        }
+
+        public void Dispose()
+        {
+            md5?.Dispose();
+        }
+
+        private void OnErrorEncountered(ErrorEncounteredEventArgs e)
+        {
+            ErrorEncountered?.Invoke(this, e);
+        }
+
+        private void OnStarting(DiskReaderStartingEventArgs e)
+        {
+            Starting?.Invoke(this, e);
         }
     }
 }

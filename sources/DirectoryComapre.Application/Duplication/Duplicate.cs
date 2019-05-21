@@ -19,7 +19,7 @@ using System.IO;
 using DustInTheWind.DirectoryCompare.Common.Utils;
 using DustInTheWind.DirectoryCompare.Entities;
 
-namespace DustInTheWind.DirectoryCompare.Application.Duplicates
+namespace DustInTheWind.DirectoryCompare.Application.Duplication
 {
     internal class Duplicate
     {

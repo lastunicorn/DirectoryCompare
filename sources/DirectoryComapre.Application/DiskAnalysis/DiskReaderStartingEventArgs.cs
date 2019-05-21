@@ -14,15 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using MediatR;
+using System;
+using DustInTheWind.DirectoryCompare.Common.Utils;
 
-namespace DustInTheWind.DirectoryCompare.Application.Duplicates
+namespace DustInTheWind.DirectoryCompare.Application.DiskAnalysis
 {
-    public class FindDuplicatesRequest : IRequest
+    public class DiskReaderStartingEventArgs : EventArgs
     {
-        public string PathLeft { get; set; }
-        public string PathRight { get; set; }
-        public IDuplicatesExporter Exporter { get; set; }
-        public bool CheckFilesExist { get; set; }
+        public PathCollection BlackList { get; }
+
+        public DiskReaderStartingEventArgs(PathCollection blackList)
+        {
+            BlackList = blackList;
+        }
     }
 }

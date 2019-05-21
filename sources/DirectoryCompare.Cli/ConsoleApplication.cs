@@ -17,8 +17,10 @@
 using System;
 using DirectoryCompare.CliFramework;
 using DustInTheWind.DirectoryCompare.Application;
+using DustInTheWind.DirectoryCompare.Application.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Application.Snapshots;
 using DustInTheWind.DirectoryCompare.Cli.Commands;
+using DustInTheWind.DirectoryCompare.DiskAnalysis;
 using FluentValidation;
 using MediatR;
 using Ninject;
@@ -55,6 +57,8 @@ namespace DustInTheWind.DirectoryCompare.Cli
             dependencyContainer.Bind(typeof(IPipelineBehavior<,>)).To(typeof(RequestValidationBehavior<,>));
 
             dependencyContainer.Bind<ServiceFactory>().ToMethod(x => t => x.Kernel.TryGet(t));
+
+            dependencyContainer.Bind<IDiskAnalyzerFactory>().To<DiskAnalyzerFactory>().InSingletonScope();
 
             return dependencyContainer.Get<IMediator>();
         }

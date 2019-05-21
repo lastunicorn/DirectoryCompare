@@ -21,10 +21,15 @@ namespace DustInTheWind.DirectoryCompare
     public interface IDiskAnalysisExport
     {
         void Open(string originalPath);
-        void OpenNewDirectory(HDirectory directory);
-        void CloseDirectory();
+
         void Add(HFile file);
+
         void Add(HDirectory directory);
+
+        void AddAndOpen(HDirectory directory);
+
+        void CloseDirectory();
+
         void Close();
     }
 }

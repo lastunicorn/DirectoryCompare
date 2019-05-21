@@ -39,7 +39,7 @@ namespace DustInTheWind.DirectoryCompare
             Snapshot.OriginalPath = originalPath;
         }
 
-        public void OpenNewDirectory(HDirectory directory)
+        public void AddAndOpen(HDirectory directory)
         {
             Add(directory);
             directoryStack.Push(directory);

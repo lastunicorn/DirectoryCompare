@@ -44,7 +44,7 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
 
         private void SaveDirectory(JsonDiskAnalysisExport jsonDiskAnalysisExport, HDirectory directory)
         {
-            jsonDiskAnalysisExport.OpenNewDirectory(directory);
+            jsonDiskAnalysisExport.AddAndOpen(directory);
 
             foreach (HDirectory subDirectory in directory.Directories)
                 SaveDirectory(jsonDiskAnalysisExport, subDirectory);

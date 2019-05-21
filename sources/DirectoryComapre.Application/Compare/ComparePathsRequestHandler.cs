@@ -15,22 +15,37 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using DustInTheWind.DirectoryCompare.DiskAnalysis;
+using DustInTheWind.DirectoryCompare.Application.DiskAnalysis;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.Compare
 {
     public class ComparePathsRequestHandler : RequestHandler<ComparePathsRequest>
     {
+        private readonly IDiskAnalyzerFactory diskAnalyzerFactory;
+
+        public ComparePathsRequestHandler(IDiskAnalyzerFactory diskAnalyzerFactory)
+        {
+            this.diskAnalyzerFactory = diskAnalyzerFactory ?? throw new ArgumentNullException(nameof(diskAnalyzerFactory));
+        }
+
         protected override void Handle(ComparePathsRequest request)
         {
+            AnalysisRequest analysisRequest1 = new AnalysisRequest
+            {
+                RootPath = request.Path1
+            };
             SnapshotDiskAnalysisExport snapshotDiskAnalysisExport1 = new SnapshotDiskAnalysisExport();
-            DiskReader diskReader1 = new DiskReader(request.Path1, snapshotDiskAnalysisExport1);
+            IDiskAnalyzer diskReader1 = diskAnalyzerFactory.Create(analysisRequest1, snapshotDiskAnalysisExport1);
             diskReader1.Starting += HandleDiskReaderStarting;
             diskReader1.Read();
 
+            AnalysisRequest analysisRequest2 = new AnalysisRequest
+            {
+                RootPath = request.Path2
+            };
             SnapshotDiskAnalysisExport snapshotDiskAnalysisExport2 = new SnapshotDiskAnalysisExport();
-            DiskReader diskReader2 = new DiskReader(request.Path2, snapshotDiskAnalysisExport2);
+            IDiskAnalyzer diskReader2 = diskAnalyzerFactory.Create(analysisRequest2, snapshotDiskAnalysisExport2);
             diskReader2.Starting += HandleDiskReaderStarting;
             diskReader2.Read();
 

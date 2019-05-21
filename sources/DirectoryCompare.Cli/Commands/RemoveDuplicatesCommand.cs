@@ -15,11 +15,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DirectoryCompare.CliFramework;
-using DustInTheWind.DirectoryCompare.Application.Duplicates;
 using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
 using MediatR;
 using System;
 using System.IO;
+using DustInTheWind.DirectoryCompare.Application.Duplication;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
