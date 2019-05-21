@@ -40,9 +40,7 @@ namespace DustInTheWind.DirectoryCompare.Tests.Serialization
             };
 
             const string expected = @"{
-  ""serializer"": {
-    ""id"": ""9e93055d-7bde-4f55-b340-dd5a4880d96e""
-  },
+  ""serializer-id"": ""9e93055d-7bde-4f55-b340-dd5a4880d96e"",
   ""original-path"": ""c:\\aaa"",
   ""creation-time"": ""2019-05-08T19:17:00Z""
 }";
@@ -65,9 +63,7 @@ namespace DustInTheWind.DirectoryCompare.Tests.Serialization
             });
 
             const string expected = @"{
-  ""serializer"": {
-    ""id"": ""9e93055d-7bde-4f55-b340-dd5a4880d96e""
-  },
+  ""serializer-id"": ""9e93055d-7bde-4f55-b340-dd5a4880d96e"",
   ""original-path"": ""c:\\aaa"",
   ""creation-time"": ""2019-05-08T19:17:00Z"",
   ""d"": [
@@ -96,9 +92,7 @@ namespace DustInTheWind.DirectoryCompare.Tests.Serialization
             });
 
             const string expected = @"{
-  ""serializer"": {
-    ""id"": ""9e93055d-7bde-4f55-b340-dd5a4880d96e""
-  },
+  ""serializer-id"": ""9e93055d-7bde-4f55-b340-dd5a4880d96e"",
   ""original-path"": ""c:\\aaa"",
   ""creation-time"": ""2019-05-08T19:17:00Z"",
   ""f"": [
