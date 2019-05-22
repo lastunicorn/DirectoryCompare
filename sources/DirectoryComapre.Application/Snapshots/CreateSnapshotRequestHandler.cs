@@ -60,16 +60,16 @@ namespace DustInTheWind.DirectoryCompare.Application.Snapshots
             {
                 AnalysisRequest analysisRequest = new AnalysisRequest
                 {
-                    RootPath = request.SourcePath
+                    RootPath = request.SourcePath,
+                    BlackList = blackList
                 };
-                JsonDiskAnalysisExport jsonDiskAnalysisExport = new JsonDiskAnalysisExport(streamWriter);
-                IDiskAnalyzer diskAnalyzer = diskAnalyzerFactory.Create(analysisRequest, jsonDiskAnalysisExport);
+                JsonAnalysisExport jsonAnalysisExport = new JsonAnalysisExport(streamWriter);
+                IDiskAnalyzer diskAnalyzer = diskAnalyzerFactory.Create(analysisRequest, jsonAnalysisExport);
                 diskAnalyzer.Starting += HandleDiskReaderStarting;
-                diskAnalyzer.BlackList = blackList;
                 diskAnalyzer.ErrorEncountered += HandleDiskReaderErrorEncountered;
 
                 Stopwatch stopwatch = Stopwatch.StartNew();
-                diskAnalyzer.Read();
+                diskAnalyzer.Run();
                 stopwatch.Stop();
 
                 logger.Info("Finished scanning path {0}", stopwatch.Elapsed);

@@ -20,13 +20,13 @@ using DustInTheWind.DirectoryCompare.Entities;
 
 namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 {
-    public class SnapshotDiskAnalysisExport : IDiskAnalysisExport
+    public class SnapshotAnalysisExport : IAnalysisExport
     {
         private readonly Stack<HDirectory> directoryStack = new Stack<HDirectory>();
 
         public Snapshot Snapshot { get; }
 
-        public SnapshotDiskAnalysisExport()
+        public SnapshotAnalysisExport()
         {
             Snapshot = new Snapshot
             {

@@ -78,16 +78,12 @@
     <Compile Include="Snapshots\CreateSnapshotRequest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DirectoryCompare.Common\DirectoryCompare.Common.csproj">
-      <Project>{05E21912-332C-4C16-A590-2BBF65A1FB7C}</Project>
-      <Name>DirectoryCompare.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj">
       <Project>{27EAA312-EC92-41EA-B854-00B5C9F2FC7B}</Project>
       <Name>DirectoryCompare.Domain</Name>
     </ProjectReference>
     <ProjectReference Include="..\DirectoryCompare.JsonHashesFile\DirectoryCompare.JsonHashesFile.csproj">
-      <Project>{def896b7-f822-4414-a2df-1c37a50490ed}</Project>
+      <Project>{DEF896B7-F822-4414-A2DF-1C37A50490ED}</Project>
       <Name>DirectoryCompare.JsonHashesFile</Name>
     </ProjectReference>
   </ItemGroup>

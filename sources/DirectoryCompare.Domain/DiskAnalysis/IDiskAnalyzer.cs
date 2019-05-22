@@ -15,17 +15,14 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using DustInTheWind.DirectoryCompare.Common.Utils;
 
 namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 {
     public interface IDiskAnalyzer
     {
-        PathCollection BlackList { get; set; }
-
         event EventHandler<ErrorEncounteredEventArgs> ErrorEncountered;
         event EventHandler<DiskReaderStartingEventArgs> Starting;
 
-        void Read();
+        void Run();
     }
 }

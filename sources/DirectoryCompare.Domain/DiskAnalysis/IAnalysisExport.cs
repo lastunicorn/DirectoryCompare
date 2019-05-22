@@ -18,7 +18,7 @@ using DustInTheWind.DirectoryCompare.Entities;
 
 namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 {
-    public interface IDiskAnalysisExport
+    public interface IAnalysisExport
     {
         void Open(string originalPath);
 

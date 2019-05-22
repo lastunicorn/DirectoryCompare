@@ -50,7 +50,7 @@ namespace DustInTheWind.DirectoryCompare.Entities
 
         protected override void InsertItem(int index, T item)
         {
-            if (index < 0 || index > Items.Count - 1)
+            if (index < 0 || index > Items.Count)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
             if (item == null)
@@ -63,7 +63,7 @@ namespace DustInTheWind.DirectoryCompare.Entities
 
         protected override void RemoveItem(int index)
         {
-            if (index < 0 || index > Items.Count - 1)
+            if (index < 0 || index >= Items.Count)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
             Items[index].Parent = null;
@@ -72,7 +72,7 @@ namespace DustInTheWind.DirectoryCompare.Entities
 
         protected override void SetItem(int index, T item)
         {
-            if (index < 0 || index > Items.Count - 1)
+            if (index < 0 || index >= Items.Count)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
             if (item == null)

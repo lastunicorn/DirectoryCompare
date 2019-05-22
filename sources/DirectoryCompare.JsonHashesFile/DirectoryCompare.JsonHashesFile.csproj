@@ -45,7 +45,7 @@
     <Compile Include="JsonExport\JsonSnapshotReader.cs" />
     <Compile Include="JsonExport\JsonSnapshotWriter.cs" />
     <Compile Include="JsonExport\JsonDirectoryWriter.cs" />
-    <Compile Include="JsonExport\JsonDiskAnalysisExport.cs" />
+    <Compile Include="JsonExport\JsonAnalysisExport.cs" />
     <Compile Include="JsonExport\JsonNodeState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\SnapshotJsonFile.cs" />

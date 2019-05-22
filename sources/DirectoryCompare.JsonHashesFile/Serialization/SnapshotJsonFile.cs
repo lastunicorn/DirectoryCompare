@@ -33,26 +33,26 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
 
         public void Save(StreamWriter streamWriter)
         {
-            JsonDiskAnalysisExport jsonDiskAnalysisExport = new JsonDiskAnalysisExport(streamWriter);
+            JsonAnalysisExport jsonAnalysisExport = new JsonAnalysisExport(streamWriter);
 
-            jsonDiskAnalysisExport.Open(Snapshot);
+            jsonAnalysisExport.Open(Snapshot);
 
-            SaveDirectory(jsonDiskAnalysisExport, Snapshot);
+            SaveDirectory(jsonAnalysisExport, Snapshot);
 
-            jsonDiskAnalysisExport.Close();
+            jsonAnalysisExport.Close();
         }
 
-        private void SaveDirectory(JsonDiskAnalysisExport jsonDiskAnalysisExport, HDirectory directory)
+        private void SaveDirectory(JsonAnalysisExport jsonAnalysisExport, HDirectory directory)
         {
-            jsonDiskAnalysisExport.AddAndOpen(directory);
+            jsonAnalysisExport.AddAndOpen(directory);
 
             foreach (HDirectory subDirectory in directory.Directories)
-                SaveDirectory(jsonDiskAnalysisExport, subDirectory);
+                SaveDirectory(jsonAnalysisExport, subDirectory);
 
             foreach (HFile file in directory.Files)
-                jsonDiskAnalysisExport.Add(file);
+                jsonAnalysisExport.Add(file);
 
-            jsonDiskAnalysisExport.CloseDirectory();
+            jsonAnalysisExport.CloseDirectory();
         }
 
         public static SnapshotJsonFile Load(string sourceFilePath)

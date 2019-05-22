@@ -47,14 +47,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DirectoryComapre.Application\DirectoryCompare.Application.csproj">
-      <Project>{4803E289-ED56-4872-9BA8-7001041E615B}</Project>
-      <Name>DirectoryCompare.Application</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DirectoryCompare.Common\DirectoryCompare.Common.csproj">
-      <Project>{05e21912-332c-4c16-a590-2bbf65a1fb7c}</Project>
-      <Name>DirectoryCompare.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj">
       <Project>{27eaa312-ec92-41ea-b854-00b5c9f2fc7b}</Project>
       <Name>DirectoryCompare.Domain</Name>

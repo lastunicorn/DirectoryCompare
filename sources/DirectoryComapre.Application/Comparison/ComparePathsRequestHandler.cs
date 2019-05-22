@@ -49,12 +49,12 @@ namespace DustInTheWind.DirectoryCompare.Application.Comparison
                 RootPath = path
             };
 
-            SnapshotDiskAnalysisExport snapshotDiskAnalysisExport = new SnapshotDiskAnalysisExport();
-            IDiskAnalyzer diskReader = diskAnalyzerFactory.Create(analysisRequest, snapshotDiskAnalysisExport);
+            SnapshotAnalysisExport snapshotAnalysisExport = new SnapshotAnalysisExport();
+            IDiskAnalyzer diskReader = diskAnalyzerFactory.Create(analysisRequest, snapshotAnalysisExport);
             diskReader.Starting += HandleDiskReaderStarting;
-            diskReader.Read();
+            diskReader.Run();
 
-            return snapshotDiskAnalysisExport.Snapshot;
+            return snapshotAnalysisExport.Snapshot;
         }
 
         private static void HandleDiskReaderStarting(object sender, DiskReaderStartingEventArgs e)

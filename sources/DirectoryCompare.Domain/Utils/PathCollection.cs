@@ -32,10 +32,14 @@ namespace DustInTheWind.DirectoryCompare.Common.Utils
         {
         }
 
-        public PathCollection ToAbsolutePaths(string rootPath)
+        /// <summary>
+        /// Prepends the specified path to all items that are not already rooted
+        /// and returns a new <see cref="PathCollection"/> with the resulted items.
+        /// </summary>
+        public PathCollection PrependPath(string path)
         {
             string[] newItems = Items
-                .Select(x => Path.IsPathRooted(x) ? x : Path.Combine(rootPath, x))
+                .Select(x => Path.IsPathRooted(x) ? x : Path.Combine(path, x))
                 .ToArray();
 
             return new PathCollection(newItems);

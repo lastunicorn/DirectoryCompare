@@ -18,10 +18,12 @@ namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 {
     public class DiskAnalyzerFactory : IDiskAnalyzerFactory
     {
-        public IDiskAnalyzer Create(AnalysisRequest request, IDiskAnalysisExport diskAnalysisExport)
+        public IDiskAnalyzer Create(AnalysisRequest request, IAnalysisExport analysisExport)
         {
-            return new DiskAnalyzer(request.RootPath, diskAnalysisExport)
+            return new DiskAnalyzer
             {
+                RootPath = request.RootPath,
+                AnalysisExport = analysisExport,
                 BlackList = request.BlackList
             };
         }

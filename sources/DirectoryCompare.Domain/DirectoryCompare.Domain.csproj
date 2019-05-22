@@ -49,21 +49,17 @@
     <Compile Include="SnapshotBuilder.cs" />
     <Compile Include="Entities\Snapshot.cs" />
     <Compile Include="Comparison\SnapshotComparer.cs" />
-    <Compile Include="DiskAnalysis\IDiskAnalysisExport.cs" />
-    <Compile Include="DiskAnalysis\SnapshotDiskAnalysisExport.cs" />
+    <Compile Include="DiskAnalysis\IAnalysisExport.cs" />
+    <Compile Include="DiskAnalysis\SnapshotAnalysisExport.cs" />
     <Compile Include="Logging\IProjectLogger.cs" />
     <Compile Include="Comparison\ItemComparison.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Entities\HDirectory.cs" />
     <Compile Include="Entities\HFile.cs" />
     <Compile Include="Entities\HItem.cs" />
+    <Compile Include="Utils\ByteArrayCompare.cs" />
+    <Compile Include="Utils\PathCollection.cs" />
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <ProjectReference Include="..\DirectoryCompare.Common\DirectoryCompare.Common.csproj">
-      <Project>{05E21912-332C-4C16-A590-2BBF65A1FB7C}</Project>
-      <Name>DirectoryCompare.Common</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

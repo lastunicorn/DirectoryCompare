@@ -23,7 +23,7 @@ using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
 {
-    public class JsonDiskAnalysisExport : IDiskAnalysisExport
+    public class JsonAnalysisExport : IAnalysisExport
     {
         private readonly Stack<JsonDirectoryWriter> directoryStack = new Stack<JsonDirectoryWriter>();
         private JsonSnapshotWriter jsonSnapshotWriter;
@@ -32,7 +32,7 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
 
         public Guid Id => new Guid("9E93055D-7BDE-4F55-B340-DD5A4880D96E");
 
-        public JsonDiskAnalysisExport(TextWriter textWriter)
+        public JsonAnalysisExport(TextWriter textWriter)
         {
             jsonTextWriter = new JsonTextWriter(textWriter)
             {
