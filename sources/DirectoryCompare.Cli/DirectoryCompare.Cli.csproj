@@ -71,6 +71,7 @@
     </Compile>
     <Compile Include="Commands\ComparePathsCommand.cs" />
     <Compile Include="Commands\CompareSnapshotsCommand.cs" />
+    <Compile Include="Commands\CreateProjectCommand.cs" />
     <Compile Include="ContravariantBindingResolver.cs" />
     <Compile Include="ConsoleApplication.cs" />
     <Compile Include="Commands\RemoveDuplicatesCommand.cs" />

@@ -14,27 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
+using FluentValidation;
+using FluentValidation.Validators;
 
-namespace DustInTheWind.DirectoryCompare.Utils
+namespace DustInTheWind.DirectoryCompare.Application.Validation
 {
-    public static class ByteArrayCompare
+    internal static class RuleBuilderExtensions
     {
-        public static bool AreEqual(IReadOnlyList<byte> list1, IReadOnlyList<byte> list2)
+        public static IRuleBuilderOptions<T, TProperty> IsPath<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder)
         {
-            if (list1 == null || list2 == null)
-                return false;
-
-            if (list1.Count != list2.Count)
-                return false;
-
-            for (int i = 0; i < list1.Count; i++)
-            {
-                if (list1[i] != list2[i])
-                    return false;
-            }
-
-            return true;
+            return ruleBuilder.SetValidator((IPropertyValidator)new PathValidator());
         }
     }
 }

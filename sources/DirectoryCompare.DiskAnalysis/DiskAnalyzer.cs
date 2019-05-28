@@ -17,9 +17,9 @@
 using System;
 using System.IO;
 using System.Security.Cryptography;
-using DustInTheWind.DirectoryCompare.Common.Utils;
 using DustInTheWind.DirectoryCompare.DiskAnalysis.DiskCrawling;
 using DustInTheWind.DirectoryCompare.Entities;
+using DustInTheWind.DirectoryCompare.Utils;
 
 namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 {

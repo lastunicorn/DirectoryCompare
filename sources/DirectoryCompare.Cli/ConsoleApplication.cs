@@ -17,6 +17,7 @@
 using System;
 using DirectoryCompare.CliFramework;
 using DustInTheWind.DirectoryCompare.Application;
+using DustInTheWind.DirectoryCompare.Application.ProjectModel;
 using DustInTheWind.DirectoryCompare.Application.Snapshots;
 using DustInTheWind.DirectoryCompare.Cli.Commands;
 using DustInTheWind.DirectoryCompare.DiskAnalysis;
@@ -76,6 +77,7 @@ namespace DustInTheWind.DirectoryCompare.Cli
 
             return new CommandCollection
             {
+                { "init", new CreateProjectCommand(mediator) },
                 { "snapshot", createSnapshotCommand },
                 { "view-snapshot", viewSnapshotCommand },
                 { "verify-path", verifyDiskCommand },

@@ -57,6 +57,10 @@
     <Compile Include="Comparison\ComparePathsRequest.cs" />
     <Compile Include="Comparison\ComparePathsRequestHandler.cs" />
     <Compile Include="Comparison\CompareSnapshotsRequestHandler.cs" />
+    <Compile Include="ProjectModel\CreateProjectRequest.cs" />
+    <Compile Include="ProjectModel\CreateProjectRequestHandler.cs" />
+    <Compile Include="IProjectRepository.cs" />
+    <Compile Include="ProjectModel\VerifyDiskRequestValidator.cs" />
     <Compile Include="Snapshots\CreateSnapshotRequestValidator.cs" />
     <Compile Include="Comparison\VerifyDiskRequestValidator.cs" />
     <Compile Include="RequestPerformanceBehaviour.cs" />
@@ -76,6 +80,8 @@
     <Compile Include="Snapshots\CreateSnapshotRequestHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Snapshots\CreateSnapshotRequest.cs" />
+    <Compile Include="Validation\PathValidator.cs" />
+    <Compile Include="Validation\RuleBuilderExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj">

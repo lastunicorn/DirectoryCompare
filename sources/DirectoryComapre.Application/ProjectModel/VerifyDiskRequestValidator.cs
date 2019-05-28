@@ -14,27 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
+using DustInTheWind.DirectoryCompare.Application.Validation;
+using FluentValidation;
 
-namespace DustInTheWind.DirectoryCompare.Utils
+namespace DustInTheWind.DirectoryCompare.Application.ProjectModel
 {
-    public static class ByteArrayCompare
+    public class VerifyDiskRequestValidator : AbstractValidator<CreateProjectRequest>
     {
-        public static bool AreEqual(IReadOnlyList<byte> list1, IReadOnlyList<byte> list2)
+        public VerifyDiskRequestValidator()
         {
-            if (list1 == null || list2 == null)
-                return false;
-
-            if (list1.Count != list2.Count)
-                return false;
-
-            for (int i = 0; i < list1.Count; i++)
-            {
-                if (list1[i] != list2[i])
-                    return false;
-            }
-
-            return true;
+            RuleFor(x => x.DirectoryPath).NotEmpty();
+            RuleFor(x => x.DirectoryPath).IsPath();
         }
     }
 }

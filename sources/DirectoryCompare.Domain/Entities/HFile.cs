@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using DustInTheWind.DirectoryCompare.Common.Utils;
+using DustInTheWind.DirectoryCompare.Utils;
 
 namespace DustInTheWind.DirectoryCompare.Entities
 {

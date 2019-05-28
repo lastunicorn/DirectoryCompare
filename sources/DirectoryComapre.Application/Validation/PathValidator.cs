@@ -14,18 +14,33 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using DustInTheWind.DirectoryCompare.Utils;
+using FluentValidation.Resources;
+using FluentValidation.Validators;
 
-namespace DustInTheWind.DirectoryCompare.DiskAnalysis
+namespace DustInTheWind.DirectoryCompare.Application.Validation
 {
-    public class DiskReaderStartingEventArgs : EventArgs
+    public class PathValidator : PropertyValidator
     {
-        public PathCollection BlackList { get; }
-
-        public DiskReaderStartingEventArgs(PathCollection blackList)
+        public PathValidator()
+            : base((IStringSource)new LanguageStringSource(nameof(PathValidator)))
         {
-            BlackList = blackList;
+        }
+
+        protected override bool IsValid(PropertyValidatorContext context)
+        {
+            object propertyValue = context.PropertyValue;
+
+            if (propertyValue == null)
+                return true;
+
+            if (propertyValue is string path)
+                return new DiskPath(path).IsValid;
+
+            if (propertyValue is DiskPath diskPath)
+                return diskPath.IsValid;
+
+            return false;
         }
     }
 }
