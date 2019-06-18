@@ -16,13 +16,13 @@
 
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.Comparison
+namespace DustInTheWind.DirectoryCompare.Application.VerifyDisk
 {
-    public class ComparePathsRequest : IRequest
+    public class VerifyDiskRequest : IRequest
     {
-        public string Path1 { get; set; }
+        public string DiskPath { get; set; }
 
-        public string Path2 { get; set; }
+        public string FilePath { get; set; }
 
         public IComparisonExporter Exporter { get; set; }
     }

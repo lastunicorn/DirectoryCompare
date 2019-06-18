@@ -21,7 +21,7 @@ using DustInTheWind.DirectoryCompare.JsonHashesFile;
 using DustInTheWind.DirectoryCompare.ProjectModel;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.ProjectModel
+namespace DustInTheWind.DirectoryCompare.Application.CreateProject
 {
     public class CreateProjectRequestHandler : RequestHandler<CreateProjectRequest>
     {

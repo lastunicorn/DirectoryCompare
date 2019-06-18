@@ -18,31 +18,28 @@ using System;
 using DustInTheWind.DirectoryCompare.Comparison;
 using DustInTheWind.DirectoryCompare.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Entities;
-using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.Comparison
+namespace DustInTheWind.DirectoryCompare.Application.ComparePaths
 {
-    public class VerifyDiskRequestHandler : RequestHandler<VerifyDiskRequest>
+    public class ComparePathsRequestHandler : RequestHandler<ComparePathsRequest>
     {
         private readonly IDiskAnalyzerFactory diskAnalyzerFactory;
 
-        public VerifyDiskRequestHandler(IDiskAnalyzerFactory diskAnalyzerFactory)
+        public ComparePathsRequestHandler(IDiskAnalyzerFactory diskAnalyzerFactory)
         {
             this.diskAnalyzerFactory = diskAnalyzerFactory ?? throw new ArgumentNullException(nameof(diskAnalyzerFactory));
         }
 
-        protected override void Handle(VerifyDiskRequest request)
+        protected override void Handle(ComparePathsRequest request)
         {
-            Snapshot snapshot1 = ReadPath(request.DiskPath);
-
-            SnapshotJsonFile file2 = SnapshotJsonFile.Load(request.FilePath);
-            Snapshot snapshot2 = file2.Snapshot;
+            Snapshot snapshot1 = ReadPath(request.Path1);
+            Snapshot snapshot2 = ReadPath(request.Path2);
 
             SnapshotComparer comparer = new SnapshotComparer(snapshot1, snapshot2);
             comparer.Compare();
 
-            request.Exporter?.Export(comparer);
+            request.Exporter.Export(comparer);
         }
 
         private Snapshot ReadPath(string path)

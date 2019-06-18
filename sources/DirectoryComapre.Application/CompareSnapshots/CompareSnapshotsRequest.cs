@@ -14,11 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.Application.Duplication
+using MediatR;
+
+namespace DustInTheWind.DirectoryCompare.Application.CompareSnapshots
 {
-    public interface IRemoveDuplicatesExporter
+    public class CompareSnapshotsRequest : IRequest
     {
-        void WriteRemove(string path);
-        void WriteSummary(int removedFiles, long removedSize);
+        public string Path1 { get; set; }
+        public string Path2 { get; set; }
+        public IComparisonExporter Exporter { get; set; }
     }
 }

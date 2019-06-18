@@ -24,7 +24,7 @@ using DustInTheWind.DirectoryCompare.Logging;
 using DustInTheWind.DirectoryCompare.Utils;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.Snapshots
+namespace DustInTheWind.DirectoryCompare.Application.CreateSnapshot
 {
     public class CreateSnapshotRequestHandler : RequestHandler<CreateSnapshotRequest>
     {

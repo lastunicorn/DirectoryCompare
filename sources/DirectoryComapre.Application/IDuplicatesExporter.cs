@@ -14,15 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Utils;
-using MediatR;
-
-namespace DustInTheWind.DirectoryCompare.Application.ProjectModel
+namespace DustInTheWind.DirectoryCompare.Application
 {
-    public class CreateProjectRequest : IRequest
+    public interface IDuplicatesExporter
     {
-        public string Name { get; set; }
-
-        public DiskPath DirectoryPath { get; set; }
+        void WriteDuplicate(string path1, string path2, long size);
+        void WriteSummary(int duplicateCount, long totalSize);
     }
 }

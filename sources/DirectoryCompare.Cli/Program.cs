@@ -25,6 +25,10 @@ namespace DustInTheWind.DirectoryCompare.Cli
         {
             try
             {
+                /**
+                 * dc read
+                 */
+
                 //args = new[] { "read-disk", @"c:\temp1", @"c:\temp\file1.json" };
                 //args = new[] { "read-disk", @"c:\temp2", @"c:\temp\file2.json" };
                 //args = new[] { "read-disk", @"c:\temp", @"c:\temp1\temp.json" };

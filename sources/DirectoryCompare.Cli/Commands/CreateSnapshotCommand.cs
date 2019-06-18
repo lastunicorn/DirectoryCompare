@@ -17,7 +17,7 @@
 using DirectoryCompare.CliFramework;
 using MediatR;
 using System;
-using DustInTheWind.DirectoryCompare.Application.Snapshots;
+using DustInTheWind.DirectoryCompare.Application.CreateSnapshot;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {

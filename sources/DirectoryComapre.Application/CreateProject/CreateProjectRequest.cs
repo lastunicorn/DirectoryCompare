@@ -14,18 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.Utils;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.Duplication
+namespace DustInTheWind.DirectoryCompare.Application.CreateProject
 {
-    public class FindDuplicatesRequest : IRequest
+    public class CreateProjectRequest : IRequest
     {
-        public string PathLeft { get; set; }
+        public string Name { get; set; }
 
-        public string PathRight { get; set; }
-
-        public IDuplicatesExporter Exporter { get; set; }
-
-        public bool CheckFilesExist { get; set; }
+        public DiskPath DirectoryPath { get; set; }
     }
 }

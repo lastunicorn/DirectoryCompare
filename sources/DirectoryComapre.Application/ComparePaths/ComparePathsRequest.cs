@@ -14,17 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Application.Validation;
-using FluentValidation;
+using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.ProjectModel
+namespace DustInTheWind.DirectoryCompare.Application.ComparePaths
 {
-    public class VerifyDiskRequestValidator : AbstractValidator<CreateProjectRequest>
+    public class ComparePathsRequest : IRequest
     {
-        public VerifyDiskRequestValidator()
-        {
-            RuleFor(x => x.DirectoryPath).NotEmpty();
-            RuleFor(x => x.DirectoryPath).IsPath();
-        }
+        public string Path1 { get; set; }
+
+        public string Path2 { get; set; }
+
+        public IComparisonExporter Exporter { get; set; }
     }
 }

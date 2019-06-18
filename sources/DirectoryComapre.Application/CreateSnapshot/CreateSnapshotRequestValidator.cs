@@ -16,7 +16,7 @@
 
 using FluentValidation;
 
-namespace DustInTheWind.DirectoryCompare.Application.Snapshots
+namespace DustInTheWind.DirectoryCompare.Application.CreateSnapshot
 {
     public class CreateSnapshotRequestValidator : AbstractValidator<CreateSnapshotRequest>
     {

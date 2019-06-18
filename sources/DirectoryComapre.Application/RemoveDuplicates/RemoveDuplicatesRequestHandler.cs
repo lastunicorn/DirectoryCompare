@@ -20,7 +20,7 @@ using DustInTheWind.DirectoryCompare.Comparison;
 using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.Duplication
+namespace DustInTheWind.DirectoryCompare.Application.RemoveDuplicates
 {
     public class RemoveDuplicatesRequestHandler : RequestHandler<RemoveDuplicatesRequest>
     {
