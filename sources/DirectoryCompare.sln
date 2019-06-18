@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.Applicatio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.DiskAnalysis", "DirectoryCompare.DiskAnalysis\DirectoryCompare.DiskAnalysis.csproj", "{243D8C53-4B1C-4D78-BA62-B0C8900C4801}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.DataAccess", "DirectoryCompare.DataAccess\DirectoryCompare.DataAccess.csproj", "{2ECC6695-9E34-4179-ACC1-94D81A3A23EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +113,18 @@ Global
 		{243D8C53-4B1C-4D78-BA62-B0C8900C4801}.Release|x64.Build.0 = Release|Any CPU
 		{243D8C53-4B1C-4D78-BA62-B0C8900C4801}.Release|x86.ActiveCfg = Release|Any CPU
 		{243D8C53-4B1C-4D78-BA62-B0C8900C4801}.Release|x86.Build.0 = Release|Any CPU
+		{2ECC6695-9E34-4179-ACC1-94D81A3A23EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2ECC6695-9E34-4179-ACC1-94D81A3A23EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2ECC6695-9E34-4179-ACC1-94D81A3A23EB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2ECC6695-9E34-4179-ACC1-94D81A3A23EB}.Debug|x64.Build.0 = Debug|Any CPU
+		{2ECC6695-9E34-4179-ACC1-94D81A3A23EB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2ECC6695-9E34-4179-ACC1-94D81A3A23EB}.Debug|x86.Build.0 = Debug|Any CPU
+		{2ECC6695-9E34-4179-ACC1-94D81A3A23EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2ECC6695-9E34-4179-ACC1-94D81A3A23EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2ECC6695-9E34-4179-ACC1-94D81A3A23EB}.Release|x64.ActiveCfg = Release|Any CPU
+		{2ECC6695-9E34-4179-ACC1-94D81A3A23EB}.Release|x64.Build.0 = Release|Any CPU
+		{2ECC6695-9E34-4179-ACC1-94D81A3A23EB}.Release|x86.ActiveCfg = Release|Any CPU
+		{2ECC6695-9E34-4179-ACC1-94D81A3A23EB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

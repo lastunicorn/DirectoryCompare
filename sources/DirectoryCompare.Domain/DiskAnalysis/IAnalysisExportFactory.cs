@@ -14,14 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Utils;
+using System.IO;
 
-namespace DustInTheWind.DirectoryCompare.ProjectModel
+namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 {
-    public class Project
+    public interface IAnalysisExportFactory
     {
-        public string Name { get; set; }
-
-        public DiskPath Path { get; set; }
+        IAnalysisExport Create();
+        IAnalysisExport Create(TextWriter textWriter);
     }
 }

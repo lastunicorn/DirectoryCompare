@@ -14,26 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using DustInTheWind.DirectoryCompare.DataAccess;
-using DustInTheWind.DirectoryCompare.Entities;
-using MediatR;
+using System.IO;
+using DustInTheWind.DirectoryCompare.DiskAnalysis;
+using DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport;
 
-namespace DustInTheWind.DirectoryCompare.Application.GetSnapshot
+namespace DustInTheWind.DirectoryCompare.DataAccess
 {
-    public class GetSnapshotRequestHandler : RequestHandler<GetSnapshotRequest, Snapshot>
+    public class AnalysisExportFactory : IAnalysisExportFactory
     {
-        private readonly IProjectRepository projectRepository;
-
-        public GetSnapshotRequestHandler(IProjectRepository projectRepository)
+        public IAnalysisExport Create()
         {
-            this.projectRepository = projectRepository ?? throw new ArgumentNullException(nameof(projectRepository));
+            return new SnapshotAnalysisExport();
         }
 
-        protected override Snapshot Handle(GetSnapshotRequest request)
+        public IAnalysisExport Create(TextWriter textWriter)
         {
-            Snapshot snapshot = projectRepository.GetSnapshot(request.FilePath);
-            return snapshot;
+            return new JsonAnalysisExport(textWriter);
         }
     }
 }

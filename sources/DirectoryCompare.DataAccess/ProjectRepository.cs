@@ -14,9 +14,29 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.Application
+using DustInTheWind.DirectoryCompare.Entities;
+using DustInTheWind.DirectoryCompare.JsonHashesFile;
+using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
+
+namespace DustInTheWind.DirectoryCompare.DataAccess
 {
-    public interface IProjectRepository
+    public class ProjectRepository : IProjectRepository
     {
+        public void Save(Project project)
+        {
+            ProjectFile projectFile = new ProjectFile
+            {
+                Name = project.Name,
+                Path = project.Path + "project.json"
+            };
+
+            projectFile.Save();
+        }
+
+        public Snapshot GetSnapshot(string path)
+        {
+            SnapshotJsonFile file = SnapshotJsonFile.Load(path);
+            return file.Snapshot;
+        }
     }
 }

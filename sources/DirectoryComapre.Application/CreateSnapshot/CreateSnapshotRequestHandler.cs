@@ -19,7 +19,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using DustInTheWind.DirectoryCompare.DiskAnalysis;
-using DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport;
 using DustInTheWind.DirectoryCompare.Logging;
 using DustInTheWind.DirectoryCompare.Utils;
 using MediatR;
@@ -30,12 +29,14 @@ namespace DustInTheWind.DirectoryCompare.Application.CreateSnapshot
     {
         private readonly IProjectLogger logger;
         private readonly IDiskAnalyzerFactory diskAnalyzerFactory;
+        private readonly IAnalysisExportFactory analysisExportFactory;
         private PathCollection blackList = new PathCollection();
 
-        public CreateSnapshotRequestHandler(IProjectLogger logger, IDiskAnalyzerFactory diskAnalyzerFactory)
+        public CreateSnapshotRequestHandler(IProjectLogger logger, IDiskAnalyzerFactory diskAnalyzerFactory, IAnalysisExportFactory analysisExportFactory)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.diskAnalyzerFactory = diskAnalyzerFactory ?? throw new ArgumentNullException(nameof(diskAnalyzerFactory));
+            this.analysisExportFactory = analysisExportFactory ?? throw new ArgumentNullException(nameof(analysisExportFactory));
         }
 
         protected override void Handle(CreateSnapshotRequest request)
@@ -63,7 +64,7 @@ namespace DustInTheWind.DirectoryCompare.Application.CreateSnapshot
                     RootPath = request.SourcePath,
                     BlackList = blackList
                 };
-                JsonAnalysisExport jsonAnalysisExport = new JsonAnalysisExport(streamWriter);
+                IAnalysisExport jsonAnalysisExport = analysisExportFactory.Create(streamWriter);
                 IDiskAnalyzer diskAnalyzer = diskAnalyzerFactory.Create(analysisRequest, jsonAnalysisExport);
                 diskAnalyzer.Starting += HandleDiskReaderStarting;
                 diskAnalyzer.ErrorEncountered += HandleDiskReaderErrorEncountered;

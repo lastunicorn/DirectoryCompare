@@ -19,6 +19,7 @@ using DirectoryCompare.CliFramework;
 using DustInTheWind.DirectoryCompare.Application;
 using DustInTheWind.DirectoryCompare.Application.CreateSnapshot;
 using DustInTheWind.DirectoryCompare.Cli.Commands;
+using DustInTheWind.DirectoryCompare.DataAccess;
 using DustInTheWind.DirectoryCompare.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Logging;
 using FluentValidation;
@@ -66,6 +67,8 @@ namespace DustInTheWind.DirectoryCompare.Cli
         private void ConfigureDependencyContainer()
         {
             dependencyContainer.Bind<IProjectLogger>().To<ProjectLogger>().InSingletonScope();
+            dependencyContainer.Bind<IProjectRepository>().To<ProjectRepository>();
+            dependencyContainer.Bind<IAnalysisExportFactory>().To<AnalysisExportFactory>();
         }
 
         protected override CommandCollection CreateCommands()

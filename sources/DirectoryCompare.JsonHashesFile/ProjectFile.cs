@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using DustInTheWind.DirectoryCompare.ProjectModel;
+using DustInTheWind.DirectoryCompare.Entities;
 using DustInTheWind.DirectoryCompare.Utils;
 using Newtonsoft.Json;
 

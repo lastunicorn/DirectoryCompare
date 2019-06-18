@@ -16,9 +16,9 @@
 
 using System;
 using DustInTheWind.DirectoryCompare.Comparison;
+using DustInTheWind.DirectoryCompare.DataAccess;
 using DustInTheWind.DirectoryCompare.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Entities;
-using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.VerifyDisk
@@ -26,18 +26,18 @@ namespace DustInTheWind.DirectoryCompare.Application.VerifyDisk
     public class VerifyDiskRequestHandler : RequestHandler<VerifyDiskRequest>
     {
         private readonly IDiskAnalyzerFactory diskAnalyzerFactory;
+        private readonly IProjectRepository projectRepository;
 
-        public VerifyDiskRequestHandler(IDiskAnalyzerFactory diskAnalyzerFactory)
+        public VerifyDiskRequestHandler(IDiskAnalyzerFactory diskAnalyzerFactory, IProjectRepository projectRepository)
         {
             this.diskAnalyzerFactory = diskAnalyzerFactory ?? throw new ArgumentNullException(nameof(diskAnalyzerFactory));
+            this.projectRepository = projectRepository ?? throw new ArgumentNullException(nameof(projectRepository));
         }
 
         protected override void Handle(VerifyDiskRequest request)
         {
             Snapshot snapshot1 = ReadPath(request.DiskPath);
-
-            SnapshotJsonFile file2 = SnapshotJsonFile.Load(request.FilePath);
-            Snapshot snapshot2 = file2.Snapshot;
+            Snapshot snapshot2 = projectRepository.GetSnapshot(request.FilePath);
 
             SnapshotComparer comparer = new SnapshotComparer(snapshot1, snapshot2);
             comparer.Compare();

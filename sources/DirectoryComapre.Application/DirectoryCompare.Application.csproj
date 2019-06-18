@@ -59,7 +59,6 @@
     <Compile Include="CompareSnapshots\CompareSnapshotsRequestHandler.cs" />
     <Compile Include="CreateProject\CreateProjectRequest.cs" />
     <Compile Include="CreateProject\CreateProjectRequestHandler.cs" />
-    <Compile Include="IProjectRepository.cs" />
     <Compile Include="CreateProject\CreateProjectRequestValidator.cs" />
     <Compile Include="CreateSnapshot\CreateSnapshotRequestValidator.cs" />
     <Compile Include="VerifyDisk\VerifyDiskRequestValidator.cs" />
@@ -87,10 +86,6 @@
     <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj">
       <Project>{27EAA312-EC92-41EA-B854-00B5C9F2FC7B}</Project>
       <Name>DirectoryCompare.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DirectoryCompare.JsonHashesFile\DirectoryCompare.JsonHashesFile.csproj">
-      <Project>{DEF896B7-F822-4414-A2DF-1C37A50490ED}</Project>
-      <Name>DirectoryCompare.JsonHashesFile</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

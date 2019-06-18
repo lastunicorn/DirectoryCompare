@@ -43,11 +43,13 @@
     <Compile Include="DiskAnalysis\AnalysisRequest.cs" />
     <Compile Include="DiskAnalysis\DiskReaderStartingEventArgs.cs" />
     <Compile Include="DiskAnalysis\ErrorEncounteredEventArgs.cs" />
+    <Compile Include="DiskAnalysis\IAnalysisExportFactory.cs" />
     <Compile Include="DiskAnalysis\IDiskAnalyzer.cs" />
     <Compile Include="DiskAnalysis\IDiskAnalyzerFactory.cs" />
+    <Compile Include="DataAccess\IProjectRepository.cs" />
     <Compile Include="Utils\DiskPath.cs" />
     <Compile Include="Entities\HItemCollection.cs" />
-    <Compile Include="ProjectModel\Project.cs" />
+    <Compile Include="Entities\Project.cs" />
     <Compile Include="SnapshotBuilder.cs" />
     <Compile Include="Entities\Snapshot.cs" />
     <Compile Include="Comparison\SnapshotComparer.cs" />

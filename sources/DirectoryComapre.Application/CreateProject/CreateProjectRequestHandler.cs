@@ -17,14 +17,21 @@
 using System;
 using System.IO;
 using System.Linq;
-using DustInTheWind.DirectoryCompare.JsonHashesFile;
-using DustInTheWind.DirectoryCompare.ProjectModel;
+using DustInTheWind.DirectoryCompare.DataAccess;
+using DustInTheWind.DirectoryCompare.Entities;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.CreateProject
 {
     public class CreateProjectRequestHandler : RequestHandler<CreateProjectRequest>
     {
+        private readonly IProjectRepository projectRepository;
+
+        public CreateProjectRequestHandler(IProjectRepository projectRepository)
+        {
+            this.projectRepository = projectRepository ?? throw new ArgumentNullException(nameof(projectRepository));
+        }
+
         protected override void Handle(CreateProjectRequest request)
         {
             // Calculate the absolute path.
@@ -52,17 +59,8 @@ namespace DustInTheWind.DirectoryCompare.Application.CreateProject
                 Path = request.DirectoryPath
             };
 
-            ProjectRepository projectRepository = new ProjectRepository();
+            //ProjectRepository projectRepository = new ProjectRepository();
             projectRepository.Save(project);
-        }
-    }
-
-    public class ProjectRepository : IProjectRepository
-    {
-        public void Save(Project project)
-        {
-            ProjectFile projectFile = ProjectFile.Create(project);
-            projectFile.Save();
         }
     }
 }

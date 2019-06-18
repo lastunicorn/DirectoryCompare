@@ -14,27 +14,36 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using System.Collections.Generic;
 using DustInTheWind.DirectoryCompare.Comparison;
-using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
+using DustInTheWind.DirectoryCompare.DataAccess;
+using DustInTheWind.DirectoryCompare.Entities;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.FindDuplicates
 {
     public class FindDuplicatesRequestHandler : RequestHandler<FindDuplicatesRequest>
     {
+        private readonly IProjectRepository projectRepository;
+
+        public FindDuplicatesRequestHandler(IProjectRepository projectRepository)
+        {
+            this.projectRepository = projectRepository ?? throw new ArgumentNullException(nameof(projectRepository));
+        }
+
         protected override void Handle(FindDuplicatesRequest request)
         {
-            SnapshotJsonFile fileLeft = SnapshotJsonFile.Load(request.PathLeft);
-            SnapshotJsonFile fileRight = null;
+            Snapshot snapshotLeft = projectRepository.GetSnapshot(request.PathLeft);
+            Snapshot snapshotRight = null;
 
             if (request.PathRight != null)
-                fileRight = SnapshotJsonFile.Load(request.PathRight);
+                snapshotRight = projectRepository.GetSnapshot(request.PathRight);
 
             FileDuplicates fileDuplicates = new FileDuplicates
             {
-                SnapshotLeft = fileLeft.Snapshot,
-                SnapshotRight = fileRight?.Snapshot,
+                SnapshotLeft = snapshotLeft,
+                SnapshotRight = snapshotRight,
                 CheckFilesExist = request.CheckFilesExist
             };
 

@@ -14,20 +14,29 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using DustInTheWind.DirectoryCompare.Comparison;
-using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
+using DustInTheWind.DirectoryCompare.DataAccess;
+using DustInTheWind.DirectoryCompare.Entities;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.CompareSnapshots
 {
     public class CompareSnapshotsRequestHandler : RequestHandler<CompareSnapshotsRequest>
     {
+        private readonly IProjectRepository projectRepository;
+
+        public CompareSnapshotsRequestHandler(IProjectRepository projectRepository)
+        {
+            this.projectRepository = projectRepository ?? throw new ArgumentNullException(nameof(projectRepository));
+        }
+
         protected override void Handle(CompareSnapshotsRequest request)
         {
-            SnapshotJsonFile file1 = SnapshotJsonFile.Load(request.Path1);
-            SnapshotJsonFile file2 = SnapshotJsonFile.Load(request.Path2);
+            Snapshot snapshot1 = projectRepository.GetSnapshot(request.Path1);
+            Snapshot snapshot2 = projectRepository.GetSnapshot(request.Path2);
 
-            SnapshotComparer comparer = new SnapshotComparer(file1.Snapshot, file2.Snapshot);
+            SnapshotComparer comparer = new SnapshotComparer(snapshot1, snapshot2);
             comparer.Compare();
 
             request.Exporter?.Export(comparer);
