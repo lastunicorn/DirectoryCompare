@@ -14,15 +14,25 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Utils;
-using MediatR;
+using DustInTheWind.DirectoryCompare.DataAccess;
+using DustInTheWind.DirectoryCompare.DiskAnalysis;
+using DustInTheWind.DirectoryCompare.Logging;
+using Ninject;
 
-namespace DustInTheWind.DirectoryCompare.Application.CreateProject
+namespace DustInTheWind.DirectoryCompare.Cli.Setup
 {
-    public class CreateProjectRequest : IRequest
+    internal static class DependencyContainerSetup
     {
-        public string Name { get; set; }
+        public static KernelBase Setup()
+        {
+            StandardKernel kernel = new StandardKernel();
 
-        public DiskPath DirectoryPath { get; set; }
+            kernel.Bind<IProjectLogger>().To<ProjectLogger>().InSingletonScope();
+            kernel.Bind<IProjectRepository>().To<ProjectRepository>();
+            kernel.Bind<IAnalysisExportFactory>().To<AnalysisExportFactory>();
+            kernel.Bind<IDiskAnalyzerFactory>().To<DiskAnalyzerFactory>().InSingletonScope();
+
+            return kernel;
+        }
     }
 }

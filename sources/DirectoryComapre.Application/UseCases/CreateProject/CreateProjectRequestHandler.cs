@@ -21,7 +21,7 @@ using DustInTheWind.DirectoryCompare.DataAccess;
 using DustInTheWind.DirectoryCompare.Entities;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.CreateProject
+namespace DustInTheWind.DirectoryCompare.Application.UseCases.CreateProject
 {
     public class CreateProjectRequestHandler : RequestHandler<CreateProjectRequest>
     {

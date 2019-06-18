@@ -16,16 +16,12 @@
 
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.FindDuplicates
+namespace DustInTheWind.DirectoryCompare.Application.UseCases.CreateSnapshot
 {
-    public class FindDuplicatesRequest : IRequest
+    public class CreateSnapshotRequest : IRequest
     {
-        public string PathLeft { get; set; }
-
-        public string PathRight { get; set; }
-
-        public IDuplicatesExporter Exporter { get; set; }
-
-        public bool CheckFilesExist { get; set; }
+        public string SourcePath { get; set; }
+        public string DestinationFilePath { get; set; }
+        public string BlackListFilePath { get; set; }
     }
 }

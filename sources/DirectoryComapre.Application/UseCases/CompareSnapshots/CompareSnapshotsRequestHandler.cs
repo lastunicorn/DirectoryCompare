@@ -20,7 +20,7 @@ using DustInTheWind.DirectoryCompare.DataAccess;
 using DustInTheWind.DirectoryCompare.Entities;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.CompareSnapshots
+namespace DustInTheWind.DirectoryCompare.Application.UseCases.CompareSnapshots
 {
     public class CompareSnapshotsRequestHandler : RequestHandler<CompareSnapshotsRequest>
     {

@@ -16,73 +16,33 @@
 
 using System;
 using DirectoryCompare.CliFramework;
-using DustInTheWind.DirectoryCompare.Application;
-using DustInTheWind.DirectoryCompare.Application.CreateSnapshot;
 using DustInTheWind.DirectoryCompare.Cli.Commands;
-using DustInTheWind.DirectoryCompare.DataAccess;
-using DustInTheWind.DirectoryCompare.DiskAnalysis;
+using DustInTheWind.DirectoryCompare.Cli.Setup;
 using DustInTheWind.DirectoryCompare.Logging;
-using FluentValidation;
 using MediatR;
 using Ninject;
-using Ninject.Extensions.Conventions;
-using Ninject.Planning.Bindings.Resolvers;
 
 namespace DustInTheWind.DirectoryCompare.Cli
 {
     internal class ConsoleApplication : ConsoleApplicationBase
     {
-        private readonly StandardKernel dependencyContainer;
+        private readonly KernelBase dependencyContainer;
         private readonly IMediator mediator;
 
         public ConsoleApplication()
         {
-            dependencyContainer = BuildDependencyContainer();
-            ConfigureDependencyContainer();
-            mediator = BuildMediator();
-        }
-
-        private static StandardKernel BuildDependencyContainer()
-        {
-            return new StandardKernel();
-        }
-
-        private IMediator BuildMediator()
-        {
-            dependencyContainer.Components.Add<IBindingResolver, ContravariantBindingResolver>();
-            dependencyContainer.Bind(x => x.FromAssemblyContaining<IMediator>().SelectAllClasses().BindDefaultInterface());
-            dependencyContainer.Bind(x => x.FromAssemblyContaining<CreateSnapshotRequest>().SelectAllClasses().InheritedFrom(typeof(IRequestHandler<,>)).BindAllInterfaces());
-            dependencyContainer.Bind(x => x.FromAssemblyContaining<CreateSnapshotRequestValidator>().SelectAllClasses().InheritedFrom(typeof(AbstractValidator<>)).BindDefaultInterfaces());
-
-            dependencyContainer.Bind(typeof(IPipelineBehavior<,>)).To(typeof(RequestPerformanceBehaviour<,>));
-            dependencyContainer.Bind(typeof(IPipelineBehavior<,>)).To(typeof(RequestValidationBehavior<,>));
-
-            dependencyContainer.Bind<ServiceFactory>().ToMethod(x => t => x.Kernel.TryGet(t));
-
-            dependencyContainer.Bind<IDiskAnalyzerFactory>().To<DiskAnalyzerFactory>().InSingletonScope();
-
-            return dependencyContainer.Get<IMediator>();
-        }
-
-        private void ConfigureDependencyContainer()
-        {
-            dependencyContainer.Bind<IProjectLogger>().To<ProjectLogger>().InSingletonScope();
-            dependencyContainer.Bind<IProjectRepository>().To<ProjectRepository>();
-            dependencyContainer.Bind<IAnalysisExportFactory>().To<AnalysisExportFactory>();
+            dependencyContainer = DependencyContainerSetup.Setup();
+            mediator = MediatorSetup.Setup(dependencyContainer);
         }
 
         protected override CommandCollection CreateCommands()
         {
-            CreateSnapshotCommand createSnapshotCommand = new CreateSnapshotCommand(mediator);
-            ViewSnapshotCommand viewSnapshotCommand = new ViewSnapshotCommand(mediator);
-            VerifyDiskCommand verifyDiskCommand = new VerifyDiskCommand(mediator);
-
             return new CommandCollection
             {
                 { "init", new CreateProjectCommand(mediator) },
-                { "snapshot", createSnapshotCommand },
-                { "view-snapshot", viewSnapshotCommand },
-                { "verify-path", verifyDiskCommand },
+                { "snapshot", new CreateSnapshotCommand(mediator) },
+                { "view-snapshot", new ViewSnapshotCommand(mediator) },
+                { "verify-path", new VerifyDiskCommand(mediator) },
                 { "compare-paths", new ComparePathsCommand(mediator) },
                 { "compare-snapshots", new CompareSnapshotsCommand(mediator) },
                 { "find-duplicates", new FindDuplicatesCommand(mediator) },

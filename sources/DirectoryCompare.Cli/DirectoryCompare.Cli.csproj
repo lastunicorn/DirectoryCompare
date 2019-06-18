@@ -41,7 +41,7 @@
     <Reference Include="FluentValidation, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentValidation.8.3.0\lib\net45\FluentValidation.dll</HintPath>
     </Reference>
-    <Reference Include="MediatR, Version=7.0.0.0, Culture=neutral, PublicKeyToken=bb9a41a5e8aaa7e2, processorArchitecture=MSIL">
+    <Reference Include="MediatR">
       <HintPath>..\packages\MediatR.7.0.0\lib\net461\MediatR.dll</HintPath>
     </Reference>
     <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
@@ -71,6 +71,8 @@
     <Compile Include="Commands\RemoveDuplicatesCommand.cs" />
     <Compile Include="Commands\FindDuplicatesCommand.cs" />
     <Compile Include="ProjectLogger.cs" />
+    <Compile Include="Setup\DependencyContainerSetup.cs" />
+    <Compile Include="Setup\MediatorSetup.cs" />
     <Compile Include="SnapshotView.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -102,11 +104,11 @@
       <Name>DirectoryCompare.DataAccess</Name>
     </ProjectReference>
     <ProjectReference Include="..\DirectoryCompare.DiskAnalysis\DirectoryCompare.DiskAnalysis.csproj">
-      <Project>{243d8c53-4b1c-4d78-ba62-b0c8900c4801}</Project>
+      <Project>{243D8C53-4B1C-4D78-BA62-B0C8900C4801}</Project>
       <Name>DirectoryCompare.DiskAnalysis</Name>
     </ProjectReference>
     <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj">
-      <Project>{27eaa312-ec92-41ea-b854-00b5c9f2fc7b}</Project>
+      <Project>{27EAA312-EC92-41EA-B854-00B5C9F2FC7B}</Project>
       <Name>DirectoryCompare.Domain</Name>
     </ProjectReference>
   </ItemGroup>

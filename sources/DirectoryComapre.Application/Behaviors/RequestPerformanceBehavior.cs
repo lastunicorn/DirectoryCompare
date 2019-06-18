@@ -21,14 +21,14 @@ using System.Threading.Tasks;
 using DustInTheWind.DirectoryCompare.Logging;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application
+namespace DustInTheWind.DirectoryCompare.Application.Behaviors
 {
-    public class RequestPerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public class RequestPerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
         private readonly Stopwatch timer;
         private readonly IProjectLogger logger;
 
-        public RequestPerformanceBehaviour(IProjectLogger logger)
+        public RequestPerformanceBehavior(IProjectLogger logger)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             timer = new Stopwatch();

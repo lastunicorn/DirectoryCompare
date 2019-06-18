@@ -1,6 +1,6 @@
 ﻿using System;
 using DirectoryCompare.CliFramework;
-using DustInTheWind.DirectoryCompare.Application.CreateProject;
+using DustInTheWind.DirectoryCompare.Application.UseCases.CreateProject;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands

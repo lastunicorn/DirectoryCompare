@@ -16,7 +16,7 @@
 
 using System;
 using DirectoryCompare.CliFramework;
-using DustInTheWind.DirectoryCompare.Application.VerifyDisk;
+using DustInTheWind.DirectoryCompare.Application.UseCases.VerifyDisk;
 using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
 using MediatR;
 

@@ -19,7 +19,7 @@ using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
 using MediatR;
 using System;
 using System.IO;
-using DustInTheWind.DirectoryCompare.Application.RemoveDuplicates;
+using DustInTheWind.DirectoryCompare.Application.UseCases.RemoveDuplicates;
 using DustInTheWind.DirectoryCompare.Comparison;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands

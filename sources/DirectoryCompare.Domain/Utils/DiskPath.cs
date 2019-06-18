@@ -39,10 +39,7 @@ namespace DustInTheWind.DirectoryCompare.Utils
 
         public DiskPath(string value)
         {
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
-
-            this.value = value;
+            this.value = value ?? throw new ArgumentNullException(nameof(value));
             isValid = null;
         }
 

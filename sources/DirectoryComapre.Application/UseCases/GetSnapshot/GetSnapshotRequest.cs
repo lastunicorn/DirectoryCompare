@@ -14,14 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.Entities;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.CompareSnapshots
+namespace DustInTheWind.DirectoryCompare.Application.UseCases.GetSnapshot
 {
-    public class CompareSnapshotsRequest : IRequest
+    public class GetSnapshotRequest : IRequest<Snapshot>
     {
-        public string Path1 { get; set; }
-        public string Path2 { get; set; }
-        public IComparisonExporter Exporter { get; set; }
+        public string FilePath { get; set; }
     }
 }

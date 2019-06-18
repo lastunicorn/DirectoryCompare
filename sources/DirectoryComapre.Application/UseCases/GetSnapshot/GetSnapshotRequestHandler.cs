@@ -14,17 +14,26 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using FluentValidation;
+using System;
+using DustInTheWind.DirectoryCompare.DataAccess;
+using DustInTheWind.DirectoryCompare.Entities;
+using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.VerifyDisk
+namespace DustInTheWind.DirectoryCompare.Application.UseCases.GetSnapshot
 {
-    public class VerifyDiskRequestValidator : AbstractValidator<VerifyDiskRequest>
+    public class GetSnapshotRequestHandler : RequestHandler<GetSnapshotRequest, Snapshot>
     {
-        public VerifyDiskRequestValidator()
+        private readonly IProjectRepository projectRepository;
+
+        public GetSnapshotRequestHandler(IProjectRepository projectRepository)
         {
-            RuleFor(x => x.DiskPath).NotEmpty();
-            RuleFor(x => x.FilePath).NotEmpty();
-            RuleFor(x => x.Exporter).NotNull();
+            this.projectRepository = projectRepository ?? throw new ArgumentNullException(nameof(projectRepository));
+        }
+
+        protected override Snapshot Handle(GetSnapshotRequest request)
+        {
+            Snapshot snapshot = projectRepository.GetSnapshot(request.FilePath);
+            return snapshot;
         }
     }
 }

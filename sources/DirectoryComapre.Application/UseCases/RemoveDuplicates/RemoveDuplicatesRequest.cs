@@ -14,17 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Application.Validation;
-using FluentValidation;
+using DustInTheWind.DirectoryCompare.Comparison;
+using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.CreateProject
+namespace DustInTheWind.DirectoryCompare.Application.UseCases.RemoveDuplicates
 {
-    public class CreateProjectRequestValidator : AbstractValidator<CreateProjectRequest>
+    public class RemoveDuplicatesRequest : IRequest
     {
-        public CreateProjectRequestValidator()
-        {
-            RuleFor(x => x.DirectoryPath).NotEmpty();
-            RuleFor(x => x.DirectoryPath).IsPath();
-        }
+        public string PathLeft { get; set; }
+
+        public string PathRight { get; set; }
+
+        public IRemoveDuplicatesExporter Exporter { get; set; }
+
+        public ComparisonSide FileToRemove { get; set; }
     }
 }
