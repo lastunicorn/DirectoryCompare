@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.Comparison;
+using DustInTheWind.DirectoryCompare.SomeInterfaces;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.UseCases.RemoveDuplicates

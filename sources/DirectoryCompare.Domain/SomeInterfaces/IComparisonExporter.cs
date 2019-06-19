@@ -16,7 +16,7 @@
 
 using DustInTheWind.DirectoryCompare.Comparison;
 
-namespace DustInTheWind.DirectoryCompare.Application
+namespace DustInTheWind.DirectoryCompare.SomeInterfaces
 {
     public interface IComparisonExporter
     {

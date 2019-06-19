@@ -37,17 +37,12 @@ namespace DustInTheWind.DirectoryCompare.Application.Performance
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
             timer.Start();
-
             TResponse response = await next();
-
             timer.Stop();
 
             if (timer.ElapsedMilliseconds > 500)
             {
                 string name = typeof(TRequest).Name;
-
-                // TODO: Add User Details
-
                 logger.Warn("Long Running Request: {0} ({1} milliseconds) {2}", name, timer.ElapsedMilliseconds, request);
             }
 
