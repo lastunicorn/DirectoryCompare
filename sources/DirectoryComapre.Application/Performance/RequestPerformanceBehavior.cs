@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 using DustInTheWind.DirectoryCompare.Logging;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.Behaviors
+namespace DustInTheWind.DirectoryCompare.Application.Performance
 {
     public class RequestPerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {

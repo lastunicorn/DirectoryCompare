@@ -23,7 +23,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.Behaviors
+namespace DustInTheWind.DirectoryCompare.Application.Validation
 {
     public class RequestValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>

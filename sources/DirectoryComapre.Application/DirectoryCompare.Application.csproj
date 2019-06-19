@@ -56,14 +56,19 @@
     </Compile>
     <Compile Include="UseCases\ComparePaths\ComparePathsRequest.cs" />
     <Compile Include="UseCases\ComparePaths\ComparePathsRequestHandler.cs" />
+    <Compile Include="UseCases\ComparePaths\ComparePathsRequestValidator.cs" />
     <Compile Include="UseCases\CompareSnapshots\CompareSnapshotsRequestHandler.cs" />
+    <Compile Include="UseCases\CompareSnapshots\CompareSnapshotsRequestValidator.cs" />
     <Compile Include="UseCases\CreateProject\CreateProjectRequest.cs" />
     <Compile Include="UseCases\CreateProject\CreateProjectRequestHandler.cs" />
     <Compile Include="UseCases\CreateProject\CreateProjectRequestValidator.cs" />
     <Compile Include="UseCases\CreateSnapshot\CreateSnapshotRequestValidator.cs" />
+    <Compile Include="UseCases\FindDuplicates\FindDuplicatesRequestValidator.cs" />
+    <Compile Include="UseCases\GetSnapshot\GetSnapshotRequestValidator.cs" />
+    <Compile Include="UseCases\RemoveDuplicates\RemoveDuplicatesRequestValidator.cs" />
     <Compile Include="UseCases\VerifyDisk\VerifyDiskRequestValidator.cs" />
-    <Compile Include="Behaviors\RequestPerformanceBehavior.cs" />
-    <Compile Include="Behaviors\RequestValidationBehavior.cs" />
+    <Compile Include="Performance\RequestPerformanceBehavior.cs" />
+    <Compile Include="Validation\RequestValidationBehavior.cs" />
     <Compile Include="UseCases\VerifyDisk\VerifyDiskRequest.cs" />
     <Compile Include="UseCases\VerifyDisk\VerifyDiskRequestHandler.cs" />
     <Compile Include="UseCases\FindDuplicates\FindDuplicatesRequest.cs" />
