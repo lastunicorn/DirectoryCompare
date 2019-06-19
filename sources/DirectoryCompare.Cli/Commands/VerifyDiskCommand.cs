@@ -18,6 +18,7 @@ using System;
 using DirectoryCompare.CliFramework;
 using DustInTheWind.DirectoryCompare.Application.UseCases.VerifyDisk;
 using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
+using DustInTheWind.DirectoryCompare.Comparison;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
@@ -36,7 +37,10 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
         public void Execute(Arguments arguments)
         {
             VerifyDiskRequest request = CreateRequest(arguments);
-            mediator.Send(request).Wait();
+            SnapshotComparer snapshotComparer = mediator.Send(request).Result;
+
+            ConsoleComparisonExporter exporter = new ConsoleComparisonExporter();
+            exporter.Export(snapshotComparer);
         }
 
         private static VerifyDiskRequest CreateRequest(Arguments arguments)
@@ -44,8 +48,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
             return new VerifyDiskRequest
             {
                 DiskPath = arguments[0],
-                FilePath = arguments[1],
-                Exporter = new ConsoleComparisonExporter()
+                FilePath = arguments[1]
             };
         }
     }

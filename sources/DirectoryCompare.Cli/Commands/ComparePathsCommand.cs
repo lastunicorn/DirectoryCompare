@@ -19,6 +19,7 @@ using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
 using MediatR;
 using System;
 using DustInTheWind.DirectoryCompare.Application.UseCases.ComparePaths;
+using DustInTheWind.DirectoryCompare.Comparison;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {
@@ -36,7 +37,10 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
         public void Execute(Arguments arguments)
         {
             ComparePathsRequest request = CreateRequest(arguments);
-            mediator.Send(request).Wait();
+            SnapshotComparer snapshotComparer = mediator.Send(request).Result;
+
+            ConsoleComparisonExporter exporter = new ConsoleComparisonExporter();
+            exporter.Export(snapshotComparer);
         }
 
         private static ComparePathsRequest CreateRequest(Arguments arguments)
@@ -44,8 +48,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Commands
             return new ComparePathsRequest
             {
                 Path1 = arguments[0],
-                Path2 = arguments[1],
-                Exporter = new ConsoleComparisonExporter()
+                Path2 = arguments[1]
             };
         }
     }

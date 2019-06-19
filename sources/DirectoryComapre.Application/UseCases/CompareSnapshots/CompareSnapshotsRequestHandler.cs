@@ -22,7 +22,7 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.UseCases.CompareSnapshots
 {
-    public class CompareSnapshotsRequestHandler : RequestHandler<CompareSnapshotsRequest>
+    public class CompareSnapshotsRequestHandler : RequestHandler<CompareSnapshotsRequest, SnapshotComparer>
     {
         private readonly IProjectRepository projectRepository;
 
@@ -31,7 +31,7 @@ namespace DustInTheWind.DirectoryCompare.Application.UseCases.CompareSnapshots
             this.projectRepository = projectRepository ?? throw new ArgumentNullException(nameof(projectRepository));
         }
 
-        protected override void Handle(CompareSnapshotsRequest request)
+        protected override SnapshotComparer Handle(CompareSnapshotsRequest request)
         {
             Snapshot snapshot1 = projectRepository.GetSnapshot(request.Path1);
             Snapshot snapshot2 = projectRepository.GetSnapshot(request.Path2);
@@ -39,7 +39,7 @@ namespace DustInTheWind.DirectoryCompare.Application.UseCases.CompareSnapshots
             SnapshotComparer comparer = new SnapshotComparer(snapshot1, snapshot2);
             comparer.Compare();
 
-            request.Exporter?.Export(comparer);
+            return comparer;
         }
     }
 }

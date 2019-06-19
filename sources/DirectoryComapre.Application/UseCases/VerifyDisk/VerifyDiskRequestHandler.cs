@@ -23,7 +23,7 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.UseCases.VerifyDisk
 {
-    public class VerifyDiskRequestHandler : RequestHandler<VerifyDiskRequest>
+    public class VerifyDiskRequestHandler : RequestHandler<VerifyDiskRequest, SnapshotComparer>
     {
         private readonly IDiskAnalyzerFactory diskAnalyzerFactory;
         private readonly IProjectRepository projectRepository;
@@ -34,7 +34,7 @@ namespace DustInTheWind.DirectoryCompare.Application.UseCases.VerifyDisk
             this.projectRepository = projectRepository ?? throw new ArgumentNullException(nameof(projectRepository));
         }
 
-        protected override void Handle(VerifyDiskRequest request)
+        protected override SnapshotComparer Handle(VerifyDiskRequest request)
         {
             Snapshot snapshot1 = ReadPath(request.DiskPath);
             Snapshot snapshot2 = projectRepository.GetSnapshot(request.FilePath);
@@ -42,7 +42,7 @@ namespace DustInTheWind.DirectoryCompare.Application.UseCases.VerifyDisk
             SnapshotComparer comparer = new SnapshotComparer(snapshot1, snapshot2);
             comparer.Compare();
 
-            request.Exporter?.Export(comparer);
+            return comparer;
         }
 
         private Snapshot ReadPath(string path)

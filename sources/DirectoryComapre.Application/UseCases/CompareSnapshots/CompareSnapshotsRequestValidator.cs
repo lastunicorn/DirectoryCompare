@@ -24,7 +24,6 @@ namespace DustInTheWind.DirectoryCompare.Application.UseCases.CompareSnapshots
         {
             RuleFor(x => x.Path1).NotEmpty();
             RuleFor(x => x.Path2).NotEmpty();
-            RuleFor(x => x.Exporter).NotNull();
         }
     }
 }

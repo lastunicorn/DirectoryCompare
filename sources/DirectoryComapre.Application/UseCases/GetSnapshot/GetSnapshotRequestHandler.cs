@@ -32,8 +32,7 @@ namespace DustInTheWind.DirectoryCompare.Application.UseCases.GetSnapshot
 
         protected override Snapshot Handle(GetSnapshotRequest request)
         {
-            Snapshot snapshot = projectRepository.GetSnapshot(request.FilePath);
-            return snapshot;
+            return projectRepository.GetSnapshot(request.FilePath);
         }
     }
 }

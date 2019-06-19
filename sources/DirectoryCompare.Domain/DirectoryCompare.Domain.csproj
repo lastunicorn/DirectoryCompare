@@ -47,7 +47,6 @@
     <Compile Include="DiskAnalysis\IDiskAnalyzer.cs" />
     <Compile Include="DiskAnalysis\IDiskAnalyzerFactory.cs" />
     <Compile Include="DataAccess\IProjectRepository.cs" />
-    <Compile Include="SomeInterfaces\IComparisonExporter.cs" />
     <Compile Include="SomeInterfaces\IDuplicatesExporter.cs" />
     <Compile Include="SomeInterfaces\IRemoveDuplicatesExporter.cs" />
     <Compile Include="Utils\DiskPath.cs" />

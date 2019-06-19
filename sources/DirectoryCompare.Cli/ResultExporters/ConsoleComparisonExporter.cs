@@ -15,13 +15,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using DustInTheWind.DirectoryCompare.Application;
 using DustInTheWind.DirectoryCompare.Comparison;
-using DustInTheWind.DirectoryCompare.SomeInterfaces;
 
 namespace DustInTheWind.DirectoryCompare.Cli.ResultExporters
 {
-    internal class ConsoleComparisonExporter : IComparisonExporter
+    internal class ConsoleComparisonExporter
     {
         public void Export(SnapshotComparer comparer)
         {

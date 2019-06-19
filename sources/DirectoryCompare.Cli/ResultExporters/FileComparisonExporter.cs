@@ -17,13 +17,11 @@
 using System;
 using System.IO;
 using DustInTheWind.ConsoleTools;
-using DustInTheWind.DirectoryCompare.Application;
 using DustInTheWind.DirectoryCompare.Comparison;
-using DustInTheWind.DirectoryCompare.SomeInterfaces;
 
 namespace DustInTheWind.DirectoryCompare.Cli.ResultExporters
 {
-    internal class FileComparisonExporter : IComparisonExporter
+    internal class FileComparisonExporter
     {
         public string ResultsDirectory { get; set; }
 

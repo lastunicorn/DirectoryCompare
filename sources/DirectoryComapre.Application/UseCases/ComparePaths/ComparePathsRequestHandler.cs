@@ -22,7 +22,7 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.UseCases.ComparePaths
 {
-    public class ComparePathsRequestHandler : RequestHandler<ComparePathsRequest>
+    public class ComparePathsRequestHandler : RequestHandler<ComparePathsRequest, SnapshotComparer>
     {
         private readonly IDiskAnalyzerFactory diskAnalyzerFactory;
 
@@ -31,7 +31,7 @@ namespace DustInTheWind.DirectoryCompare.Application.UseCases.ComparePaths
             this.diskAnalyzerFactory = diskAnalyzerFactory ?? throw new ArgumentNullException(nameof(diskAnalyzerFactory));
         }
 
-        protected override void Handle(ComparePathsRequest request)
+        protected override SnapshotComparer Handle(ComparePathsRequest request)
         {
             Snapshot snapshot1 = ReadPath(request.Path1);
             Snapshot snapshot2 = ReadPath(request.Path2);
@@ -39,7 +39,7 @@ namespace DustInTheWind.DirectoryCompare.Application.UseCases.ComparePaths
             SnapshotComparer comparer = new SnapshotComparer(snapshot1, snapshot2);
             comparer.Compare();
 
-            request.Exporter.Export(comparer);
+            return comparer;
         }
 
         private Snapshot ReadPath(string path)

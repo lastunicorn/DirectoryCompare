@@ -24,7 +24,6 @@ namespace DustInTheWind.DirectoryCompare.Application.UseCases.VerifyDisk
         {
             RuleFor(x => x.DiskPath).NotEmpty();
             RuleFor(x => x.FilePath).NotEmpty();
-            RuleFor(x => x.Exporter).NotNull();
         }
     }
 }
