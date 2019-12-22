@@ -18,15 +18,13 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
 
+    <AssemblyTitle>DirectoryCompare.Cli</AssemblyTitle>
     <Version>1.0.1.0</Version>
-    <AssemblyVersion>1.0.1.0</AssemblyVersion>
-    <FileVersion>1.0.1.0</FileVersion>
-    <Company>Dust in the Wind</Company>
-    <Authors>AuthorName</Authors>
     <Product>Directory Compare</Product>
     <Description />
+    <Company>Dust in the Wind</Company>
     <Copyright>Copyright © Dust in the Wind 2019</Copyright>
-
+    
   </PropertyGroup>
 
 </Project>
