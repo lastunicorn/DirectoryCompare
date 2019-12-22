@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\DirectoryCompare.Application\DirectoryCompare.Application.csproj" />
+    <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" />
+    <ProjectReference Include="..\DirectoryCompare.DataAccess\DirectoryCompare.DataAccess.csproj" />
+    <ProjectReference Include="..\DirectoryCompare.DiskAnalysis\DirectoryCompare.DiskAnalysis.csproj" />
+    <ProjectReference Include="..\ConsoleFramework\ConsoleFramework.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Ninject" Version="3.3.4" />
+    <PackageReference Include="Ninject.Extensions.Conventions" Version="3.3.0" />
+    <PackageReference Include="Ninject.Extensions.Factory" Version="3.3.2" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+
+    <Version>1.0.1.0</Version>
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
+    <FileVersion>1.0.1.0</FileVersion>
+    <Company>Dust in the Wind</Company>
+    <Authors>AuthorName</Authors>
+    <Product>Directory Compare</Product>
+    <Description />
+    <Copyright>Copyright © Dust in the Wind 2019</Copyright>
+
+  </PropertyGroup>
+
+</Project>
