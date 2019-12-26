@@ -1,0 +1,11 @@
+<Project>
+
+  <PropertyGroup>
+    <Version>1.0.3.0</Version>
+    <Product>Directory Compare</Product>
+    <Company>Dust in the Wind</Company>
+    <Copyright>Copyright © Dust in the Wind 2017-2019</Copyright>
+    <Authors />
+  </PropertyGroup>
+
+</Project>

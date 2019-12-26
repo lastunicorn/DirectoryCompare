@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="RequestBus.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentValidation" Version="8.6.0" />
     <PackageReference Include="MediatR" Version="7.0.0" />
   </ItemGroup>

@@ -17,7 +17,7 @@
 using System;
 using System.Globalization;
 using System.IO;
-using DustInTheWind.DirectoryCompare.Entities;
+using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport;
 using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
 using Newtonsoft.Json;

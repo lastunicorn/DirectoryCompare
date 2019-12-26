@@ -30,14 +30,28 @@ namespace DustInTheWind.DirectoryCompare.Cli.Setup
         public static IMediator Setup(KernelBase dependencyContainer)
         {
             dependencyContainer.Components.Add<IBindingResolver, ContravariantBindingResolver>();
+
             dependencyContainer.Bind(x => x.FromAssemblyContaining<IMediator>().SelectAllClasses().BindDefaultInterface());
-            dependencyContainer.Bind(x => x.FromAssemblyContaining<CreateSnapshotRequest>().SelectAllClasses().InheritedFrom(typeof(Application.IRequestHandler<,>)).BindAllInterfaces());
+            dependencyContainer.Bind(x => x.FromAssemblyContaining<CreateSnapshotRequest>().SelectAllClasses().InheritedFrom(typeof(IRequestHandler<,>)).BindAllInterfaces());
             dependencyContainer.Bind(x => x.FromAssemblyContaining<CreateSnapshotRequestValidator>().SelectAllClasses().InheritedFrom(typeof(AbstractValidator<>)).BindDefaultInterfaces());
 
-            dependencyContainer.Bind(typeof(IPipelineBehavior<,>)).To(typeof(RequestPerformanceBehavior<,>));
-            dependencyContainer.Bind(typeof(IPipelineBehavior<,>)).To(typeof(RequestValidationBehavior<,>));
+            dependencyContainer
+                .Bind(typeof(IPipelineBehavior<,>))
+                .To(typeof(RequestPerformanceBehavior<,>));
+            dependencyContainer
+                .Bind(typeof(IPipelineBehavior<,>))
+                .To(typeof(RequestValidationBehavior<,>));
 
-            dependencyContainer.Bind<ServiceFactory>().ToMethod(x => t => x.Kernel.TryGet(t));
+            dependencyContainer
+                .Bind<ServiceFactory>()
+                .ToMethod(x =>
+                {
+                    return t =>
+                    {
+                        object a = dependencyContainer.TryGet(t);
+                        return x.Kernel.TryGet(t);
+                    };
+                });
 
             return dependencyContainer.Get<IMediator>();
         }
