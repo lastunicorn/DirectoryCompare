@@ -16,7 +16,9 @@
 
 using DustInTheWind.DirectoryCompare.DataAccess;
 using DustInTheWind.DirectoryCompare.DiskAnalysis;
-using DustInTheWind.DirectoryCompare.Logging;
+using DustInTheWind.DirectoryCompare.Domain.DataAccess;
+using DustInTheWind.DirectoryCompare.Domain.DiskAnalysis;
+using DustInTheWind.DirectoryCompare.Domain.Logging;
 using Ninject;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Setup

@@ -16,9 +16,9 @@
 
 using System;
 using System.Collections.Generic;
-using DustInTheWind.DirectoryCompare.Entities;
+using DustInTheWind.DirectoryCompare.Domain.Entities;
 
-namespace DustInTheWind.DirectoryCompare.DiskAnalysis
+namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
 {
     public class SnapshotAnalysisExport : IAnalysisExport
     {

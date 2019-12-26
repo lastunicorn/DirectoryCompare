@@ -15,9 +15,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using DustInTheWind.DirectoryCompare.Entities;
+using DustInTheWind.DirectoryCompare.Domain.Entities;
 
-namespace DustInTheWind.DirectoryCompare.Comparison
+namespace DustInTheWind.DirectoryCompare.Domain.Comparison
 {
     public struct ItemComparison : IEquatable<ItemComparison>
     {

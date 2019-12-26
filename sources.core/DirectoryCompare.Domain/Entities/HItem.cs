@@ -16,7 +16,7 @@
 
 using System;
 
-namespace DustInTheWind.DirectoryCompare.Entities
+namespace DustInTheWind.DirectoryCompare.Domain.Entities
 {
     public class HItem : IEquatable<HItem>
     {

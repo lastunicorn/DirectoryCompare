@@ -18,8 +18,9 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 using DustInTheWind.DirectoryCompare.DiskAnalysis.DiskCrawling;
-using DustInTheWind.DirectoryCompare.Entities;
-using DustInTheWind.DirectoryCompare.Utils;
+using DustInTheWind.DirectoryCompare.Domain.DiskAnalysis;
+using DustInTheWind.DirectoryCompare.Domain.Entities;
+using DustInTheWind.DirectoryCompare.Domain.Utils;
 
 namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 {

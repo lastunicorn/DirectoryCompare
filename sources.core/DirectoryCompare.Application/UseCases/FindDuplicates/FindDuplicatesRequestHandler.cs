@@ -16,9 +16,9 @@
 
 using System;
 using System.Collections.Generic;
-using DustInTheWind.DirectoryCompare.Comparison;
-using DustInTheWind.DirectoryCompare.DataAccess;
-using DustInTheWind.DirectoryCompare.Entities;
+using DustInTheWind.DirectoryCompare.Domain.Comparison;
+using DustInTheWind.DirectoryCompare.Domain.DataAccess;
+using DustInTheWind.DirectoryCompare.Domain.Entities;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.UseCases.FindDuplicates

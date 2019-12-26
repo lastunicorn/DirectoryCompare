@@ -1,4 +1,5 @@
 ﻿using System;
+using DustInTheWind.DirectoryCompare.Domain;
 using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport

@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace DustInTheWind.DirectoryCompare
+namespace DustInTheWind.DirectoryCompare.Application
 {
     public interface IRequestBus
     {

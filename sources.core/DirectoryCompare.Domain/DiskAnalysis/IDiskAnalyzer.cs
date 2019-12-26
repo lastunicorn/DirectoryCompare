@@ -16,7 +16,7 @@
 
 using System;
 
-namespace DustInTheWind.DirectoryCompare.DiskAnalysis
+namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
 {
     public interface IDiskAnalyzer
     {

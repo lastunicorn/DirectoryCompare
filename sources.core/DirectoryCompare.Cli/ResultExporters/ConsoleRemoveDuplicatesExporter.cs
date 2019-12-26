@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using DustInTheWind.DirectoryCompare.SomeInterfaces;
+using DustInTheWind.DirectoryCompare.Domain.SomeInterfaces;
 
 namespace DustInTheWind.DirectoryCompare.Cli.ResultExporters
 {

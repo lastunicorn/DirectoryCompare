@@ -15,7 +15,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.IO;
-using DustInTheWind.DirectoryCompare.Entities;
+using DustInTheWind.DirectoryCompare.Domain;
+using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport;
 using Newtonsoft.Json;
 

@@ -17,9 +17,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DirectoryCompare.CliFramework.UserControls;
+using DustInTheWind.ConsoleFramework.UserControls;
 
-namespace DirectoryCompare.CliFramework.Commands
+namespace DustInTheWind.ConsoleFramework.Commands
 {
     public class HelpCommand : ICommand
     {

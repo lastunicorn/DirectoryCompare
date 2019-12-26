@@ -3,17 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.Application", "DirectoryCompare.Application\DirectoryCompare.Application.csproj", "{44F2CA03-CBFA-4DE8-A0C0-1A0801BC462E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.Application", "DirectoryCompare.Application\DirectoryCompare.Application.csproj", "{44F2CA03-CBFA-4DE8-A0C0-1A0801BC462E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.Cli", "DirectoryCompare.Cli\DirectoryCompare.Cli.csproj", "{7171167C-4AFC-45B5-AC8D-54B62651BBF0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.Cli", "DirectoryCompare.Cli\DirectoryCompare.Cli.csproj", "{7171167C-4AFC-45B5-AC8D-54B62651BBF0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.DataAccess", "DirectoryCompare.DataAccess\DirectoryCompare.DataAccess.csproj", "{258D4B7B-1A21-4A15-9BF9-B2B05CC96EB7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.DataAccess", "DirectoryCompare.DataAccess\DirectoryCompare.DataAccess.csproj", "{258D4B7B-1A21-4A15-9BF9-B2B05CC96EB7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.Domain", "DirectoryCompare.Domain\DirectoryCompare.Domain.csproj", "{C73C24C9-AF10-4D5E-958E-6F9B1E31FF55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.Domain", "DirectoryCompare.Domain\DirectoryCompare.Domain.csproj", "{C73C24C9-AF10-4D5E-958E-6F9B1E31FF55}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.DiskAnalysis", "DirectoryCompare.DiskAnalysis\DirectoryCompare.DiskAnalysis.csproj", "{DF4CD735-6648-4EDC-A589-E81C36E75700}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.DiskAnalysis", "DirectoryCompare.DiskAnalysis\DirectoryCompare.DiskAnalysis.csproj", "{DF4CD735-6648-4EDC-A589-E81C36E75700}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.JsonHashesFile", "DirectoryCompare.JsonHashesFile\DirectoryCompare.JsonHashesFile.csproj", "{620EF388-1790-4A09-9717-347AFD74DDFA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.JsonHashesFile", "DirectoryCompare.JsonHashesFile\DirectoryCompare.JsonHashesFile.csproj", "{620EF388-1790-4A09-9717-347AFD74DDFA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleFramework", "ConsoleFramework\ConsoleFramework.csproj", "{D695AF7C-AD67-433B-9C7D-CD541A1A0B74}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,9 +25,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{44F2CA03-CBFA-4DE8-A0C0-1A0801BC462E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -100,5 +99,23 @@ Global
 		{620EF388-1790-4A09-9717-347AFD74DDFA}.Release|x64.Build.0 = Release|Any CPU
 		{620EF388-1790-4A09-9717-347AFD74DDFA}.Release|x86.ActiveCfg = Release|Any CPU
 		{620EF388-1790-4A09-9717-347AFD74DDFA}.Release|x86.Build.0 = Release|Any CPU
+		{D695AF7C-AD67-433B-9C7D-CD541A1A0B74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D695AF7C-AD67-433B-9C7D-CD541A1A0B74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D695AF7C-AD67-433B-9C7D-CD541A1A0B74}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D695AF7C-AD67-433B-9C7D-CD541A1A0B74}.Debug|x64.Build.0 = Debug|Any CPU
+		{D695AF7C-AD67-433B-9C7D-CD541A1A0B74}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D695AF7C-AD67-433B-9C7D-CD541A1A0B74}.Debug|x86.Build.0 = Debug|Any CPU
+		{D695AF7C-AD67-433B-9C7D-CD541A1A0B74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D695AF7C-AD67-433B-9C7D-CD541A1A0B74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D695AF7C-AD67-433B-9C7D-CD541A1A0B74}.Release|x64.ActiveCfg = Release|Any CPU
+		{D695AF7C-AD67-433B-9C7D-CD541A1A0B74}.Release|x64.Build.0 = Release|Any CPU
+		{D695AF7C-AD67-433B-9C7D-CD541A1A0B74}.Release|x86.ActiveCfg = Release|Any CPU
+		{D695AF7C-AD67-433B-9C7D-CD541A1A0B74}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {86D5FACB-2648-4347-86B1-9D6DAAAD7AE9}
 	EndGlobalSection
 EndGlobal

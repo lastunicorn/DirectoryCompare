@@ -16,7 +16,7 @@
 
 using System.Collections.Generic;
 
-namespace DirectoryCompare.CliFramework
+namespace DustInTheWind.ConsoleFramework
 {
     public class Arguments
     {

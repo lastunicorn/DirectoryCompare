@@ -17,9 +17,9 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using DirectoryCompare.CliFramework.Commands;
+using DustInTheWind.ConsoleFramework.Commands;
 
-namespace DirectoryCompare.CliFramework
+namespace DustInTheWind.ConsoleFramework
 {
     public class CommandCollection : Collection<CommandCollectionItem>
     {

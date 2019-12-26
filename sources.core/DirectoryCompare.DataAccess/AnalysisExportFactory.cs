@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.IO;
-using DustInTheWind.DirectoryCompare.DiskAnalysis;
+using DustInTheWind.DirectoryCompare.Domain.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport;
 
 namespace DustInTheWind.DirectoryCompare.DataAccess

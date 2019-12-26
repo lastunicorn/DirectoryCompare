@@ -18,9 +18,9 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using DustInTheWind.DirectoryCompare.DiskAnalysis;
-using DustInTheWind.DirectoryCompare.Logging;
-using DustInTheWind.DirectoryCompare.Utils;
+using DustInTheWind.DirectoryCompare.Domain.DiskAnalysis;
+using DustInTheWind.DirectoryCompare.Domain.Logging;
+using DustInTheWind.DirectoryCompare.Domain.Utils;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.UseCases.CreateSnapshot

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DirectoryCompare.CliFramework.UserControls
+namespace DustInTheWind.ConsoleFramework.UserControls
 {
     internal class UsageControl
     {

@@ -17,7 +17,7 @@
 using System;
 using System.IO;
 
-namespace DustInTheWind.DirectoryCompare.Utils
+namespace DustInTheWind.DirectoryCompare.Domain.Utils
 {
     public struct DiskPath
     {

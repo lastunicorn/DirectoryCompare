@@ -17,9 +17,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using DustInTheWind.DirectoryCompare.Entities;
+using DustInTheWind.DirectoryCompare.Domain.Entities;
 
-namespace DustInTheWind.DirectoryCompare.Comparison
+namespace DustInTheWind.DirectoryCompare.Domain.Comparison
 {
     public class FileDuplicates
     {

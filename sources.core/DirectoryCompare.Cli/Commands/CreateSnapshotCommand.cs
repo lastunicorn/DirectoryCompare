@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DirectoryCompare.CliFramework;
 using MediatR;
 using System;
+using DustInTheWind.ConsoleFramework;
 using DustInTheWind.DirectoryCompare.Application.UseCases.CreateSnapshot;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands

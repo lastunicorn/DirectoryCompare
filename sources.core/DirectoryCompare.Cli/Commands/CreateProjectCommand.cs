@@ -1,5 +1,5 @@
 ﻿using System;
-using DirectoryCompare.CliFramework;
+using DustInTheWind.ConsoleFramework;
 using DustInTheWind.DirectoryCompare.Application.UseCases.CreateProject;
 using MediatR;
 

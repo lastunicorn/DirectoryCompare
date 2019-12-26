@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DirectoryCompare.CliFramework.Commands;
-using DirectoryCompare.CliFramework.UserControls;
+using System;
+using DustInTheWind.ConsoleFramework.Commands;
+using DustInTheWind.ConsoleFramework.UserControls;
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Spinners;
-using System;
 
-namespace DirectoryCompare.CliFramework
+namespace DustInTheWind.ConsoleFramework
 {
     public class ConsoleApplicationBase
     {

@@ -17,7 +17,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace DirectoryCompare.CliFramework
+namespace DustInTheWind.ConsoleFramework
 {
     public class ConsoleFrameworkException : Exception
     {

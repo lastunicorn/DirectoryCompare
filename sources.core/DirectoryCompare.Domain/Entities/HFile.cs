@@ -15,9 +15,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using DustInTheWind.DirectoryCompare.Utils;
+using DustInTheWind.DirectoryCompare.Domain.Utils;
 
-namespace DustInTheWind.DirectoryCompare.Entities
+namespace DustInTheWind.DirectoryCompare.Domain.Entities
 {
     public class HFile : HItem, IEquatable<HFile>
     {

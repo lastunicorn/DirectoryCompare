@@ -14,12 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DirectoryCompare.CliFramework;
 using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
 using MediatR;
 using System;
+using DustInTheWind.ConsoleFramework;
 using DustInTheWind.DirectoryCompare.Application.UseCases.ComparePaths;
-using DustInTheWind.DirectoryCompare.Comparison;
+using DustInTheWind.DirectoryCompare.Domain.Comparison;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands
 {

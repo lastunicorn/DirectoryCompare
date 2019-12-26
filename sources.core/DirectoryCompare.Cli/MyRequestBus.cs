@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.Application;
 using DustInTheWind.DirectoryCompare.Application.UseCases.ComparePaths;
 using DustInTheWind.DirectoryCompare.Application.UseCases.CompareSnapshots;
 using DustInTheWind.DirectoryCompare.Application.UseCases.CreateProject;

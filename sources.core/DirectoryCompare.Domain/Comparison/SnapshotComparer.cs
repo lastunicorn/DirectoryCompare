@@ -17,10 +17,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DustInTheWind.DirectoryCompare.Entities;
-using DustInTheWind.DirectoryCompare.Utils;
+using DustInTheWind.DirectoryCompare.Domain.Entities;
+using DustInTheWind.DirectoryCompare.Domain.Utils;
 
-namespace DustInTheWind.DirectoryCompare.Comparison
+namespace DustInTheWind.DirectoryCompare.Domain.Comparison
 {
     public class SnapshotComparer
     {

@@ -15,10 +15,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using DirectoryCompare.CliFramework;
+using DustInTheWind.ConsoleFramework;
 using DustInTheWind.DirectoryCompare.Cli.Commands;
 using DustInTheWind.DirectoryCompare.Cli.Setup;
-using DustInTheWind.DirectoryCompare.Logging;
+using DustInTheWind.DirectoryCompare.Domain.Logging;
 using MediatR;
 using Ninject;
 

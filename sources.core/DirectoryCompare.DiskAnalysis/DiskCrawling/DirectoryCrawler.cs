@@ -19,7 +19,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DustInTheWind.DirectoryCompare.Utils;
+using DustInTheWind.DirectoryCompare.Domain.Utils;
 
 namespace DustInTheWind.DirectoryCompare.DiskAnalysis.DiskCrawling
 {

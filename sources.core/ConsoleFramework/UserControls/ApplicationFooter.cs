@@ -16,7 +16,7 @@
 
 using DustInTheWind.ConsoleTools;
 
-namespace DirectoryCompare.CliFramework.UserControls
+namespace DustInTheWind.ConsoleFramework.UserControls
 {
     public class ApplicationFooter
     {

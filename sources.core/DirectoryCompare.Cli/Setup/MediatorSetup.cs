@@ -31,7 +31,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Setup
         {
             dependencyContainer.Components.Add<IBindingResolver, ContravariantBindingResolver>();
             dependencyContainer.Bind(x => x.FromAssemblyContaining<IMediator>().SelectAllClasses().BindDefaultInterface());
-            dependencyContainer.Bind(x => x.FromAssemblyContaining<CreateSnapshotRequest>().SelectAllClasses().InheritedFrom(typeof(IRequestHandler<,>)).BindAllInterfaces());
+            dependencyContainer.Bind(x => x.FromAssemblyContaining<CreateSnapshotRequest>().SelectAllClasses().InheritedFrom(typeof(Application.IRequestHandler<,>)).BindAllInterfaces());
             dependencyContainer.Bind(x => x.FromAssemblyContaining<CreateSnapshotRequestValidator>().SelectAllClasses().InheritedFrom(typeof(AbstractValidator<>)).BindDefaultInterfaces());
 
             dependencyContainer.Bind(typeof(IPipelineBehavior<,>)).To(typeof(RequestPerformanceBehavior<,>));

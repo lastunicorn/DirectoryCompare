@@ -15,10 +15,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using DirectoryCompare.CliFramework;
+using DustInTheWind.ConsoleFramework;
 using DustInTheWind.DirectoryCompare.Application.UseCases.VerifyDisk;
 using DustInTheWind.DirectoryCompare.Cli.ResultExporters;
-using DustInTheWind.DirectoryCompare.Comparison;
+using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Commands

@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace DustInTheWind.DirectoryCompare.Entities
+namespace DustInTheWind.DirectoryCompare.Domain.Entities
 {
     public class HItemCollection<T> : Collection<T>
         where T : HItem

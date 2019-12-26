@@ -16,7 +16,7 @@
 
 using System;
 
-namespace DirectoryCompare.CliFramework
+namespace DustInTheWind.ConsoleFramework
 {
     public class CommandCollectionItem
     {

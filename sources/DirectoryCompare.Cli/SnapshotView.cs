@@ -33,14 +33,14 @@ namespace DustInTheWind.DirectoryCompare.Cli
             DisplayDirectory(snapshot, 0);
         }
 
-        private void DisplayDirectory(HDirectory hDirectory, int index)
+        private static void DisplayDirectory(HDirectory hDirectory, int index)
         {
             string indent = new string(' ', index);
 
-            foreach (HDirectory xSubdirectory in hDirectory.Directories)
+            foreach (HDirectory subdirectory in hDirectory.Directories)
             {
-                Console.WriteLine(indent + xSubdirectory.Name);
-                DisplayDirectory(xSubdirectory, index + 1);
+                Console.WriteLine(indent + subdirectory.Name);
+                DisplayDirectory(subdirectory, index + 1);
             }
 
             foreach (HFile xFile in hDirectory.Files)

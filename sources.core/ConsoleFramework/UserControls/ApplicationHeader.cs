@@ -18,7 +18,7 @@ using System;
 using System.Reflection;
 using DustInTheWind.ConsoleTools;
 
-namespace DirectoryCompare.CliFramework.UserControls
+namespace DustInTheWind.ConsoleFramework.UserControls
 {
     public class ApplicationHeader
     {

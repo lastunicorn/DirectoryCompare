@@ -5,7 +5,8 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <RootNamespace>DustInTheWind.DirectoryCompare.DiskAnalysis</RootNamespace>
   </PropertyGroup>
 
 </Project>

@@ -18,7 +18,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace DustInTheWind.DirectoryCompare.Entities
+namespace DustInTheWind.DirectoryCompare.Domain.Entities
 {
     public class HDirectory : HItem, IEquatable<HDirectory>, IEnumerable<HItem>
     {
