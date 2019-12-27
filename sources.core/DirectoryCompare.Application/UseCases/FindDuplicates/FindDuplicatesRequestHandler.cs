@@ -25,20 +25,20 @@ namespace DustInTheWind.DirectoryCompare.Application.UseCases.FindDuplicates
 {
     public class FindDuplicatesRequestHandler : RequestHandler<FindDuplicatesRequest>
     {
-        private readonly IProjectRepository projectRepository;
+        private readonly ISnapshotRepository snapshotRepository;
 
-        public FindDuplicatesRequestHandler(IProjectRepository projectRepository)
+        public FindDuplicatesRequestHandler(ISnapshotRepository snapshotRepository)
         {
-            this.projectRepository = projectRepository ?? throw new ArgumentNullException(nameof(projectRepository));
+            this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
         }
 
         protected override void Handle(FindDuplicatesRequest request)
         {
-            Snapshot snapshotLeft = projectRepository.GetSnapshot(request.PathLeft);
+            Snapshot snapshotLeft = snapshotRepository.GetLast(request.Left);
             Snapshot snapshotRight = null;
 
-            if (request.PathRight != null)
-                snapshotRight = projectRepository.GetSnapshot(request.PathRight);
+            if (request.Right != null)
+                snapshotRight = snapshotRepository.GetLast(request.Right);
 
             FileDuplicates fileDuplicates = new FileDuplicates
             {

@@ -14,15 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.IO;
-using DustInTheWind.DirectoryCompare.Domain.Entities;
+using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Domain.DataAccess
+namespace DustInTheWind.DirectoryCompare.Application.UseCases.Import
 {
-    public interface ISnapshotRepository
+    public class ImportRequest : IRequest
     {
-        Stream CreateStream(string potName);
-        Snapshot GetLast(string potName);
-        void Add(string potName, Snapshot snapshot);
+        public string FilePath { get; set; }
+        public string PotName { get; set; }
     }
 }

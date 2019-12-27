@@ -44,8 +44,9 @@ namespace DustInTheWind.DirectoryCompare.Cli
                 { "view-snapshot", new ViewSnapshotCommand(mediator) },
                 //{ "verify-path", new VerifyDiskCommand(mediator) },
                 { "compare", new CompareSnapshotsCommand(mediator) },
-                //{ "find-duplicates", new FindDuplicatesCommand(mediator) },
+                { "find-duplicates", new FindDuplicatesCommand(mediator) },
                 //{ "remove-duplicates", new RemoveDuplicatesCommand(mediator) }
+                { "import", new ImportCommand(mediator) }
             };
         }
 

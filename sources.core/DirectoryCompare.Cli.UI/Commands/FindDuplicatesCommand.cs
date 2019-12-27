@@ -15,7 +15,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.IO;
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.DirectoryCompare.Application.UseCases.FindDuplicates;
 using DustInTheWind.DirectoryCompare.Cli.UI.ResultExporters;
@@ -27,12 +26,12 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
     {
         private readonly IMediator mediator;
 
-        public string Description => string.Empty;
-
         public FindDuplicatesCommand(IMediator mediator)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
+
+        public string Description => string.Empty;
 
         public void Execute(Arguments arguments)
         {
@@ -45,34 +44,46 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
             if (arguments.Count == 0)
                 throw new Exception("Invalid command parameters.");
 
-            string pathRight;
+            string right;
             bool checkFilesExist;
 
-            if (arguments.Count > 1)
+            switch (arguments.Count)
             {
-                bool isFileRight = File.Exists(arguments[1]);
+                case 1:
+                    right = null;
+                    checkFilesExist = false;
+                    break;
 
-                if (isFileRight)
-                {
-                    pathRight = arguments[1];
-                    checkFilesExist = arguments.Count > 2 && bool.Parse(arguments[2]);
-                }
-                else
-                {
-                    pathRight = null;
-                    checkFilesExist = bool.Parse(arguments[1]);
-                }
-            }
-            else
-            {
-                pathRight = null;
-                checkFilesExist = false;
+                case 2:
+                    bool success = bool.TryParse(arguments[1], out checkFilesExist);
+
+                    if (success)
+                    {
+                        right = null;
+                    }
+                    else
+                    {
+                        right = arguments[1];
+                        checkFilesExist = false;
+                    }
+
+                    break;
+
+                case 3:
+                    right = arguments[1];
+                    bool.TryParse(arguments[2], out checkFilesExist);
+                    break;
+
+                default:
+                    right = arguments[1];
+                    bool.TryParse(arguments[2], out checkFilesExist);
+                    break;
             }
 
             return new FindDuplicatesRequest
             {
-                PathLeft = arguments[0],
-                PathRight = pathRight,
+                Left = arguments[0],
+                Right = right,
                 Exporter = new ConsoleDuplicatesExporter(),
                 CheckFilesExist = checkFilesExist
             };

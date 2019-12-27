@@ -16,11 +16,11 @@
 
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
+using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
 using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Linq;
-using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
 
 namespace DustInTheWind.DirectoryCompare.DataAccess
 {
@@ -53,6 +53,22 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
 
             SnapshotJsonFile file = SnapshotJsonFile.Load(snapshotFileName);
             return file.Snapshot;
+        }
+
+        public void Add(string potName, Snapshot snapshot)
+        {
+            string snapshotsDirectoryPath = GetSnapshotsDirectoryPath(potName);
+            EnsureDirectory(snapshotsDirectoryPath);
+
+            string snapshotFileName = string.Format("{0:yyyy MM dd HHmmss}.json", snapshot.CreationTime);
+            string snapshotFilePath = Path.Combine(snapshotsDirectoryPath, snapshotFileName);
+
+            SnapshotJsonFile snapshotJsonFile = new SnapshotJsonFile
+            {
+                Snapshot = snapshot
+            };
+
+            snapshotJsonFile.Save(snapshotFilePath);
         }
 
         private static string GetSnapshotsDirectoryPath(string potName)

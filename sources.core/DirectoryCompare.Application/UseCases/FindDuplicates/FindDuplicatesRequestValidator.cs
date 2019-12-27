@@ -22,9 +22,8 @@ namespace DustInTheWind.DirectoryCompare.Application.UseCases.FindDuplicates
     {
         public FindDuplicatesRequestValidator()
         {
-            RuleFor(x => x.PathLeft).NotEmpty();
+            RuleFor(x => x.Left).NotEmpty();
             RuleFor(x => x.Exporter).NotNull();
-            RuleFor(x => x.CheckFilesExist).IsInEnum();
         }
     }
 }

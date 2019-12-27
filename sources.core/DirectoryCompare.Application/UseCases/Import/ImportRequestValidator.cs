@@ -14,15 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.IO;
-using DustInTheWind.DirectoryCompare.Domain.Entities;
+using DustInTheWind.DirectoryCompare.Application.UseCases.Import;
+using FluentValidation;
 
-namespace DustInTheWind.DirectoryCompare.Domain.DataAccess
+namespace DustInTheWind.DirectoryCompare.Application.UseCases.GetSnapshot
 {
-    public interface ISnapshotRepository
+    public class ImportRequestValidator : AbstractValidator<ImportRequest>
     {
-        Stream CreateStream(string potName);
-        Snapshot GetLast(string potName);
-        void Add(string potName, Snapshot snapshot);
+        public ImportRequestValidator()
+        {
+            RuleFor(x => x.PotName).NotEmpty();
+        }
     }
 }

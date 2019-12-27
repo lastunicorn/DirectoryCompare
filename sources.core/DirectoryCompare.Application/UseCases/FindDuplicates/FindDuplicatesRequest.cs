@@ -21,9 +21,9 @@ namespace DustInTheWind.DirectoryCompare.Application.UseCases.FindDuplicates
 {
     public class FindDuplicatesRequest : IRequest
     {
-        public string PathLeft { get; set; }
+        public string Left { get; set; }
 
-        public string PathRight { get; set; }
+        public string Right { get; set; }
 
         public IDuplicatesExporter Exporter { get; set; }
 
