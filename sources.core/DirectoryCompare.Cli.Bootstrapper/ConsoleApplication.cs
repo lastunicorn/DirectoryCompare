@@ -39,7 +39,7 @@ namespace DustInTheWind.DirectoryCompare.Cli
         {
             return new CommandCollection
             {
-                { "pot", new CreatePotCommand(mediator) },
+                { "pot", new PotCommand(mediator) },
                 { "snapshot", new CreateSnapshotCommand(mediator) },
                 { "view-snapshot", new ViewSnapshotCommand(mediator) },
                 { "verify-path", new VerifyDiskCommand(mediator) },

@@ -15,13 +15,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
+using DustInTheWind.DirectoryCompare.Domain;
+using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Domain.DataAccess
+namespace DustInTheWind.DirectoryCompare.Application.UseCases.GetPot
 {
-    public interface IPotRepository
+    public class GetPotRequest : IRequest, IRequest<List<Pot>>
     {
-        List<Pot> Get();
-        Pot Get(string name);
-        void Add(Pot pot);
     }
 }

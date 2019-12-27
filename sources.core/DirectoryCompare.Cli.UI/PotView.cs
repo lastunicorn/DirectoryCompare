@@ -14,14 +14,28 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using System.Collections.Generic;
+using DustInTheWind.DirectoryCompare.Domain;
 
-namespace DustInTheWind.DirectoryCompare.Domain.DataAccess
+namespace DustInTheWind.DirectoryCompare.Cli.UI
 {
-    public interface IPotRepository
+    internal class PotView
     {
-        List<Pot> Get();
-        Pot Get(string name);
-        void Add(Pot pot);
+        private readonly List<Pot> pots;
+
+        public PotView(List<Pot> pots)
+        {
+            this.pots = pots;
+        }
+
+        public void Display()
+        {
+            if (pots == null)
+                return;
+
+            foreach (Pot pot in pots)
+                Console.WriteLine("{0} - {1}", pot.Name, pot.Path);
+        }
     }
 }

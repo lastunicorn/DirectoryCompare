@@ -14,29 +14,44 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.DirectoryCompare.Application.UseCases.CreatePot;
+using DustInTheWind.DirectoryCompare.Application.UseCases.GetPot;
+using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 using MediatR;
+using System;
+using System.Collections.Generic;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
-    public class CreatePotCommand : ICommand
+    public class PotCommand : ICommand
     {
         private readonly IMediator mediator;
 
-        public string Description => "Creates a new pot to hold snapshots for a single path on disk.";
+        public string Description => "Manages a pot that hold snapshots for a single path on disk.";
 
-        public CreatePotCommand(IMediator mediator)
+        public PotCommand(IMediator mediator)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         public void Execute(Arguments arguments)
         {
-            CreatePotRequest request = CreateRequest(arguments);
-            mediator.Send(request).Wait();
+
+            if (arguments.Count == 0)
+            {
+                GetPotRequest request = new GetPotRequest();
+                List<Pot> pots = mediator.Send<List<Pot>>(request).Result;
+
+                PotView potView = new PotView(pots);
+                potView.Display();
+            }
+            else
+            {
+                CreatePotRequest request = CreateRequest(arguments);
+                mediator.Send(request).Wait();
+            }
         }
 
         private static CreatePotRequest CreateRequest(Arguments arguments)

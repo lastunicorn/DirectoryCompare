@@ -14,14 +14,26 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
+using DustInTheWind.DirectoryCompare.Domain;
+using MediatR;
 using System.Collections.Generic;
+using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 
-namespace DustInTheWind.DirectoryCompare.Domain.DataAccess
+namespace DustInTheWind.DirectoryCompare.Application.UseCases.GetPot
 {
-    public interface IPotRepository
+    public class GetPotRequestHandler : RequestHandler<GetPotRequest, List<Pot>>
     {
-        List<Pot> Get();
-        Pot Get(string name);
-        void Add(Pot pot);
+        private readonly IPotRepository potRepository;
+
+        public GetPotRequestHandler(IPotRepository potRepository)
+        {
+            this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
+        }
+
+        protected override List<Pot> Handle(GetPotRequest request)
+        {
+            return potRepository.Get();
+        }
     }
 }

@@ -18,6 +18,7 @@ using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -25,7 +26,30 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
 {
     public class PotRepository : IPotRepository
     {
+        public List<Pot> Get()
+        {
+            return GetAllPotInfo()
+                .Select(x => new Pot
+                {
+                    Name = x.Name,
+                    Path = x.Path
+                })
+                .ToList();
+        }
+
         public Pot Get(string name)
+        {
+            return GetAllPotInfo()
+                .Where(x => x.Name == name)
+                .Select(x => new Pot
+                {
+                    Name = x.Name,
+                    Path = x.Path
+                })
+                .FirstOrDefault();
+        }
+
+        private static IEnumerable<JPotInfo> GetAllPotInfo()
         {
             return Directory.GetDirectories(".")
                 .Select(x => Path.Combine(x, "info.json"))
@@ -42,13 +66,7 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
                         return null;
                     }
                 })
-                .Where(x => x.Name == name)
-                .Select(x => new Pot
-                {
-                    Name = x.Name,
-                    Path = x.Path
-                })
-                .FirstOrDefault();
+                .Where(x => x != null);
         }
 
         public void Add(Pot pot)

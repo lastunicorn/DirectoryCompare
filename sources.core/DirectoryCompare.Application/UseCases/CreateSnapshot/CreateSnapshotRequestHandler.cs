@@ -62,8 +62,6 @@ namespace DustInTheWind.DirectoryCompare.Application.UseCases.CreateSnapshot
                 foreach (string blackListItem in blackList)
                     logger.Info(blackListItem);
 
-
-
             using (Stream stream = snapshotRepository.CreateStream(pot.Name))
             using (StreamWriter streamWriter = new StreamWriter(stream))
             {
