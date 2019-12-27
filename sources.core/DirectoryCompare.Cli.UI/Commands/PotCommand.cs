@@ -29,7 +29,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
     {
         private readonly IMediator mediator;
 
-        public string Description => "Manages a pot that hold snapshots for a single path on disk.";
+        public string Description => "Manages a pot that holds snapshots for a single path on disk.";
 
         public PotCommand(IMediator mediator)
         {

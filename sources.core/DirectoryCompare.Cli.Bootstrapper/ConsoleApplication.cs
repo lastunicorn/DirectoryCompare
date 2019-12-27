@@ -42,11 +42,10 @@ namespace DustInTheWind.DirectoryCompare.Cli
                 { "pot", new PotCommand(mediator) },
                 { "snapshot", new CreateSnapshotCommand(mediator) },
                 { "view-snapshot", new ViewSnapshotCommand(mediator) },
-                { "verify-path", new VerifyDiskCommand(mediator) },
-                { "compare-paths", new ComparePathsCommand(mediator) },
+                //{ "verify-path", new VerifyDiskCommand(mediator) },
                 { "compare", new CompareSnapshotsCommand(mediator) },
-                { "find-duplicates", new FindDuplicatesCommand(mediator) },
-                { "remove-duplicates", new RemoveDuplicatesCommand(mediator) }
+                //{ "find-duplicates", new FindDuplicatesCommand(mediator) },
+                //{ "remove-duplicates", new RemoveDuplicatesCommand(mediator) }
             };
         }
 
