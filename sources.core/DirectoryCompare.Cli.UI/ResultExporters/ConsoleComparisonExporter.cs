@@ -59,4 +59,30 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.ResultExporters
             }
         }
     }
+    internal class ConsoleComparisonReducedExporter
+    {
+        public void Export(SnapshotComparer comparer)
+        {
+            DisplayResults(comparer);
+        }
+
+        public static void DisplayResults(SnapshotComparer comparer)
+        {
+            Console.WriteLine();
+
+            Console.WriteLine("Files only in snapshot 1: " + comparer.OnlyInSnapshot1.Count);
+
+            Console.WriteLine();
+
+            Console.WriteLine("Files only in snapshot 2: " + comparer.OnlyInSnapshot2.Count);
+
+            Console.WriteLine();
+
+            Console.WriteLine("Different names: " + comparer.DifferentNames.Count);
+
+            Console.WriteLine();
+
+            Console.WriteLine("Different content: " + comparer.DifferentContent.Count);
+        }
+    }
 }

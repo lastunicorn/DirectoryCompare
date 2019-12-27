@@ -27,7 +27,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
     {
         private readonly IMediator mediator;
 
-        public string Description => "Compares two json hash files.";
+        public string Description => "Compares two snapshots.";
 
         public CompareSnapshotsCommand(IMediator mediator)
         {
@@ -57,8 +57,8 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
         {
             return new CompareSnapshotsRequest
             {
-                Path1 = arguments[0],
-                Path2 = arguments[1]
+                PotName1 = arguments[0],
+                PotName2 = arguments[1]
             };
         }
     }

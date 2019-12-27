@@ -22,8 +22,8 @@ namespace DustInTheWind.DirectoryCompare.Application.UseCases.CompareSnapshots
     {
         public CompareSnapshotsRequestValidator()
         {
-            RuleFor(x => x.Path1).NotEmpty();
-            RuleFor(x => x.Path2).NotEmpty();
+            RuleFor(x => x.PotName1).NotEmpty();
+            RuleFor(x => x.PotName2).NotEmpty();
         }
     }
 }

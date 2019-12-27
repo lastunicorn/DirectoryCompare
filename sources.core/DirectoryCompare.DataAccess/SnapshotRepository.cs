@@ -14,34 +14,62 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.Domain.DataAccess;
+using DustInTheWind.DirectoryCompare.Domain.Entities;
+using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Linq;
-using DustInTheWind.DirectoryCompare.Domain.DataAccess;
-using Newtonsoft.Json;
+using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
 
 namespace DustInTheWind.DirectoryCompare.DataAccess
 {
     public class SnapshotRepository : ISnapshotRepository
     {
+        private const string SnapshotsDirectoryName = "snapshots";
+
         public Stream CreateStream(string potName)
         {
-            string potDirectoryPath = Directory.GetDirectories(".")
-                .FirstOrDefault(x => IsPot(x, potName));
-
-            string snapshotDirectoryPath = Path.Combine(potDirectoryPath, "snapshots");
-            EnsureDirectory(snapshotDirectoryPath);
+            string snapshotsDirectoryPath = GetSnapshotsDirectoryPath(potName);
+            EnsureDirectory(snapshotsDirectoryPath);
 
             string snapshotFileName = string.Format("{0:yyyy MM dd HHmmss}.json", DateTime.UtcNow);
-            string snapshotFilePath = Path.Combine(snapshotDirectoryPath, snapshotFileName);
+            string snapshotFilePath = Path.Combine(snapshotsDirectoryPath, snapshotFileName);
 
             return new FileStream(snapshotFilePath, FileMode.CreateNew);
         }
 
-        private static void EnsureDirectory(string directoryPath)
+        public Snapshot GetLast(string potName)
         {
-            if (!Directory.Exists(directoryPath))
-                Directory.CreateDirectory(directoryPath);
+            string snapshotsDirectoryPath = GetSnapshotsDirectoryPath(potName);
+            string[] snapshotFileNames = Directory.GetFiles(snapshotsDirectoryPath);
+
+            string snapshotFileName = snapshotFileNames
+                .OrderByDescending(x => x)
+                .FirstOrDefault();
+
+            if (snapshotFileName == null)
+                return null;
+
+            SnapshotJsonFile file = SnapshotJsonFile.Load(snapshotFileName);
+            return file.Snapshot;
+        }
+
+        private static string GetSnapshotsDirectoryPath(string potName)
+        {
+            string potDirectoryPath = GetPotRootPath(potName);
+            return Path.Combine(potDirectoryPath, SnapshotsDirectoryName);
+        }
+
+        private static string GetPotRootPath(string potName)
+        {
+            string potDirectoryPath = Directory.GetDirectories(".")
+                .FirstOrDefault(x => IsPot(x, potName));
+
+            if (potDirectoryPath == null)
+                throw new Exception($"There is no pot with the name: {potName}");
+
+            return potDirectoryPath;
         }
 
         private static bool IsPot(string directoryPath, string potName)
@@ -61,6 +89,12 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
             {
                 return false;
             }
+        }
+
+        private static void EnsureDirectory(string directoryPath)
+        {
+            if (!Directory.Exists(directoryPath))
+                Directory.CreateDirectory(directoryPath);
         }
     }
 }

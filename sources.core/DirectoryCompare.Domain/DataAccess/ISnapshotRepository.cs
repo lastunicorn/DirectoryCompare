@@ -15,11 +15,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.IO;
+using DustInTheWind.DirectoryCompare.Domain.Entities;
 
 namespace DustInTheWind.DirectoryCompare.Domain.DataAccess
 {
     public interface ISnapshotRepository
     {
         Stream CreateStream(string potName);
+        Snapshot GetLast(string potName);
     }
 }

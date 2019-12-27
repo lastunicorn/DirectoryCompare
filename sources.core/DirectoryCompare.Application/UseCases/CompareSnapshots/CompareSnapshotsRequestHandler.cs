@@ -25,16 +25,18 @@ namespace DustInTheWind.DirectoryCompare.Application.UseCases.CompareSnapshots
     public class CompareSnapshotsRequestHandler : RequestHandler<CompareSnapshotsRequest, SnapshotComparer>
     {
         private readonly IProjectRepository projectRepository;
+        private readonly ISnapshotRepository snapshotRepository;
 
-        public CompareSnapshotsRequestHandler(IProjectRepository projectRepository)
+        public CompareSnapshotsRequestHandler(IProjectRepository projectRepository, ISnapshotRepository snapshotRepository)
         {
             this.projectRepository = projectRepository ?? throw new ArgumentNullException(nameof(projectRepository));
+            this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
         }
 
         protected override SnapshotComparer Handle(CompareSnapshotsRequest request)
         {
-            Snapshot snapshot1 = projectRepository.GetSnapshot(request.Path1);
-            Snapshot snapshot2 = projectRepository.GetSnapshot(request.Path2);
+            Snapshot snapshot1 = snapshotRepository.GetLast(request.PotName1);
+            Snapshot snapshot2 = snapshotRepository.GetLast(request.PotName2);
 
             SnapshotComparer comparer = new SnapshotComparer(snapshot1, snapshot2);
             comparer.Compare();
