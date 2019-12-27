@@ -76,7 +76,7 @@ namespace DustInTheWind.DirectoryCompare.Domain.Comparison
             foreach (HFile file1 in files1)
             {
                 List<HFile> file2Matches = files2
-                    .Where(x => x.Name == file1.Name || ByteArrayCompare.AreEqual(x.Hash, file1.Hash))
+                    .Where(x => x.Name == file1.Name || x.Hash == file1.Hash)
                     .ToList();
 
                 if (file2Matches.Count == 0)
@@ -95,7 +95,7 @@ namespace DustInTheWind.DirectoryCompare.Domain.Comparison
                         };
 
                         bool sameName = file1.Name == file2.Name;
-                        bool sameContent = ByteArrayCompare.AreEqual(file1.Hash, file2.Hash);
+                        bool sameContent = file1.Hash == file2.Hash;
 
                         if (!sameName && sameContent)
                             differentNames.Add(itemComparison);

@@ -24,12 +24,10 @@ namespace DustInTheWind.DirectoryCompare.Application.UseCases.CompareSnapshots
 {
     public class CompareSnapshotsRequestHandler : RequestHandler<CompareSnapshotsRequest, SnapshotComparer>
     {
-        private readonly IProjectRepository projectRepository;
         private readonly ISnapshotRepository snapshotRepository;
 
-        public CompareSnapshotsRequestHandler(IProjectRepository projectRepository, ISnapshotRepository snapshotRepository)
+        public CompareSnapshotsRequestHandler(ISnapshotRepository snapshotRepository)
         {
-            this.projectRepository = projectRepository ?? throw new ArgumentNullException(nameof(projectRepository));
             this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
         }
 

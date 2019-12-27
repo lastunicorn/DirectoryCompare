@@ -22,7 +22,7 @@ namespace DustInTheWind.DirectoryCompare.Application.UseCases.GetSnapshot
     {
         public GetSnapshotRequestValidator()
         {
-            RuleFor(x => x.FilePath).NotEmpty();
+            RuleFor(x => x.PotName).NotEmpty();
         }
     }
 }

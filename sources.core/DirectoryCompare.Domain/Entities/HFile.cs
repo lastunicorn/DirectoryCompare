@@ -21,14 +21,14 @@ namespace DustInTheWind.DirectoryCompare.Domain.Entities
 {
     public class HFile : HItem, IEquatable<HFile>
     {
-        public byte[] Hash { get; set; }
+        public FileHash Hash { get; set; }
 
         public bool Equals(HFile other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
 
-            return base.Equals(other) && ByteArrayCompare.AreEqual(Hash, other.Hash);
+            return base.Equals(other) && Hash == other.Hash;
         }
 
         public override bool Equals(object obj)

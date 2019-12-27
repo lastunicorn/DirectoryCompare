@@ -14,8 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
+using System;
+using DustInTheWind.ConsoleTools;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI
 {
@@ -33,7 +34,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI
             DisplayDirectory(snapshot, 0);
         }
 
-        private void DisplayDirectory(HDirectory hDirectory, int index)
+        private static void DisplayDirectory(HDirectory hDirectory, int index)
         {
             string indent = new string(' ', index);
 
@@ -44,7 +45,10 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI
             }
 
             foreach (HFile xFile in hDirectory.Files)
-                Console.WriteLine(indent + xFile.Name);
+            {
+                Console.Write(indent + xFile.Name);
+                CustomConsole.WriteLine(ConsoleColor.DarkGray, " [" + xFile.Hash + "]");
+            }
         }
     }
 }

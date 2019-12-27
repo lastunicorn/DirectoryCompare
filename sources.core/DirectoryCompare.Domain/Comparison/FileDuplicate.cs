@@ -58,7 +58,7 @@ namespace DustInTheWind.DirectoryCompare.Domain.Comparison
 
         private void CalculateEquality()
         {
-            bool areEqual = ByteArrayCompare.AreEqual(tuple1.Item2.Hash, tuple2.Item2.Hash);
+            bool areEqual = tuple1.Item2.Hash == tuple2.Item2.Hash;
 
             if (areEqual)
             {

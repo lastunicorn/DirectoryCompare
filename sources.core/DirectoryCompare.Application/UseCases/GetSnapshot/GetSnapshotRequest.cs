@@ -21,6 +21,6 @@ namespace DustInTheWind.DirectoryCompare.Application.UseCases.GetSnapshot
 {
     public class GetSnapshotRequest : IRequest<Snapshot>
     {
-        public string FilePath { get; set; }
+        public string PotName { get; set; }
     }
 }

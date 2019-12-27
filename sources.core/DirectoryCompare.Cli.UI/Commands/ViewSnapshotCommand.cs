@@ -46,7 +46,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
         {
             return new GetSnapshotRequest
             {
-                FilePath = arguments[0]
+                PotName = arguments[0]
             };
         }
     }

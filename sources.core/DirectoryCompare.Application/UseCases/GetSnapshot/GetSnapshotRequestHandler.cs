@@ -23,16 +23,16 @@ namespace DustInTheWind.DirectoryCompare.Application.UseCases.GetSnapshot
 {
     public class GetSnapshotRequestHandler : RequestHandler<GetSnapshotRequest, Snapshot>
     {
-        private readonly IProjectRepository projectRepository;
+        private readonly ISnapshotRepository snapshotRepository;
 
-        public GetSnapshotRequestHandler(IProjectRepository projectRepository)
+        public GetSnapshotRequestHandler(ISnapshotRepository snapshotRepository)
         {
-            this.projectRepository = projectRepository ?? throw new ArgumentNullException(nameof(projectRepository));
+            this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
         }
 
         protected override Snapshot Handle(GetSnapshotRequest request)
         {
-            return projectRepository.GetSnapshot(request.FilePath);
+            return snapshotRepository.GetLast(request.PotName);
         }
     }
 }
