@@ -14,15 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using FluentValidation;
+using DustInTheWind.DirectoryCompare.Domain.Utils;
 
-namespace DustInTheWind.DirectoryCompare.Application.UseCases.CreateSnapshot
+namespace DustInTheWind.DirectoryCompare.Domain
 {
-    public class CreateSnapshotRequestValidator : AbstractValidator<CreateSnapshotRequest>
+    public class Pot
     {
-        public CreateSnapshotRequestValidator()
-        {
-            RuleFor(x => x.PotName).NotEmpty();
-        }
+        public string Name { get; set; }
+        public DiskPath Path { get; set; }
     }
 }

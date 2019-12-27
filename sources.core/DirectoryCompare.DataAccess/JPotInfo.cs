@@ -14,15 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using FluentValidation;
-
-namespace DustInTheWind.DirectoryCompare.Application.UseCases.CreateSnapshot
+namespace DustInTheWind.DirectoryCompare.DataAccess
 {
-    public class CreateSnapshotRequestValidator : AbstractValidator<CreateSnapshotRequest>
+    internal class JPotInfo
     {
-        public CreateSnapshotRequestValidator()
-        {
-            RuleFor(x => x.PotName).NotEmpty();
-        }
+        public string Name { get; set; }
+        public string Path { get; set; }
     }
 }

@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "DirectoryCompare.Cli": {
-      "commandName": "Project",
-      "commandLineArgs": "compare-snapshots oldd.json newd.json"
-    }
-  }
-}

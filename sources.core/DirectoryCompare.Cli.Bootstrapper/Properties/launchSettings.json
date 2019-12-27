@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DirectoryCompare.Cli": {
+      "commandName": "Project",
+      "commandLineArgs": "snapshot c-temp"
+    }
+  }
+}

@@ -20,8 +20,6 @@ namespace DustInTheWind.DirectoryCompare.Application.UseCases.CreateSnapshot
 {
     public class CreateSnapshotRequest : IRequest
     {
-        public string SourcePath { get; set; }
-        public string DestinationFilePath { get; set; }
-        public string BlackListFilePath { get; set; }
+        public string PotName { get; set; }
     }
 }

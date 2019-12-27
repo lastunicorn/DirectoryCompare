@@ -16,13 +16,13 @@
 
 using FluentValidation;
 
-namespace DustInTheWind.DirectoryCompare.Application.UseCases.CreateSnapshot
+namespace DustInTheWind.DirectoryCompare.Application.UseCases.CreatePot
 {
-    public class CreateSnapshotRequestValidator : AbstractValidator<CreateSnapshotRequest>
+    public class CreatePotRequestValidator : AbstractValidator<CreatePotRequest>
     {
-        public CreateSnapshotRequestValidator()
+        public CreatePotRequestValidator()
         {
-            RuleFor(x => x.PotName).NotEmpty();
+            RuleFor(x => x.Name).NotEmpty();
         }
     }
 }

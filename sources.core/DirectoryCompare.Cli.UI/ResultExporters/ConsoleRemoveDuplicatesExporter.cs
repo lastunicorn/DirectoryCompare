@@ -14,15 +14,23 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using FluentValidation;
+using System;
+using DustInTheWind.DirectoryCompare.Domain.SomeInterfaces;
 
-namespace DustInTheWind.DirectoryCompare.Application.UseCases.CreateSnapshot
+namespace DustInTheWind.DirectoryCompare.Cli.UI.ResultExporters
 {
-    public class CreateSnapshotRequestValidator : AbstractValidator<CreateSnapshotRequest>
+    internal class ConsoleRemoveDuplicatesExporter : IRemoveDuplicatesExporter
     {
-        public CreateSnapshotRequestValidator()
+        public void WriteRemove(string path)
         {
-            RuleFor(x => x.PotName).NotEmpty();
+            Console.WriteLine("removed: {0}", path);
+        }
+
+        public void WriteSummary(int removedFiles, long removedSize)
+        {
+            Console.WriteLine("Total removes: " + removedFiles);
+            Console.WriteLine("Total size: " + removedSize);
+            Console.WriteLine();
         }
     }
 }

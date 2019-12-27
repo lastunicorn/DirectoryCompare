@@ -92,9 +92,17 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
 
         public void Add(HDirectory directory)
         {
-            JsonDirectoryWriter topDirectoryWriter = directoryStack.Peek();
-            JsonDirectoryWriter newDirectoryWriter = topDirectoryWriter.WriteStartDirectory(directory.Name);
-            newDirectoryWriter.WriteEnd();
+            if (directoryStack.Count == 0)
+            {
+                AddAndOpen(directory);
+                CloseDirectory();
+            }
+            else
+            {
+                JsonDirectoryWriter topDirectoryWriter = directoryStack.Peek();
+                JsonDirectoryWriter newDirectoryWriter = topDirectoryWriter.WriteStartDirectory(directory.Name);
+                newDirectoryWriter.WriteEnd();
+            }
         }
 
         public void Close()

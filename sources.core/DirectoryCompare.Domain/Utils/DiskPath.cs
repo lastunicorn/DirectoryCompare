@@ -59,6 +59,11 @@ namespace DustInTheWind.DirectoryCompare.Domain.Utils
             }
         }
 
+        public override string ToString()
+        {
+            return value;
+        }
+
         public static implicit operator string(DiskPath diskPath)
         {
             return diskPath.value;
