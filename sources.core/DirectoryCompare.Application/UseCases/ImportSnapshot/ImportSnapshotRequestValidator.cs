@@ -14,13 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using MediatR;
+using FluentValidation;
 
-namespace DustInTheWind.DirectoryCompare.Application.UseCases.Import
+namespace DustInTheWind.DirectoryCompare.Application.UseCases.ImportSnapshot
 {
-    public class ImportRequest : IRequest
+    public class ImportSnapshotRequestValidator : AbstractValidator<ImportSnapshotRequest>
     {
-        public string FilePath { get; set; }
-        public string PotName { get; set; }
+        public ImportSnapshotRequestValidator()
+        {
+            RuleFor(x => x.PotName).NotEmpty();
+        }
     }
 }

@@ -16,16 +16,16 @@
 
 using System;
 using DustInTheWind.ConsoleFramework;
-using DustInTheWind.DirectoryCompare.Application.UseCases.Import;
+using DustInTheWind.DirectoryCompare.Application.UseCases.ImportSnapshot;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
-    public class ImportCommand : ICommand
+    public class ImportSnapshotCommand : ICommand
     {
         private readonly IMediator mediator;
 
-        public ImportCommand(IMediator mediator)
+        public ImportSnapshotCommand(IMediator mediator)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
@@ -34,13 +34,13 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 
         public void Execute(Arguments arguments)
         {
-            ImportRequest request = CreateRequest(arguments);
+            ImportSnapshotRequest request = CreateRequest(arguments);
             mediator.Send(request).Wait();
         }
 
-        private static ImportRequest CreateRequest(Arguments arguments)
+        private static ImportSnapshotRequest CreateRequest(Arguments arguments)
         {
-            return new ImportRequest
+            return new ImportSnapshotRequest
             {
                 FilePath = arguments[0],
                 PotName = arguments[1]

@@ -14,26 +14,26 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
-using MediatR;
-using System;
 using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
+using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.UseCases.Import
+namespace DustInTheWind.DirectoryCompare.Application.UseCases.ImportSnapshot
 {
-    public class ImportRequestHandler : RequestHandler<ImportRequest>
+    public class ImportSnapshotRequestHandler : RequestHandler<ImportSnapshotRequest>
     {
         private readonly IPotRepository potRepository;
         private readonly ISnapshotRepository snapshotRepository;
 
-        public ImportRequestHandler(IPotRepository potRepository, ISnapshotRepository snapshotRepository)
+        public ImportSnapshotRequestHandler(IPotRepository potRepository, ISnapshotRepository snapshotRepository)
         {
             this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
             this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
         }
 
-        protected override void Handle(ImportRequest request)
+        protected override void Handle(ImportSnapshotRequest request)
         {
             SnapshotJsonFile snapshotJsonFile = SnapshotJsonFile.Load(request.FilePath);
 
