@@ -14,14 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Domain.Utils;
+using FluentValidation;
 
-namespace DustInTheWind.DirectoryCompare.Domain.DataAccess
+namespace DustInTheWind.DirectoryCompare.Application.UseCases.AddBlackList
 {
-    public interface IBlackListRepository
+    public class AddBlackListRequestValidator : AbstractValidator<AddBlackListRequest>
     {
-        PathCollection Get(string potName);
-        void Add(string potName, DiskPath path);
-        void Delete(string potName, DiskPath path);
+        public AddBlackListRequestValidator()
+        {
+            RuleFor(x => x.PotName).NotEmpty();
+        }
     }
 }

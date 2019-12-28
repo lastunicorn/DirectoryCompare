@@ -14,14 +14,27 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 
-namespace DustInTheWind.DirectoryCompare.Domain.DataAccess
+namespace DustInTheWind.DirectoryCompare.Cli.UI
 {
-    public interface IBlackListRepository
+    internal class BlackListView
     {
-        PathCollection Get(string potName);
-        void Add(string potName, DiskPath path);
-        void Delete(string potName, DiskPath path);
+        private readonly PathCollection blackList;
+
+        public BlackListView(PathCollection blackList)
+        {
+            this.blackList = blackList;
+        }
+
+        public void Display()
+        {
+            if (blackList == null)
+                return;
+
+            foreach (string path in blackList)
+                Console.WriteLine(path);
+        }
     }
 }

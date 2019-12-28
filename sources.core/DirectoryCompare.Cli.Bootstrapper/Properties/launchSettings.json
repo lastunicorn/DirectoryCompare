@@ -2,7 +2,7 @@
   "profiles": {
     "DirectoryCompare.Cli": {
       "commandName": "Project",
-      "commandLineArgs": "import c:\\Temp\\smth.json c-temp"
+      "commandLineArgs": "blacklist get c-temp1"
     }
   }
 }

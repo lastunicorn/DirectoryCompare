@@ -15,13 +15,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.Domain.Utils;
+using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Domain.DataAccess
+namespace DustInTheWind.DirectoryCompare.Application.UseCases.AddBlackList
 {
-    public interface IBlackListRepository
+    public class AddBlackListRequest : IRequest
     {
-        PathCollection Get(string potName);
-        void Add(string potName, DiskPath path);
-        void Delete(string potName, DiskPath path);
+        public string PotName { get; set; }
+        public DiskPath Path { get; set; }
     }
 }

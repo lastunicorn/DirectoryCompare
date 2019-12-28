@@ -14,14 +14,25 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
+using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
+using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Domain.DataAccess
+namespace DustInTheWind.DirectoryCompare.Application.UseCases.GetBlackList
 {
-    public interface IBlackListRepository
+    public class GetBlackListRequestHandler : RequestHandler<GetBlackListRequest, PathCollection>
     {
-        PathCollection Get(string potName);
-        void Add(string potName, DiskPath path);
-        void Delete(string potName, DiskPath path);
+        private readonly IBlackListRepository blackListRepository;
+
+        public GetBlackListRequestHandler(IBlackListRepository blackListRepository)
+        {
+            this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
+        }
+
+        protected override PathCollection Handle(GetBlackListRequest request)
+        {
+            return blackListRepository.Get(request.PotName);
+        }
     }
 }

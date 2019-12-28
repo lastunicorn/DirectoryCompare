@@ -14,10 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
+using System.Collections.Generic;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 using Newtonsoft.Json;
-using System;
 using System.IO;
 using System.Linq;
 
@@ -29,13 +30,55 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
         {
             string potDirectoryPath = Directory.GetDirectories(".")
                 .FirstOrDefault(x => IsPot(x, potName));
-            
+
+            if (potDirectoryPath == null)
+                throw new Exception($"There is no pot with name '{potName}'.");
+
             string blackListFilePath = Path.Combine(potDirectoryPath, "bl");
 
             if (!File.Exists(blackListFilePath))
                 return new PathCollection();
 
             return ReadBlackList(blackListFilePath);
+        }
+
+        public void Add(string potName, DiskPath path)
+        {
+            string potDirectoryPath = Directory.GetDirectories(".")
+                .FirstOrDefault(x => IsPot(x, potName));
+
+            if (potDirectoryPath == null)
+                throw new Exception($"There is no pot with name '{potName}'.");
+
+            string blackListFilePath = Path.Combine(potDirectoryPath, "bl");
+
+            PathCollection blackList = File.Exists(blackListFilePath)
+                ? ReadBlackList(blackListFilePath)
+                : new PathCollection();
+
+            if (!blackList.Contains(path))
+            {
+                blackList.Add(path);
+                WriteBlackList(blackListFilePath, blackList);
+            }
+        }
+
+        public void Delete(string potName, DiskPath path)
+        {
+            string potDirectoryPath = Directory.GetDirectories(".")
+                .FirstOrDefault(x => IsPot(x, potName));
+
+            if (potDirectoryPath == null)
+                throw new Exception($"There is no pot with name '{potName}'.");
+
+            string blackListFilePath = Path.Combine(potDirectoryPath, "bl");
+
+            PathCollection blackList = File.Exists(blackListFilePath)
+                ? ReadBlackList(blackListFilePath)
+                : new PathCollection();
+
+            blackList.Remove(path);
+            WriteBlackList(blackListFilePath, blackList);
         }
 
         private static bool IsPot(string directoryPath, string potName)
@@ -59,16 +102,33 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
 
         private static PathCollection ReadBlackList(string filePath)
         {
-            Console.WriteLine("Reading black list from file: {0}", filePath);
-
-            string[] list = File.Exists(filePath)
+            List<string> list = File.Exists(filePath)
                 ? File.ReadAllLines(filePath)
                     .Where(x => !string.IsNullOrEmpty(x))
                     .Where(x => !x.StartsWith("#"))
-                    .ToArray()
-                : new string[0];
+                    .ToList()
+                : new List<string>();
 
             return new PathCollection(list);
+        }
+
+        private static void WriteBlackList(string filePath, PathCollection blackList)
+        {
+            string backupFilePath = filePath + ".bak";
+
+            if (File.Exists(backupFilePath))
+                File.Delete(backupFilePath);
+
+            if (File.Exists(filePath))
+                File.Move(filePath, backupFilePath);
+
+            string[] lines = blackList
+                .ToArray();
+
+            File.WriteAllLines(filePath, lines);
+
+            if (File.Exists(backupFilePath))
+                File.Delete(backupFilePath);
         }
     }
 }
