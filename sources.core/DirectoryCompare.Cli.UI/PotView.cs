@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.Domain;
 using System;
 using System.Collections.Generic;
-using DustInTheWind.DirectoryCompare.Domain;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI
 {
@@ -35,7 +35,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI
                 return;
 
             foreach (Pot pot in pots)
-                Console.WriteLine("{0} - {1}", pot.Name, pot.Path);
+                Console.WriteLine("{0} {1} - {2}", pot.Guid.ToString().Substring(0, 8), pot.Name, pot.Path);
         }
     }
 }

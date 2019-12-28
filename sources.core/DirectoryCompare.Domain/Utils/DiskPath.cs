@@ -91,5 +91,17 @@ namespace DustInTheWind.DirectoryCompare.Domain.Utils
             string newPath = Path.Combine(path, diskPath.value);
             return new DiskPath(newPath);
         }
+
+        public static bool operator ==(DiskPath diskPath, string path)
+        {
+            string value = diskPath.value.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            return value == path;
+        }
+
+        public static bool operator !=(DiskPath diskPath, string path)
+        {
+            string value = diskPath.value.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            return value != path;
+        }
     }
 }

@@ -14,12 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 
 namespace DustInTheWind.DirectoryCompare.Domain
 {
     public class Pot
     {
+        public Guid Guid { get; set; }
         public string Name { get; set; }
         public DiskPath Path { get; set; }
     }

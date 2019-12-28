@@ -48,8 +48,8 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
                     return false;
 
                 string json = File.ReadAllText(infoFilePath);
-                JPotInfo jPotInfo = JsonConvert.DeserializeObject<JPotInfo>(json);
-                return jPotInfo.Name == potName;
+                JInfo jInfo = JsonConvert.DeserializeObject<JInfo>(json);
+                return jInfo.Name == potName;
             }
             catch
             {

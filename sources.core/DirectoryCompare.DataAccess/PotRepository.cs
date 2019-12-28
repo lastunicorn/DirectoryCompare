@@ -28,38 +28,42 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
     {
         public List<Pot> Get()
         {
-            return GetAllPotInfo()
-                .Select(x => new Pot
-                {
-                    Name = x.Name,
-                    Path = x.Path
-                })
+            return GetAllPots()
                 .ToList();
         }
 
         public Pot Get(string name)
         {
-            return GetAllPotInfo()
-                .Where(x => x.Name == name)
-                .Select(x => new Pot
-                {
-                    Name = x.Name,
-                    Path = x.Path
-                })
-                .FirstOrDefault();
+            return GetAllPots()
+                .FirstOrDefault(x => x.Name == name);
         }
 
-        private static IEnumerable<JPotInfo> GetAllPotInfo()
+        private static IEnumerable<Pot> GetAllPots()
         {
             return Directory.GetDirectories(".")
-                .Select(x => Path.Combine(x, "info.json"))
-                .Where(File.Exists)
-                .Select(File.ReadAllText)
+                .Select(x => new
+                {
+                    DirectoryName = Path.GetFileName(x),
+                    InfoFilePath = Path.Combine(x, "info.json")
+                })
+                .Where(x=> File.Exists(x.InfoFilePath))
+                .Select(x=> new
+                {
+                    DirectoryName = x.DirectoryName,
+                    InfoFileContent = File.ReadAllText(x.InfoFilePath)
+                })
                 .Select(x =>
                 {
                     try
                     {
-                        return JsonConvert.DeserializeObject<JPotInfo>(x);
+                        JInfo jInfo = JsonConvert.DeserializeObject<JInfo>(x.InfoFileContent);
+
+                        return new Pot
+                        {
+                            Guid = new Guid(x.DirectoryName),
+                            Name = jInfo.Name,
+                            Path = jInfo.Path
+                        };
                     }
                     catch
                     {
@@ -94,13 +98,13 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
 
         private static void CreateInfoFile(Pot pot, string directoryName)
         {
-            JPotInfo jPotInfo = new JPotInfo
+            JInfo jInfo = new JInfo
             {
                 Name = pot.Name,
                 Path = pot.Path
             };
 
-            string json = JsonConvert.SerializeObject(jPotInfo);
+            string json = JsonConvert.SerializeObject(jInfo);
 
             string infoFilePath = Path.Combine(directoryName, "info.json");
             File.WriteAllText(infoFilePath, json);
