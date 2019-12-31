@@ -31,8 +31,8 @@ namespace DustInTheWind.DirectoryCompare.Tests.Serialization
         [Test]
         public void SerializeEmptySnapshot()
         {
-            SnapshotJsonFile snapshotJsonFile = new SnapshotJsonFile();
-            snapshotJsonFile.Snapshot = new Snapshot
+            JsonSnapshotFile jsonSnapshotFile = new JsonSnapshotFile();
+            jsonSnapshotFile.Snapshot = new Snapshot
             {
                 CreationTime = new DateTime(2019, 5, 8, 19, 17, 0, DateTimeKind.Utc),
                 Name = "Snapshot 1",
@@ -44,20 +44,20 @@ namespace DustInTheWind.DirectoryCompare.Tests.Serialization
   ""original-path"": ""c:\\aaa"",
   ""creation-time"": ""2019-05-08T19:17:00Z""
 }";
-            PerformTest(snapshotJsonFile, expected);
+            PerformTest(jsonSnapshotFile, expected);
         }
 
         [Test]
         public void SerializeSnapshotWithOneDirectory()
         {
-            SnapshotJsonFile snapshotJsonFile = new SnapshotJsonFile();
-            snapshotJsonFile.Snapshot = new Snapshot
+            JsonSnapshotFile jsonSnapshotFile = new JsonSnapshotFile();
+            jsonSnapshotFile.Snapshot = new Snapshot
             {
                 CreationTime = new DateTime(2019, 5, 8, 19, 17, 0, DateTimeKind.Utc),
                 Name = "Snapshot 1",
                 OriginalPath = @"c:\aaa"
             };
-            snapshotJsonFile.Snapshot.Directories.Add(new HDirectory
+            jsonSnapshotFile.Snapshot.Directories.Add(new HDirectory
             {
                 Name = "directory-name"
             });
@@ -72,20 +72,20 @@ namespace DustInTheWind.DirectoryCompare.Tests.Serialization
     }
   ]
 }";
-            PerformTest(snapshotJsonFile, expected);
+            PerformTest(jsonSnapshotFile, expected);
         }
 
         [Test]
         public void SerializeSnapshotWithOneFile()
         {
-            SnapshotJsonFile snapshotJsonFile = new SnapshotJsonFile();
-            snapshotJsonFile.Snapshot = new Snapshot
+            JsonSnapshotFile jsonSnapshotFile = new JsonSnapshotFile();
+            jsonSnapshotFile.Snapshot = new Snapshot
             {
                 CreationTime = new DateTime(2019, 5, 8, 19, 17, 0, DateTimeKind.Utc),
                 Name = "Snapshot 1",
                 OriginalPath = @"c:\aaa"
             };
-            snapshotJsonFile.Snapshot.Files.Add(new HFile
+            jsonSnapshotFile.Snapshot.Files.Add(new HFile
             {
                 Name = "file.extension",
                 Hash = new byte[] { 0, 1, 2 }
@@ -102,15 +102,15 @@ namespace DustInTheWind.DirectoryCompare.Tests.Serialization
     }
   ]
 }";
-            PerformTest(snapshotJsonFile, expected);
+            PerformTest(jsonSnapshotFile, expected);
         }
 
-        private static void PerformTest(SnapshotJsonFile snapshotJsonFile, string expected)
+        private static void PerformTest(JsonSnapshotFile jsonSnapshotFile, string expected)
         {
             using (MemoryStream memoryStream = new MemoryStream())
             {
                 StreamWriter streamWriter = new StreamWriter(memoryStream);
-                snapshotJsonFile.Save(streamWriter);
+                jsonSnapshotFile.Save(streamWriter);
                 streamWriter.Flush();
                 memoryStream.Flush();
 

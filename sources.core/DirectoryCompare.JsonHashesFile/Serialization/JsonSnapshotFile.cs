@@ -22,7 +22,7 @@ using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
 {
-    public class SnapshotJsonFile
+    public class JsonSnapshotFile
     {
         public Snapshot Snapshot { get; set; }
 
@@ -56,7 +56,7 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
             jsonAnalysisExport.CloseDirectory();
         }
 
-        public static SnapshotJsonFile Load(string sourceFilePath)
+        public static JsonSnapshotFile Load(string sourceFilePath)
         {
             using (StreamReader streamReader = File.OpenText(sourceFilePath))
             using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
@@ -64,14 +64,14 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
                 JsonSerializer serializer = new JsonSerializer();
                 JsonSnapshot jsonSnapshot = (JsonSnapshot)serializer.Deserialize(jsonTextReader, typeof(JsonSnapshot));
 
-                return new SnapshotJsonFile
+                return new JsonSnapshotFile
                 {
                     Snapshot = jsonSnapshot.ToSnapshot()
                 };
             }
         }
 
-        public static SnapshotJsonFile Load1(string sourceFilePath)
+        public static JsonSnapshotFile Load1(string sourceFilePath)
         {
             using (StreamReader streamReader = File.OpenText(sourceFilePath))
             using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
@@ -81,7 +81,7 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
                 JsonSerializer serializer = new JsonSerializer();
                 JsonSnapshot jsonSnapshot = (JsonSnapshot)serializer.Deserialize(jsonTextReader, typeof(JsonSnapshot));
 
-                return new SnapshotJsonFile
+                return new JsonSnapshotFile
                 {
                     Snapshot = jsonSnapshot.ToSnapshot()
                 };

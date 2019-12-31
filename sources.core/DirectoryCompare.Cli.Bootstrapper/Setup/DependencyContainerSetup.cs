@@ -35,7 +35,6 @@ namespace DustInTheWind.DirectoryCompare.Cli.Setup
             kernel.Bind<IPotRepository>().To<PotRepository>();
             kernel.Bind<IBlackListRepository>().To<BlackListRepository>();
             kernel.Bind<ISnapshotRepository>().To<SnapshotRepository>();
-            kernel.Bind<IAnalysisExportFactory>().To<AnalysisExportFactory>();
             kernel.Bind<IDiskAnalyzerFactory>().To<DiskAnalyzerFactory>().InSingletonScope();
 
             return kernel;

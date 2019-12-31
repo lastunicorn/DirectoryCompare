@@ -16,9 +16,7 @@ namespace DustInTheWind.ConsoleFramework.UserControls
             Console.WriteLine("Usage:");
 
             foreach (string commandName in CommandNames)
-            {
                 Console.WriteLine(commandName);
-            }
         }
     }
 }

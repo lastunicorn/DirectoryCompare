@@ -14,58 +14,39 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
-using DustInTheWind.DirectoryCompare.Domain.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using MediatR;
+using System;
 
 namespace DustInTheWind.DirectoryCompare.Application.UseCases.CompareSnapshots
 {
     public class CompareSnapshotsRequestHandler : RequestHandler<CompareSnapshotsRequest, SnapshotComparer>
     {
         private readonly ISnapshotRepository snapshotRepository;
-        private readonly IDiskAnalyzerFactory diskAnalyzerFactory;
 
-        public CompareSnapshotsRequestHandler(ISnapshotRepository snapshotRepository, IDiskAnalyzerFactory diskAnalyzerFactory)
+        public CompareSnapshotsRequestHandler(ISnapshotRepository snapshotRepository)
         {
             this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
-            this.diskAnalyzerFactory = diskAnalyzerFactory ?? throw new ArgumentNullException(nameof(diskAnalyzerFactory));
         }
 
         protected override SnapshotComparer Handle(CompareSnapshotsRequest request)
         {
-            Snapshot snapshot1 = snapshotRepository.GetLast(request.PotName1) ?? ReadPath(request.PotName1);
-            Snapshot snapshot2 = snapshotRepository.GetLast(request.PotName2) ?? ReadPath(request.PotName2);
+            Snapshot snapshot1 = snapshotRepository.GetLast(request.PotName1);
+
+            if (snapshot1 == null)
+                throw new Exception($"There is no pot with the name '{request.PotName1}'.");
+
+            Snapshot snapshot2 = snapshotRepository.GetLast(request.PotName2);
+
+            if (snapshot2 == null)
+                throw new Exception($"There is no pot with the name '{request.PotName2}'.");
 
             SnapshotComparer comparer = new SnapshotComparer(snapshot1, snapshot2);
             comparer.Compare();
 
             return comparer;
-        }
-
-        private Snapshot ReadPath(string path)
-        {
-            AnalysisRequest analysisRequest = new AnalysisRequest
-            {
-                RootPath = path
-            };
-
-            SnapshotAnalysisExport snapshotAnalysisExport = new SnapshotAnalysisExport();
-            IDiskAnalyzer diskReader = diskAnalyzerFactory.Create(analysisRequest, snapshotAnalysisExport);
-            diskReader.Starting += HandleDiskReaderStarting;
-            diskReader.Run();
-
-            return snapshotAnalysisExport.Snapshot;
-        }
-
-        private static void HandleDiskReaderStarting(object sender, DiskReaderStartingEventArgs e)
-        {
-            Console.WriteLine("Computed black list:");
-
-            foreach (string blackListItem in e.BlackList)
-                Console.WriteLine("- " + blackListItem);
         }
     }
 }

@@ -23,7 +23,7 @@ namespace DustInTheWind.DirectoryCompare.Application.Validation
     public class PathValidator : PropertyValidator
     {
         public PathValidator()
-            : base((IStringSource)new LanguageStringSource(nameof(PathValidator)))
+            : base(new LanguageStringSource(nameof(PathValidator)))
         {
         }
 

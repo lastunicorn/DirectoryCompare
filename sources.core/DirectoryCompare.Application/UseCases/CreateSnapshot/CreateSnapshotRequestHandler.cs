@@ -19,6 +19,7 @@ using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Domain.Logging;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
+using DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport;
 using MediatR;
 using System;
 using System.Diagnostics;
@@ -30,17 +31,15 @@ namespace DustInTheWind.DirectoryCompare.Application.UseCases.CreateSnapshot
     {
         private readonly IProjectLogger logger;
         private readonly IDiskAnalyzerFactory diskAnalyzerFactory;
-        private readonly IAnalysisExportFactory analysisExportFactory;
         private readonly IPotRepository potRepository;
         private readonly IBlackListRepository blackListRepository;
         private readonly ISnapshotRepository snapshotRepository;
 
-        public CreateSnapshotRequestHandler(IProjectLogger logger, IDiskAnalyzerFactory diskAnalyzerFactory, IAnalysisExportFactory analysisExportFactory,
+        public CreateSnapshotRequestHandler(IProjectLogger logger, IDiskAnalyzerFactory diskAnalyzerFactory,
             IPotRepository potRepository, IBlackListRepository blackListRepository, ISnapshotRepository snapshotRepository)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.diskAnalyzerFactory = diskAnalyzerFactory ?? throw new ArgumentNullException(nameof(diskAnalyzerFactory));
-            this.analysisExportFactory = analysisExportFactory ?? throw new ArgumentNullException(nameof(analysisExportFactory));
             this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
             this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
             this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
@@ -51,26 +50,19 @@ namespace DustInTheWind.DirectoryCompare.Application.UseCases.CreateSnapshot
             Pot pot = potRepository.Get(request.PotName);
 
             if (pot == null)
-                throw new Exception("There is no pot with the specified name");
-
-            PathCollection blackList = blackListRepository.Get(pot.Name);
+                throw new Exception($"There is no pot with the name '{request.PotName}'.");
 
             logger.Info("Scanning path: {0}", pot.Path);
-            logger.Info("Black List:");
-
-            if (blackList != null)
-                foreach (string blackListItem in blackList)
-                    logger.Info(blackListItem);
-
+            
             using (Stream stream = snapshotRepository.CreateStream(pot.Name))
             using (StreamWriter streamWriter = new StreamWriter(stream))
             {
                 AnalysisRequest analysisRequest = new AnalysisRequest
                 {
                     RootPath = pot.Path,
-                    BlackList = blackList
+                    BlackList = blackListRepository.Get(pot.Name)
                 };
-                IAnalysisExport jsonAnalysisExport = analysisExportFactory.Create(streamWriter);
+                JsonAnalysisExport jsonAnalysisExport = new JsonAnalysisExport(streamWriter);
                 IDiskAnalyzer diskAnalyzer = diskAnalyzerFactory.Create(analysisRequest, jsonAnalysisExport);
                 diskAnalyzer.Starting += HandleDiskReaderStarting;
                 diskAnalyzer.ErrorEncountered += HandleDiskReaderErrorEncountered;
@@ -79,16 +71,22 @@ namespace DustInTheWind.DirectoryCompare.Application.UseCases.CreateSnapshot
                 diskAnalyzer.Run();
                 stopwatch.Stop();
 
-                logger.Info("Finished scanning path {0}", stopwatch.Elapsed);
+                logger.Info("Finished scanning path in {0}", stopwatch.Elapsed);
             }
         }
 
-        private static void HandleDiskReaderStarting(object sender, DiskReaderStartingEventArgs e)
+        private void HandleDiskReaderStarting(object sender, DiskReaderStartingEventArgs e)
         {
-            Console.WriteLine("Computed black list:");
+            if (e.BlackList.Count == 0)
+            {
+                logger.Info("No blacklist entries.");
+                return;
+            }
+
+            logger.Info("Computed black list:");
 
             foreach (string blackListItem in e.BlackList)
-                Console.WriteLine("- " + blackListItem);
+                logger.Info("- " + blackListItem);
         }
 
         private void HandleDiskReaderErrorEncountered(object sender, ErrorEncounteredEventArgs e)

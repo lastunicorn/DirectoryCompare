@@ -22,15 +22,25 @@ namespace DustInTheWind.ConsoleFramework.UserControls
 {
     public class ApplicationHeader
     {
+        private readonly Version version;
+
+        public ApplicationHeader()
+        {
+            version = GetVersion();
+        }
+
         public void Display()
         {
-            Assembly assembly = Assembly.GetEntryAssembly();
-            AssemblyName assemblyName = assembly?.GetName();
-            Version version = assemblyName?.Version;
-
             CustomConsole.WriteLine($"Directory Compare ver {version?.ToString(3)}");
             CustomConsole.WriteLine(new string('=', 79));
             CustomConsole.WriteLine();
+        }
+
+        private static Version GetVersion()
+        {
+            Assembly assembly = Assembly.GetEntryAssembly();
+            AssemblyName assemblyName = assembly?.GetName();
+            return assemblyName?.Version;
         }
     }
 }

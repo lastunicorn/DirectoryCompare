@@ -51,7 +51,7 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
             if (snapshotFileName == null)
                 return null;
 
-            SnapshotJsonFile file = SnapshotJsonFile.Load(snapshotFileName);
+            JsonSnapshotFile file = JsonSnapshotFile.Load(snapshotFileName);
             return file.Snapshot;
         }
 
@@ -63,12 +63,12 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
             string snapshotFileName = string.Format("{0:yyyy MM dd HHmmss}.json", snapshot.CreationTime);
             string snapshotFilePath = Path.Combine(snapshotsDirectoryPath, snapshotFileName);
 
-            SnapshotJsonFile snapshotJsonFile = new SnapshotJsonFile
+            JsonSnapshotFile jsonSnapshotFile = new JsonSnapshotFile
             {
                 Snapshot = snapshot
             };
 
-            snapshotJsonFile.Save(snapshotFilePath);
+            jsonSnapshotFile.Save(snapshotFilePath);
         }
 
         private static string GetSnapshotsDirectoryPath(string potName)

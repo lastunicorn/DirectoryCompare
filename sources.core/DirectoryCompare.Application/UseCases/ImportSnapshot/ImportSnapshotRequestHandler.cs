@@ -35,7 +35,7 @@ namespace DustInTheWind.DirectoryCompare.Application.UseCases.ImportSnapshot
 
         protected override void Handle(ImportSnapshotRequest request)
         {
-            SnapshotJsonFile snapshotJsonFile = SnapshotJsonFile.Load(request.FilePath);
+            JsonSnapshotFile jsonSnapshotFile = JsonSnapshotFile.Load(request.FilePath);
 
             Pot pot = potRepository.Get(request.PotName);
             
@@ -44,18 +44,18 @@ namespace DustInTheWind.DirectoryCompare.Application.UseCases.ImportSnapshot
                 pot = new Pot
                 {
                     Name = request.PotName,
-                    Path = snapshotJsonFile.Snapshot.OriginalPath
+                    Path = jsonSnapshotFile.Snapshot.OriginalPath
                 };
 
                 potRepository.Add(pot);
             }
             else
             {
-                if (pot.Path != snapshotJsonFile.Snapshot.OriginalPath)
+                if (pot.Path != jsonSnapshotFile.Snapshot.OriginalPath)
                     throw new Exception("The url of the imported snapshot is different than the one of the pot.");
             }
 
-            snapshotRepository.Add(request.PotName, snapshotJsonFile.Snapshot);
+            snapshotRepository.Add(request.PotName, jsonSnapshotFile.Snapshot);
         }
     }
 }

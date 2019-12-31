@@ -36,7 +36,7 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
 
         public Snapshot GetSnapshot(string path)
         {
-            SnapshotJsonFile file = SnapshotJsonFile.Load(path);
+            JsonSnapshotFile file = JsonSnapshotFile.Load(path);
             return file.Snapshot;
         }
     }
