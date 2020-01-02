@@ -17,11 +17,11 @@
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
+using DustInTheWind.DirectoryCompare.Domain.SomeInterfaces;
 using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DustInTheWind.DirectoryCompare.Domain.SomeInterfaces;
 
 namespace DustInTheWind.DirectoryCompare.Application.UseCases.FindDuplicates
 {
@@ -36,10 +36,17 @@ namespace DustInTheWind.DirectoryCompare.Application.UseCases.FindDuplicates
 
         protected override void Handle(FindDuplicatesRequest request)
         {
-            List<HFile> filesLeft = GetFiles(request.Left) ?? new List<HFile>();
-            List<HFile> filesRight = GetFiles(request.Right) ?? filesLeft;
+            List<HFile> filesLeft = GetFiles(request.Left);
 
-            IEnumerable<FileDuplicate> fileDuplicates = GetDuplicates(filesLeft, filesRight, request.CheckFilesExist);
+            if (filesLeft == null)
+                return;
+
+            List<HFile> filesRight = GetFiles(request.Right);
+
+            IEnumerable<FileDuplicate> fileDuplicates = filesRight == null
+                ? GetDuplicates(filesLeft, request.CheckFilesExist)
+                : GetDuplicates(filesLeft, filesRight, request.CheckFilesExist);
+
             ExportDuplicates(fileDuplicates, request.Exporter);
         }
 
@@ -50,6 +57,24 @@ namespace DustInTheWind.DirectoryCompare.Application.UseCases.FindDuplicates
 
             Snapshot snapshotRight = snapshotRepository.GetLast(potName);
             return snapshotRight?.EnumerateFiles().ToList();
+        }
+
+        private static IEnumerable<FileDuplicate> GetDuplicates(IReadOnlyList<HFile> files, bool checkFilesExist)
+        {
+            for (int i = 0; i < files.Count; i++)
+            {
+                HFile fileLeft = files[i];
+
+                for (int j = i + 1; j < files.Count; j++)
+                {
+                    HFile fileRight = files[j];
+
+                    FileDuplicate fileDuplicate = new FileDuplicate(fileLeft, fileRight, checkFilesExist);
+
+                    if (fileDuplicate.AreEqual)
+                        yield return fileDuplicate;
+                }
+            }
         }
 
         private static IEnumerable<FileDuplicate> GetDuplicates(IReadOnlyCollection<HFile> filesLeft, IReadOnlyCollection<HFile> filesRight, bool checkFilesExist)

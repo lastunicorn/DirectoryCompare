@@ -1,7 +1,7 @@
 <Project>
 
   <PropertyGroup>
-    <Version>1.0.8.0</Version>
+    <Version>1.0.9.0</Version>
     <Product>Directory Compare</Product>
     <Company>Dust in the Wind</Company>
     <Copyright>Copyright © Dust in the Wind 2017-2019</Copyright>
