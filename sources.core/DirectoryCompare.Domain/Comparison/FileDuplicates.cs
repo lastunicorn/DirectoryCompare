@@ -14,14 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.IO;
+using System.Collections;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DustInTheWind.DirectoryCompare.Domain.Comparison
 {
-    public class FileDuplicates
+    public class FileDuplicates : IEnumerable<FileDuplicate>
     {
         public Snapshot SnapshotLeft { get; set; }
 
@@ -29,67 +29,27 @@ namespace DustInTheWind.DirectoryCompare.Domain.Comparison
 
         public bool CheckFilesExist { get; set; }
 
-        public IEnumerable<FileDuplicate> Compare()
+        public IEnumerator<FileDuplicate> GetEnumerator()
         {
-            List<Tuple<string, HFile>> filesLeft = new List<Tuple<string, HFile>>();
-            Read(filesLeft, SnapshotLeft, Path.DirectorySeparatorChar.ToString());
+            List<HFile> filesLeft = SnapshotLeft?.EnumerateFiles().ToList() ?? new List<HFile>();
 
-            if (SnapshotRight == null)
+            List<HFile> filesRight = SnapshotRight == null
+                ? filesLeft
+                : SnapshotRight.EnumerateFiles().ToList();
+
+            foreach (HFile fileLeft in filesLeft)
+            foreach (HFile fileRight in filesRight)
             {
-                return FindDuplicates(filesLeft, SnapshotLeft);
-            }
-            else
-            {
-                List<Tuple<string, HFile>> filesRight = new List<Tuple<string, HFile>>();
-                Read(filesRight, SnapshotRight, Path.DirectorySeparatorChar.ToString());
+                FileDuplicate fileDuplicate = new FileDuplicate(fileLeft, fileRight, CheckFilesExist);
 
-                return FindDuplicates(filesLeft, filesRight, SnapshotLeft, SnapshotRight);
-            }
-        }
-
-        private static void Read(ICollection<Tuple<string, HFile>> files, HDirectory hDirectory, string parentPath)
-        {
-            if (hDirectory.Files != null)
-                foreach (HFile xFile in hDirectory.Files)
-                {
-                    string filePath = Path.Combine(parentPath, xFile.Name);
-                    files.Add(new Tuple<string, HFile>(filePath, xFile));
-                }
-
-            if (hDirectory.Directories != null)
-                foreach (HDirectory xSubDirectory in hDirectory.Directories)
-                {
-                    string subdirectoryPath = Path.Combine(parentPath, xSubDirectory.Name);
-                    Read(files, xSubDirectory, subdirectoryPath);
-                }
-        }
-
-        private IEnumerable<FileDuplicate> FindDuplicates(IReadOnlyList<Tuple<string, HFile>> files, Snapshot snapshot)
-        {
-            for (int i = 0; i < files.Count; i++)
-            {
-                for (int j = i + 1; j < files.Count; j++)
-                {
-                    Tuple<string, HFile> tupleLeft = files[i];
-                    Tuple<string, HFile> tupleRight = files[j];
-
-                    yield return new FileDuplicate(tupleLeft, tupleRight, CheckFilesExist, snapshot, snapshot);
-                }
+                if (fileDuplicate.AreEqual)
+                    yield return fileDuplicate;
             }
         }
 
-        private IEnumerable<FileDuplicate> FindDuplicates(IReadOnlyList<Tuple<string, HFile>> filesLeft, IReadOnlyList<Tuple<string, HFile>> filesRight, Snapshot snapshotLeft, Snapshot snapshotRight)
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            for (int i = 0; i < filesLeft.Count; i++)
-            {
-                for (int j = 0; j < filesRight.Count; j++)
-                {
-                    Tuple<string, HFile> tupleLeft = filesLeft[i];
-                    Tuple<string, HFile> tupleRight = filesRight[j];
-
-                    yield return new FileDuplicate(tupleLeft, tupleRight, CheckFilesExist, snapshotLeft, snapshotRight);
-                }
-            }
+            return GetEnumerator();
         }
     }
 }

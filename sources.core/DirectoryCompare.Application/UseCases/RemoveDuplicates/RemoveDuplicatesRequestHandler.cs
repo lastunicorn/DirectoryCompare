@@ -48,12 +48,10 @@ namespace DustInTheWind.DirectoryCompare.Application.UseCases.RemoveDuplicates
                 CheckFilesExist = true
             };
 
-            IEnumerable<FileDuplicate> duplicates = fileDuplicates.Compare();
-
             int removeCount = 0;
             long totalSize = 0;
 
-            foreach (FileDuplicate duplicate in duplicates)
+            foreach (FileDuplicate duplicate in fileDuplicates)
             {
                 if (!duplicate.AreEqual)
                     continue;

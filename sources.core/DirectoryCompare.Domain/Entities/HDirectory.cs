@@ -39,6 +39,18 @@ namespace DustInTheWind.DirectoryCompare.Domain.Entities
             Files = new HItemCollection<HFile>(this);
         }
 
+        public IEnumerable<HFile> EnumerateFiles()
+        {
+            if (Files != null)
+                foreach (HFile file in Files)
+                    yield return file;
+
+            if (Directories != null)
+                foreach (HDirectory xSubDirectory in Directories)
+                    foreach (HFile file in xSubDirectory.EnumerateFiles())
+                        yield return file;
+        }
+
         public IEnumerator<HItem> GetEnumerator()
         {
             if (Files != null)

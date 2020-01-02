@@ -15,6 +15,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace DustInTheWind.DirectoryCompare.Domain.Entities
 {
@@ -25,6 +28,49 @@ namespace DustInTheWind.DirectoryCompare.Domain.Entities
         public string Error { get; set; }
 
         public HItem Parent { get; set; }
+
+        public string GetPath()
+        {
+            List<string> items = new List<string>();
+
+            HItem item = this;
+
+            while (item != null)
+            {
+                items.Add(item.Name);
+                item = item.Parent;
+            }
+
+            IEnumerable<string> reversedItems = ((IEnumerable<string>)items).Reverse();
+            return string.Join(Path.DirectorySeparatorChar, reversedItems);
+        }
+
+        public string GetOriginalPath()
+        {
+            List<string> items = new List<string>();
+
+            HItem item = this;
+            Snapshot snapshot = null;
+
+            while (item != null)
+            {
+                items.Add(item.Name);
+
+                if (item.Parent is Snapshot s)
+                    snapshot = s;
+
+                item = item.Parent;
+            }
+
+            IEnumerable<string> reversedItems = ((IEnumerable<string>)items).Reverse();
+            string relativePath = string.Join(Path.DirectorySeparatorChar, reversedItems);
+
+            if (snapshot == null)
+                return relativePath;
+
+            relativePath = relativePath.Substring(Path.GetPathRoot(relativePath).Length);
+            return Path.Combine(snapshot.OriginalPath, relativePath);
+        }
 
         public override string ToString()
         {

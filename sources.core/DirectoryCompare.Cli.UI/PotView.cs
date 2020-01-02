@@ -45,6 +45,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI
                 CustomConsole.Write(" - ");
 
                 CustomConsole.WriteEmphasies(pot.Path);
+                CustomConsole.WriteLine();
 
                 //TextBlockBuilder textBlock = new TextBlockBuilder
                 //{
