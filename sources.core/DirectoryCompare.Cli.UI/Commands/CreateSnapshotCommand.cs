@@ -14,16 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.DirectoryCompare.Application.UseCases.CreateSnapshot;
 using MediatR;
+using System;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
     public class CreateSnapshotCommand : ICommand
     {
         private readonly IMediator mediator;
+        private CreateSnapshotView createSnapshotView;
 
         public string Description => "Creates a new snapshot in a specific pot.";
 
@@ -34,15 +35,18 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 
         public void Execute(Arguments arguments)
         {
+            createSnapshotView = new CreateSnapshotView();
+
             CreateSnapshotRequest request = CreateRequest(arguments);
             mediator.Send(request).Wait();
         }
 
-        private static CreateSnapshotRequest CreateRequest(Arguments arguments)
+        private  CreateSnapshotRequest CreateRequest(Arguments arguments)
         {
             return new CreateSnapshotRequest
             {
-                PotName = arguments[0]
+                PotName = arguments[0],
+                Progress = new Progress<float>(value => createSnapshotView.DisplayProgress(value))
             };
         }
     }

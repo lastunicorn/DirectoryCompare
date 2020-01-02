@@ -14,16 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
+using System.Diagnostics;
+using System.IO;
 using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Domain.Logging;
-using DustInTheWind.DirectoryCompare.Domain.Utils;
 using DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport;
 using MediatR;
-using System;
-using System.Diagnostics;
-using System.IO;
 
 namespace DustInTheWind.DirectoryCompare.Application.UseCases.CreateSnapshot
 {
@@ -53,7 +52,7 @@ namespace DustInTheWind.DirectoryCompare.Application.UseCases.CreateSnapshot
                 throw new Exception($"There is no pot with the name '{request.PotName}'.");
 
             logger.Info("Scanning path: {0}", pot.Path);
-            
+
             using (Stream stream = snapshotRepository.CreateStream(pot.Name))
             using (StreamWriter streamWriter = new StreamWriter(stream))
             {
@@ -64,6 +63,7 @@ namespace DustInTheWind.DirectoryCompare.Application.UseCases.CreateSnapshot
                 };
                 JsonAnalysisExport jsonAnalysisExport = new JsonAnalysisExport(streamWriter);
                 IDiskAnalyzer diskAnalyzer = diskAnalyzerFactory.Create(analysisRequest, jsonAnalysisExport);
+                diskAnalyzer.ProgressIndicator = request.Progress;
                 diskAnalyzer.Starting += HandleDiskReaderStarting;
                 diskAnalyzer.ErrorEncountered += HandleDiskReaderErrorEncountered;
 

@@ -16,14 +16,19 @@
 
 using System;
 
-namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
+namespace DustInTheWind.DirectoryCompare.Cli.UI
 {
-    public interface IDiskAnalyzer
+    internal class CreateSnapshotView
     {
-        event EventHandler<ErrorEncounteredEventArgs> ErrorEncountered;
-        event EventHandler<DiskReaderStartingEventArgs> Starting;
-        IProgress<float> ProgressIndicator { get; set; }
+        private float lastValue;
 
-        void Run();
+        public void DisplayProgress(float value)
+        {
+            if (Math.Abs(lastValue - value) > 0.1)
+            {
+                Console.WriteLine($"Progress: {value}%");
+                lastValue = value;
+            }
+        }
     }
 }

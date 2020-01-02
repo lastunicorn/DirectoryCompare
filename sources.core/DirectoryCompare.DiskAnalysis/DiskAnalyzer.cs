@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.IO;
-using System.Security.Cryptography;
 using DustInTheWind.DirectoryCompare.DiskAnalysis.DiskCrawling;
 using DustInTheWind.DirectoryCompare.Domain.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
+using System;
+using System.IO;
+using System.Security.Cryptography;
 
 namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 {
@@ -28,6 +28,8 @@ namespace DustInTheWind.DirectoryCompare.DiskAnalysis
     {
         private readonly MD5 md5;
         private string rootPath;
+        private long totalSize;
+        private long readSize;
 
         public string RootPath
         {
@@ -42,6 +44,8 @@ namespace DustInTheWind.DirectoryCompare.DiskAnalysis
         public event EventHandler<ErrorEncounteredEventArgs> ErrorEncountered;
         public event EventHandler<DiskReaderStartingEventArgs> Starting;
 
+        public IProgress<float> ProgressIndicator { get; set; }
+
         public DiskAnalyzer()
         {
             md5 = MD5.Create();
@@ -55,6 +59,51 @@ namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 
             AnalysisExport?.Open(RootPath);
 
+            totalSize = CalculateSize(rootedBlackList);
+            CalculateHashes(rootedBlackList);
+
+            AnalysisExport?.Close();
+        }
+
+        private long CalculateSize(PathCollection rootedBlackList)
+        {
+            DiskCrawler diskCrawler = new DiskCrawler(RootPath, rootedBlackList);
+            long size = 0;
+
+            foreach (CrawlerStep crawlerStep in diskCrawler)
+            {
+                switch (crawlerStep.Action)
+                {
+                    case CrawlerAction.DirectoryOpened:
+                        break;
+
+                    case CrawlerAction.DirectoryClosed:
+                        break;
+
+                    case CrawlerAction.FileFound:
+                        {
+                            try
+                            {
+                                FileInfo fileInfo = new FileInfo(crawlerStep.Path);
+                                size += fileInfo.Length;
+                            }
+                            catch { }
+                        }
+                        break;
+
+                    case CrawlerAction.Error:
+                        break;
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+
+            return size;
+        }
+
+        private void CalculateHashes(PathCollection rootedBlackList)
+        {
             DiskCrawler diskCrawler = new DiskCrawler(RootPath, rootedBlackList);
 
             foreach (CrawlerStep crawlerStep in diskCrawler)
@@ -81,8 +130,6 @@ namespace DustInTheWind.DirectoryCompare.DiskAnalysis
                         throw new ArgumentOutOfRangeException();
                 }
             }
-
-            AnalysisExport?.Close();
         }
 
         private void AddDirectory(CrawlerStep crawlerStep)
@@ -108,7 +155,13 @@ namespace DustInTheWind.DirectoryCompare.DiskAnalysis
             try
             {
                 using (FileStream stream = File.OpenRead(crawlerStep.Path))
+                {
                     hFile.Hash = md5.ComputeHash(stream);
+                    readSize += stream.Length;
+
+                    if (totalSize > 0)
+                        ProgressIndicator?.Report(readSize * 100 / totalSize);
+                }
             }
             catch (Exception ex)
             {

@@ -17,6 +17,7 @@
 using DustInTheWind.DirectoryCompare.Domain;
 using System;
 using System.Collections.Generic;
+using DustInTheWind.ConsoleTools;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI
 {
@@ -35,7 +36,25 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI
                 return;
 
             foreach (Pot pot in pots)
-                Console.WriteLine("{0} {1} - {2}", pot.Guid.ToString().Substring(0, 8), pot.Name, pot.Path);
+            {
+                string guid = pot.Guid.ToString().Substring(0, 8);
+                CustomConsole.Write(guid);
+                CustomConsole.Write(" ");
+
+                CustomConsole.WriteEmphasies(pot.Name);
+                CustomConsole.Write(" - ");
+
+                CustomConsole.WriteEmphasies(pot.Path);
+
+                //TextBlockBuilder textBlock = new TextBlockBuilder
+                //{
+                //    TextBlock.FromText(guid),
+                //    " ",
+                //    TextBlock.FromText(pot.Name, Emphasized),
+                //    " - ",
+                //    TextBlock.FromText(pot.Path),
+                //};
+            }
         }
     }
 }
