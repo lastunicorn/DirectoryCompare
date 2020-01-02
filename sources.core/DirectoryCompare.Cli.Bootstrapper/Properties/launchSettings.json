@@ -2,7 +2,7 @@
   "profiles": {
     "DirectoryCompare.Cli": {
       "commandName": "Project",
-      "commandLineArgs": "blacklist get c-temp1"
+      "commandLineArgs": "compare ryuk zoidberg compare-ryuk-zoidberg"
     }
   }
 }

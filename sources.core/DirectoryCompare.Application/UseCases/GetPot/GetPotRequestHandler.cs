@@ -18,6 +18,7 @@ using System;
 using DustInTheWind.DirectoryCompare.Domain;
 using MediatR;
 using System.Collections.Generic;
+using System.Linq;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 
 namespace DustInTheWind.DirectoryCompare.Application.UseCases.GetPot
@@ -33,7 +34,9 @@ namespace DustInTheWind.DirectoryCompare.Application.UseCases.GetPot
 
         protected override List<Pot> Handle(GetPotRequest request)
         {
-            return potRepository.Get();
+            return potRepository.Get()
+                .OrderBy(x=>x.Name)
+                .ToList();
         }
     }
 }

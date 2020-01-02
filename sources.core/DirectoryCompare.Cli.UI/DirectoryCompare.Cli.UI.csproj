@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ConsoleTools" Version="0.5.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ConsoleFramework\ConsoleFramework.csproj" />
     <ProjectReference Include="..\DirectoryCompare.Application\DirectoryCompare.Application.csproj" />
     <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" />

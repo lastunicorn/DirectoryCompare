@@ -73,31 +73,27 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
                 CreationTime = CreationTime
             };
 
-            IEnumerable<HDirectory> newDirectories = GetHDirectories();
-            snapshot.Directories.AddRange(newDirectories);
+            IEnumerable<HDirectory> directories = GetHDirectories();
+            if (directories != null)
+                snapshot.Directories.AddRange(directories);
 
-            IEnumerable<HFile> newFiles = GetHFiles();
-            snapshot.Files.AddRange(newFiles);
+            IEnumerable<HFile> files = GetHFiles();
+            if (files != null)
+                snapshot.Files.AddRange(files);
 
             return snapshot;
         }
 
         private IEnumerable<HDirectory> GetHDirectories()
         {
-            if (Directories == null)
-                return null;
-
-            return Directories
+            return Directories?
                 .Select(x => x.ToHDirectory())
                 .ToList();
         }
 
         private IEnumerable<HFile> GetHFiles()
         {
-            if (Files == null)
-                return null;
-
-            return Files
+            return Files?
                 .Select(x => x.ToHFile())
                 .ToList();
         }
