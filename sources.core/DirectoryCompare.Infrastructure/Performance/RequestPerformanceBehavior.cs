@@ -14,12 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.Domain.Logging;
+using MediatR;
 using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using DustInTheWind.DirectoryCompare.Domain.Logging;
-using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Infrastructure.Performance
 {
@@ -37,16 +37,18 @@ namespace DustInTheWind.DirectoryCompare.Infrastructure.Performance
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
             timer.Start();
-            TResponse response = await next();
-            timer.Stop();
 
-            if (timer.ElapsedMilliseconds > 500)
+            try
             {
-                string name = typeof(TRequest).Name;
-                logger.Warn("Long Running Request: {0} ({1} milliseconds) {2}", name, timer.ElapsedMilliseconds, request);
+                return await next();
             }
+            finally
+            {
+                timer.Stop();
 
-            return response;
+                string name = typeof(TRequest).Name;
+                logger.Info("Request {0} finished in {1:n0} milliseconds", name, timer.ElapsedMilliseconds);
+            }
         }
     }
 }

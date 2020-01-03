@@ -14,24 +14,26 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.SomeInterfaces;
 using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DustInTheWind.DirectoryCompare.Application.FindDuplicates
 {
     public class FindDuplicatesRequestHandler : RequestHandler<FindDuplicatesRequest>
     {
         private readonly ISnapshotRepository snapshotRepository;
+        private readonly IPotRepository potRepository;
 
-        public FindDuplicatesRequestHandler(ISnapshotRepository snapshotRepository)
+        public FindDuplicatesRequestHandler(ISnapshotRepository snapshotRepository, IPotRepository potRepository)
         {
             this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
+            this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
         }
 
         protected override void Handle(FindDuplicatesRequest request)
@@ -50,13 +52,36 @@ namespace DustInTheWind.DirectoryCompare.Application.FindDuplicates
             ExportDuplicates(fileDuplicates, request.Exporter);
         }
 
-        private List<HFile> GetFiles(string potName)
+        private List<HFile> GetFiles(string potPath)
         {
-            if (potName == null)
+            if (potPath == null)
                 return null;
 
-            Snapshot snapshotRight = snapshotRepository.GetLast(potName);
-            return snapshotRight?.EnumerateFiles().ToList();
+            string potName = potPath;
+            string filter = null;
+
+            bool potExists = potRepository.Exists(potName);
+
+            if (!potExists)
+            {
+                int pos = potPath.IndexOf('!');
+                if (pos >= 0)
+                {
+                    potName = potPath.Substring(0, pos);
+                    filter = potPath.Substring(pos + 1);
+
+                    potExists = potRepository.Exists(potName);
+                }
+
+                if (!potExists)
+                    return null;
+            }
+
+            Snapshot snapshot = snapshotRepository.GetLast(potName);
+
+            return snapshot?.EnumerateFiles()
+                .Where(x => filter == null || x.GetPath().StartsWith(filter))
+                .ToList();
         }
 
         private static IEnumerable<FileDuplicate> GetDuplicates(IReadOnlyList<HFile> files, bool checkFilesExist)
@@ -80,13 +105,13 @@ namespace DustInTheWind.DirectoryCompare.Application.FindDuplicates
         private static IEnumerable<FileDuplicate> GetDuplicates(IReadOnlyCollection<HFile> filesLeft, IReadOnlyCollection<HFile> filesRight, bool checkFilesExist)
         {
             foreach (HFile fileLeft in filesLeft)
-            foreach (HFile fileRight in filesRight)
-            {
-                FileDuplicate fileDuplicate = new FileDuplicate(fileLeft, fileRight, checkFilesExist);
+                foreach (HFile fileRight in filesRight)
+                {
+                    FileDuplicate fileDuplicate = new FileDuplicate(fileLeft, fileRight, checkFilesExist);
 
-                if (fileDuplicate.AreEqual)
-                    yield return fileDuplicate;
-            }
+                    if (fileDuplicate.AreEqual)
+                        yield return fileDuplicate;
+                }
         }
 
         private static void ExportDuplicates(IEnumerable<FileDuplicate> fileDuplicates, IDuplicatesExporter exporter)

@@ -2,7 +2,7 @@
   "profiles": {
     "DirectoryCompare.Cli": {
       "commandName": "Project",
-      "commandLineArgs": "find-duplicates c-temp"
+      "commandLineArgs": "find-duplicates \"c-temp!\\Directory Compare v1.0.0\""
     }
   }
 }

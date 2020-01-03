@@ -25,14 +25,15 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.ResultExporters
         {
             Console.WriteLine(path1);
             Console.WriteLine(path2);
-            Console.WriteLine(size / 1024);
+
+            Console.WriteLine($"{size:n0} bytes");
             Console.WriteLine();
         }
 
         public void WriteSummary(int duplicateCount, long totalSize)
         {
-            Console.WriteLine("Total duplicates: " + duplicateCount);
-            Console.WriteLine("Total size: " + totalSize);
+            Console.WriteLine($"Total duplicates: {duplicateCount:n0} files");
+            Console.WriteLine($"Total size: {totalSize:n0} bytes");
             Console.WriteLine();
         }
     }
