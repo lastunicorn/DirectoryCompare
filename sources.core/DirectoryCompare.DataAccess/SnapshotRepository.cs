@@ -14,13 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.IO;
-using System.Linq;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace DustInTheWind.DirectoryCompare.DataAccess
 {
@@ -39,20 +40,53 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
             return new FileStream(snapshotFilePath, FileMode.CreateNew);
         }
 
-        public Snapshot GetLast(string potName)
+        public Snapshot GetByIndex(string potName, int index = 0)
         {
             string snapshotsDirectoryPath = GetSnapshotsDirectoryPath(potName);
-            string[] snapshotFileNames = Directory.GetFiles(snapshotsDirectoryPath);
 
-            string snapshotFileName = snapshotFileNames
+            return Directory.GetFiles(snapshotsDirectoryPath)
                 .OrderByDescending(x => x)
+                .Skip(index)
+                .Select(x =>
+                {
+                    JsonSnapshotFile file = JsonSnapshotFile.Load(x);
+                    return file.Snapshot;
+                })
                 .FirstOrDefault();
+        }
 
-            if (snapshotFileName == null)
-                return null;
+        public Snapshot GetLast(string potName)
+        {
+            return GetByIndex(potName);
+        }
 
-            JsonSnapshotFile file = JsonSnapshotFile.Load(snapshotFileName);
-            return file.Snapshot;
+        public IEnumerable<Snapshot> GetByDate(string potName, DateTime dateTime)
+        {
+            string searchedFileName = dateTime.ToString("yyyy MM dd");
+            string snapshotsDirectoryPath = GetSnapshotsDirectoryPath(potName);
+
+            return Directory.GetFiles(snapshotsDirectoryPath)
+                .Where(x => x.StartsWith(searchedFileName))
+                .Select(x =>
+                {
+                    JsonSnapshotFile file = JsonSnapshotFile.Load(x);
+                    return file.Snapshot;
+                });
+        }
+
+        public Snapshot GetByExactDateTime(string potName, DateTime dateTime)
+        {
+            string searchedFileName = dateTime.ToString("yyyy MM dd HHmmss");
+            string snapshotsDirectoryPath = GetSnapshotsDirectoryPath(potName);
+
+            return Directory.GetFiles(snapshotsDirectoryPath)
+                .Where(x => x == searchedFileName)
+                .Select(x =>
+                {
+                    JsonSnapshotFile file = JsonSnapshotFile.Load(x);
+                    return file.Snapshot;
+                })
+                .FirstOrDefault();
         }
 
         public void Add(string potName, Snapshot snapshot)

@@ -22,7 +22,7 @@ namespace DustInTheWind.DirectoryCompare.Application.FindDuplicates
     {
         public FindDuplicatesRequestValidator()
         {
-            RuleFor(x => x.Left).NotEmpty();
+            RuleFor(x => x.SnapshotLeft).NotEmpty();
             RuleFor(x => x.Exporter).NotNull();
         }
     }

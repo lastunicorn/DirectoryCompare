@@ -14,77 +14,34 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Domain.Comparison;
-using DustInTheWind.DirectoryCompare.Domain.DataAccess;
-using DustInTheWind.DirectoryCompare.Domain.Entities;
-using DustInTheWind.DirectoryCompare.Domain.SomeInterfaces;
-using MediatR;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using DustInTheWind.DirectoryCompare.Domain.Comparison;
+using DustInTheWind.DirectoryCompare.Domain.DataAccess;
+using DustInTheWind.DirectoryCompare.Domain.SomeInterfaces;
+using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.FindDuplicates
 {
     public class FindDuplicatesRequestHandler : RequestHandler<FindDuplicatesRequest>
     {
         private readonly ISnapshotRepository snapshotRepository;
-        private readonly IPotRepository potRepository;
 
-        public FindDuplicatesRequestHandler(ISnapshotRepository snapshotRepository, IPotRepository potRepository)
+        public FindDuplicatesRequestHandler(ISnapshotRepository snapshotRepository)
         {
             this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
-            this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
         }
 
         protected override void Handle(FindDuplicatesRequest request)
         {
-            List<HFile> filesLeft = GetFiles(request.Left);
-
-            if (filesLeft == null)
-                return;
-
-            List<HFile> filesRight = GetFiles(request.Right);
-
-            FileDuplicates fileDuplicates = new FileDuplicates
+            FileDuplicates fileDuplicates = new FileDuplicates(snapshotRepository)
             {
-                FilesLeft = filesLeft,
-                FilesRight = filesRight,
+                SnapshotLeft = request.SnapshotLeft,
+                SnapshotRight = request.SnapshotRight,
                 CheckFilesExist = request.CheckFilesExist
             };
 
             ExportDuplicates(fileDuplicates, request.Exporter);
-        }
-
-        private List<HFile> GetFiles(string potPath)
-        {
-            if (potPath == null)
-                return null;
-
-            string potName = potPath;
-            string filter = null;
-
-            bool potExists = potRepository.Exists(potName);
-
-            if (!potExists)
-            {
-                int pos = potPath.IndexOf('!');
-                if (pos >= 0)
-                {
-                    potName = potPath.Substring(0, pos);
-                    filter = potPath.Substring(pos + 1);
-
-                    potExists = potRepository.Exists(potName);
-                }
-
-                if (!potExists)
-                    return null;
-            }
-
-            Snapshot snapshot = snapshotRepository.GetLast(potName);
-
-            return snapshot?.EnumerateFiles()
-                .Where(x => filter == null || x.GetPath().StartsWith(filter))
-                .ToList();
         }
 
         private static void ExportDuplicates(IEnumerable<FileDuplicate> fileDuplicates, IDuplicatesExporter exporter)

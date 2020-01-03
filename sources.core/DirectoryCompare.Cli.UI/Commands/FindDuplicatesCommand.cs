@@ -82,8 +82,8 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 
             return new FindDuplicatesRequest
             {
-                Left = arguments[0],
-                Right = right,
+                SnapshotLeft = arguments[0],
+                SnapshotRight = right,
                 Exporter = new ConsoleDuplicatesExporter(),
                 CheckFilesExist = checkFilesExist
             };

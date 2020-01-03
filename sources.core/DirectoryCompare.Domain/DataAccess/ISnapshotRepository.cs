@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
+using System.Collections.Generic;
 using System.IO;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 
@@ -22,7 +24,10 @@ namespace DustInTheWind.DirectoryCompare.Domain.DataAccess
     public interface ISnapshotRepository
     {
         Stream CreateStream(string potName);
+        Snapshot GetByIndex(string potName, int index);
         Snapshot GetLast(string potName);
+        IEnumerable<Snapshot> GetByDate(string potName, DateTime dateTime);
+        Snapshot GetByExactDateTime(string potName, DateTime dateTime);
         void Add(string potName, Snapshot snapshot);
     }
 }
