@@ -16,7 +16,7 @@
 
 using System;
 using DustInTheWind.ConsoleFramework;
-using DustInTheWind.DirectoryCompare.Application.UseCases.ImportSnapshot;
+using DustInTheWind.DirectoryCompare.Application.ImportSnapshot;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands

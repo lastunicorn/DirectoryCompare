@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Application.Performance;
-using DustInTheWind.DirectoryCompare.Application.UseCases.CreateSnapshot;
-using DustInTheWind.DirectoryCompare.Application.Validation;
+using DustInTheWind.DirectoryCompare.Application.CreateSnapshot;
+using DustInTheWind.DirectoryCompare.Infrastructure.Performance;
+using DustInTheWind.DirectoryCompare.Infrastructure.Validation;
 using FluentValidation;
 using MediatR;
 using Ninject;

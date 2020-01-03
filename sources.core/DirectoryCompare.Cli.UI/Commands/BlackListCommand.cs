@@ -15,12 +15,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleFramework;
-using DustInTheWind.DirectoryCompare.Application.UseCases.AddBlackList;
-using DustInTheWind.DirectoryCompare.Application.UseCases.GetBlackList;
-using DustInTheWind.DirectoryCompare.Application.UseCases.RemoveBlackList;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 using MediatR;
 using System;
+using DustInTheWind.DirectoryCompare.Application.AddBlackList;
+using DustInTheWind.DirectoryCompare.Application.GetBlackList;
+using DustInTheWind.DirectoryCompare.Application.RemoveBlackList;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {

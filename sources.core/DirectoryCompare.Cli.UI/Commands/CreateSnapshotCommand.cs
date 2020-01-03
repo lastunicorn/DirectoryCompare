@@ -15,9 +15,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleFramework;
-using DustInTheWind.DirectoryCompare.Application.UseCases.CreateSnapshot;
 using MediatR;
 using System;
+using DustInTheWind.DirectoryCompare.Application.CreateSnapshot;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {

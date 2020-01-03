@@ -15,13 +15,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleFramework;
-using DustInTheWind.DirectoryCompare.Application.UseCases.CreatePot;
-using DustInTheWind.DirectoryCompare.Application.UseCases.GetPot;
 using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 using MediatR;
 using System;
 using System.Collections.Generic;
+using DustInTheWind.DirectoryCompare.Application.CreatePot;
+using DustInTheWind.DirectoryCompare.Application.GetPot;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {

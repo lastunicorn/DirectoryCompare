@@ -16,7 +16,7 @@
 
 using System;
 using DustInTheWind.ConsoleFramework;
-using DustInTheWind.DirectoryCompare.Application.UseCases.GetSnapshot;
+using DustInTheWind.DirectoryCompare.Application.GetSnapshot;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using MediatR;
 
