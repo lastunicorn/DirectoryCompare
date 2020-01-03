@@ -27,7 +27,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Setup
 {
     internal static class MediatorSetup
     {
-        public static IMediator Setup(KernelBase dependencyContainer)
+        public static void Setup(KernelBase dependencyContainer)
         {
             dependencyContainer.Components.Add<IBindingResolver, ContravariantBindingResolver>();
 
@@ -52,8 +52,6 @@ namespace DustInTheWind.DirectoryCompare.Cli.Setup
                         return x.Kernel.TryGet(t);
                     };
                 });
-
-            return dependencyContainer.Get<IMediator>();
         }
     }
 }

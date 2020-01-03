@@ -17,9 +17,7 @@
 using System;
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.DirectoryCompare.Cli.Setup;
-using DustInTheWind.DirectoryCompare.Cli.UI.Commands;
 using DustInTheWind.DirectoryCompare.Domain.Logging;
-using MediatR;
 using Ninject;
 
 namespace DustInTheWind.DirectoryCompare.Cli
@@ -27,32 +25,22 @@ namespace DustInTheWind.DirectoryCompare.Cli
     internal class ConsoleApplication : ConsoleApplicationBase
     {
         private readonly KernelBase dependencyContainer;
-        private readonly IMediator mediator;
+        private readonly IProjectLogger logger;
 
         public ConsoleApplication()
         {
             dependencyContainer = DependencyContainerSetup.Setup();
-            mediator = MediatorSetup.Setup(dependencyContainer);
+            MediatorSetup.Setup(dependencyContainer);
+            logger = dependencyContainer.Get<IProjectLogger>();
         }
 
         protected override CommandCollection CreateCommands()
         {
-            return new CommandCollection
-            {
-                { "pot", new PotCommand(mediator) },
-                { "read", new CreateSnapshotCommand(mediator) },
-                { "snapshot", new ViewSnapshotCommand(mediator) },
-                { "compare", new CompareSnapshotsCommand(mediator) },
-                { "find-duplicates", new FindDuplicatesCommand(mediator) },
-                //{ "remove-duplicates", new RemoveDuplicatesCommand(mediator) }
-                { "import", new ImportSnapshotCommand(mediator) },
-                { "blacklist", new BlackListCommand(mediator) }
-            };
+            return CommandsSetup.Create(dependencyContainer);
         }
 
         protected override void OnStart()
         {
-            IProjectLogger logger = dependencyContainer.Get<IProjectLogger>();
             logger.Open();
 
             base.OnStart();
@@ -60,7 +48,6 @@ namespace DustInTheWind.DirectoryCompare.Cli
 
         protected override void OnExit()
         {
-            IProjectLogger logger = dependencyContainer.Get<IProjectLogger>();
             logger.Close();
 
             base.OnExit();
@@ -68,7 +55,6 @@ namespace DustInTheWind.DirectoryCompare.Cli
 
         protected override void OnError(Exception ex)
         {
-            IProjectLogger logger = dependencyContainer.Get<IProjectLogger>();
             logger.Error(ex.ToString());
         }
     }
