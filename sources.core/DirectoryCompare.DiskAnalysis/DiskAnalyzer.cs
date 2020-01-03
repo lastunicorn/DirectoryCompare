@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
+using System.IO;
+using System.Security.Cryptography;
 using DustInTheWind.DirectoryCompare.DiskAnalysis.DiskCrawling;
 using DustInTheWind.DirectoryCompare.Domain.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
-using System;
-using System.IO;
-using System.Security.Cryptography;
 
 namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 {
@@ -81,14 +81,16 @@ namespace DustInTheWind.DirectoryCompare.DiskAnalysis
                         break;
 
                     case CrawlerAction.FileFound:
+                    {
+                        try
                         {
-                            try
-                            {
-                                FileInfo fileInfo = new FileInfo(crawlerStep.Path);
-                                size += fileInfo.Length;
-                            }
-                            catch { }
+                            FileInfo fileInfo = new FileInfo(crawlerStep.Path);
+                            size += fileInfo.Length;
                         }
+                        catch
+                        {
+                        }
+                    }
                         break;
 
                     case CrawlerAction.Error:
