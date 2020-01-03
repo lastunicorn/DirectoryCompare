@@ -15,18 +15,19 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Domain.SomeInterfaces;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.ResultExporters
 {
     internal class ConsoleDuplicatesExporter : IDuplicatesExporter
     {
-        public void WriteDuplicate(string path1, string path2, long size)
+        public void WriteDuplicate(FileDuplicate duplicate)
         {
-            Console.WriteLine(path1);
-            Console.WriteLine(path2);
+            Console.WriteLine(duplicate.FullPath1);
+            Console.WriteLine(duplicate.FullPath2);
 
-            Console.WriteLine($"{size:n0} bytes");
+            Console.WriteLine($"{duplicate.Size:n0} bytes");
             Console.WriteLine();
         }
 

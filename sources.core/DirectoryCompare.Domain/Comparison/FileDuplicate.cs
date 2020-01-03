@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.Domain.Entities;
 using System;
 using System.IO;
-using DustInTheWind.DirectoryCompare.Domain.Entities;
 
 namespace DustInTheWind.DirectoryCompare.Domain.Comparison
 {
@@ -38,11 +38,27 @@ namespace DustInTheWind.DirectoryCompare.Domain.Comparison
             }
         }
 
-        public long Size { get; private set; }
-        public string FullPath1 { get; private set; }
-        public string FullPath2 { get; private set; }
-        public bool File1Exists { get; private set; }
-        public bool File2Exists { get; private set; }
+        public long Size => file1.Size;
+        public string FullPath1 => file1.GetOriginalPath();
+        public string FullPath2 => file2.GetOriginalPath();
+
+        public bool File1Exists
+        {
+            get
+            {
+                string fullPath1 = file1.GetOriginalPath();
+                return File.Exists(fullPath1);
+            }
+        }
+
+        public bool File2Exists
+        {
+            get
+            {
+                string fullPath2 = file2.GetOriginalPath();
+                return File.Exists(fullPath2);
+            }
+        }
 
         public FileDuplicate(HFile file1, HFile file2, bool checkFilesExist)
         {
@@ -53,34 +69,18 @@ namespace DustInTheWind.DirectoryCompare.Domain.Comparison
 
         private void CalculateEquality()
         {
-            if (file1.Hash == file2.Hash)
+            if (file1.Hash == file2.Hash && file1.Size == file2.Size)
             {
                 areEqual = false;
-
-                FullPath1 = file1.GetOriginalPath();
-                FullPath2 = file2.GetOriginalPath();
-
-                File1Exists = File.Exists(FullPath1);
-                File2Exists = File.Exists(FullPath2);
 
                 if (checkFilesExist)
                 {
                     if (File1Exists && File2Exists)
-                    {
                         areEqual = true;
-                        Size = new FileInfo(FullPath2).Length;
-                    }
                 }
                 else
                 {
                     areEqual = true;
-
-                    if (File1Exists)
-                        Size = new FileInfo(FullPath1).Length;
-                    else if (File2Exists)
-                        Size = new FileInfo(FullPath2).Length;
-                    else
-                        Size = 0;
                 }
             }
             else

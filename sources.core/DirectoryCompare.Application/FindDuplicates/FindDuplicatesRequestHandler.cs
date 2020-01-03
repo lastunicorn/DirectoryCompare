@@ -45,9 +45,12 @@ namespace DustInTheWind.DirectoryCompare.Application.FindDuplicates
 
             List<HFile> filesRight = GetFiles(request.Right);
 
-            IEnumerable<FileDuplicate> fileDuplicates = filesRight == null
-                ? GetDuplicates(filesLeft, request.CheckFilesExist)
-                : GetDuplicates(filesLeft, filesRight, request.CheckFilesExist);
+            FileDuplicates fileDuplicates = new FileDuplicates
+            {
+                FilesLeft = filesLeft,
+                FilesRight = filesRight,
+                CheckFilesExist = request.CheckFilesExist
+            };
 
             ExportDuplicates(fileDuplicates, request.Exporter);
         }
@@ -84,36 +87,6 @@ namespace DustInTheWind.DirectoryCompare.Application.FindDuplicates
                 .ToList();
         }
 
-        private static IEnumerable<FileDuplicate> GetDuplicates(IReadOnlyList<HFile> files, bool checkFilesExist)
-        {
-            for (int i = 0; i < files.Count; i++)
-            {
-                HFile fileLeft = files[i];
-
-                for (int j = i + 1; j < files.Count; j++)
-                {
-                    HFile fileRight = files[j];
-
-                    FileDuplicate fileDuplicate = new FileDuplicate(fileLeft, fileRight, checkFilesExist);
-
-                    if (fileDuplicate.AreEqual)
-                        yield return fileDuplicate;
-                }
-            }
-        }
-
-        private static IEnumerable<FileDuplicate> GetDuplicates(IReadOnlyCollection<HFile> filesLeft, IReadOnlyCollection<HFile> filesRight, bool checkFilesExist)
-        {
-            foreach (HFile fileLeft in filesLeft)
-                foreach (HFile fileRight in filesRight)
-                {
-                    FileDuplicate fileDuplicate = new FileDuplicate(fileLeft, fileRight, checkFilesExist);
-
-                    if (fileDuplicate.AreEqual)
-                        yield return fileDuplicate;
-                }
-        }
-
         private static void ExportDuplicates(IEnumerable<FileDuplicate> fileDuplicates, IDuplicatesExporter exporter)
         {
             int duplicateCount = 0;
@@ -123,7 +96,7 @@ namespace DustInTheWind.DirectoryCompare.Application.FindDuplicates
             {
                 duplicateCount++;
                 totalSize += duplicate.Size;
-                exporter.WriteDuplicate(duplicate.FullPath1, duplicate.FullPath2, duplicate.Size);
+                exporter.WriteDuplicate(duplicate);
             }
 
             exporter.WriteSummary(duplicateCount, totalSize);

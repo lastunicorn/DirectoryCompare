@@ -15,7 +15,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
@@ -25,25 +27,28 @@ namespace DustInTheWind.DirectoryCompare.Application.RemoveDuplicates
 {
     public class RemoveDuplicatesRequestHandler : RequestHandler<RemoveDuplicatesRequest>
     {
-        private readonly IProjectRepository projectRepository;
+        private readonly ISnapshotRepository snapshotRepository;
+        private readonly IPotRepository potRepository;
 
-        public RemoveDuplicatesRequestHandler(IProjectRepository projectRepository)
+        public RemoveDuplicatesRequestHandler(ISnapshotRepository snapshotRepository, IPotRepository potRepository)
         {
-            this.projectRepository = projectRepository ?? throw new ArgumentNullException(nameof(projectRepository));
+            this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
+            this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
         }
 
         protected override void Handle(RemoveDuplicatesRequest request)
         {
-            Snapshot snapshotLeft = projectRepository.GetSnapshot(request.PathLeft);
-            Snapshot snapshotRight = null;
+            List<HFile> filesLeft = GetFiles(request.PathLeft);
 
-            if (request.PathRight != null)
-                snapshotRight = projectRepository.GetSnapshot(request.PathRight);
+            if (filesLeft == null)
+                return;
+
+            List<HFile> filesRight = GetFiles(request.PathRight);
 
             FileDuplicates fileDuplicates = new FileDuplicates
             {
-                SnapshotLeft = snapshotLeft,
-                SnapshotRight = snapshotRight,
+                FilesLeft = filesLeft,
+                FilesRight = filesRight,
                 CheckFilesExist = true
             };
 
@@ -55,10 +60,7 @@ namespace DustInTheWind.DirectoryCompare.Application.RemoveDuplicates
                 if (!duplicate.AreEqual)
                     continue;
 
-                bool file1Exists = duplicate.File1Exists;
-                bool file2Exists = duplicate.File2Exists;
-
-                if (file1Exists && file2Exists)
+                if (duplicate.File1Exists && duplicate.File2Exists)
                 {
                     switch (request.FileToRemove)
                     {
@@ -80,6 +82,38 @@ namespace DustInTheWind.DirectoryCompare.Application.RemoveDuplicates
             }
 
             request.Exporter.WriteSummary(removeCount, totalSize);
+        }
+
+        private List<HFile> GetFiles(string potPath)
+        {
+            if (potPath == null)
+                return null;
+
+            string potName = potPath;
+            string filter = null;
+
+            bool potExists = potRepository.Exists(potName);
+
+            if (!potExists)
+            {
+                int pos = potPath.IndexOf('!');
+                if (pos >= 0)
+                {
+                    potName = potPath.Substring(0, pos);
+                    filter = potPath.Substring(pos + 1);
+
+                    potExists = potRepository.Exists(potName);
+                }
+
+                if (!potExists)
+                    return null;
+            }
+
+            Snapshot snapshot = snapshotRepository.GetLast(potName);
+
+            return snapshot?.EnumerateFiles()
+                .Where(x => filter == null || x.GetPath().StartsWith(filter))
+                .ToList();
         }
     }
 }

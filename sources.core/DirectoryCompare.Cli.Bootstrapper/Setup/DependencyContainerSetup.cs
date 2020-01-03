@@ -31,7 +31,6 @@ namespace DustInTheWind.DirectoryCompare.Cli.Setup
             StandardKernel kernel = new StandardKernel();
 
             kernel.Bind<IProjectLogger>().To<ProjectLogger>().InSingletonScope();
-            kernel.Bind<IProjectRepository>().To<ProjectRepository>();
             kernel.Bind<IPotRepository>().To<PotRepository>();
             kernel.Bind<IBlackListRepository>().To<BlackListRepository>();
             kernel.Bind<ISnapshotRepository>().To<SnapshotRepository>();

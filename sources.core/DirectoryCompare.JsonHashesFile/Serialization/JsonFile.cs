@@ -22,9 +22,14 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
 {
     internal class JsonFile
     {
-        [JsonProperty("n")] public string Name { get; set; }
+        [JsonProperty("n")]
+        public string Name { get; set; }
 
-        [JsonProperty("h")] public byte[] Hash { get; set; }
+        [JsonProperty("s")]
+        public long Size { get; set; }
+
+        [JsonProperty("h")]
+        public byte[] Hash { get; set; }
 
         public JsonFile()
         {
@@ -35,6 +40,7 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
             if (file == null) throw new ArgumentNullException(nameof(file));
 
             Name = file.Name;
+            Size = file.Size;
             Hash = file.Hash;
         }
 
@@ -43,6 +49,7 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
             return new HFile
             {
                 Name = Name,
+                Size = Size,
                 Hash = Hash
             };
         }

@@ -21,13 +21,14 @@ namespace DustInTheWind.DirectoryCompare.Domain.Entities
     public class HFile : HItem, IEquatable<HFile>
     {
         public FileHash Hash { get; set; }
+        public long Size { get; set; }
 
         public bool Equals(HFile other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
 
-            return base.Equals(other) && Hash == other.Hash;
+            return base.Equals(other) && Hash == other.Hash && Size == other.Size;
         }
 
         public override bool Equals(object obj)
@@ -43,7 +44,10 @@ namespace DustInTheWind.DirectoryCompare.Domain.Entities
         {
             unchecked
             {
-                return (base.GetHashCode() * 397) ^ (Hash != null ? Hash.GetHashCode() : 0);
+                int hashCode = base.GetHashCode();
+                hashCode = (hashCode * 397) ^ Hash.GetHashCode();
+                hashCode = (hashCode * 397) ^ Size.GetHashCode();
+                return hashCode;
             }
         }
     }

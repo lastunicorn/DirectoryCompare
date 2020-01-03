@@ -14,36 +14,51 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.Domain.Entities;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using DustInTheWind.DirectoryCompare.Domain.Entities;
 
 namespace DustInTheWind.DirectoryCompare.Domain.Comparison
 {
     public class FileDuplicates : IEnumerable<FileDuplicate>
     {
-        public Snapshot SnapshotLeft { get; set; }
+        public List<HFile> FilesLeft { get; set; }
 
-        public Snapshot SnapshotRight { get; set; }
+        public List<HFile> FilesRight { get; set; }
 
         public bool CheckFilesExist { get; set; }
 
         public IEnumerator<FileDuplicate> GetEnumerator()
         {
-            List<HFile> filesLeft = SnapshotLeft?.EnumerateFiles().ToList() ?? new List<HFile>();
-
-            List<HFile> filesRight = SnapshotRight == null
-                ? filesLeft
-                : SnapshotRight.EnumerateFiles().ToList();
-
-            foreach (HFile fileLeft in filesLeft)
-            foreach (HFile fileRight in filesRight)
+            if (FilesRight == null)
             {
-                FileDuplicate fileDuplicate = new FileDuplicate(fileLeft, fileRight, CheckFilesExist);
+                for (int i = 0; i < FilesLeft.Count; i++)
+                {
+                    HFile fileLeft = FilesLeft[i];
 
-                if (fileDuplicate.AreEqual)
-                    yield return fileDuplicate;
+                    for (int j = i + 1; j < FilesLeft.Count; j++)
+                    {
+                        HFile fileRight = FilesLeft[j];
+
+                        FileDuplicate fileDuplicate = new FileDuplicate(fileLeft, fileRight, CheckFilesExist);
+
+                        if (fileDuplicate.AreEqual)
+                            yield return fileDuplicate;
+                    }
+                }
+            }
+            else
+            {
+                foreach (HFile fileLeft in FilesLeft)
+                {
+                    foreach (HFile fileRight in FilesRight)
+                    {
+                        FileDuplicate fileDuplicate = new FileDuplicate(fileLeft, fileRight, CheckFilesExist);
+
+                        if (fileDuplicate.AreEqual)
+                            yield return fileDuplicate;
+                    }
+                }
             }
         }
 

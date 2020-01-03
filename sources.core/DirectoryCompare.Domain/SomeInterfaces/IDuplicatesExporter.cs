@@ -14,11 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.Domain.Comparison;
+
 namespace DustInTheWind.DirectoryCompare.Domain.SomeInterfaces
 {
     public interface IDuplicatesExporter
     {
-        void WriteDuplicate(string path1, string path2, long size);
+        void WriteDuplicate(FileDuplicate duplicate);
         void WriteSummary(int duplicateCount, long totalSize);
     }
 }

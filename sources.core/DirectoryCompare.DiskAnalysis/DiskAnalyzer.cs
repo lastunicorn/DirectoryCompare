@@ -159,7 +159,10 @@ namespace DustInTheWind.DirectoryCompare.DiskAnalysis
                 using (FileStream stream = File.OpenRead(crawlerStep.Path))
                 {
                     hFile.Hash = md5.ComputeHash(stream);
-                    readSize += stream.Length;
+                    long size = stream.Length;
+
+                    hFile.Size = size;
+                    readSize += size;
 
                     if (totalSize > 0)
                         ProgressIndicator?.Report(readSize * 100 / totalSize);

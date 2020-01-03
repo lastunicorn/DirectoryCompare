@@ -20,6 +20,9 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
             Writer.WritePropertyName("n");
             Writer.WriteValue(file.Name);
 
+            Writer.WritePropertyName("s");
+            Writer.WriteValue(file.Size);
+
             Writer.WritePropertyName("h");
             Writer.WriteValue(file.Hash);
 
