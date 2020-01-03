@@ -34,7 +34,7 @@ namespace DustInTheWind.DirectoryCompare.Application.CreatePot
         {
             Pot pot = potRepository.Get(request.Name);
 
-            if(pot != null)
+            if (pot != null)
                 throw new Exception("Another pot with the same name already exists.");
 
             pot = new Pot

@@ -14,14 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using Ninject.Components;
-using Ninject.Infrastructure;
-using Ninject.Planning.Bindings;
-using Ninject.Planning.Bindings.Resolvers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Ninject.Components;
+using Ninject.Infrastructure;
+using Ninject.Planning.Bindings;
+using Ninject.Planning.Bindings.Resolvers;
 
 namespace DustInTheWind.DirectoryCompare.Cli
 {

@@ -80,13 +80,13 @@ namespace DustInTheWind.DirectoryCompare.Application.FindDuplicates
         private static IEnumerable<FileDuplicate> GetDuplicates(IReadOnlyCollection<HFile> filesLeft, IReadOnlyCollection<HFile> filesRight, bool checkFilesExist)
         {
             foreach (HFile fileLeft in filesLeft)
-                foreach (HFile fileRight in filesRight)
-                {
-                    FileDuplicate fileDuplicate = new FileDuplicate(fileLeft, fileRight, checkFilesExist);
+            foreach (HFile fileRight in filesRight)
+            {
+                FileDuplicate fileDuplicate = new FileDuplicate(fileLeft, fileRight, checkFilesExist);
 
-                    if (fileDuplicate.AreEqual)
-                        yield return fileDuplicate;
-                }
+                if (fileDuplicate.AreEqual)
+                    yield return fileDuplicate;
+            }
         }
 
         private static void ExportDuplicates(IEnumerable<FileDuplicate> fileDuplicates, IDuplicatesExporter exporter)

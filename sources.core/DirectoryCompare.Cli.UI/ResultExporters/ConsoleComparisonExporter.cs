@@ -59,6 +59,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.ResultExporters
             }
         }
     }
+
     internal class ConsoleComparisonReducedExporter
     {
         public void Export(SnapshotComparer comparer)

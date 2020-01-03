@@ -38,7 +38,7 @@ namespace DustInTheWind.DirectoryCompare.Application.ImportSnapshot
             JsonSnapshotFile jsonSnapshotFile = JsonSnapshotFile.Load(request.FilePath);
 
             Pot pot = potRepository.Get(request.PotName);
-            
+
             if (pot == null)
             {
                 pot = new Pot

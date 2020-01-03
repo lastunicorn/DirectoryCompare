@@ -47,8 +47,8 @@ namespace DustInTheWind.DirectoryCompare.Domain.Entities
 
             if (Directories != null)
                 foreach (HDirectory xSubDirectory in Directories)
-                    foreach (HFile file in xSubDirectory.EnumerateFiles())
-                        yield return file;
+                foreach (HFile file in xSubDirectory.EnumerateFiles())
+                    yield return file;
         }
 
         public IEnumerator<HItem> GetEnumerator()
@@ -81,7 +81,7 @@ namespace DustInTheWind.DirectoryCompare.Domain.Entities
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
 
             return Equals((HDirectory)obj);
         }

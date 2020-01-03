@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.ConsoleFramework;
-using DustInTheWind.DirectoryCompare.Domain.Utils;
-using MediatR;
 using System;
+using DustInTheWind.ConsoleFramework;
 using DustInTheWind.DirectoryCompare.Application.AddBlackList;
 using DustInTheWind.DirectoryCompare.Application.GetBlackList;
 using DustInTheWind.DirectoryCompare.Application.RemoveBlackList;
+using DustInTheWind.DirectoryCompare.Domain.Utils;
+using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {

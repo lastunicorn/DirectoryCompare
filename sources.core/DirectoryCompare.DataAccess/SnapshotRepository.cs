@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
+using System.IO;
+using System.Linq;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
 using Newtonsoft.Json;
-using System;
-using System.IO;
-using System.Linq;
 
 namespace DustInTheWind.DirectoryCompare.DataAccess
 {

@@ -35,7 +35,7 @@ namespace DustInTheWind.DirectoryCompare.Application.GetPot
         protected override List<Pot> Handle(GetPotRequest request)
         {
             return potRepository.Get()
-                .OrderBy(x=>x.Name)
+                .OrderBy(x => x.Name)
                 .ToList();
         }
     }

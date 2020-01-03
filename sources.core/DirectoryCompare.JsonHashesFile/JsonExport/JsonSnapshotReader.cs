@@ -34,6 +34,7 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
                         {
                             // Warning !!! The json file was serialized with a different serializer. It may not be compatible with the current deserializer.
                         }
+
                         break;
 
                     case "original-path":

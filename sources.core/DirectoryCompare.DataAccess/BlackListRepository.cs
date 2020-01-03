@@ -16,11 +16,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 using Newtonsoft.Json;
-using System.IO;
-using System.Linq;
 
 namespace DustInTheWind.DirectoryCompare.DataAccess
 {

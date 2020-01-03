@@ -14,14 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
+using System.Collections.Generic;
 using DustInTheWind.ConsoleFramework;
+using DustInTheWind.DirectoryCompare.Application.CreatePot;
+using DustInTheWind.DirectoryCompare.Application.GetPot;
 using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using DustInTheWind.DirectoryCompare.Application.CreatePot;
-using DustInTheWind.DirectoryCompare.Application.GetPot;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
@@ -38,7 +38,6 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 
         public void Execute(Arguments arguments)
         {
-
             if (arguments.Count == 0)
             {
                 GetPotRequest request = new GetPotRequest();

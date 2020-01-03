@@ -22,11 +22,9 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
 {
     internal class JsonFile
     {
-        [JsonProperty("n")]
-        public string Name { get; set; }
+        [JsonProperty("n")] public string Name { get; set; }
 
-        [JsonProperty("h")]
-        public byte[] Hash { get; set; }
+        [JsonProperty("h")] public byte[] Hash { get; set; }
 
         public JsonFile()
         {

@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.ConsoleFramework;
-using MediatR;
 using System;
+using DustInTheWind.ConsoleFramework;
 using DustInTheWind.DirectoryCompare.Application.CreateSnapshot;
+using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
@@ -41,7 +41,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
             mediator.Send(request).Wait();
         }
 
-        private  CreateSnapshotRequest CreateRequest(Arguments arguments)
+        private CreateSnapshotRequest CreateRequest(Arguments arguments)
         {
             return new CreateSnapshotRequest
             {
