@@ -19,7 +19,7 @@ using System.IO;
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.DirectoryCompare.Domain.Logging;
 
-namespace DustInTheWind.DirectoryCompare.Cli.UI
+namespace DustInTheWind.DirectoryCompare.Logging
 {
     public sealed class ProjectLogger : IProjectLogger, IDisposable
     {
@@ -49,6 +49,28 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI
             streamWriter?.Flush();
             streamWriter?.Close();
             streamWriter = null;
+        }
+
+        public void Debug(string format)
+        {
+            if (isDisposed)
+                throw new ObjectDisposedException(nameof(ProjectLogger));
+
+            Debug(format, new object[0]);
+
+        }
+
+        public void Debug(string format, params object[] arg)
+        {
+            if (isDisposed)
+                throw new ObjectDisposedException(nameof(ProjectLogger));
+
+            string text = arg == null ? format : string.Format(format, arg);
+            text = string.Format("[{0:yyyy-MM-dd HH:mm:ss.fff}] DEBUG {1}", DateTime.Now, text);
+
+            streamWriter?.WriteLine(text);
+
+            CustomConsole.WriteLine(text);
         }
 
         public void Info(string format)

@@ -14,12 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Cli.UI;
 using DustInTheWind.DirectoryCompare.DataAccess;
 using DustInTheWind.DirectoryCompare.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Domain.Logging;
+using DustInTheWind.DirectoryCompare.Logging;
 using Ninject;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Setup
@@ -30,7 +30,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Setup
         {
             StandardKernel kernel = new StandardKernel();
 
-            kernel.Bind<IProjectLogger>().To<ProjectLogger>().InSingletonScope();
+            kernel.Bind<IProjectLogger>().To<Log4NetLogger>().InSingletonScope();
             kernel.Bind<IPotRepository>().To<PotRepository>();
             kernel.Bind<IBlackListRepository>().To<BlackListRepository>();
             kernel.Bind<ISnapshotRepository>().To<SnapshotRepository>();

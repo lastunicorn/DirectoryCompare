@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ConsoleTools" Version="0.5.2" />
+    <PackageReference Include="ConsoleTools" Version="0.5.3" />
   </ItemGroup>
 
   <ItemGroup>

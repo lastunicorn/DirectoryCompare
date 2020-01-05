@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
+using DustInTheWind.DirectoryCompare.Domain.Logging;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.GetPot
@@ -26,14 +27,18 @@ namespace DustInTheWind.DirectoryCompare.Application.GetPot
     public class GetPotRequestHandler : RequestHandler<GetPotRequest, List<Pot>>
     {
         private readonly IPotRepository potRepository;
+        private readonly IProjectLogger projectLogger;
 
-        public GetPotRequestHandler(IPotRepository potRepository)
+        public GetPotRequestHandler(IPotRepository potRepository, IProjectLogger projectLogger)
         {
             this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
+            this.projectLogger = projectLogger ?? throw new ArgumentNullException(nameof(projectLogger));
         }
 
         protected override List<Pot> Handle(GetPotRequest request)
         {
+            projectLogger.Info("Test alez");
+
             return potRepository.Get()
                 .OrderBy(x => x.Name)
                 .ToList();

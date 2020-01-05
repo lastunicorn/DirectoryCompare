@@ -20,7 +20,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI
 {
     internal class CreateSnapshotView
     {
-        private float lastValue;
+        private float lastValue = -1;
 
         public void DisplayProgress(float value)
         {

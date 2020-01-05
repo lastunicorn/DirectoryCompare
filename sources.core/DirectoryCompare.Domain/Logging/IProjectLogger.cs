@@ -20,6 +20,8 @@ namespace DustInTheWind.DirectoryCompare.Domain.Logging
     {
         void Open();
         void Close();
+        void Debug(string format);
+        void Debug(string format, params object[] arg);
         void Info(string format);
         void Info(string format, params object[] arg);
         void Warn(string format);

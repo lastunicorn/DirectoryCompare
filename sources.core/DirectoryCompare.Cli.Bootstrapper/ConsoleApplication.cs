@@ -31,6 +31,7 @@ namespace DustInTheWind.DirectoryCompare.Cli
         {
             dependencyContainer = DependencyContainerSetup.Setup();
             MediatorSetup.Setup(dependencyContainer);
+            Log4NetSetup.Configure();
             logger = dependencyContainer.Get<IProjectLogger>();
         }
 
