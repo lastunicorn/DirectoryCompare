@@ -14,28 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
+using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Domain.SomeInterfaces;
+using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Cli.UI.ResultExporters
+namespace DustInTheWind.DirectoryCompare.Application.RemoveDuplicates
 {
-    internal class ConsoleDuplicatesExporter : IDuplicatesExporter
+    public class RemoveDuplicatesRequest : IRequest
     {
-        public void WriteDuplicate(FileDuplicate duplicate)
-        {
-            Console.WriteLine(duplicate.FullPathLeft);
-            Console.WriteLine(duplicate.FullPathRight);
-
-            Console.WriteLine($"{duplicate.Size:n0} bytes");
-            Console.WriteLine();
-        }
-
-        public void WriteSummary(int duplicateCount, long totalSize)
-        {
-            Console.WriteLine($"Total duplicates: {duplicateCount:n0} files");
-            Console.WriteLine($"Total size: {totalSize:n0} bytes");
-            Console.WriteLine();
-        }
+        public SnapshotLocation SnapshotLeft { get; set; }
+        public SnapshotLocation SnapshotRight { get; set; }
+        public IRemoveDuplicatesExporter Exporter { get; set; }
+        public ComparisonSide FileToRemove { get; set; }
+        public string DestinationDirectory { get; set; }
     }
 }

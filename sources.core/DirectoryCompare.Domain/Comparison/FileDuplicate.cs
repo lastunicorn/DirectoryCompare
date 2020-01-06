@@ -17,13 +17,14 @@
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace DustInTheWind.DirectoryCompare.Domain.Comparison
 {
     public class FileDuplicate
     {
-        private readonly HFile file1;
-        private readonly HFile file2;
+        private readonly HFile fileLeft;
+        private readonly HFile fileRight;
         private readonly bool checkFilesExist;
         private bool? areEqual;
 
@@ -38,44 +39,44 @@ namespace DustInTheWind.DirectoryCompare.Domain.Comparison
             }
         }
 
-        public long Size => file1.Size;
-        public string FullPath1 => file1.GetOriginalPath();
-        public string FullPath2 => file2.GetOriginalPath();
+        public long Size => fileLeft.Size;
+        public string FullPathLeft => fileLeft.GetOriginalPath();
+        public string FullPathRight => fileRight.GetOriginalPath();
 
-        public bool File1Exists
+        public bool FileLeftExists
         {
             get
             {
-                string fullPath1 = file1.GetOriginalPath();
+                string fullPath1 = fileLeft.GetOriginalPath();
                 return File.Exists(fullPath1);
             }
         }
 
-        public bool File2Exists
+        public bool FileRightExists
         {
             get
             {
-                string fullPath2 = file2.GetOriginalPath();
+                string fullPath2 = fileRight.GetOriginalPath();
                 return File.Exists(fullPath2);
             }
         }
 
-        public FileDuplicate(HFile file1, HFile file2, bool checkFilesExist)
+        public FileDuplicate(HFile fileLeft, HFile fileRight, bool checkFilesExist)
         {
-            this.file1 = file1 ?? throw new ArgumentNullException(nameof(file1));
-            this.file2 = file2 ?? throw new ArgumentNullException(nameof(file2));
+            this.fileLeft = fileLeft ?? throw new ArgumentNullException(nameof(fileLeft));
+            this.fileRight = fileRight ?? throw new ArgumentNullException(nameof(fileRight));
             this.checkFilesExist = checkFilesExist;
         }
 
         private void CalculateEquality()
         {
-            if (file1.Hash == file2.Hash && file1.Size == file2.Size)
+            if (fileLeft.Hash == fileRight.Hash && fileLeft.Size == fileRight.Size)
             {
                 areEqual = false;
 
                 if (checkFilesExist)
                 {
-                    if (File1Exists && File2Exists)
+                    if (FileLeftExists && FileRightExists)
                         areEqual = true;
                 }
                 else
@@ -87,6 +88,58 @@ namespace DustInTheWind.DirectoryCompare.Domain.Comparison
             {
                 areEqual = false;
             }
+        }
+
+        public void DeleteLeft()
+        {
+            File.Delete(FullPathLeft);
+        }
+
+        public void DeleteRight()
+        {
+            File.Delete(FullPathRight);
+        }
+
+        public void MoveLeft(string destinationDirectory)
+        {
+            MoveFile(fileLeft, destinationDirectory);
+        }
+
+        public void MoveRight(string destinationDirectory)
+        {
+            MoveFile(fileRight, destinationDirectory);
+        }
+
+        private static void MoveFile(HFile hFile, string destinationDirectory)
+        {
+            string sourceFilePath = hFile.GetOriginalPath();
+
+            string relativePath = hFile.GetPath()
+                .TrimStart(Path.DirectorySeparatorChar)
+                .TrimStart(Path.AltDirectorySeparatorChar);
+            string destinationFilePath = Path.Combine(destinationDirectory, relativePath);
+
+            string destinationDirectoryPath = Path.GetDirectoryName(destinationFilePath);
+
+            if (!Directory.Exists(destinationDirectoryPath))
+                Directory.CreateDirectory(destinationDirectoryPath);
+
+            File.Move(sourceFilePath, destinationFilePath);
+
+            RemoveParentIfEmpty(sourceFilePath);
+        }
+
+        private static void RemoveParentIfEmpty(string path)
+        {
+            string parentDirectoryPath = Path.GetDirectoryName(path);
+
+            bool isDirectoryEmpty = !Directory.EnumerateFileSystemEntries(parentDirectoryPath).Any();
+
+            if (!isDirectoryEmpty)
+                return;
+
+            Directory.Delete(parentDirectoryPath);
+            RemoveParentIfEmpty(parentDirectoryPath);
         }
     }
 }

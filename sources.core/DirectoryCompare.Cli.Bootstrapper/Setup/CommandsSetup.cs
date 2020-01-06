@@ -34,6 +34,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Setup
                 { "snapshot", new ViewSnapshotCommand(mediator) },
                 { "compare", new CompareSnapshotsCommand(mediator) },
                 { "find-duplicates", new FindDuplicatesCommand(mediator) },
+                { "remove-duplicates", new RemoveDuplicatesCommand(mediator) },
                 { "import", new ImportSnapshotCommand(mediator) },
                 { "blacklist", new BlackListCommand(mediator) }
             };
