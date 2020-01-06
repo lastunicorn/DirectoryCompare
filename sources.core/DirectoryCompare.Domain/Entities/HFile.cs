@@ -22,13 +22,17 @@ namespace DustInTheWind.DirectoryCompare.Domain.Entities
     {
         public FileHash Hash { get; set; }
         public long Size { get; set; }
+        public DateTime LastModifiedTime { get; set; }
 
         public bool Equals(HFile other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
 
-            return base.Equals(other) && Hash == other.Hash && Size == other.Size;
+            return base.Equals(other) &&
+                Hash == other.Hash &&
+                Size == other.Size &&
+                LastModifiedTime == other.LastModifiedTime;
         }
 
         public override bool Equals(object obj)
@@ -47,6 +51,7 @@ namespace DustInTheWind.DirectoryCompare.Domain.Entities
                 int hashCode = base.GetHashCode();
                 hashCode = (hashCode * 397) ^ Hash.GetHashCode();
                 hashCode = (hashCode * 397) ^ Size.GetHashCode();
+                hashCode = (hashCode * 397) ^ LastModifiedTime.GetHashCode();
                 return hashCode;
             }
         }

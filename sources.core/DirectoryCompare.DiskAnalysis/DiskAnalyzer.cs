@@ -156,6 +156,9 @@ namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 
             try
             {
+                FileInfo fileInfo = new FileInfo(crawlerStep.Path);
+                hFile.LastModifiedTime = fileInfo.LastWriteTimeUtc;
+
                 using (FileStream stream = File.OpenRead(crawlerStep.Path))
                 {
                     hFile.Hash = md5.ComputeHash(stream);
@@ -163,7 +166,7 @@ namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 
                     hFile.Size = size;
                     readSize += size;
-
+                    
                     if (totalSize > 0)
                         ProgressIndicator?.Report(readSize * 100 / totalSize);
                 }

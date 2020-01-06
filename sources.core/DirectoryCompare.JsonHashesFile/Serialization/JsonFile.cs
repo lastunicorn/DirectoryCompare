@@ -28,6 +28,9 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
         [JsonProperty("s")]
         public long Size { get; set; }
 
+        [JsonProperty("m")]
+        public DateTime LastModifiedTime { get; set; }
+
         [JsonProperty("h")]
         public byte[] Hash { get; set; }
 
@@ -42,6 +45,7 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
             Name = file.Name;
             Size = file.Size;
             Hash = file.Hash;
+            LastModifiedTime = file.LastModifiedTime;
         }
 
         public HFile ToHFile()
@@ -50,7 +54,8 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
             {
                 Name = Name,
                 Size = Size,
-                Hash = Hash
+                Hash = Hash,
+                LastModifiedTime = LastModifiedTime
             };
         }
     }
