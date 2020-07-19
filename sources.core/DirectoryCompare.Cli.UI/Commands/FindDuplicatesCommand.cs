@@ -16,19 +16,19 @@
 
 using System;
 using DustInTheWind.ConsoleFramework;
+using DustInTheWind.DirectoryCompare.Application;
 using DustInTheWind.DirectoryCompare.Application.FindDuplicates;
 using DustInTheWind.DirectoryCompare.Cli.UI.ResultExporters;
-using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
     public class FindDuplicatesCommand : ICommand
     {
-        private readonly IMediator mediator;
+        private readonly RequestBus requestBus;
 
-        public FindDuplicatesCommand(IMediator mediator)
+        public FindDuplicatesCommand(RequestBus requestBus)
         {
-            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
         }
 
         public string Description => string.Empty;
@@ -36,7 +36,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
         public void Execute(Arguments arguments)
         {
             FindDuplicatesRequest request = CreateRequest(arguments);
-            mediator.Send(request).Wait();
+            requestBus.PlaceRequest(request).Wait();
         }
 
         private static FindDuplicatesRequest CreateRequest(Arguments arguments)

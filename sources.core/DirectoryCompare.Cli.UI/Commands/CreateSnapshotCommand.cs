@@ -16,21 +16,21 @@
 
 using System;
 using DustInTheWind.ConsoleFramework;
+using DustInTheWind.DirectoryCompare.Application;
 using DustInTheWind.DirectoryCompare.Application.CreateSnapshot;
-using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
     public class CreateSnapshotCommand : ICommand
     {
-        private readonly IMediator mediator;
+        private readonly RequestBus requestBus;
         private CreateSnapshotView createSnapshotView;
 
         public string Description => "Creates a new snapshot in a specific pot.";
 
-        public CreateSnapshotCommand(IMediator mediator)
+        public CreateSnapshotCommand(RequestBus requestBus)
         {
-            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
         }
 
         public void Execute(Arguments arguments)
@@ -38,7 +38,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
             createSnapshotView = new CreateSnapshotView();
 
             CreateSnapshotRequest request = CreateRequest(arguments);
-            mediator.Send(request).Wait();
+            requestBus.PlaceRequest(request).Wait();
         }
 
         private CreateSnapshotRequest CreateRequest(Arguments arguments)

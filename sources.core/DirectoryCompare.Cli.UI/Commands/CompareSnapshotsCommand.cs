@@ -16,28 +16,28 @@
 
 using System;
 using DustInTheWind.ConsoleFramework;
+using DustInTheWind.DirectoryCompare.Application;
 using DustInTheWind.DirectoryCompare.Application.CompareSnapshots;
 using DustInTheWind.DirectoryCompare.Cli.UI.ResultExporters;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
-using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
     public class CompareSnapshotsCommand : ICommand
     {
-        private readonly IMediator mediator;
+        private readonly RequestBus requestBus;
 
         public string Description => "Compares two snapshots.";
 
-        public CompareSnapshotsCommand(IMediator mediator)
+        public CompareSnapshotsCommand(RequestBus requestBus)
         {
-            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
         }
 
         public void Execute(Arguments arguments)
         {
             CompareSnapshotsRequest request = CreateRequest(arguments);
-            SnapshotComparer snapshotComparer = mediator.Send(request).Result;
+            SnapshotComparer snapshotComparer = requestBus.PlaceRequest<CompareSnapshotsRequest, SnapshotComparer>(request).Result;
 
             bool exportToFile = arguments.Count >= 3;
 

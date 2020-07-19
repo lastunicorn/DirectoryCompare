@@ -16,21 +16,21 @@
 
 using System;
 using DustInTheWind.ConsoleFramework;
+using DustInTheWind.DirectoryCompare.Application;
 using DustInTheWind.DirectoryCompare.Application.AddBlackList;
 using DustInTheWind.DirectoryCompare.Application.GetBlackList;
 using DustInTheWind.DirectoryCompare.Application.RemoveBlackList;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
-using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
     public class BlackListCommand : ICommand
     {
-        private readonly IMediator mediator;
+        private readonly RequestBus requestBus;
 
-        public BlackListCommand(IMediator mediator)
+        public BlackListCommand(RequestBus requestBus)
         {
-            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
         }
 
         public string Description => string.Empty;
@@ -67,7 +67,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
                 PotName = arguments[1]
             };
 
-            PathCollection blackList = mediator.Send<PathCollection>(request).Result;
+            PathCollection blackList = requestBus.PlaceRequest<GetBlackListRequest, PathCollection>(request).Result;
 
             BlackListView blackListView = new BlackListView(blackList);
             blackListView.Display();
@@ -80,7 +80,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
                 PotName = arguments[1],
                 Path = arguments[2]
             };
-            mediator.Send(request).Wait();
+            requestBus.PlaceRequest(request).Wait();
         }
 
         private void RemoveBlackList(Arguments arguments)
@@ -90,7 +90,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
                 PotName = arguments[1],
                 Path = arguments[2]
             };
-            mediator.Send(request).Wait();
+            requestBus.PlaceRequest(request).Wait();
         }
     }
 }
