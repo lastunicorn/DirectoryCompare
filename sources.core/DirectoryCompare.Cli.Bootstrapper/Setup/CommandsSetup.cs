@@ -29,7 +29,8 @@ namespace DustInTheWind.DirectoryCompare.Cli.Setup
 
             return new CommandCollection
             {
-                { "pot", new PotCommand(mediator) },
+                //{ "pot", new PotCommand(mediator) },
+                { "pot", dependencyContainer.Get<PotCommand>() },
                 { "read", new CreateSnapshotCommand(mediator) },
                 { "snapshot", new ViewSnapshotCommand(mediator) },
                 { "compare", new CompareSnapshotsCommand(mediator) },

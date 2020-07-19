@@ -17,23 +17,23 @@
 using System;
 using System.Collections.Generic;
 using DustInTheWind.ConsoleFramework;
+using DustInTheWind.DirectoryCompare.Application;
 using DustInTheWind.DirectoryCompare.Application.CreatePot;
 using DustInTheWind.DirectoryCompare.Application.GetPot;
 using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
-using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
     public class PotCommand : ICommand
     {
-        private readonly IMediator mediator;
+        private readonly RequestBus requestBus;
 
         public string Description => "Manages a pot that holds snapshots for a single path on disk.";
 
-        public PotCommand(IMediator mediator)
+        public PotCommand(RequestBus requestBus)
         {
-            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
         }
 
         public void Execute(Arguments arguments)
@@ -41,7 +41,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
             if (arguments.Count == 0)
             {
                 GetPotRequest request = new GetPotRequest();
-                List<Pot> pots = mediator.Send<List<Pot>>(request).Result;
+                List<Pot> pots = requestBus.PlaceRequest<GetPotRequest, List<Pot>>(request).Result;
 
                 PotView potView = new PotView(pots);
                 potView.Display();
@@ -49,7 +49,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
             else
             {
                 CreatePotRequest request = CreateRequest(arguments);
-                mediator.Send(request).Wait();
+                requestBus.PlaceRequest(request).Wait();
             }
         }
 

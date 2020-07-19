@@ -64,6 +64,20 @@ namespace DustInTheWind.DirectoryCompare.Domain.Utils
             return value;
         }
 
+        public override bool Equals(object obj)
+        {
+            return obj is DiskPath path &&
+                   value == path.value &&
+                   isValid == path.isValid &&
+                   IsValid == path.IsValid &&
+                   IsRooted == path.IsRooted;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(value, isValid, IsValid, IsRooted);
+        }
+
         public static implicit operator string(DiskPath diskPath)
         {
             return diskPath.value;

@@ -15,10 +15,4 @@
     <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="MediatR">
-      <HintPath>..\..\..\..\Users\alez\.nuget\packages\mediatr\7.0.0\lib\netstandard2.0\MediatR.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>
