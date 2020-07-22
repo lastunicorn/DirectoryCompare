@@ -17,6 +17,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Domain.Logging;
@@ -26,7 +27,7 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.CreateSnapshot
 {
-    public class CreateSnapshotRequestHandler : RequestHandler<CreateSnapshotRequest>
+    public class CreateSnapshotRequestHandler : RequestHandler<CreateSnapshotRequest, SnapshotProgress>
     {
         private readonly IProjectLogger logger;
         private readonly IDiskAnalyzerFactory diskAnalyzerFactory;
@@ -44,7 +45,7 @@ namespace DustInTheWind.DirectoryCompare.Application.CreateSnapshot
             this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
         }
 
-        protected override void Handle(CreateSnapshotRequest request)
+        protected override SnapshotProgress Handle(CreateSnapshotRequest request)
         {
             Pot pot = potRepository.Get(request.PotName);
 
@@ -53,26 +54,36 @@ namespace DustInTheWind.DirectoryCompare.Application.CreateSnapshot
 
             logger.Info("Scanning path: {0}", pot.Path);
 
-            using (Stream stream = snapshotRepository.CreateStream(pot.Name))
-            using (StreamWriter streamWriter = new StreamWriter(stream))
+            SnapshotProgress snapshotProgress = new SnapshotProgress();
+
+            Task.Run(() =>
             {
-                AnalysisRequest analysisRequest = new AnalysisRequest
+                using (Stream stream = snapshotRepository.CreateStream(pot.Name))
+                using (StreamWriter streamWriter = new StreamWriter(stream))
                 {
-                    RootPath = pot.Path,
-                    BlackList = blackListRepository.Get(pot.Name)
-                };
-                JsonAnalysisExport jsonAnalysisExport = new JsonAnalysisExport(streamWriter);
-                IDiskAnalyzer diskAnalyzer = diskAnalyzerFactory.Create(analysisRequest, jsonAnalysisExport);
-                diskAnalyzer.ProgressIndicator = request.Progress;
-                diskAnalyzer.Starting += HandleDiskReaderStarting;
-                diskAnalyzer.ErrorEncountered += HandleDiskReaderErrorEncountered;
+                    AnalysisRequest analysisRequest = new AnalysisRequest
+                    {
+                        RootPath = pot.Path,
+                        BlackList = blackListRepository.Get(pot.Name)
+                    };
+                    JsonAnalysisExport jsonAnalysisExport = new JsonAnalysisExport(streamWriter);
+                    IDiskAnalyzer diskAnalyzer = diskAnalyzerFactory.Create(analysisRequest, jsonAnalysisExport);
+                    IProgress<float> progress = new Progress<float>(value => snapshotProgress.ReportProgress(value));
+                    diskAnalyzer.ProgressIndicator = progress;
+                    diskAnalyzer.Starting += HandleDiskReaderStarting;
+                    diskAnalyzer.ErrorEncountered += HandleDiskReaderErrorEncountered;
 
-                Stopwatch stopwatch = Stopwatch.StartNew();
-                diskAnalyzer.Run();
-                stopwatch.Stop();
+                    Stopwatch stopwatch = Stopwatch.StartNew();
+                    diskAnalyzer.Run();
+                    stopwatch.Stop();
 
-                logger.Info("Finished scanning path in {0}", stopwatch.Elapsed);
-            }
+                    snapshotProgress.ReportEnd();
+
+                    logger.Info("Finished scanning path in {0}", stopwatch.Elapsed);
+                }
+            });
+
+            return snapshotProgress;
         }
 
         private void HandleDiskReaderStarting(object sender, DiskReaderStartingEventArgs e)

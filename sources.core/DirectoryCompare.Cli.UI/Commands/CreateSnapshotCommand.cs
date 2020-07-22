@@ -38,15 +38,18 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
             createSnapshotView = new CreateSnapshotView();
 
             CreateSnapshotRequest request = CreateRequest(arguments);
-            requestBus.PlaceRequest(request).Wait();
+
+            SnapshotProgress snapshotProgress = requestBus.PlaceRequest<CreateSnapshotRequest, SnapshotProgress>(request).Result;
+            snapshotProgress.ProgressChanged += (sender, value) => createSnapshotView.DisplayProgress(value);
+
+            snapshotProgress.WaitToEnd();
         }
 
-        private CreateSnapshotRequest CreateRequest(Arguments arguments)
+        private static CreateSnapshotRequest CreateRequest(Arguments arguments)
         {
             return new CreateSnapshotRequest
             {
-                PotName = arguments[0],
-                Progress = new Progress<float>(value => createSnapshotView.DisplayProgress(value))
+                PotName = arguments[0]
             };
         }
     }
