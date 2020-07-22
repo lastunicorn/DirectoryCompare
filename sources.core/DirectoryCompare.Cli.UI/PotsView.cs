@@ -14,34 +14,47 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System.Collections.Generic;
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI
 {
-    internal class PotView
+    internal class PotsView
     {
-        private readonly Pot pot;
+        private readonly List<Pot> pots;
 
-        public PotView(Pot pot)
+        public PotsView(List<Pot> pots)
         {
-            this.pot = pot;
+            this.pots = pots;
         }
 
         public void Display()
         {
-            if (pot == null)
+            if (pots == null)
                 return;
 
-            string guid = pot.Guid.ToString().Substring(0, 8);
-            CustomConsole.Write("GUID: ");
-            CustomConsole.WriteLineEmphasies(guid);
-            
-            CustomConsole.Write("Name: ");
-            CustomConsole.WriteLineEmphasies(pot.Name);
-            
-            CustomConsole.Write("Path: ");
-            CustomConsole.WriteLineEmphasies(pot.Path);
+            foreach (Pot pot in pots)
+            {
+                string guid = pot.Guid.ToString().Substring(0, 8);
+                CustomConsole.Write(guid);
+                CustomConsole.Write(" ");
+
+                CustomConsole.WriteEmphasies(pot.Name);
+                CustomConsole.Write(" - ");
+
+                CustomConsole.WriteEmphasies(pot.Path);
+                CustomConsole.WriteLine();
+
+                //TextBlockBuilder textBlock = new TextBlockBuilder
+                //{
+                //    TextBlock.FromText(guid),
+                //    " ",
+                //    TextBlock.FromText(pot.Name, Emphasized),
+                //    " - ",
+                //    TextBlock.FromText(pot.Path),
+                //};
+            }
         }
     }
 }

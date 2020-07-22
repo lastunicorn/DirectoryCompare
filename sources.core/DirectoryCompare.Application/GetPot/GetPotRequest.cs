@@ -14,14 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
-using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.GetPot
 {
-    public class GetPotRequest : IRequest, IRequest<List<Pot>>
+    public class GetPotRequest : IRequest<Pot>
     {
+        public string PotName { get; set; }
     }
 }

@@ -115,5 +115,34 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
             string infoFilePath = Path.Combine(directoryName, "info.json");
             File.WriteAllText(infoFilePath, json);
         }
+
+        public void Delete(string name)
+        {
+            string directoryName = Directory.GetDirectories(".")
+                .Select(x => new
+                {
+                    DirectoryName = Path.GetFileName(x),
+                    InfoFilePath = Path.Combine(x, "info.json")
+                })
+                .Where(x => File.Exists(x.InfoFilePath))
+                .Select(x => new
+                {
+                    DirectoryName = x.DirectoryName,
+                    InfoFileContent = File.ReadAllText(x.InfoFilePath)
+                })
+                .Select(x => new
+                {
+                    DirectoryName = x.DirectoryName,
+                    JInfo = JsonConvert.DeserializeObject<JInfo>(x.InfoFileContent)
+                })
+                .Where(x => x.JInfo.Name == name)
+                .Select(x => x.DirectoryName)
+                .FirstOrDefault();
+
+            if (directoryName != null && Directory.Exists(directoryName))
+                Directory.Delete(directoryName, true);
+            else
+                throw new Exception($"Pot '{name}' does not exist.");
+        }
     }
 }

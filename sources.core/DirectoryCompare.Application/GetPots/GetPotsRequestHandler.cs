@@ -15,24 +15,28 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.GetPot
+namespace DustInTheWind.DirectoryCompare.Application.GetPots
 {
-    public class GetPotRequestHandler : RequestHandler<GetPotRequest, Pot>
+    public class GetPotsRequestHandler : RequestHandler<GetPotsRequest, List<Pot>>
     {
         private readonly IPotRepository potRepository;
 
-        public GetPotRequestHandler(IPotRepository potRepository)
+        public GetPotsRequestHandler(IPotRepository potRepository)
         {
             this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
         }
 
-        protected override Pot Handle(GetPotRequest request)
+        protected override List<Pot> Handle(GetPotsRequest request)
         {
-            return potRepository.Get(request.PotName);
+            return potRepository.Get()
+                .OrderBy(x => x.Name)
+                .ToList();
         }
     }
 }

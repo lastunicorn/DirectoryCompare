@@ -25,5 +25,6 @@ namespace DustInTheWind.DirectoryCompare.Domain.DataAccess
         Pot Get(string name);
         void Add(Pot pot);
         bool Exists(string name);
+        void Delete(string name);
     }
 }

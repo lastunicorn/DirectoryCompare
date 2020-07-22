@@ -16,23 +16,22 @@
 
 using System;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
-using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.GetPot
+namespace DustInTheWind.DirectoryCompare.Application.DeletePot
 {
-    public class GetPotRequestHandler : RequestHandler<GetPotRequest, Pot>
+    public class DeletePotRequestHandler : RequestHandler<DeletePotRequest>
     {
         private readonly IPotRepository potRepository;
 
-        public GetPotRequestHandler(IPotRepository potRepository)
+        public DeletePotRequestHandler(IPotRepository potRepository)
         {
             this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
         }
 
-        protected override Pot Handle(GetPotRequest request)
+        protected override void Handle(DeletePotRequest request)
         {
-            return potRepository.Get(request.PotName);
+            potRepository.Delete(request.PotName);
         }
     }
 }

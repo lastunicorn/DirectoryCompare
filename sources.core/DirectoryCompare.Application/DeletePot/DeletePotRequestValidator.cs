@@ -14,25 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using DustInTheWind.DirectoryCompare.Domain.DataAccess;
-using DustInTheWind.DirectoryCompare.Domain.PotModel;
-using MediatR;
+using FluentValidation;
 
-namespace DustInTheWind.DirectoryCompare.Application.GetPot
+namespace DustInTheWind.DirectoryCompare.Application.DeletePot
 {
-    public class GetPotRequestHandler : RequestHandler<GetPotRequest, Pot>
+    public class DeletePotRequestValidator : AbstractValidator<DeletePotRequest>
     {
-        private readonly IPotRepository potRepository;
-
-        public GetPotRequestHandler(IPotRepository potRepository)
+        public DeletePotRequestValidator()
         {
-            this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
-        }
-
-        protected override Pot Handle(GetPotRequest request)
-        {
-            return potRepository.Get(request.PotName);
+            RuleFor(x => x.PotName).NotEmpty();
         }
     }
 }
