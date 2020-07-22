@@ -14,31 +14,31 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using DustInTheWind.ConsoleFramework;
+using DustInTheWind.DirectoryCompare.Application;
 using DustInTheWind.DirectoryCompare.Application.RemoveDuplicates;
 using DustInTheWind.DirectoryCompare.Cli.UI.ResultExporters;
-using DustInTheWind.DirectoryCompare.Domain.Comparison;
-using MediatR;
-using System;
 using DustInTheWind.DirectoryCompare.Domain;
+using DustInTheWind.DirectoryCompare.Domain.Comparison;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
     public class RemoveDuplicatesCommand : ICommand
     {
-        private readonly IMediator mediator;
+        private readonly RequestBus requestBus;
 
         public string Description => string.Empty;
 
-        public RemoveDuplicatesCommand(IMediator mediator)
+        public RemoveDuplicatesCommand(RequestBus requestBus)
         {
-            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
         }
 
         public void Execute(Arguments arguments)
         {
             RemoveDuplicatesRequest request = CreateRequest(arguments);
-            mediator.Send(request).Wait();
+            requestBus.PlaceRequest(request).Wait();
         }
 
         private static RemoveDuplicatesRequest CreateRequest(Arguments arguments)

@@ -16,7 +16,6 @@
 
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.DirectoryCompare.Cli.UI.Commands;
-using MediatR;
 using Ninject;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Setup
@@ -25,17 +24,15 @@ namespace DustInTheWind.DirectoryCompare.Cli.Setup
     {
         public static CommandCollection Create(IKernel dependencyContainer)
         {
-            IMediator mediator = dependencyContainer.Get<IMediator>();
-
             return new CommandCollection
             {
                 { "pot", dependencyContainer.Get<PotCommand>() },
                 { "read", dependencyContainer.Get<CreateSnapshotCommand>() },
-                { "snapshot", new ViewSnapshotCommand(mediator) },
+                { "snapshot", dependencyContainer.Get<ViewSnapshotCommand>() },
                 { "compare", dependencyContainer.Get<CompareSnapshotsCommand>() },
                 { "find-duplicates", dependencyContainer.Get<FindDuplicatesCommand>() },
-                { "remove-duplicates", new RemoveDuplicatesCommand(mediator) },
-                { "import", new ImportSnapshotCommand(mediator) },
+                { "remove-duplicates", dependencyContainer.Get<RemoveDuplicatesCommand>() },
+                { "import", dependencyContainer.Get<ImportSnapshotCommand>() },
                 { "blacklist", dependencyContainer.Get<BlackListCommand>() }
             };
         }

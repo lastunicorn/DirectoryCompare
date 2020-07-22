@@ -20,6 +20,7 @@ using System.Linq;
 using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Logging;
+using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.GetPot

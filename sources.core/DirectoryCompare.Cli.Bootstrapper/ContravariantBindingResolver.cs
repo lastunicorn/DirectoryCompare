@@ -44,7 +44,7 @@ namespace DustInTheWind.DirectoryCompare.Cli
                     return bindings
                         .Where(x =>
                             x.Key.IsGenericType &&
-                            x.Key.GetGenericTypeDefinition().Equals(genericType) &&
+                            x.Key.GetGenericTypeDefinition() == genericType &&
                             x.Key.GetGenericArguments().Single() != argument &&
                             x.Key.GetGenericArguments().Single().IsAssignableFrom(argument))
                         .SelectMany(x => x.Value);

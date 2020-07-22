@@ -16,18 +16,18 @@
 
 using System;
 using DustInTheWind.ConsoleFramework;
+using DustInTheWind.DirectoryCompare.Application;
 using DustInTheWind.DirectoryCompare.Application.ImportSnapshot;
-using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
     public class ImportSnapshotCommand : ICommand
     {
-        private readonly IMediator mediator;
+        private readonly RequestBus requestBus;
 
-        public ImportSnapshotCommand(IMediator mediator)
+        public ImportSnapshotCommand(RequestBus requestBus)
         {
-            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
         }
 
         public string Description => string.Empty;
@@ -35,7 +35,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
         public void Execute(Arguments arguments)
         {
             ImportSnapshotRequest request = CreateRequest(arguments);
-            mediator.Send(request).Wait();
+            requestBus.PlaceRequest(request).Wait();
         }
 
         private static ImportSnapshotRequest CreateRequest(Arguments arguments)

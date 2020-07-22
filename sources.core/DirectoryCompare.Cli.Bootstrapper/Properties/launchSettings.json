@@ -1,8 +1,7 @@
 {
   "profiles": {
     "DirectoryCompare.Cli": {
-      "commandName": "Project",
-      "commandLineArgs": "remove-duplicates c-temp c-temp2 Right c:\\Temp-Removed"
+      "commandName": "Project"
     }
   }
 }

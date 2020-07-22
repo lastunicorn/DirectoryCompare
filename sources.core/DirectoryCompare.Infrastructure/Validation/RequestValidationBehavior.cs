@@ -37,7 +37,7 @@ namespace DustInTheWind.DirectoryCompare.Infrastructure.Validation
 
         public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
-            ValidationContext context = new ValidationContext(request);
+            ValidationContext<TRequest> context = new ValidationContext<TRequest>(request);
 
             List<ValidationFailure> failures = validators
                 .Select(x => x.Validate(context))

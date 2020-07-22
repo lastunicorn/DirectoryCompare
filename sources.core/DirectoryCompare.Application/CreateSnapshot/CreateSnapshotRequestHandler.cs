@@ -17,10 +17,10 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Domain.Logging;
+using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport;
 using MediatR;
 
@@ -49,7 +49,7 @@ namespace DustInTheWind.DirectoryCompare.Application.CreateSnapshot
             Pot pot = potRepository.Get(request.PotName);
 
             if (pot == null)
-                throw new Exception($"There is no pot with the name '{request.PotName}'.");
+                throw new PotDoesNotExistException(request.PotName);
 
             logger.Info("Scanning path: {0}", pot.Path);
 

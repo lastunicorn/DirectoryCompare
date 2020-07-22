@@ -16,27 +16,27 @@
 
 using System;
 using DustInTheWind.ConsoleFramework;
+using DustInTheWind.DirectoryCompare.Application;
 using DustInTheWind.DirectoryCompare.Application.GetSnapshot;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
-using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
     public class ViewSnapshotCommand : ICommand
     {
-        private readonly IMediator mediator;
+        private readonly RequestBus requestBus;
 
         public string Description => "Displays the content of a json hash files";
 
-        public ViewSnapshotCommand(IMediator mediator)
+        public ViewSnapshotCommand(RequestBus requestBus)
         {
-            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
         }
 
         public void Execute(Arguments arguments)
         {
             GetSnapshotRequest request = CreateRequest(arguments);
-            Snapshot snapshot = mediator.Send(request).Result;
+            Snapshot snapshot = requestBus.PlaceRequest<GetSnapshotRequest, Snapshot>(request).Result;
 
             SnapshotView snapshotView = new SnapshotView(snapshot);
             snapshotView.Display();

@@ -17,7 +17,7 @@
 using System;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 
-namespace DustInTheWind.DirectoryCompare.Domain
+namespace DustInTheWind.DirectoryCompare.Domain.PotModel
 {
     public class Pot
     {

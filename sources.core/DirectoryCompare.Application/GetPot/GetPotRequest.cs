@@ -16,6 +16,7 @@
 
 using System.Collections.Generic;
 using DustInTheWind.DirectoryCompare.Domain;
+using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.GetPot

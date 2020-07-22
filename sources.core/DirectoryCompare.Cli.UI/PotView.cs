@@ -16,7 +16,7 @@
 
 using System.Collections.Generic;
 using DustInTheWind.ConsoleTools;
-using DustInTheWind.DirectoryCompare.Domain;
+using DustInTheWind.DirectoryCompare.Domain.PotModel;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI
 {

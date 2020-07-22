@@ -17,6 +17,7 @@
 using System;
 using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
+using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.CreatePot
@@ -35,7 +36,7 @@ namespace DustInTheWind.DirectoryCompare.Application.CreatePot
             Pot pot = potRepository.Get(request.Name);
 
             if (pot != null)
-                throw new Exception("Another pot with the same name already exists.");
+                throw new PotAlreadyExistsException();
 
             pot = new Pot
             {
