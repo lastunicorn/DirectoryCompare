@@ -28,7 +28,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Setup
             {
                 { "pot", dependencyContainer.Get<PotCommand>() },
                 { "read", dependencyContainer.Get<CreateSnapshotCommand>() },
-                { "snapshot", dependencyContainer.Get<ViewSnapshotCommand>() },
+                { "snapshot", dependencyContainer.Get<SnapshotCommand>() },
                 { "compare", dependencyContainer.Get<CompareSnapshotsCommand>() },
                 { "find-duplicates", dependencyContainer.Get<FindDuplicatesCommand>() },
                 { "remove-duplicates", dependencyContainer.Get<RemoveDuplicatesCommand>() },

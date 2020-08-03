@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
 
     <AssemblyTitle>DirectoryCompare.Tests</AssemblyTitle>
     <Version>1.0.1.0</Version>
@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ConsoleFramework\ConsoleFramework.csproj" />
     <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" />
     <ProjectReference Include="..\DirectoryCompare.JsonHashesFile\DirectoryCompare.JsonHashesFile.csproj" />
   </ItemGroup>

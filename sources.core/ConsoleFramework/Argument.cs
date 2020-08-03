@@ -14,23 +14,26 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-
 namespace DustInTheWind.ConsoleFramework
 {
-    public class Argument
+    public struct Argument
     {
         public string Name { get; }
+
         public string Value { get; }
 
-        public Argument(string name)
-            : this(name, null)
+        public bool IsEmpty => Name == null && Value == null;
+
+        public bool HasName => !string.IsNullOrEmpty(Name);
+
+        public Argument(string value)
+            : this(null, value)
         {
         }
 
         public Argument(string name, string value)
         {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Name = name;
             Value = value;
         }
     }

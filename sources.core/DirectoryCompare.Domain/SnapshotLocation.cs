@@ -43,10 +43,10 @@ namespace DustInTheWind.DirectoryCompare.Domain
             }
             else
             {
-                Tuple<string, string> parts = SplitByFirst(value, '>');
+                Tuple<string, string> parts = SplitByFirstOccurence(value, '>');
                 InternalPath = parts.Item2;
 
-                parts = SplitByFirst(parts.Item1, '~');
+                parts = SplitByFirstOccurence(parts.Item1, '~');
                 PotName = parts.Item1;
 
                 if (int.TryParse(parts.Item2, out int snapshotIndex))
@@ -67,9 +67,9 @@ namespace DustInTheWind.DirectoryCompare.Domain
             }
         }
 
-        private static Tuple<string, string> SplitByFirst(string text, char c)
+        private static Tuple<string, string> SplitByFirstOccurence(string text, char c)
         {
-            int pos = text.IndexOf('>');
+            int pos = text.IndexOf(c);
             string value1;
             string value2;
 

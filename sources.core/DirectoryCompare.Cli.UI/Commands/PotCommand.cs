@@ -41,18 +41,25 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 
         public void Execute(Arguments arguments)
         {
+            // pot                                  - Displays a list of all existing pots.
+            // pot <pot-name>                       - Displays details about the specified pot.
+            // pot -c <pot-name> -p <target-path>   - Creates a new pot.
+            // pot -d <pot-name>                    - Deletes the pot with the specified name.
+
             Argument createArgument = arguments.Values.FirstOrDefault(x => string.Equals(x.Name, "c", StringComparison.InvariantCultureIgnoreCase));
-            bool isCreate = createArgument != null;
+            bool isCreate = !createArgument.IsEmpty;
 
             Argument deleteArgument = arguments.Values.FirstOrDefault(x => string.Equals(x.Name, "d", StringComparison.InvariantCultureIgnoreCase));
-            bool isDelete = deleteArgument != null;
+            bool isDelete = !deleteArgument.IsEmpty;
 
             if (isCreate)
             {
+                // pot -c <pot-name> -p <target-path>
                 ExecuteCreate(arguments, createArgument);
             }
             else if (isDelete)
             {
+                // pot -d <pot-name>
                 ExecuteDelete(deleteArgument);
             }
             else
@@ -60,9 +67,15 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
                 bool hasArguments = arguments.Values.Any();
 
                 if (hasArguments)
+                {
+                    // pot <pot-name>
                     ExecuteDisplayOne(arguments);
+                }
                 else
+                {
+                    // pot
                     ExecuteDisplayAll();
+                }
             }
         }
 
@@ -70,8 +83,8 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
         {
             Argument pathArgument = arguments.Values.FirstOrDefault(x => string.Equals(x.Name, "p", StringComparison.InvariantCultureIgnoreCase));
 
-            if (pathArgument == null)
-                throw new Exception("Path must be provided");
+            if (pathArgument.IsEmpty)
+                throw new Exception("Path must be provided.");
 
             CreatePotRequest request = new CreatePotRequest
             {

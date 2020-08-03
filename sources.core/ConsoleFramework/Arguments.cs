@@ -23,9 +23,10 @@ namespace DustInTheWind.ConsoleFramework
         public string Command { get; }
 
         public List<Argument> Values { get; } = new List<Argument>();
+
         public int Count => Values.Count;
 
-        public string this[int index] => Values[index]?.Value ?? Values[index]?.Name;
+        public string this[int index] => Values[index].Value ?? Values[index].Name;
 
         public Arguments(IReadOnlyList<string> args)
         {
@@ -54,15 +55,15 @@ namespace DustInTheWind.ConsoleFramework
                 }
                 else
                 {
-                    if (previousName != null)
+                    if (previousName == null)
+                    {
+                        Values.Add(new Argument(null, arg));
+                    }
+                    else
                     {
                         Values.Add(new Argument(previousName, arg));
 
                         previousName = null;
-                    }
-                    else
-                    {
-                        Values.Add(new Argument(arg, null));
                     }
                 }
             }
