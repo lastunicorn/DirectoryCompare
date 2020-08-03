@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools;
+using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI
@@ -33,15 +34,28 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI
             if (pot == null)
                 return;
 
-            string guid = pot.Guid.ToString().Substring(0, 8);
+            string guid = pot.Guid.ToString();
             CustomConsole.Write("GUID: ");
             CustomConsole.WriteLineEmphasies(guid);
-            
+
             CustomConsole.Write("Name: ");
             CustomConsole.WriteLineEmphasies(pot.Name);
-            
+
             CustomConsole.Write("Path: ");
             CustomConsole.WriteLineEmphasies(pot.Path);
+
+            if (pot.Shapshots != null && pot.Shapshots.Count > 0)
+            {
+                CustomConsole.WriteLine("Snapshots: ");
+
+                foreach (Snapshot snapshot in pot.Shapshots)
+                    CustomConsole.WriteLineEmphasies("  - " + snapshot.CreationTime);
+            }
+            else
+            {
+                CustomConsole.Write("Snapshots: ");
+                CustomConsole.WriteLineEmphasies("<none>");
+            }
         }
     }
 }

@@ -40,6 +40,22 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
             return new FileStream(snapshotFilePath, FileMode.CreateNew);
         }
 
+        public IEnumerable<Snapshot> GetByPot(string potName)
+        {
+            string snapshotsDirectoryPath = GetSnapshotsDirectoryPath(potName);
+
+            if (!Directory.Exists(snapshotsDirectoryPath))
+                return Enumerable.Empty<Snapshot>();
+
+            return Directory.GetFiles(snapshotsDirectoryPath)
+                .OrderByDescending(x => x)
+                .Select(x =>
+                {
+                    JsonSnapshotFile file = JsonSnapshotFile.Load(x);
+                    return file.Snapshot;
+                });
+        }
+
         public Snapshot GetByIndex(string potName, int index = 0)
         {
             string snapshotsDirectoryPath = GetSnapshotsDirectoryPath(potName);

@@ -24,7 +24,9 @@ namespace DustInTheWind.DirectoryCompare.Domain.DataAccess
     public interface ISnapshotRepository
     {
         Stream CreateStream(string potName);
-        
+
+        IEnumerable<Snapshot> GetByPot(string potName);
+
         Snapshot GetByIndex(string potName, int index);
         
         Snapshot GetLast(string potName);

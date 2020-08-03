@@ -15,6 +15,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections.Generic;
+using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 
 namespace DustInTheWind.DirectoryCompare.Domain.PotModel
@@ -22,7 +24,11 @@ namespace DustInTheWind.DirectoryCompare.Domain.PotModel
     public class Pot
     {
         public Guid Guid { get; set; }
+
         public string Name { get; set; }
+
         public DiskPath Path { get; set; }
+
+        public List<Snapshot> Shapshots { get; set; }
     }
 }
