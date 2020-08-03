@@ -2,7 +2,7 @@
   "profiles": {
     "DirectoryCompare.Cli": {
       "commandName": "Project",
-      "commandLineArgs": "snapshot -c -p test3"
+      "commandLineArgs": "snapshot -d \"test3~2020-08-03 17:16:50\""
     }
   }
 }

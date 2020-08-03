@@ -19,6 +19,7 @@ using System.Linq;
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.DirectoryCompare.Application;
 using DustInTheWind.DirectoryCompare.Application.CreateSnapshot;
+using DustInTheWind.DirectoryCompare.Application.DeleteSnapshot;
 using DustInTheWind.DirectoryCompare.Application.GetSnapshot;
 using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
@@ -92,9 +93,14 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
             return potArgument.Value;
         }
 
-        private static void ExecuteDelete(Arguments arguments, Argument deleteArgument)
+        private void ExecuteDelete(Arguments arguments, Argument deleteArgument)
         {
-            throw new NotImplementedException();
+            DeleteSnapshotRequest request = new DeleteSnapshotRequest
+            {
+                Location = deleteArgument.Value
+            };
+
+            requestBus.PlaceRequest(request).Wait();
         }
 
         private void ExecuteDisplay(Arguments arguments)
@@ -107,13 +113,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
             }
             else
             {
-
-                Argument potArgument = arguments.Values.FirstOrDefault(x => string.Equals(x.Name, "p", StringComparison.InvariantCultureIgnoreCase));
-
-                if (potArgument.IsEmpty)
-                    throw new Exception("Pot name must be provided.");
-
-                snapshotLocation = potArgument.Value;
+                throw new Exception("Snapshot path must be provided.");
             }
 
             GetSnapshotRequest request = new GetSnapshotRequest

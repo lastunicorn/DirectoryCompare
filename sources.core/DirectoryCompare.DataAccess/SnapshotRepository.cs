@@ -66,7 +66,7 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
             string snapshotsDirectoryPath = GetSnapshotsDirectoryPath(potName);
 
             return Directory.GetFiles(snapshotsDirectoryPath)
-                .Where(x => x.StartsWith(searchedFileName))
+                .Where(x => Path.GetFileName(x).StartsWith(searchedFileName))
                 .Select(x =>
                 {
                     JsonSnapshotFile file = JsonSnapshotFile.Load(x);
@@ -76,11 +76,11 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
 
         public Snapshot GetByExactDateTime(string potName, DateTime dateTime)
         {
-            string searchedFileName = dateTime.ToString("yyyy MM dd HHmmss");
+            string searchedFileName = dateTime.ToString("yyyy MM dd HHmmss") + ".json";
             string snapshotsDirectoryPath = GetSnapshotsDirectoryPath(potName);
 
             return Directory.GetFiles(snapshotsDirectoryPath)
-                .Where(x => x == searchedFileName)
+                .Where(x => Path.GetFileName(x) == searchedFileName)
                 .Select(x =>
                 {
                     JsonSnapshotFile file = JsonSnapshotFile.Load(x);
@@ -103,6 +103,58 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
             };
 
             jsonSnapshotFile.Save(snapshotFilePath);
+        }
+
+        public void DeleteByIndex(string potName, int index = 0)
+        {
+            string snapshotsDirectoryPath = GetSnapshotsDirectoryPath(potName);
+
+            string snapshotFileName = Directory.GetFiles(snapshotsDirectoryPath)
+                .OrderByDescending(x => x)
+                .Skip(index)
+                .FirstOrDefault();
+
+            if (snapshotFileName != null)
+                File.Delete(snapshotFileName);
+        }
+
+        public void DeleteLast(string potName)
+        {
+            DeleteByIndex(potName);
+        }
+
+        public bool DeleteSingleByDate(string potName, DateTime dateTime)
+        {
+            string searchedFileName = dateTime.ToString("yyyy MM dd");
+            string snapshotsDirectoryPath = GetSnapshotsDirectoryPath(potName);
+
+            List<string> snapshotFileNames = Directory.GetFiles(snapshotsDirectoryPath)
+                .Where(x => Path.GetFileName(x).StartsWith(searchedFileName))
+                .ToList();
+
+            if (snapshotFileNames.Count == 0)
+                return false;
+
+            if (snapshotFileNames.Count > 1)
+                throw new Exception($"There are multiple snapshots that match the specified date. Pot = {potName}; Date = {dateTime}");
+
+            File.Delete(snapshotFileNames.First());
+            return true;
+        }
+
+        public bool DeleteByExactDateTime(string potName, DateTime dateTime)
+        {
+            string searchedFileName = dateTime.ToString("yyyy MM dd HHmmss") + ".json";
+            string snapshotsDirectoryPath = GetSnapshotsDirectoryPath(potName);
+
+            string snapshotFileName = Directory.GetFiles(snapshotsDirectoryPath)
+                .FirstOrDefault(x => Path.GetFileName(x) == searchedFileName);
+
+            if (snapshotFileName == null)
+                return false;
+
+            File.Delete(snapshotFileName);
+            return true;
         }
 
         private static string GetSnapshotsDirectoryPath(string potName)
