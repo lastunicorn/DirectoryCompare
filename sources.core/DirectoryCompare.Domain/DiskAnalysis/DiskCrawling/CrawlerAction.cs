@@ -14,16 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-
-namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
+namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis.DiskCrawling
 {
-    public interface IDiskAnalyzer
+    internal enum CrawlerAction
     {
-        event EventHandler<ErrorEncounteredEventArgs> ErrorEncountered;
-        event EventHandler<DiskReaderStartingEventArgs> Starting;
-        IProgress<float> ProgressIndicator { get; set; }
-
-        void Run();
+        DirectoryOpened,
+        DirectoryClosed,
+        FileFound,
+        Error
     }
 }

@@ -30,16 +30,14 @@ namespace DustInTheWind.DirectoryCompare.Application.CreateSnapshot
     public class CreateSnapshotRequestHandler : RequestHandler<CreateSnapshotRequest, SnapshotProgress>
     {
         private readonly IProjectLogger logger;
-        private readonly IDiskAnalyzerFactory diskAnalyzerFactory;
         private readonly IPotRepository potRepository;
         private readonly IBlackListRepository blackListRepository;
         private readonly ISnapshotRepository snapshotRepository;
 
-        public CreateSnapshotRequestHandler(IProjectLogger logger, IDiskAnalyzerFactory diskAnalyzerFactory,
-            IPotRepository potRepository, IBlackListRepository blackListRepository, ISnapshotRepository snapshotRepository)
+        public CreateSnapshotRequestHandler(IProjectLogger logger, IPotRepository potRepository,
+            IBlackListRepository blackListRepository, ISnapshotRepository snapshotRepository)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            this.diskAnalyzerFactory = diskAnalyzerFactory ?? throw new ArgumentNullException(nameof(diskAnalyzerFactory));
             this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
             this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
             this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
@@ -52,38 +50,44 @@ namespace DustInTheWind.DirectoryCompare.Application.CreateSnapshot
             if (pot == null)
                 throw new PotDoesNotExistException(request.PotName);
 
-            logger.Info("Scanning path: {0}", pot.Path);
+            return StartAnalysis(pot);
+        }
 
+        private SnapshotProgress StartAnalysis(Pot pot)
+        {
             SnapshotProgress snapshotProgress = new SnapshotProgress();
 
-            Task.Run(() =>
-            {
-                using (Stream stream = snapshotRepository.CreateStream(pot.Name))
-                using (StreamWriter streamWriter = new StreamWriter(stream))
-                {
-                    AnalysisRequest analysisRequest = new AnalysisRequest
-                    {
-                        RootPath = pot.Path,
-                        BlackList = blackListRepository.Get(pot.Name)
-                    };
-                    JsonAnalysisExport jsonAnalysisExport = new JsonAnalysisExport(streamWriter);
-                    IDiskAnalyzer diskAnalyzer = diskAnalyzerFactory.Create(analysisRequest, jsonAnalysisExport);
-                    IProgress<float> progress = new Progress<float>(value => snapshotProgress.ReportProgress(value));
-                    diskAnalyzer.ProgressIndicator = progress;
-                    diskAnalyzer.Starting += HandleDiskReaderStarting;
-                    diskAnalyzer.ErrorEncountered += HandleDiskReaderErrorEncountered;
-
-                    Stopwatch stopwatch = Stopwatch.StartNew();
-                    diskAnalyzer.Run();
-                    stopwatch.Stop();
-
-                    snapshotProgress.ReportEnd();
-
-                    logger.Info("Finished scanning path in {0}", stopwatch.Elapsed);
-                }
-            });
+            Task.Run(() => { RunAnalysis(pot, snapshotProgress); });
 
             return snapshotProgress;
+        }
+
+        private void RunAnalysis(Pot pot, SnapshotProgress snapshotProgress)
+        {
+            logger.Info("Scanning path: {0}", pot.Path);
+
+            using (Stream stream = snapshotRepository.CreateStream(pot.Name))
+            using (StreamWriter streamWriter = new StreamWriter(stream))
+            {
+                DiskAnalysis diskAnalysis = new DiskAnalysis
+                {
+                    RootPath = pot.Path,
+                    AnalysisExport = new JsonAnalysisExport(streamWriter),
+                    BlackList = blackListRepository.Get(pot.Name)
+                };
+                IProgress<float> progress = new Progress<float>(snapshotProgress.ReportProgress);
+                diskAnalysis.ProgressIndicator = progress;
+                diskAnalysis.Starting += HandleDiskReaderStarting;
+                diskAnalysis.ErrorEncountered += HandleDiskReaderErrorEncountered;
+
+                Stopwatch stopwatch = Stopwatch.StartNew();
+                diskAnalysis.Run();
+                stopwatch.Stop();
+
+                snapshotProgress.ReportEnd();
+
+                logger.Info("Finished scanning path in {0}", stopwatch.Elapsed);
+            }
         }
 
         private void HandleDiskReaderStarting(object sender, DiskReaderStartingEventArgs e)

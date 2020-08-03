@@ -15,9 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.DataAccess;
-using DustInTheWind.DirectoryCompare.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
-using DustInTheWind.DirectoryCompare.Domain.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Domain.Logging;
 using DustInTheWind.DirectoryCompare.Logging;
 using Ninject;
@@ -34,7 +32,6 @@ namespace DustInTheWind.DirectoryCompare.Cli.Setup
             kernel.Bind<IPotRepository>().To<PotRepository>();
             kernel.Bind<IBlackListRepository>().To<BlackListRepository>();
             kernel.Bind<ISnapshotRepository>().To<SnapshotRepository>();
-            kernel.Bind<IDiskAnalyzerFactory>().To<DiskAnalyzerFactory>().InSingletonScope();
 
             return kernel;
         }

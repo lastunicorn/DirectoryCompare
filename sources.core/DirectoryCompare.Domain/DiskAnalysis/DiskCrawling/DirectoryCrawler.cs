@@ -18,16 +18,21 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 
-namespace DustInTheWind.DirectoryCompare.DiskAnalysis.DiskCrawling
+namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis.DiskCrawling
 {
-    internal class DiskCrawler : IEnumerable<CrawlerStep>
+    internal class DirectoryCrawler : IEnumerable<CrawlerStep>
     {
         private readonly string path;
         private readonly PathCollection blackList;
 
-        public DiskCrawler(string path, PathCollection blackList)
+        private string[] filePaths;
+        private string[] directoryPaths;
+        private Exception exception;
+
+        public DirectoryCrawler(string path, PathCollection blackList)
         {
             this.path = path ?? throw new ArgumentNullException(nameof(path));
             this.blackList = blackList ?? throw new ArgumentNullException(nameof(blackList));
@@ -35,17 +40,49 @@ namespace DustInTheWind.DirectoryCompare.DiskAnalysis.DiskCrawling
 
         public IEnumerator<CrawlerStep> GetEnumerator()
         {
-            if (!Directory.Exists(path))
+            OpenDirectory();
+
+            if (exception != null)
             {
-                Exception exception = new Exception($"The path '{path}' does not exist.");
                 yield return CrawlerStep.Error(exception, path);
             }
             else
             {
-                DirectoryCrawler directoryCrawler = new DirectoryCrawler(path, blackList);
+                yield return CrawlerStep.DirectoryOpened(path, filePaths.Length, directoryPaths.Length);
 
-                foreach (CrawlerStep crawlerStep in directoryCrawler)
+                foreach (string filePath in filePaths)
+                    yield return CrawlerStep.FileFound(filePath);
+
+                IEnumerable<CrawlerStep> steps = directoryPaths
+                    .Select(x => new DirectoryCrawler(x, blackList))
+                    .SelectMany(x => x);
+
+                foreach (CrawlerStep crawlerStep in steps)
                     yield return crawlerStep;
+
+                yield return CrawlerStep.DirectoryClosed(path);
+            }
+        }
+
+        private void OpenDirectory()
+        {
+            filePaths = null;
+            directoryPaths = null;
+            exception = null;
+
+            try
+            {
+                filePaths = Directory.GetFiles(path)
+                    .Where(x => !blackList.Contains(x))
+                    .ToArray();
+
+                directoryPaths = Directory.GetDirectories(path)
+                    .Where(x => !blackList.Contains(x))
+                    .ToArray();
+            }
+            catch (Exception ex)
+            {
+                exception = ex;
             }
         }
 

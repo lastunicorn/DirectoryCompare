@@ -17,14 +17,13 @@
 using System;
 using System.IO;
 using System.Security.Cryptography;
-using DustInTheWind.DirectoryCompare.DiskAnalysis.DiskCrawling;
-using DustInTheWind.DirectoryCompare.Domain.DiskAnalysis;
+using DustInTheWind.DirectoryCompare.Domain.DiskAnalysis.DiskCrawling;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 
-namespace DustInTheWind.DirectoryCompare.DiskAnalysis
+namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
 {
-    public sealed class DiskAnalyzer : IDiskAnalyzer, IDisposable
+    public sealed class DiskAnalysis : IDisposable
     {
         private readonly MD5 md5;
         private string rootPath;
@@ -46,7 +45,7 @@ namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 
         public IProgress<float> ProgressIndicator { get; set; }
 
-        public DiskAnalyzer()
+        public DiskAnalysis()
         {
             md5 = MD5.Create();
         }

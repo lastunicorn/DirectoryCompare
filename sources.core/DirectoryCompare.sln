@@ -1,15 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26124.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29926.136
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.Application", "DirectoryCompare.Application\DirectoryCompare.Application.csproj", "{44F2CA03-CBFA-4DE8-A0C0-1A0801BC462E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.DataAccess", "DirectoryCompare.DataAccess\DirectoryCompare.DataAccess.csproj", "{258D4B7B-1A21-4A15-9BF9-B2B05CC96EB7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.Domain", "DirectoryCompare.Domain\DirectoryCompare.Domain.csproj", "{C73C24C9-AF10-4D5E-958E-6F9B1E31FF55}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.DiskAnalysis", "DirectoryCompare.DiskAnalysis\DirectoryCompare.DiskAnalysis.csproj", "{DF4CD735-6648-4EDC-A589-E81C36E75700}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleFramework", "ConsoleFramework\ConsoleFramework.csproj", "{D695AF7C-AD67-433B-9C7D-CD541A1A0B74}"
 EndProject
@@ -29,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.JsonHashes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.Infrastructure", "DirectoryCompare.Infrastructure\DirectoryCompare.Infrastructure.csproj", "{21DFC865-34C1-4ECD-9D79-3F33F555E4D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.Logging", "DirectoryCompare.Logging\DirectoryCompare.Logging.csproj", "{1B780968-B6A7-4849-A36A-86D9A0EBA5B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.Logging", "DirectoryCompare.Logging\DirectoryCompare.Logging.csproj", "{1B780968-B6A7-4849-A36A-86D9A0EBA5B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,18 +75,6 @@ Global
 		{C73C24C9-AF10-4D5E-958E-6F9B1E31FF55}.Release|x64.Build.0 = Release|Any CPU
 		{C73C24C9-AF10-4D5E-958E-6F9B1E31FF55}.Release|x86.ActiveCfg = Release|Any CPU
 		{C73C24C9-AF10-4D5E-958E-6F9B1E31FF55}.Release|x86.Build.0 = Release|Any CPU
-		{DF4CD735-6648-4EDC-A589-E81C36E75700}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DF4CD735-6648-4EDC-A589-E81C36E75700}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DF4CD735-6648-4EDC-A589-E81C36E75700}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{DF4CD735-6648-4EDC-A589-E81C36E75700}.Debug|x64.Build.0 = Debug|Any CPU
-		{DF4CD735-6648-4EDC-A589-E81C36E75700}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{DF4CD735-6648-4EDC-A589-E81C36E75700}.Debug|x86.Build.0 = Debug|Any CPU
-		{DF4CD735-6648-4EDC-A589-E81C36E75700}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DF4CD735-6648-4EDC-A589-E81C36E75700}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DF4CD735-6648-4EDC-A589-E81C36E75700}.Release|x64.ActiveCfg = Release|Any CPU
-		{DF4CD735-6648-4EDC-A589-E81C36E75700}.Release|x64.Build.0 = Release|Any CPU
-		{DF4CD735-6648-4EDC-A589-E81C36E75700}.Release|x86.ActiveCfg = Release|Any CPU
-		{DF4CD735-6648-4EDC-A589-E81C36E75700}.Release|x86.Build.0 = Release|Any CPU
 		{D695AF7C-AD67-433B-9C7D-CD541A1A0B74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D695AF7C-AD67-433B-9C7D-CD541A1A0B74}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D695AF7C-AD67-433B-9C7D-CD541A1A0B74}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -181,7 +167,6 @@ Global
 		{44F2CA03-CBFA-4DE8-A0C0-1A0801BC462E} = {52A15438-167C-4E52-B2D5-591109C38ECC}
 		{258D4B7B-1A21-4A15-9BF9-B2B05CC96EB7} = {88D27769-CFD0-417C-96BB-64A05415B47C}
 		{C73C24C9-AF10-4D5E-958E-6F9B1E31FF55} = {52A15438-167C-4E52-B2D5-591109C38ECC}
-		{DF4CD735-6648-4EDC-A589-E81C36E75700} = {52A15438-167C-4E52-B2D5-591109C38ECC}
 		{F4445650-0D0C-43F2-A113-FA5A38093F62} = {2CABD000-FEDF-4858-B3E1-51ADF6F56C1D}
 		{0609FA89-0257-4103-A74D-EAAA90340CAE} = {2CABD000-FEDF-4858-B3E1-51ADF6F56C1D}
 		{BCF65B3C-360A-44F8-AB0F-6EEB83A0545E} = {52A15438-167C-4E52-B2D5-591109C38ECC}
