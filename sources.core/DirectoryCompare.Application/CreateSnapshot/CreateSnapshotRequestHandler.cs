@@ -75,10 +75,10 @@ namespace DustInTheWind.DirectoryCompare.Application.CreateSnapshot
                     AnalysisExport = new JsonAnalysisExport(streamWriter),
                     BlackList = blackListRepository.Get(pot.Name)
                 };
-                IProgress<float> progress = new Progress<float>(snapshotProgress.ReportProgress);
-                diskAnalysis.ProgressIndicator = progress;
+
                 diskAnalysis.Starting += HandleDiskReaderStarting;
                 diskAnalysis.ErrorEncountered += HandleDiskReaderErrorEncountered;
+                diskAnalysis.Progress += (sender, args) => snapshotProgress.ReportProgress(args.Percentage);
 
                 Stopwatch stopwatch = Stopwatch.StartNew();
                 diskAnalysis.Run();

@@ -25,6 +25,7 @@ namespace DustInTheWind.DirectoryCompare.Domain
         public string PotName { get; }
 
         public int? SnapshotIndex { get; }
+
         public DateTime? SnapshotDate { get; }
 
         public string InternalPath { get; }

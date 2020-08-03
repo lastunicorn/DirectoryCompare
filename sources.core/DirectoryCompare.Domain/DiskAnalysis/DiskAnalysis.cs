@@ -42,8 +42,7 @@ namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
 
         public event EventHandler<ErrorEncounteredEventArgs> ErrorEncountered;
         public event EventHandler<DiskReaderStartingEventArgs> Starting;
-
-        public IProgress<float> ProgressIndicator { get; set; }
+        public event EventHandler<DiskAnalysisProgressEventArgs> Progress;
 
         public DiskAnalysis()
         {
@@ -165,9 +164,12 @@ namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
 
                     hFile.Size = size;
                     readSize += size;
-                    
+
                     if (totalSize > 0)
-                        ProgressIndicator?.Report(readSize * 100 / totalSize);
+                    {
+                        long percentage = readSize * 100 / totalSize;
+                        OnProgress(new DiskAnalysisProgressEventArgs(percentage));
+                    }
                 }
             }
             catch (Exception ex)
@@ -205,6 +207,11 @@ namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
         private void OnStarting(DiskReaderStartingEventArgs e)
         {
             Starting?.Invoke(this, e);
+        }
+
+        private void OnProgress(DiskAnalysisProgressEventArgs e)
+        {
+            Progress?.Invoke(this, e);
         }
     }
 }
