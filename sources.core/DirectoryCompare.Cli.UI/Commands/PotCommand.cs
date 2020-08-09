@@ -46,10 +46,10 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
             // pot -c <pot-name> -p <target-path>   - Creates a new pot.
             // pot -d <pot-name>                    - Deletes the pot with the specified name.
 
-            Argument createArgument = arguments.Values.FirstOrDefault(x => string.Equals(x.Name, "c", StringComparison.InvariantCultureIgnoreCase));
+            Argument createArgument = arguments["c"];
             bool isCreate = !createArgument.IsEmpty;
 
-            Argument deleteArgument = arguments.Values.FirstOrDefault(x => string.Equals(x.Name, "d", StringComparison.InvariantCultureIgnoreCase));
+            Argument deleteArgument = arguments["d"];
             bool isDelete = !deleteArgument.IsEmpty;
 
             if (isCreate)
@@ -81,7 +81,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 
         private void ExecuteCreate(Arguments arguments, Argument createArgument)
         {
-            Argument pathArgument = arguments.Values.FirstOrDefault(x => string.Equals(x.Name, "p", StringComparison.InvariantCultureIgnoreCase));
+            Argument pathArgument = arguments["p"];
 
             if (pathArgument.IsEmpty)
                 throw new Exception("Path must be provided.");
@@ -109,7 +109,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
         {
             GetPotRequest request = new GetPotRequest
             {
-                PotName = arguments[0]
+                PotName = arguments.GetStringValue(0)
             };
             Pot pot = requestBus.PlaceRequest<GetPotRequest, Pot>(request).Result;
 

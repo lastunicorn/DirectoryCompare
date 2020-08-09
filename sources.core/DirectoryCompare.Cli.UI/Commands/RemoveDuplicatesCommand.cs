@@ -46,11 +46,11 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
             if (arguments.Count < 3)
                 throw new Exception("Invalid command parameters.");
 
-            SnapshotLocation snapshotLeft = arguments[0];
-            SnapshotLocation snapshotRight = arguments[1];
-            ComparisonSide fileToRemove = (ComparisonSide)Enum.Parse(typeof(ComparisonSide), arguments[2]);
+            SnapshotLocation snapshotLeft = arguments.GetStringValue(0);
+            SnapshotLocation snapshotRight = arguments.GetStringValue(1);
+            ComparisonSide fileToRemove = (ComparisonSide)Enum.Parse(typeof(ComparisonSide), arguments.GetStringValue(2));
             string destinationDirectory = arguments.Count >= 4
-                ? arguments[3]
+                ? arguments.GetStringValue(3)
                 : null;
 
             return new RemoveDuplicatesRequest

@@ -42,8 +42,8 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
         {
             return new ImportSnapshotRequest
             {
-                FilePath = arguments[0],
-                PotName = arguments[1]
+                FilePath = arguments.GetStringValue(0),
+                PotName = arguments.GetStringValue(1)
             };
         }
     }

@@ -40,7 +40,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
             if (arguments.Count == 0)
                 throw new Exception("No action is specified for the black-list command.");
 
-            switch (arguments[0])
+            switch (arguments.GetStringValue(0))
             {
                 case "get":
                     DisplayBlackList(arguments);
@@ -64,7 +64,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
         {
             GetBlackListRequest request = new GetBlackListRequest
             {
-                PotName = arguments[1]
+                PotName = arguments.GetStringValue(1)
             };
 
             PathCollection blackList = requestBus.PlaceRequest<GetBlackListRequest, PathCollection>(request).Result;
@@ -77,8 +77,8 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
         {
             AddBlackListRequest request = new AddBlackListRequest
             {
-                PotName = arguments[1],
-                Path = arguments[2]
+                PotName = arguments.GetStringValue(1),
+                Path = arguments.GetStringValue(2)
             };
             requestBus.PlaceRequest(request).Wait();
         }
@@ -87,8 +87,8 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
         {
             RemoveBlackListRequest request = new RemoveBlackListRequest
             {
-                PotName = arguments[1],
-                Path = arguments[2]
+                PotName = arguments.GetStringValue(1),
+                Path = arguments.GetStringValue(2)
             };
             requestBus.PlaceRequest(request).Wait();
         }

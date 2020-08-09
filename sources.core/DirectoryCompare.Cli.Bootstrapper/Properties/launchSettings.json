@@ -2,7 +2,7 @@
   "profiles": {
     "DirectoryCompare.Cli": {
       "commandName": "Project",
-      "commandLineArgs": "pot test2"
+      "commandLineArgs": "find-duplicates \"test2>delme\""
     }
   }
 }

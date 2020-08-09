@@ -14,7 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DustInTheWind.ConsoleFramework
 {
@@ -26,7 +28,18 @@ namespace DustInTheWind.ConsoleFramework
 
         public int Count => Values.Count;
 
-        public string this[int index] => Values[index].Value ?? Values[index].Name;
+        public Argument this[int index]
+        {
+            get
+            {
+                if (index < 0 || index >= Values.Count)
+                    return Argument.Empty;
+
+                return Values[index];
+            }
+        }
+
+        public Argument this[string name] => Values.FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.InvariantCulture));
 
         public Arguments(IReadOnlyList<string> args)
         {
@@ -35,38 +48,56 @@ namespace DustInTheWind.ConsoleFramework
 
             Command = args[0];
 
-            string previousName = null;
+            ArgumentsEnumerator argumentsEnumerator = new ArgumentsEnumerator(args.Skip(1));
 
-            for (int i = 1; i < args.Count; i++)
+            while (argumentsEnumerator.MoveNext())
             {
-                string arg = args[i];
-
-                if (arg == null)
-                    continue;
-
-                bool isNewArgument = arg.StartsWith("-");
-
-                if (isNewArgument)
-                {
-                    if (previousName != null)
-                        Values.Add(new Argument(previousName, null));
-
-                    previousName = arg.TrimStart('-');
-                }
-                else
-                {
-                    if (previousName == null)
-                    {
-                        Values.Add(new Argument(null, arg));
-                    }
-                    else
-                    {
-                        Values.Add(new Argument(previousName, arg));
-
-                        previousName = null;
-                    }
-                }
+                Values.Add(argumentsEnumerator.Current);
             }
+        }
+
+        public IEnumerable<Argument> GetAnonymousArguments()
+        {
+            return Values.Where(x => x.Name == null);
+        }
+
+        public string GetStringValue(string name)
+        {
+            Argument argument = Values.FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.InvariantCulture));
+
+            if (argument.IsEmpty)
+                return null;
+
+            return argument.Value ?? argument.Name;
+        }
+
+        public string GetStringValue(int index)
+        {
+            if (index < 0 || index >= Values.Count)
+                return null;
+
+            Argument argument = Values[index];
+
+            if (argument.IsEmpty)
+                return null;
+
+            return argument.Value ?? argument.Name;
+        }
+
+        public bool GetBoolValue(int index)
+        {
+            if (index < 0 || index >= Values.Count)
+                return false;
+
+            Argument argument = Values[index];
+
+            return !argument.IsEmpty;
+        }
+
+        public bool GetBoolValue(string name)
+        {
+            Argument argument = Values.FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.InvariantCulture));
+            return !argument.IsEmpty;
         }
     }
 }

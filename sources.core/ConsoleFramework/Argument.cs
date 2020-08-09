@@ -18,6 +18,8 @@ namespace DustInTheWind.ConsoleFramework
 {
     public struct Argument
     {
+        public static Argument Empty { get; } = new Argument(null, null);
+
         public string Name { get; }
 
         public string Value { get; }
@@ -25,7 +27,7 @@ namespace DustInTheWind.ConsoleFramework
         public bool IsEmpty => Name == null && Value == null;
 
         public bool HasName => !string.IsNullOrEmpty(Name);
-
+        
         public Argument(string value)
             : this(null, value)
         {

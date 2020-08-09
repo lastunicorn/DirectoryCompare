@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Linq;
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.DirectoryCompare.Application;
 using DustInTheWind.DirectoryCompare.Application.FindDuplicates;
@@ -44,45 +45,24 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
             if (arguments.Count == 0)
                 throw new Exception("Invalid command parameters.");
 
-            string right;
-            bool checkFilesExist;
+            Argument[] anonymousArguments = arguments.GetAnonymousArguments().ToArray();
 
-            switch (arguments.Count)
-            {
-                case 1:
-                    right = null;
-                    checkFilesExist = false;
-                    break;
+            if (anonymousArguments.Length == 0)
+                throw new Exception("Invalid command parameters.");
 
-                case 2:
-                    bool success = bool.TryParse(arguments[1], out checkFilesExist);
+            string left = anonymousArguments.Length >= 1
+                ? anonymousArguments[0].Value
+                : null;
 
-                    if (success)
-                    {
-                        right = null;
-                    }
-                    else
-                    {
-                        right = arguments[1];
-                        checkFilesExist = false;
-                    }
+            string right = anonymousArguments.Length >= 2
+                ? anonymousArguments[1].Value
+                : null;
 
-                    break;
-
-                case 3:
-                    right = arguments[1];
-                    bool.TryParse(arguments[2], out checkFilesExist);
-                    break;
-
-                default:
-                    right = arguments[1];
-                    bool.TryParse(arguments[2], out checkFilesExist);
-                    break;
-            }
+            bool checkFilesExist = arguments.GetBoolValue("x");
 
             return new FindDuplicatesRequest
             {
-                SnapshotLeft = arguments[0],
+                SnapshotLeft = left,
                 SnapshotRight = right,
                 Exporter = new ConsoleDuplicatesExporter(),
                 CheckFilesExist = checkFilesExist

@@ -43,7 +43,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 
             if (exportToFile)
             {
-                FileComparisonExporter exporter = new FileComparisonExporter { ResultsDirectory = arguments[2] };
+                FileComparisonExporter exporter = new FileComparisonExporter { ResultsDirectory = arguments.GetStringValue(2) };
                 exporter.Export(snapshotComparer);
             }
             else
@@ -57,8 +57,8 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
         {
             return new CompareSnapshotsRequest
             {
-                PotName1 = arguments[0],
-                PotName2 = arguments[1]
+                PotName1 = arguments.GetStringValue(0),
+                PotName2 = arguments.GetStringValue(1)
             };
         }
     }

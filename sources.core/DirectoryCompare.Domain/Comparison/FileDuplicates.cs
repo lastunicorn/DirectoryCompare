@@ -19,6 +19,7 @@ using DustInTheWind.DirectoryCompare.Domain.Entities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace DustInTheWind.DirectoryCompare.Domain.Comparison
@@ -121,7 +122,15 @@ namespace DustInTheWind.DirectoryCompare.Domain.Comparison
             IEnumerable<HFile> filesQuery = snapshot.EnumerateFiles();
 
             if (snapshotLocation.InternalPath != null)
-                filesQuery = filesQuery.Where(x => x.GetPath().StartsWith(snapshotLocation.InternalPath));
+                filesQuery = filesQuery.Where(x =>
+                {
+                    string internalPath = snapshotLocation.InternalPath;
+
+                    if (!internalPath.StartsWith(Path.DirectorySeparatorChar))
+                        internalPath = Path.DirectorySeparatorChar + internalPath;
+
+                    return x.GetPath().StartsWith(internalPath);
+                });
 
             return filesQuery.ToList();
         }

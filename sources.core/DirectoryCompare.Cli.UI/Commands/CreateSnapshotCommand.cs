@@ -49,7 +49,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
         {
             return new CreateSnapshotRequest
             {
-                PotName = arguments[0]
+                PotName = arguments.GetStringValue(0)
             };
         }
     }
