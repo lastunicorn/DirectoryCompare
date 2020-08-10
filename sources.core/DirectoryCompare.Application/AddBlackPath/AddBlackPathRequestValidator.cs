@@ -14,24 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using DustInTheWind.DirectoryCompare.Domain.DataAccess;
-using MediatR;
+using FluentValidation;
 
-namespace DustInTheWind.DirectoryCompare.Application.AddBlackList
+namespace DustInTheWind.DirectoryCompare.Application.AddBlackPath
 {
-    public class AddBlackListRequestHandler : RequestHandler<AddBlackListRequest>
+    public class AddBlackPathRequestValidator : AbstractValidator<AddBlackPathRequest>
     {
-        private readonly IBlackListRepository blackListRepository;
-
-        public AddBlackListRequestHandler(IBlackListRepository blackListRepository)
+        public AddBlackPathRequestValidator()
         {
-            this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
-        }
-
-        protected override void Handle(AddBlackListRequest request)
-        {
-            blackListRepository.Add(request.PotName, request.Path);
+            RuleFor(x => x.PotName).NotEmpty();
+            RuleFor(x => x.Path).NotEmpty();
         }
     }
 }

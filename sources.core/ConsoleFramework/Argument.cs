@@ -27,7 +27,9 @@ namespace DustInTheWind.ConsoleFramework
         public bool IsEmpty => Name == null && Value == null;
 
         public bool HasName => !string.IsNullOrEmpty(Name);
-        
+
+        public bool HasValue => Value != null;
+
         public Argument(string value)
             : this(null, value)
         {

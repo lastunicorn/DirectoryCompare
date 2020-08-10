@@ -18,20 +18,20 @@ using System;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.RemoveBlackList
+namespace DustInTheWind.DirectoryCompare.Application.AddBlackPath
 {
-    public class RemoveBlackListRequestHandler : RequestHandler<RemoveBlackListRequest>
+    public class AddBlackPathRequestHandler : RequestHandler<AddBlackPathRequest>
     {
         private readonly IBlackListRepository blackListRepository;
 
-        public RemoveBlackListRequestHandler(IBlackListRepository blackListRepository)
+        public AddBlackPathRequestHandler(IBlackListRepository blackListRepository)
         {
             this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
         }
 
-        protected override void Handle(RemoveBlackListRequest request)
+        protected override void Handle(AddBlackPathRequest request)
         {
-            blackListRepository.Delete(request.PotName, request.Path);
+            blackListRepository.Add(request.PotName, request.Path);
         }
     }
 }

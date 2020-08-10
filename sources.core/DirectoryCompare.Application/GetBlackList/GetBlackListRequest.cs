@@ -19,8 +19,10 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.GetBlackList
 {
-    public class GetBlackListRequest : IRequest, IRequest<PathCollection>
+    public class GetBlackListRequest : IRequest<PathCollection>
     {
         public string PotName { get; set; }
+
+        public string BlackList { get; set; }
     }
 }

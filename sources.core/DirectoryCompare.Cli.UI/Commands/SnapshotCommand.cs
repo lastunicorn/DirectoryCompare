@@ -15,7 +15,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Linq;
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.DirectoryCompare.Application;
 using DustInTheWind.DirectoryCompare.Application.CreateSnapshot;
@@ -39,10 +38,10 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 
         public void Execute(Arguments arguments)
         {
-            Argument createArgument = arguments.Values.FirstOrDefault(x => string.Equals(x.Name, "c", StringComparison.InvariantCultureIgnoreCase));
+            Argument createArgument = arguments["c"];
             bool isCreate = !createArgument.IsEmpty;
 
-            Argument deleteArgument = arguments.Values.FirstOrDefault(x => string.Equals(x.Name, "d", StringComparison.InvariantCultureIgnoreCase));
+            Argument deleteArgument = arguments["d"];
             bool isDelete = !deleteArgument.IsEmpty;
 
             if (isCreate)
@@ -85,7 +84,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
             if (!string.IsNullOrEmpty(createArgument.Value))
                 return createArgument.Value;
 
-            Argument potArgument = arguments.Values.FirstOrDefault(x => string.Equals(x.Name, "p", StringComparison.InvariantCultureIgnoreCase));
+            Argument potArgument = arguments["p"];
 
             if (potArgument.IsEmpty)
                 throw new Exception("Pot name must be provided.");

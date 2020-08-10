@@ -16,13 +16,14 @@
 
 using FluentValidation;
 
-namespace DustInTheWind.DirectoryCompare.Application.AddBlackList
+namespace DustInTheWind.DirectoryCompare.Application.RemoveBlackPath
 {
-    public class AddBlackListRequestValidator : AbstractValidator<AddBlackListRequest>
+    public class RemoveBlackPathRequestValidator : AbstractValidator<RemoveBlackPathRequest>
     {
-        public AddBlackListRequestValidator()
+        public RemoveBlackPathRequestValidator()
         {
             RuleFor(x => x.PotName).NotEmpty();
+            RuleFor(x => x.Path).NotEmpty();
         }
     }
 }

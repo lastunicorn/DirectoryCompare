@@ -17,11 +17,14 @@
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.AddBlackList
+namespace DustInTheWind.DirectoryCompare.Application.RemoveBlackPath
 {
-    public class AddBlackListRequest : IRequest
+    public class RemoveBlackPathRequest : IRequest
     {
         public string PotName { get; set; }
+        
+        public string BlackList { get; set; }
+
         public DiskPath Path { get; set; }
     }
 }

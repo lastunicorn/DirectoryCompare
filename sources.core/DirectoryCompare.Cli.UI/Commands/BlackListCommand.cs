@@ -15,11 +15,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.DirectoryCompare.Application;
-using DustInTheWind.DirectoryCompare.Application.AddBlackList;
+using DustInTheWind.DirectoryCompare.Application.AddBlackPath;
 using DustInTheWind.DirectoryCompare.Application.GetBlackList;
-using DustInTheWind.DirectoryCompare.Application.RemoveBlackList;
+using DustInTheWind.DirectoryCompare.Application.RemoveBlackPath;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
@@ -37,60 +39,91 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 
         public void Execute(Arguments arguments)
         {
-            if (arguments.Count == 0)
-                throw new Exception("No action is specified for the black-list command.");
+            Argument createBlacklistArgument = arguments["c"];
+            bool isCreateBlacklist = !createBlacklistArgument.IsEmpty;
 
-            switch (arguments.GetStringValue(0))
+            Argument deleteBlacklistArgument = arguments["d"];
+            bool isDeleteBlacklist = !deleteBlacklistArgument.IsEmpty;
+
+            Argument addPathArgument = arguments["a"];
+            bool isAddPath = !addPathArgument.IsEmpty;
+
+            Argument removePathArgument = arguments["r"];
+            bool isRemovePath = !removePathArgument.IsEmpty;
+
+            if (isCreateBlacklist)
             {
-                case "get":
-                    DisplayBlackList(arguments);
-                    break;
-
-                case "add":
-                    AddBlackList(arguments);
-                    break;
-
-
-                case "remove":
-                    RemoveBlackList(arguments);
-                    break;
-
-                default:
-                    throw new Exception("Invalid action for black list command.");
+                // blacklist -c <blacklist-name> -p <pot-name>
+                ExecuteCreateBlacklist(arguments, createBlacklistArgument);
+            }
+            else if (isDeleteBlacklist)
+            {
+                // blacklist -d <blacklist-name> -p <pot-name>
+                ExecuteDeleteBlacklist(arguments, deleteBlacklistArgument);
+            }
+            else if (isAddPath)
+            {
+                // blacklist -a <path> -p <pot-name> -b <blacklist-name>
+                ExecuteAddPath(arguments, addPathArgument);
+            }
+            else if (isRemovePath)
+            {
+                // blacklist -r <path> -p <pot-name> -b <blacklist-name>
+                ExecuteRemovePath(arguments, removePathArgument);
+            }
+            else
+            {
+                // blacklist <blacklist-name> -p <pot-name>
+                ExecuteDisplay(arguments);
             }
         }
 
-        private void DisplayBlackList(Arguments arguments)
+        private void ExecuteCreateBlacklist(Arguments arguments, Argument createBlacklistArgument)
         {
+            throw new NotImplementedException();
+        }
+
+        private void ExecuteDeleteBlacklist(Arguments arguments, Argument deleteBlacklistArgument)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ExecuteAddPath(Arguments arguments, Argument addPathArgument)
+        {
+            AddBlackPathRequest request = new AddBlackPathRequest
+            {
+                PotName = arguments["p"].Value,
+                BlackList = arguments["b"].Value,
+                Path = addPathArgument.Value
+            };
+            requestBus.PlaceRequest(request).Wait();
+        }
+
+        private void ExecuteRemovePath(Arguments arguments, Argument removePathArgument)
+        {
+            RemoveBlackPathRequest request = new RemoveBlackPathRequest
+            {
+                PotName = arguments["p"].Value,
+                BlackList = arguments["b"].Value,
+                Path = removePathArgument.Value
+            };
+            requestBus.PlaceRequest(request).Wait();
+        }
+
+        private void ExecuteDisplay(Arguments arguments)
+        {
+            IEnumerable<Argument> anonymousArguments = arguments.GetAnonymousArguments();
+
             GetBlackListRequest request = new GetBlackListRequest
             {
-                PotName = arguments.GetStringValue(1)
+                PotName = arguments["p"].Value,
+                BlackList = anonymousArguments.FirstOrDefault().Value
             };
 
             PathCollection blackList = requestBus.PlaceRequest<GetBlackListRequest, PathCollection>(request).Result;
 
             BlackListView blackListView = new BlackListView(blackList);
             blackListView.Display();
-        }
-
-        private void AddBlackList(Arguments arguments)
-        {
-            AddBlackListRequest request = new AddBlackListRequest
-            {
-                PotName = arguments.GetStringValue(1),
-                Path = arguments.GetStringValue(2)
-            };
-            requestBus.PlaceRequest(request).Wait();
-        }
-
-        private void RemoveBlackList(Arguments arguments)
-        {
-            RemoveBlackListRequest request = new RemoveBlackListRequest
-            {
-                PotName = arguments.GetStringValue(1),
-                Path = arguments.GetStringValue(2)
-            };
-            requestBus.PlaceRequest(request).Wait();
         }
     }
 }

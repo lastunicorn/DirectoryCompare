@@ -28,6 +28,8 @@ namespace DustInTheWind.ConsoleFramework
 
         public int Count => Values.Count;
 
+        public bool IsEmpty => Values.Count == 0;
+
         public Argument this[int index]
         {
             get

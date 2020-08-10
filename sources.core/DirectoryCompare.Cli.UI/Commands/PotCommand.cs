@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.DirectoryCompare.Application;
 using DustInTheWind.DirectoryCompare.Application.CreatePot;
@@ -64,7 +63,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
             }
             else
             {
-                bool hasArguments = arguments.Values.Any();
+                bool hasArguments = !arguments.IsEmpty;
 
                 if (hasArguments)
                 {
