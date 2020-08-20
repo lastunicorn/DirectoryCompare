@@ -18,7 +18,7 @@ using System;
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 
-namespace DustInTheWind.DirectoryCompare.Cli.UI
+namespace DustInTheWind.DirectoryCompare.Cli.UI.Views
 {
     internal class SnapshotView
     {

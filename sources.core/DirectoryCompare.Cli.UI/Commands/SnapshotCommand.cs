@@ -20,6 +20,7 @@ using DustInTheWind.DirectoryCompare.Application;
 using DustInTheWind.DirectoryCompare.Application.CreateSnapshot;
 using DustInTheWind.DirectoryCompare.Application.DeleteSnapshot;
 using DustInTheWind.DirectoryCompare.Application.GetSnapshot;
+using DustInTheWind.DirectoryCompare.Cli.UI.Views;
 using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 

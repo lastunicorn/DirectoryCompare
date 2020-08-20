@@ -68,7 +68,7 @@ namespace DustInTheWind.DirectoryCompare.Application.RemoveDuplicates
         private void RemoveDuplicates(IEnumerable<FileDuplicate> fileDuplicates)
         {
             int fileRemovedCount = 0;
-            long totalSize = 0;
+            DataSize totalSize = 0;
 
             foreach (FileDuplicate duplicate in fileDuplicates)
             {

@@ -22,7 +22,7 @@ namespace DustInTheWind.DirectoryCompare.Domain.Entities
     {
         public FileHash Hash { get; set; }
         
-        public long Size { get; set; }
+        public DataSize Size { get; set; }
         
         public DateTime LastModifiedTime { get; set; }
 

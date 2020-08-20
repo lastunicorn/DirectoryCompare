@@ -22,6 +22,7 @@ using DustInTheWind.DirectoryCompare.Application.CreatePot;
 using DustInTheWind.DirectoryCompare.Application.DeletePot;
 using DustInTheWind.DirectoryCompare.Application.GetPot;
 using DustInTheWind.DirectoryCompare.Application.GetPots;
+using DustInTheWind.DirectoryCompare.Cli.UI.Views;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 

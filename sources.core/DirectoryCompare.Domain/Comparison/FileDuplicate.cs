@@ -39,7 +39,7 @@ namespace DustInTheWind.DirectoryCompare.Domain.Comparison
             }
         }
 
-        public long Size => fileLeft.Size;
+        public DataSize Size => fileLeft.Size;
         public string FullPathLeft => fileLeft.GetOriginalPath();
         public string FullPathRight => fileRight.GetOriginalPath();
 

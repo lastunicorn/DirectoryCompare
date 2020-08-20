@@ -19,6 +19,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 
 namespace DustInTheWind.DirectoryCompare.Application.FindDuplicates
@@ -52,7 +53,7 @@ namespace DustInTheWind.DirectoryCompare.Application.FindDuplicates
                 try
                 {
                     int duplicateCount = 0;
-                    long totalSize = 0;
+                    DataSize totalSize = 0;
 
                     foreach (FileDuplicate duplicate in fileDuplicates)
                     {

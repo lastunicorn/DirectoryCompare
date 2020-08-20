@@ -16,7 +16,7 @@
 
 using System;
 
-namespace DustInTheWind.DirectoryCompare.Cli.UI
+namespace DustInTheWind.DirectoryCompare.Cli.UI.Views
 {
     internal class CreateSnapshotView
     {

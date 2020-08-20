@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 
-namespace DustInTheWind.DirectoryCompare.Cli.UI
+namespace DustInTheWind.DirectoryCompare.Cli.UI.Views
 {
     internal class PotsView
     {

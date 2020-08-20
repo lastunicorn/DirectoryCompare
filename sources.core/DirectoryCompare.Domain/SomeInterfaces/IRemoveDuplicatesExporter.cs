@@ -19,6 +19,7 @@ namespace DustInTheWind.DirectoryCompare.Domain.SomeInterfaces
     public interface IRemoveDuplicatesExporter
     {
         void WriteRemove(string path);
-        void WriteSummary(int removedFiles, long removedSize);
+
+        void WriteSummary(int removedFiles, DataSize removedSize);
     }
 }

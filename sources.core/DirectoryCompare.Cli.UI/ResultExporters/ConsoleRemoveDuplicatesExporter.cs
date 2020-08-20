@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.SomeInterfaces;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.ResultExporters
@@ -26,7 +27,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.ResultExporters
             Console.WriteLine("removed: {0}", path);
         }
 
-        public void WriteSummary(int removedFiles, long removedSize)
+        public void WriteSummary(int removedFiles, DataSize removedSize)
         {
             Console.WriteLine("Total removes: " + removedFiles);
             Console.WriteLine("Total size: " + removedSize);

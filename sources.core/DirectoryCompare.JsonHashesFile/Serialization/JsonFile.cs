@@ -26,7 +26,7 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
         public string Name { get; set; }
 
         [JsonProperty("s")]
-        public long Size { get; set; }
+        public ulong Size { get; set; }
 
         [JsonProperty("m")]
         public DateTime LastModifiedTime { get; set; }

@@ -22,6 +22,7 @@ using DustInTheWind.DirectoryCompare.Application;
 using DustInTheWind.DirectoryCompare.Application.AddBlackPath;
 using DustInTheWind.DirectoryCompare.Application.GetBlackList;
 using DustInTheWind.DirectoryCompare.Application.RemoveBlackPath;
+using DustInTheWind.DirectoryCompare.Cli.UI.Views;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands

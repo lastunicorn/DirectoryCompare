@@ -14,27 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using DustInTheWind.DirectoryCompare.Domain.Utils;
-
-namespace DustInTheWind.DirectoryCompare.Cli.UI.Views
+namespace DustInTheWind.DirectoryCompare.Domain
 {
-    internal class BlackListView
+    /// <summary>
+    /// The measurement unit for data.
+    /// </summary>
+    public enum DataSizeUnit
     {
-        private readonly PathCollection blackList;
-
-        public BlackListView(PathCollection blackList)
-        {
-            this.blackList = blackList;
-        }
-
-        public void Display()
-        {
-            if (blackList == null)
-                return;
-
-            foreach (string path in blackList)
-                Console.WriteLine(path);
-        }
+        Unknown,
+        Byte,
+        Kilobyte,
+        Megabyte,
+        Gigabyte,
+        Terabyte
     }
 }
