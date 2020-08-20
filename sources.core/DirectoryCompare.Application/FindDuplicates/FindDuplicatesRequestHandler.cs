@@ -21,16 +21,16 @@ using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
-using DustInTheWind.DirectoryCompare.Domain.SomeInterfaces;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.FindDuplicates
 {
-    public class FindDuplicatesRequestHandler : RequestHandler<FindDuplicatesRequest>
+    public class FindDuplicatesRequestHandler : RequestHandler<FindDuplicatesRequest, DuplicatesAnalysis>
     {
         private readonly ISnapshotRepository snapshotRepository;
         private readonly IBlackListRepository blackListRepository;
+        private DuplicatesAnalysis duplicatesAnalysis;
 
         public FindDuplicatesRequestHandler(ISnapshotRepository snapshotRepository, IBlackListRepository blackListRepository)
         {
@@ -38,7 +38,7 @@ namespace DustInTheWind.DirectoryCompare.Application.FindDuplicates
             this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
         }
 
-        protected override void Handle(FindDuplicatesRequest request)
+        protected override DuplicatesAnalysis Handle(FindDuplicatesRequest request)
         {
             FileDuplicates fileDuplicates = new FileDuplicates
             {
@@ -47,7 +47,11 @@ namespace DustInTheWind.DirectoryCompare.Application.FindDuplicates
                 CheckFilesExist = request.CheckFilesExist
             };
 
-            ExportDuplicates(fileDuplicates, request.Exporter);
+            duplicatesAnalysis = new DuplicatesAnalysis(fileDuplicates);
+
+            duplicatesAnalysis.RunAsync();
+
+            return duplicatesAnalysis;
         }
 
         private List<HFile> GetFiles(SnapshotLocation snapshotLocation)
@@ -65,21 +69,6 @@ namespace DustInTheWind.DirectoryCompare.Application.FindDuplicates
 
             PathCollection blackListPaths = blackListRepository.Get(snapshotLocation.PotName);
             return new BlackList(blackListPaths);
-        }
-
-        private static void ExportDuplicates(IEnumerable<FileDuplicate> fileDuplicates, IDuplicatesExporter exporter)
-        {
-            int duplicateCount = 0;
-            long totalSize = 0;
-
-            foreach (FileDuplicate duplicate in fileDuplicates)
-            {
-                duplicateCount++;
-                totalSize += duplicate.Size;
-                exporter.WriteDuplicate(duplicate);
-            }
-
-            exporter.WriteSummary(duplicateCount, totalSize);
         }
     }
 }

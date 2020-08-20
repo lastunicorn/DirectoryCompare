@@ -45,7 +45,7 @@ namespace DustInTheWind.DirectoryCompare.Domain.Entities
                 if (currentHItem == null)
                     return false;
 
-                bool isMatch = currentHItem.Name == parts[index] && (!isDirectoryOnly || currentHItem is HDirectory);
+                bool isMatch = currentHItem.Name == parts[index] && (index != parts.Length - 1 || !isDirectoryOnly || currentHItem is HDirectory);
 
                 if (isMatch)
                     index--;

@@ -15,21 +15,26 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.DirectoryCompare.Application;
 using DustInTheWind.DirectoryCompare.Application.FindDuplicates;
 using DustInTheWind.DirectoryCompare.Cli.UI.ResultExporters;
+using DustInTheWind.DirectoryCompare.Domain.Comparison;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
     public class FindDuplicatesCommand : ICommand
     {
         private readonly RequestBus requestBus;
+        private readonly FindDuplicatesView findDuplicatesView;
 
         public FindDuplicatesCommand(RequestBus requestBus)
         {
             this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
+
+            findDuplicatesView = new FindDuplicatesView();
         }
 
         public string Description => string.Empty;
@@ -37,7 +42,33 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
         public void Execute(Arguments arguments)
         {
             FindDuplicatesRequest request = CreateRequest(arguments);
-            requestBus.PlaceRequest(request).Wait();
+            DuplicatesAnalysis analysis = requestBus.PlaceRequest<FindDuplicatesRequest, DuplicatesAnalysis>(request).Result;
+            analysis.DuplicateFound += HandleDuplicateFound;
+
+            DisplayDuplicatesFromBuffer(analysis);
+
+            analysis.WaitToEnd();
+
+            DisplaySummary(analysis);
+        }
+
+        private void HandleDuplicateFound(object sender, EventArgs e)
+        {
+            if (sender is DuplicatesAnalysis analysis)
+                DisplayDuplicatesFromBuffer(analysis);
+        }
+
+        private void DisplayDuplicatesFromBuffer(DuplicatesAnalysis analysis)
+        {
+            IEnumerable<FileDuplicate> duplicates = analysis.GetDuplicatesFromBuffer();
+
+            foreach (FileDuplicate fileDuplicate in duplicates)
+                findDuplicatesView.WriteDuplicate(fileDuplicate);
+        }
+
+        private void DisplaySummary(DuplicatesAnalysis analysis)
+        {
+            findDuplicatesView.WriteSummary(analysis.Summary.DuplicateCount, analysis.Summary.TotalSize);
         }
 
         private static FindDuplicatesRequest CreateRequest(Arguments arguments)
@@ -64,7 +95,6 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
             {
                 SnapshotLeft = left,
                 SnapshotRight = right,
-                Exporter = new ConsoleDuplicatesExporter(),
                 CheckFilesExist = checkFilesExist
             };
         }

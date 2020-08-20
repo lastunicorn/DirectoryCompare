@@ -24,9 +24,13 @@ namespace DustInTheWind.DirectoryCompare.Application.RemoveDuplicates
     public class RemoveDuplicatesRequest : IRequest
     {
         public SnapshotLocation SnapshotLeft { get; set; }
+        
         public SnapshotLocation SnapshotRight { get; set; }
+        
         public IRemoveDuplicatesExporter Exporter { get; set; }
+        
         public ComparisonSide FileToRemove { get; set; }
+        
         public string DestinationDirectory { get; set; }
     }
 }

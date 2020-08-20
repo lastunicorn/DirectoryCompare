@@ -15,12 +15,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 
 namespace DustInTheWind.DirectoryCompare.Domain.Entities
 {
-    public class BlackList : List<BlackPath>
+    public class BlackList : Collection<BlackPath>
     {
         public BlackList(PathCollection paths)
         {
@@ -28,14 +29,15 @@ namespace DustInTheWind.DirectoryCompare.Domain.Entities
             AddRange(blackPaths);
         }
 
-        // /dir-or-file
-        // /dir/
-        // dir-or-file
-        // dir/
+        private void AddRange(IEnumerable<BlackPath> blackPaths)
+        {
+            foreach (BlackPath blackPath in blackPaths)
+                Items.Add(blackPath);
+        }
 
         public bool MatchPath(HItem item)
         {
-            return this.Any(x => x.Matches(item));
+            return Items.Any(x => x.Matches(item));
         }
     }
 }

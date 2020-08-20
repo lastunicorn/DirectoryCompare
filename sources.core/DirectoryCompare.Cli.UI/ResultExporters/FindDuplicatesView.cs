@@ -14,14 +14,27 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 
-namespace DustInTheWind.DirectoryCompare.Domain.SomeInterfaces
+namespace DustInTheWind.DirectoryCompare.Cli.UI.ResultExporters
 {
-    public interface IDuplicatesExporter
+    internal class FindDuplicatesView
     {
-        void WriteDuplicate(FileDuplicate duplicate);
+        public void WriteDuplicate(FileDuplicate duplicate)
+        {
+            Console.WriteLine(duplicate.FullPathLeft);
+            Console.WriteLine(duplicate.FullPathRight);
 
-        void WriteSummary(int duplicateCount, long totalSize);
+            Console.WriteLine($"{duplicate.Size:n0} bytes");
+            Console.WriteLine();
+        }
+
+        public void WriteSummary(int duplicateCount, long totalSize)
+        {
+            Console.WriteLine($"Total duplicates: {duplicateCount:n0} files");
+            Console.WriteLine($"Total size: {totalSize:n0} bytes");
+            Console.WriteLine();
+        }
     }
 }
