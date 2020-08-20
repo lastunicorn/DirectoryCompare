@@ -46,9 +46,8 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 
             if (isCreate)
             {
-                // snapshot -c -p <pot-name>
                 // snapshot -c <pot-name>
-                ExecuteCreate(arguments, createArgument);
+                ExecuteCreate(createArgument);
             }
             else if (isDelete)
             {
@@ -62,34 +61,25 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
             }
         }
 
-        private void ExecuteCreate(Arguments arguments, Argument createArgument)
+        private void ExecuteCreate(Argument createArgument)
         {
-            string potName = GetPotNameFromCreateArgument(arguments, createArgument);
-
             CreateSnapshotRequest request = new CreateSnapshotRequest
             {
-                PotName = potName
+                PotName = createArgument.HasValue
+                    ? createArgument.Value
+                    : null
             };
 
             SnapshotProgress snapshotProgress = requestBus.PlaceRequest<CreateSnapshotRequest, SnapshotProgress>(request).Result;
+            DisplayCreationProgress(snapshotProgress);
+        }
 
+        private static void DisplayCreationProgress(SnapshotProgress snapshotProgress)
+        {
             CreateSnapshotView createSnapshotView = new CreateSnapshotView();
             snapshotProgress.ProgressChanged += (sender, value) => createSnapshotView.DisplayProgress(value);
 
             snapshotProgress.WaitToEnd();
-        }
-
-        private static string GetPotNameFromCreateArgument(Arguments arguments, Argument createArgument)
-        {
-            if (!string.IsNullOrEmpty(createArgument.Value))
-                return createArgument.Value;
-
-            Argument potArgument = arguments["p"];
-
-            if (potArgument.IsEmpty)
-                throw new Exception("Pot name must be provided.");
-
-            return potArgument.Value;
         }
 
         private void ExecuteDelete(Arguments arguments, Argument deleteArgument)

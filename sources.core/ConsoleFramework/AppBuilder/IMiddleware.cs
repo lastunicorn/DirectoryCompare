@@ -14,6 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
-[assembly: InternalsVisibleTo("DustInTheWind.DirectoryCompare.Tests")]
+namespace DustInTheWind.ConsoleFramework.AppBuilder
+{
+    public interface IMiddleware
+    {
+        Task InvokeAsync(ConsoleRequestContext context, RequestDelegate next);
+    }
+}

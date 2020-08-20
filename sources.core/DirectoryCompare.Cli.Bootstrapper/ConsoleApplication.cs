@@ -40,20 +40,6 @@ namespace DustInTheWind.DirectoryCompare.Cli
             return CommandsSetup.Create(dependencyContainer);
         }
 
-        protected override void OnStart()
-        {
-            logger.Open();
-
-            base.OnStart();
-        }
-
-        protected override void OnExit()
-        {
-            logger.Close();
-
-            base.OnExit();
-        }
-
         protected override void OnError(Exception ex)
         {
             logger.Error(ex.ToString());

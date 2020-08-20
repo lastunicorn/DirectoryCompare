@@ -14,19 +14,27 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.Domain.Logging
+using System;
+using System.Threading.Tasks;
+using DustInTheWind.ConsoleFramework.AppBuilder;
+
+namespace DustInTheWind.ConsoleFramework.CustomMiddleware
 {
-    public interface IProjectLogger
+    internal class CommandMiddleware : IMiddleware
     {
-        //void Open();
-        //void Close();
-        void Debug(string format);
-        void Debug(string format, params object[] arg);
-        void Info(string format);
-        void Info(string format, params object[] arg);
-        void Warn(string format);
-        void Warn(string format, params object[] arg);
-        void Error(string format);
-        void Error(string format, params object[] arg);
+        private readonly CommandCollection commands;
+
+        public CommandMiddleware(CommandCollection commands)
+        {
+            this.commands = commands ?? throw new ArgumentNullException(nameof(commands));
+        }
+
+        public Task InvokeAsync(ConsoleRequestContext context, RequestDelegate next)
+        {
+            ICommand command = commands.SelectCommand(context.Arguments.Command);
+            command.Execute(context.Arguments);
+
+            return next?.Invoke(context);
+        }
     }
 }

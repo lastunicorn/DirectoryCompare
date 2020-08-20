@@ -110,7 +110,7 @@ namespace DustInTheWind.DirectoryCompare.Domain.Comparison
             MoveFile(fileRight, destinationDirectory);
         }
 
-        private static void MoveFile(HFile hFile, string destinationDirectory)
+        private static void MoveFile(HItem hFile, string destinationDirectory)
         {
             string sourceFilePath = hFile.GetOriginalPath();
 
@@ -131,15 +131,17 @@ namespace DustInTheWind.DirectoryCompare.Domain.Comparison
 
         private static void RemoveParentIfEmpty(string path)
         {
-            string parentDirectoryPath = Path.GetDirectoryName(path);
+            while (true)
+            {
+                string parentDirectoryPath = Path.GetDirectoryName(path);
 
-            bool isDirectoryEmpty = !Directory.EnumerateFileSystemEntries(parentDirectoryPath).Any();
+                bool isDirectoryEmpty = !Directory.EnumerateFileSystemEntries(parentDirectoryPath).Any();
 
-            if (!isDirectoryEmpty)
-                return;
+                if (!isDirectoryEmpty) return;
 
-            Directory.Delete(parentDirectoryPath);
-            RemoveParentIfEmpty(parentDirectoryPath);
+                Directory.Delete(parentDirectoryPath);
+                path = parentDirectoryPath;
+            }
         }
     }
 }

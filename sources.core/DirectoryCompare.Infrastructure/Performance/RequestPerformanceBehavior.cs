@@ -47,7 +47,7 @@ namespace DustInTheWind.DirectoryCompare.Infrastructure.Performance
                 timer.Stop();
 
                 string name = typeof(TRequest).Name;
-                logger.Info("Request {0} finished in {1:n0} milliseconds", name, timer.ElapsedMilliseconds);
+                logger.Debug("Request {0} finished in {1:n0} milliseconds", name, timer.ElapsedMilliseconds);
             }
         }
     }

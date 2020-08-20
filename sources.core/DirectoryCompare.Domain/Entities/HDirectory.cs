@@ -17,6 +17,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace DustInTheWind.DirectoryCompare.Domain.Entities
 {
@@ -39,16 +41,51 @@ namespace DustInTheWind.DirectoryCompare.Domain.Entities
             Files = new HItemCollection<HFile>(this);
         }
 
-        public IEnumerable<HFile> EnumerateFiles()
+        public IEnumerable<HFile> EnumerateFiles(string path, BlackList blackList = null)
+        {
+            IEnumerable<HFile> filesQuery = EnumerateFiles(blackList);
+
+            if (path != null)
+                filesQuery = filesQuery.Where(x =>
+                {
+                    if (!path.StartsWith(Path.DirectorySeparatorChar))
+                        path = Path.DirectorySeparatorChar + path;
+
+                    return x.GetPath().StartsWith(path);
+                });
+
+            return filesQuery;
+        }
+
+        public IEnumerable<HFile> EnumerateFiles(BlackList blackList = null)
         {
             if (Files != null)
+            {
                 foreach (HFile file in Files)
+                {
+                    if (blackList != null && blackList.MatchPath(file))
+                        continue;
+
                     yield return file;
+                }
+            }
 
             if (Directories != null)
+            {
                 foreach (HDirectory xSubDirectory in Directories)
+                {
+                    if (blackList != null && blackList.MatchPath(xSubDirectory))
+                        continue;
+
                     foreach (HFile file in xSubDirectory.EnumerateFiles())
+                    {
+                        if (blackList != null && blackList.MatchPath(file))
+                            continue;
+
                         yield return file;
+                    }
+                }
+            }
         }
 
         public IEnumerator<HItem> GetEnumerator()

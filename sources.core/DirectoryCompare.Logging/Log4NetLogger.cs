@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using DustInTheWind.DirectoryCompare.Domain.Logging;
 using log4net;
 
@@ -24,61 +23,77 @@ namespace DustInTheWind.DirectoryCompare.Logging
     {
         private ILog log;
 
-        public Log4NetLogger()
-        {
-        }
-
-        public void Open()
-        {
-            log = LogManager.GetLogger(typeof(ProjectLogger));
-        }
-
-        public void Close()
-        {
-        }
-
         public void Debug(string text)
         {
+            if (log == null)
+                Open();
+
             log.Debug(text);
         }
 
         public void Debug(string format, params object[] arg)
         {
+            if (log == null)
+                Open();
+
             string text = arg == null ? format : string.Format(format, arg);
             log.Debug(text);
         }
 
         public void Info(string text)
         {
+            if (log == null)
+                Open();
+
             log.Info(text);
         }
 
         public void Info(string format, params object[] arg)
         {
+            if (log == null)
+                Open();
+
             string text = arg == null ? format : string.Format(format, arg);
             log.Info(text);
         }
 
         public void Warn(string text)
         {
+            if (log == null)
+                Open();
+
             log.Warn(text);
         }
 
         public void Warn(string format, params object[] arg)
         {
+            if (log == null)
+                Open();
+
             string text = arg == null ? format : string.Format(format, arg);
             log.Warn(text);
         }
 
         public void Error(string text)
         {
+            if (log == null)
+                Open();
+
             log.Error(text);
         }
 
         public void Error(string format, params object[] arg)
         {
+            if (log == null)
+                Open();
+
             string text = arg == null ? format : string.Format(format, arg);
             log.Error(text);
+        }
+
+        private void Open()
+        {
+            log = LogManager.GetLogger(typeof(ProjectLogger));
         }
     }
 }

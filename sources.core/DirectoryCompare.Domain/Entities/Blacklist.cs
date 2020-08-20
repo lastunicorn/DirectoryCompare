@@ -14,6 +14,28 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Runtime.CompilerServices;
+using System.Collections.Generic;
+using System.Linq;
+using DustInTheWind.DirectoryCompare.Domain.Utils;
 
-[assembly: InternalsVisibleTo("DustInTheWind.DirectoryCompare.Tests")]
+namespace DustInTheWind.DirectoryCompare.Domain.Entities
+{
+    public class BlackList : List<BlackPath>
+    {
+        public BlackList(PathCollection paths)
+        {
+            IEnumerable<BlackPath> blackPaths = paths.Select(x => new BlackPath(x));
+            AddRange(blackPaths);
+        }
+
+        // /dir-or-file
+        // /dir/
+        // dir-or-file
+        // dir/
+
+        public bool MatchPath(HItem item)
+        {
+            return this.Any(x => x.Matches(item));
+        }
+    }
+}

@@ -14,6 +14,21 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Runtime.CompilerServices;
+using System;
+using DustInTheWind.ConsoleFramework.AppBuilder;
 
-[assembly: InternalsVisibleTo("DustInTheWind.DirectoryCompare.Tests")]
+namespace DustInTheWind.ConsoleFramework
+{
+    public class ApplicationServices : IServiceProvider
+    {
+        public CommandCollection Commands { get; set; }
+
+        public object GetService(Type serviceType)
+        {
+            if (serviceType == typeof(IMiddlewareFactory))
+                return new MiddlewareFactory(Commands);
+
+            return Activator.CreateInstance(serviceType);
+        }
+    }
+}

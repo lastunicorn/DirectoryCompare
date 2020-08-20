@@ -14,6 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Runtime.CompilerServices;
+using DustInTheWind.ConsoleFramework.AppBuilder;
 
-[assembly: InternalsVisibleTo("DustInTheWind.DirectoryCompare.Tests")]
+namespace DustInTheWind.ConsoleFramework.CustomMiddleware
+{
+    public static class CommandMiddlewareExtensions
+    {
+        public static IApplicationBuilder UseCommands(this IApplicationBuilder builder)
+        {
+            return builder.UseMiddleware<CommandMiddleware>();
+        }
+    }
+}

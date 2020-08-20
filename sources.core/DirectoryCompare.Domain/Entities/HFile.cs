@@ -21,7 +21,9 @@ namespace DustInTheWind.DirectoryCompare.Domain.Entities
     public class HFile : HItem, IEquatable<HFile>
     {
         public FileHash Hash { get; set; }
+        
         public long Size { get; set; }
+        
         public DateTime LastModifiedTime { get; set; }
 
         public bool Equals(HFile other)

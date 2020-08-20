@@ -14,47 +14,35 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Domain.DataAccess;
-using DustInTheWind.DirectoryCompare.Domain.Entities;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using DustInTheWind.DirectoryCompare.Domain.Entities;
 
 namespace DustInTheWind.DirectoryCompare.Domain.Comparison
 {
     public class FileDuplicates : IEnumerable<FileDuplicate>
     {
-        private readonly ISnapshotRepository snapshotRepository;
+        public List<HFile> FilesLeft { get; set; }
 
-        public SnapshotLocation SnapshotLeft { get; set; }
-        public SnapshotLocation SnapshotRight { get; set; }
+        public List<HFile> FilesRight { get; set; }
+
         public bool CheckFilesExist { get; set; }
-
-        public FileDuplicates(ISnapshotRepository snapshotRepository)
-        {
-            this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
-        }
 
         public IEnumerator<FileDuplicate> GetEnumerator()
         {
-            List<HFile> filesLeft = GetFiles(SnapshotLeft);
-
-            if (filesLeft == null)
+            if (FilesLeft == null)
                 yield break;
 
-            List<HFile> filesRight = GetFiles(SnapshotRight);
-
-            if (filesRight == null)
+            if (FilesRight == null)
             {
-                for (int i = 0; i < filesLeft.Count; i++)
+                for (int i = 0; i < FilesLeft.Count; i++)
                 {
-                    HFile fileLeft = filesLeft[i];
+                    HFile fileLeft = FilesLeft[i];
 
-                    for (int j = i + 1; j < filesLeft.Count; j++)
+                    for (int j = i + 1; j < FilesLeft.Count; j++)
                     {
-                        HFile fileRight = filesLeft[j];
+                        HFile fileRight = FilesLeft[j];
 
                         FileDuplicate fileDuplicate = new FileDuplicate(fileLeft, fileRight, CheckFilesExist);
 
@@ -65,74 +53,19 @@ namespace DustInTheWind.DirectoryCompare.Domain.Comparison
             }
             else
             {
-                foreach (HFile fileLeft in filesLeft)
-                {
-                    foreach (HFile fileRight in filesRight)
-                    {
-                        FileDuplicate fileDuplicate = new FileDuplicate(fileLeft, fileRight, CheckFilesExist);
+                IEnumerable<FileDuplicate> duplicates = FilesLeft
+                    .Select(fileLeft => FilesRight.Select(fileRight => new FileDuplicate(fileLeft, fileRight, CheckFilesExist)))
+                    .SelectMany(fileDuplicates => fileDuplicates)
+                    .Where(x => x.AreEqual);
 
-                        if (fileDuplicate.AreEqual)
-                            yield return fileDuplicate;
-                    }
-                }
+                foreach (FileDuplicate fileDuplicate in duplicates)
+                    yield return fileDuplicate;
             }
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
-        }
-
-        private List<HFile> GetFiles(SnapshotLocation snapshotLocation)
-        {
-            Snapshot snapshot;
-
-            if (string.IsNullOrEmpty(snapshotLocation.PotName))
-                return null;
-
-            if (snapshotLocation.SnapshotIndex.HasValue)
-            {
-                snapshot = snapshotRepository.GetByIndex(snapshotLocation.PotName, snapshotLocation.SnapshotIndex.Value);
-            }
-            else if (snapshotLocation.SnapshotDate.HasValue)
-            {
-                DateTime searchedDate = snapshotLocation.SnapshotDate.Value;
-
-                snapshot = snapshotRepository.GetByExactDateTime(snapshotLocation.PotName, searchedDate);
-
-                if (snapshot == null && searchedDate.TimeOfDay == TimeSpan.Zero)
-                {
-                    List<Snapshot> snapshots = snapshotRepository.GetByDate(snapshotLocation.PotName, searchedDate)
-                        .ToList();
-
-                    if (snapshots.Count == 1)
-                        snapshot = snapshots[0];
-                    else if (snapshots.Count > 1)
-                        throw new Exception($"There are multiple snapshots that match the specified date. Pot = {snapshotLocation.PotName}; Date = {searchedDate}");
-                }
-            }
-            else
-            {
-                snapshot = snapshotRepository.GetLast(snapshotLocation.PotName);
-            }
-
-            if (snapshot == null)
-                return null;
-
-            IEnumerable<HFile> filesQuery = snapshot.EnumerateFiles();
-
-            if (snapshotLocation.InternalPath != null)
-                filesQuery = filesQuery.Where(x =>
-                {
-                    string internalPath = snapshotLocation.InternalPath;
-
-                    if (!internalPath.StartsWith(Path.DirectorySeparatorChar))
-                        internalPath = Path.DirectorySeparatorChar + internalPath;
-
-                    return x.GetPath().StartsWith(internalPath);
-                });
-
-            return filesQuery.ToList();
         }
     }
 }

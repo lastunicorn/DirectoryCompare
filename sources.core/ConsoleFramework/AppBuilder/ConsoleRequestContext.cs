@@ -14,6 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Runtime.CompilerServices;
+using System;
 
-[assembly: InternalsVisibleTo("DustInTheWind.DirectoryCompare.Tests")]
+namespace DustInTheWind.ConsoleFramework.AppBuilder
+{
+    public class ConsoleRequestContext
+    {
+        public Arguments Arguments { get; }
+
+        /// <summary>
+        /// Gets or sets the <see cref="IServiceProvider"/> that provides access to the request's service container.
+        /// </summary>
+        public IServiceProvider RequestServices { get; set; }
+
+        public ConsoleRequestContext(Arguments arguments)
+        {
+            Arguments = arguments ?? throw new ArgumentNullException(nameof(arguments));
+        }
+    }
+}

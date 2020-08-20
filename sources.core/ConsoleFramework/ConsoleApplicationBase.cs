@@ -15,7 +15,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using DustInTheWind.ConsoleFramework.AppBuilder;
 using DustInTheWind.ConsoleFramework.Commands;
+using DustInTheWind.ConsoleFramework.CustomMiddleware;
 using DustInTheWind.ConsoleFramework.UserControls;
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Spinners;
@@ -28,11 +30,20 @@ namespace DustInTheWind.ConsoleFramework
         private CommandCollection commands;
         private ApplicationFooter applicationFooter;
 
+        private readonly ApplicationBuilder app = new ApplicationBuilder();
+
         public bool UseSpinner { get; set; }
+
+        public ConsoleApplicationBase()
+        {
+            app.ApplicationServices = new ApplicationServices();
+        }
 
         public void Initialize()
         {
             commands = CreateCommands() ?? new CommandCollection();
+
+            ((ApplicationServices)app.ApplicationServices).Commands = commands;
 
             CommandCollectionItem helpCommandItem = CreateHelpCommand();
 
@@ -74,12 +85,10 @@ namespace DustInTheWind.ConsoleFramework
 
                 Arguments arguments = new Arguments(args);
 
-                ICommand command = commands.SelectCommand(arguments.Command);
-
                 if (UseSpinner)
-                    Spinner.Run(() => command.Execute(arguments));
+                    Spinner.Run(() => ProcessRequest(arguments));
                 else
-                    command.Execute(arguments);
+                    ProcessRequest(arguments);
             }
             catch (Exception ex)
             {
@@ -92,8 +101,25 @@ namespace DustInTheWind.ConsoleFramework
             }
         }
 
+        private void ProcessRequest(Arguments arguments)
+        {
+            RequestDelegate requestDelegate = app.Build();
+
+            ConsoleRequestContext context = new ConsoleRequestContext(arguments);
+            context.RequestServices = app.ApplicationServices;
+
+            requestDelegate.Invoke(context);
+        }
+
         protected virtual void OnStart()
         {
+            app.Use(async (context, next) =>
+            {
+                await next();
+            });
+
+            app.UseUselessMiddleware();
+            app.UseCommands();
         }
 
         protected virtual void OnExit()

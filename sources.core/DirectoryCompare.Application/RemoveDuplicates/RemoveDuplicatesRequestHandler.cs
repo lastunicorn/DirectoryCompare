@@ -19,32 +19,50 @@ using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using MediatR;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using DustInTheWind.DirectoryCompare.Domain;
+using DustInTheWind.DirectoryCompare.Domain.Entities;
+using DustInTheWind.DirectoryCompare.Domain.Utils;
 
 namespace DustInTheWind.DirectoryCompare.Application.RemoveDuplicates
 {
     public class RemoveDuplicatesRequestHandler : RequestHandler<RemoveDuplicatesRequest>
     {
         private readonly ISnapshotRepository snapshotRepository;
+        private readonly IBlackListRepository blackListRepository;
 
         private RemoveDuplicatesRequest request;
 
-        public RemoveDuplicatesRequestHandler(ISnapshotRepository snapshotRepository)
+        public RemoveDuplicatesRequestHandler(ISnapshotRepository snapshotRepository, IBlackListRepository blackListRepository)
         {
             this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
+            this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
         }
 
         protected override void Handle(RemoveDuplicatesRequest request)
         {
             this.request = request;
+            
+            PathCollection blackListPathsLeft = blackListRepository.Get(request.SnapshotLeft.PotName);
+            BlackList blackListLeft = new BlackList(blackListPathsLeft);
 
-            FileDuplicates fileDuplicates = new FileDuplicates(snapshotRepository)
+            PathCollection blackListPathsRight = blackListRepository.Get(request.SnapshotRight.PotName);
+            BlackList blackListRight = new BlackList(blackListPathsRight);
+
+            FileDuplicates fileDuplicates = new FileDuplicates
             {
-                SnapshotLeft = request.SnapshotLeft,
-                SnapshotRight = request.SnapshotRight,
+                FilesLeft = GetFiles(request.SnapshotLeft, blackListLeft),
+                FilesRight = GetFiles(request.SnapshotRight, blackListRight),
                 CheckFilesExist = true
             };
 
             RemoveDuplicates(fileDuplicates);
+        }
+
+        private List<HFile> GetFiles(SnapshotLocation snapshotLocation, BlackList blackList)
+        {
+            IEnumerable<HFile> files = snapshotRepository.EnumerateFiles(snapshotLocation, blackList);
+            return files.ToList();
         }
 
         private void RemoveDuplicates(IEnumerable<FileDuplicate> fileDuplicates)

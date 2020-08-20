@@ -14,6 +14,29 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Runtime.CompilerServices;
+using System;
+using System.Threading.Tasks;
 
-[assembly: InternalsVisibleTo("DustInTheWind.DirectoryCompare.Tests")]
+namespace DustInTheWind.ConsoleFramework.AppBuilder
+{
+    internal class ApplicationBuilder : IApplicationBuilder
+    {
+        private RequestDelegate requestDelegate = next => Task.FromResult(0);
+
+        public IServiceProvider ApplicationServices { get; set; }
+
+        public IApplicationBuilder Use(Func<RequestDelegate, RequestDelegate> middleware)
+        {
+            if (middleware == null) throw new ArgumentNullException(nameof(middleware));
+
+            requestDelegate = middleware(requestDelegate);
+
+            return this;
+        }
+
+        public RequestDelegate Build()
+        {
+            return requestDelegate;
+        }
+    }
+}

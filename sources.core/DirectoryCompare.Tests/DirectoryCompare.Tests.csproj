@@ -9,7 +9,8 @@
     <Description />
     <Company>Dust in the Wind</Company>
     <Copyright>Copyright © Dust in the Wind 2019</Copyright>
-    <RootNamespace>DustInTheWind.DirectoryCompare.Tests</RootNamespace>    
+    <RootNamespace>DustInTheWind.DirectoryCompare.Tests</RootNamespace>
+    <AssemblyName>DustInTheWind.DirectoryCompare.Tests</AssemblyName>    
     
   </PropertyGroup>
 

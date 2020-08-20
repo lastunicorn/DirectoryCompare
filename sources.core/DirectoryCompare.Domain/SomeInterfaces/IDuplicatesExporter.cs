@@ -21,6 +21,7 @@ namespace DustInTheWind.DirectoryCompare.Domain.SomeInterfaces
     public interface IDuplicatesExporter
     {
         void WriteDuplicate(FileDuplicate duplicate);
+
         void WriteSummary(int duplicateCount, long totalSize);
     }
 }

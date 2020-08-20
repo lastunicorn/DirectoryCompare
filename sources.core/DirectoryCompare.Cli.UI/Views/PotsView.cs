@@ -45,15 +45,6 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI
 
                 CustomConsole.WriteEmphasies(pot.Path);
                 CustomConsole.WriteLine();
-
-                //TextBlockBuilder textBlock = new TextBlockBuilder
-                //{
-                //    TextBlock.FromText(guid),
-                //    " ",
-                //    TextBlock.FromText(pot.Name, Emphasized),
-                //    " - ",
-                //    TextBlock.FromText(pot.Path),
-                //};
             }
         }
     }

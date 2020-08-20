@@ -32,29 +32,13 @@ namespace DustInTheWind.DirectoryCompare.Logging
             basePath = Environment.CurrentDirectory;
         }
 
-        public void Open()
-        {
-            if (isDisposed)
-                throw new ObjectDisposedException(nameof(ProjectLogger));
-
-            string logFilePath = Path.Combine(basePath, string.Format("{0:yyyy MM dd HHmmss}.log", DateTime.UtcNow));
-            streamWriter = new StreamWriter(logFilePath);
-        }
-
-        public void Close()
-        {
-            if (isDisposed)
-                throw new ObjectDisposedException(nameof(ProjectLogger));
-
-            streamWriter?.Flush();
-            streamWriter?.Close();
-            streamWriter = null;
-        }
-
         public void Debug(string format)
         {
             if (isDisposed)
                 throw new ObjectDisposedException(nameof(ProjectLogger));
+
+            if (streamWriter == null)
+                Open();
 
             Debug(format, new object[0]);
 
@@ -64,6 +48,9 @@ namespace DustInTheWind.DirectoryCompare.Logging
         {
             if (isDisposed)
                 throw new ObjectDisposedException(nameof(ProjectLogger));
+
+            if (streamWriter == null)
+                Open();
 
             string text = arg == null ? format : string.Format(format, arg);
             text = string.Format("[{0:yyyy-MM-dd HH:mm:ss.fff}] DEBUG {1}", DateTime.Now, text);
@@ -78,6 +65,9 @@ namespace DustInTheWind.DirectoryCompare.Logging
             if (isDisposed)
                 throw new ObjectDisposedException(nameof(ProjectLogger));
 
+            if (streamWriter == null)
+                Open();
+
             Info(format, new object[0]);
         }
 
@@ -85,6 +75,9 @@ namespace DustInTheWind.DirectoryCompare.Logging
         {
             if (isDisposed)
                 throw new ObjectDisposedException(nameof(ProjectLogger));
+
+            if (streamWriter == null)
+                Open();
 
             string text = arg == null ? format : string.Format(format, arg);
             text = string.Format("[{0:yyyy-MM-dd HH:mm:ss.fff}] INFO {1}", DateTime.Now, text);
@@ -99,6 +92,9 @@ namespace DustInTheWind.DirectoryCompare.Logging
             if (isDisposed)
                 throw new ObjectDisposedException(nameof(ProjectLogger));
 
+            if (streamWriter == null)
+                Open();
+
             Warn(format, new object[0]);
         }
 
@@ -106,6 +102,9 @@ namespace DustInTheWind.DirectoryCompare.Logging
         {
             if (isDisposed)
                 throw new ObjectDisposedException(nameof(ProjectLogger));
+
+            if (streamWriter == null)
+                Open();
 
             string text = arg == null ? format : string.Format(format, arg);
             text = string.Format("[{0:yyyy-MM-dd HH:mm:ss.fff}] WARN {1}", DateTime.Now, text);
@@ -120,6 +119,9 @@ namespace DustInTheWind.DirectoryCompare.Logging
             if (isDisposed)
                 throw new ObjectDisposedException(nameof(ProjectLogger));
 
+            if (streamWriter == null)
+                Open();
+
             Error(format, new object[0]);
         }
 
@@ -128,12 +130,21 @@ namespace DustInTheWind.DirectoryCompare.Logging
             if (isDisposed)
                 throw new ObjectDisposedException(nameof(ProjectLogger));
 
+            if (streamWriter == null)
+                Open();
+
             string text = arg == null ? format : string.Format(format, arg);
             text = string.Format("[{0:yyyy-MM-dd HH:mm:ss.fff}] ERROR {1}", DateTime.Now, text);
 
             streamWriter?.WriteLine(text);
 
             CustomConsole.WriteLineError(text);
+        }
+
+        private void Open()
+        {
+            string logFilePath = Path.Combine(basePath, string.Format("{0:yyyy MM dd HHmmss}.log", DateTime.UtcNow));
+            streamWriter = new StreamWriter(logFilePath);
         }
 
         public void Dispose()
