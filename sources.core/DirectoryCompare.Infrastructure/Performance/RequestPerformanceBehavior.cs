@@ -38,6 +38,9 @@ namespace DustInTheWind.DirectoryCompare.Infrastructure.Performance
         {
             timer.Start();
 
+            string name = typeof(TRequest).Name;
+            logger.Debug("Request {0} started.", name);
+
             try
             {
                 return await next();
@@ -45,8 +48,6 @@ namespace DustInTheWind.DirectoryCompare.Infrastructure.Performance
             finally
             {
                 timer.Stop();
-
-                string name = typeof(TRequest).Name;
                 logger.Debug("Request {0} finished in {1:n0} milliseconds", name, timer.ElapsedMilliseconds);
             }
         }

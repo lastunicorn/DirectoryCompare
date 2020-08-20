@@ -21,6 +21,7 @@ using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
+using DustInTheWind.DirectoryCompare.Domain.Logging;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 using MediatR;
 
@@ -30,16 +31,20 @@ namespace DustInTheWind.DirectoryCompare.Application.FindDuplicates
     {
         private readonly ISnapshotRepository snapshotRepository;
         private readonly IBlackListRepository blackListRepository;
+        private readonly IProjectLogger logger;
         private DuplicatesAnalysis duplicatesAnalysis;
 
-        public FindDuplicatesRequestHandler(ISnapshotRepository snapshotRepository, IBlackListRepository blackListRepository)
+        public FindDuplicatesRequestHandler(ISnapshotRepository snapshotRepository, IBlackListRepository blackListRepository, IProjectLogger logger)
         {
             this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
             this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         protected override DuplicatesAnalysis Handle(FindDuplicatesRequest request)
         {
+            logger.Info("Searching for duplicates between pot '{0}' and '{1}'.", request.SnapshotLeft.PotName, request.SnapshotRight.PotName);
+
             FileDuplicates fileDuplicates = new FileDuplicates
             {
                 FilesLeft = GetFiles(request.SnapshotLeft),
