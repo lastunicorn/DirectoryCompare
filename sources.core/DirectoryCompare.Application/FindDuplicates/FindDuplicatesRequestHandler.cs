@@ -32,7 +32,6 @@ namespace DustInTheWind.DirectoryCompare.Application.FindDuplicates
         private readonly ISnapshotRepository snapshotRepository;
         private readonly IBlackListRepository blackListRepository;
         private readonly IProjectLogger logger;
-        private DuplicatesAnalysis duplicatesAnalysis;
 
         public FindDuplicatesRequestHandler(ISnapshotRepository snapshotRepository, IBlackListRepository blackListRepository, IProjectLogger logger)
         {
@@ -52,7 +51,7 @@ namespace DustInTheWind.DirectoryCompare.Application.FindDuplicates
                 CheckFilesExist = request.CheckFilesExist
             };
 
-            duplicatesAnalysis = new DuplicatesAnalysis(fileDuplicates);
+            DuplicatesAnalysis duplicatesAnalysis = new DuplicatesAnalysis(fileDuplicates);
 
             duplicatesAnalysis.RunAsync();
 

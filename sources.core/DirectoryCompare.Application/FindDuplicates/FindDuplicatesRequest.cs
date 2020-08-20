@@ -19,7 +19,7 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.FindDuplicates
 {
-    public class FindDuplicatesRequest : IRequest<DuplicatesAnalysis>, IRequest
+    public class FindDuplicatesRequest : IRequest<DuplicatesAnalysis>
     {
         public SnapshotLocation SnapshotLeft { get; set; }
 
