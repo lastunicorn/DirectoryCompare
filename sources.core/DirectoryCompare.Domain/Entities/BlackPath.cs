@@ -32,26 +32,26 @@ namespace DustInTheWind.DirectoryCompare.Domain.Entities
             isDirectoryOnly = trimmedPattern.EndsWith("/");
             parts = pattern
                 .Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)
-                .Reverse()
                 .ToArray();
         }
 
         public bool Matches(HItem hItem)
         {
-            int index = 0;
+            int index = parts.Length - 1;
             HItem currentHItem = hItem;
 
-            if (isDirectoryOnly && !(currentHItem is HDirectory))
-                return false;
-
-            while (index < parts.Length)
+            while (index >= 0)
             {
-                string currentPart = parts[index];
-
-                if (currentHItem == null || currentHItem.Name != currentPart)
+                if (currentHItem == null)
                     return false;
 
-                index++;
+                bool isMatch = currentHItem.Name == parts[index] && (!isDirectoryOnly || currentHItem is HDirectory);
+
+                if (isMatch)
+                    index--;
+                else
+                    index = parts.Length - 1;
+
                 currentHItem = currentHItem.Parent;
             }
 

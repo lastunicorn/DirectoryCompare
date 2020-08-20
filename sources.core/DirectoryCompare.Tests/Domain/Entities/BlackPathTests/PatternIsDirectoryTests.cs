@@ -101,5 +101,25 @@ namespace DustInTheWind.DirectoryCompare.Tests.Domain.Entities.BlackPathTests
 
             Assert.That(actual, Is.True);
         }
+
+        [Test]
+        public void HavingFilePlacedInDirectoryWithMatchingname_WhenChecked_ThenMatches()
+        {
+            // pattern: item-1/
+            // path:    /item-1/file-1 (file)
+
+            HFile hFile = new HFile
+            {
+                Name = "file-1",
+                Parent = new HDirectory
+                {
+                    Name = "item-1"
+                }
+            };
+
+            bool actual = blackPath.Matches(hFile);
+
+            Assert.That(actual, Is.True);
+        }
     }
 }
