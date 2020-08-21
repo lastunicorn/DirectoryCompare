@@ -36,7 +36,7 @@ namespace DustInTheWind.DirectoryCompare.Application.GetPot
         protected override Pot Handle(GetPotRequest request)
         {
             Pot pot = potRepository.Get(request.PotName);
-            pot.Shapshots = snapshotRepository.GetByPot(request.PotName).ToList();
+            pot.Snapshots = snapshotRepository.GetByPot(request.PotName).ToList();
 
             return pot;
         }

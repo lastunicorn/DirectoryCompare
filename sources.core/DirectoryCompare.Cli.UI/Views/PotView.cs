@@ -44,11 +44,11 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Views
             CustomConsole.Write("Path: ");
             CustomConsole.WriteLineEmphasies(pot.Path);
 
-            if (pot.Shapshots != null && pot.Shapshots.Count > 0)
+            if (pot.Snapshots != null && pot.Snapshots.Count > 0)
             {
                 CustomConsole.WriteLine("Snapshots: ");
 
-                foreach (Snapshot snapshot in pot.Shapshots)
+                foreach (Snapshot snapshot in pot.Snapshots)
                     CustomConsole.WriteLineEmphasies("  - " + snapshot.CreationTime);
             }
             else

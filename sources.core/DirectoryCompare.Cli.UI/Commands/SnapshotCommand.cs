@@ -20,6 +20,7 @@ using DustInTheWind.DirectoryCompare.Application;
 using DustInTheWind.DirectoryCompare.Application.CreateSnapshot;
 using DustInTheWind.DirectoryCompare.Application.DeleteSnapshot;
 using DustInTheWind.DirectoryCompare.Application.GetSnapshot;
+using DustInTheWind.DirectoryCompare.Application.ImportSnapshot;
 using DustInTheWind.DirectoryCompare.Cli.UI.Views;
 using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
@@ -45,6 +46,9 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
             Argument deleteArgument = arguments["d"];
             bool isDelete = !deleteArgument.IsEmpty;
 
+            Argument importArgument = arguments["i"];
+            bool isImport = !importArgument.IsEmpty;
+
             if (isCreate)
             {
                 // snapshot -c <pot-name>
@@ -54,6 +58,11 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
             {
                 // snapshot -d <snapshot-location>
                 ExecuteDelete(arguments, deleteArgument);
+            }
+            else if (isImport)
+            {
+                // snapshot -i <file-path> -p <pot-name>
+                ExecuteImport(arguments, importArgument);
             }
             else
             {
@@ -93,18 +102,22 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
             requestBus.PlaceRequest(request).Wait();
         }
 
+        private void ExecuteImport(Arguments arguments, Argument importArgument)
+        {
+            ImportSnapshotRequest request = new ImportSnapshotRequest
+            {
+                FilePath = importArgument.Value,
+                PotName = arguments.GetStringValue("p")
+            };
+            requestBus.PlaceRequest(request).Wait();
+        }
+
         private void ExecuteDisplay(Arguments arguments)
         {
-            SnapshotLocation snapshotLocation;
-
-            if (arguments.Values.Count > 0 && !arguments.Values[0].HasName)
-            {
-                snapshotLocation = arguments.Values[0].Value;
-            }
-            else
-            {
+            if (arguments.Values.Count <= 0 || arguments.Values[0].HasName)
                 throw new Exception("Snapshot path must be provided.");
-            }
+            
+            SnapshotLocation snapshotLocation = arguments.Values[0].Value;
 
             GetSnapshotRequest request = new GetSnapshotRequest
             {

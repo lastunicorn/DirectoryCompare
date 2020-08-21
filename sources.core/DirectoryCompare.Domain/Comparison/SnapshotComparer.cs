@@ -23,21 +23,27 @@ namespace DustInTheWind.DirectoryCompare.Domain.Comparison
 {
     public class SnapshotComparer
     {
-        public Snapshot Snapshot1 { get; }
-        public Snapshot Snapshot2 { get; }
-
-        public DateTime StartTimeUtc { get; private set; }
-        public DateTime EndTimeUtc { get; private set; }
-        public TimeSpan TotalTime => EndTimeUtc - StartTimeUtc;
-
         private readonly List<string> onlyInSnapshot1 = new List<string>();
         private readonly List<string> onlyInSnapshot2 = new List<string>();
         private readonly List<ItemComparison> differentNames = new List<ItemComparison>();
         private readonly List<ItemComparison> differentContent = new List<ItemComparison>();
 
+        public Snapshot Snapshot1 { get; }
+        
+        public Snapshot Snapshot2 { get; }
+
+        public DateTime StartTimeUtc { get; private set; }
+        
+        public DateTime EndTimeUtc { get; private set; }
+        
+        public TimeSpan TotalTime => EndTimeUtc - StartTimeUtc;
+
         public IReadOnlyList<string> OnlyInSnapshot1 => onlyInSnapshot1;
+        
         public IReadOnlyList<string> OnlyInSnapshot2 => onlyInSnapshot2;
+        
         public IReadOnlyList<ItemComparison> DifferentNames => differentNames;
+        
         public IReadOnlyList<ItemComparison> DifferentContent => differentContent;
 
         public SnapshotComparer(Snapshot snapshot1, Snapshot snapshot2)

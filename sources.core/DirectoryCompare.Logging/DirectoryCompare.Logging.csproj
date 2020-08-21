@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" />
+    <ProjectReference Include="..\DirectoryCompare.Infrastructure\DirectoryCompare.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

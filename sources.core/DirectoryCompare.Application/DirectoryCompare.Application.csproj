@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" />
+    <ProjectReference Include="..\DirectoryCompare.Infrastructure\DirectoryCompare.Infrastructure.csproj" />
     <ProjectReference Include="..\DirectoryCompare.JsonHashesFile\DirectoryCompare.JsonHashesFile.csproj" />
   </ItemGroup>
 

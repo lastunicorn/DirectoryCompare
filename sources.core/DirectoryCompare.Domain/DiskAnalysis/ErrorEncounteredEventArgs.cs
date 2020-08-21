@@ -21,6 +21,7 @@ namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
     public class ErrorEncounteredEventArgs : EventArgs
     {
         public Exception Exception { get; }
+      
         public string Path { get; }
 
         public ErrorEncounteredEventArgs(Exception exception, string path)

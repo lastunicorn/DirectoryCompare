@@ -19,6 +19,7 @@ namespace DustInTheWind.ConsoleFramework
     public interface ICommand
     {
         string Description { get; }
+
         void Execute(Arguments arguments);
     }
 }

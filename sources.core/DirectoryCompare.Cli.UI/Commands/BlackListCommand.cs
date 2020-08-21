@@ -79,12 +79,12 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
             }
         }
 
-        private void ExecuteCreateBlacklist(Arguments arguments, Argument createBlacklistArgument)
+        private static void ExecuteCreateBlacklist(Arguments arguments, Argument createBlacklistArgument)
         {
             throw new NotImplementedException();
         }
 
-        private void ExecuteDeleteBlacklist(Arguments arguments, Argument deleteBlacklistArgument)
+        private static void ExecuteDeleteBlacklist(Arguments arguments, Argument deleteBlacklistArgument)
         {
             throw new NotImplementedException();
         }

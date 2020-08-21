@@ -29,6 +29,6 @@ namespace DustInTheWind.DirectoryCompare.Domain.PotModel
 
         public DiskPath Path { get; set; }
 
-        public List<Snapshot> Shapshots { get; set; }
+        public List<Snapshot> Snapshots { get; set; }
     }
 }

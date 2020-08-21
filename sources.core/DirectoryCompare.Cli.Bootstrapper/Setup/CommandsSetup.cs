@@ -27,13 +27,12 @@ namespace DustInTheWind.DirectoryCompare.Cli.Setup
             return new CommandCollection
             {
                 { "pot", dependencyContainer.Get<PotCommand>() },
-                { "read", dependencyContainer.Get<CreateSnapshotCommand>() },
                 { "snapshot", dependencyContainer.Get<SnapshotCommand>() },
+                { "blacklist", dependencyContainer.Get<BlackListCommand>() },
+                { "read", dependencyContainer.Get<CreateSnapshotCommand>() },
                 { "compare", dependencyContainer.Get<CompareSnapshotsCommand>() },
                 { "find-duplicates", dependencyContainer.Get<FindDuplicatesCommand>() },
-                { "remove-duplicates", dependencyContainer.Get<RemoveDuplicatesCommand>() },
-                { "import", dependencyContainer.Get<ImportSnapshotCommand>() },
-                { "blacklist", dependencyContainer.Get<BlackListCommand>() }
+                { "remove-duplicates", dependencyContainer.Get<RemoveDuplicatesCommand>() }
             };
         }
     }

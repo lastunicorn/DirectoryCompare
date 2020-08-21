@@ -45,8 +45,10 @@ namespace DustInTheWind.DirectoryCompare.Domain.Comparison
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            return obj is ItemComparison && Equals((ItemComparison)obj);
+            if (ReferenceEquals(null, obj))
+                return false;
+            
+            return obj is ItemComparison comparison && Equals(comparison);
         }
 
         public override int GetHashCode()

@@ -21,9 +21,13 @@ namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis.DiskCrawling
     internal struct CrawlerStep
     {
         public CrawlerAction Action { get; private set; }
+        
         public string Path { get; private set; }
+        
         public long FileCount { get; private set; }
+        
         public long DirectoryCount { get; private set; }
+        
         public Exception Exception { get; private set; }
 
         public static CrawlerStep DirectoryOpened(string directoryPath, long fileCount, long directoryCount)

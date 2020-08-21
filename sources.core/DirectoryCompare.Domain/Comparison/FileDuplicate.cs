@@ -40,7 +40,9 @@ namespace DustInTheWind.DirectoryCompare.Domain.Comparison
         }
 
         public DataSize Size => fileLeft.Size;
+        
         public string FullPathLeft => fileLeft.GetOriginalPath();
+        
         public string FullPathRight => fileRight.GetOriginalPath();
 
         public bool FileLeftExists
