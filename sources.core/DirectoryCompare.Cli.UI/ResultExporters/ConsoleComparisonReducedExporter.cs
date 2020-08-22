@@ -19,7 +19,7 @@ using DustInTheWind.DirectoryCompare.Domain.Comparison;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.ResultExporters
 {
-    internal class ConsoleComparisonExporter
+    internal class ConsoleComparisonReducedExporter
     {
         public void Export(SnapshotComparer comparer)
         {
@@ -30,33 +30,19 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.ResultExporters
         {
             Console.WriteLine();
 
-            Console.WriteLine("Files only in snapshot 1:");
-            foreach (string path in comparer.OnlyInSnapshot1)
-                Console.WriteLine(path);
+            Console.WriteLine("Files only in snapshot 1: " + comparer.OnlyInSnapshot1.Count);
 
             Console.WriteLine();
 
-            Console.WriteLine("Files only in snapshot 2:");
-            foreach (string path in comparer.OnlyInSnapshot2)
-                Console.WriteLine(path);
+            Console.WriteLine("Files only in snapshot 2: " + comparer.OnlyInSnapshot2.Count);
 
             Console.WriteLine();
 
-            Console.WriteLine("Different names:");
-            foreach (ItemComparison itemComparison in comparer.DifferentNames)
-            {
-                Console.WriteLine("1 - " + itemComparison.FullName1);
-                Console.WriteLine("2 - " + itemComparison.FullName2);
-            }
+            Console.WriteLine("Different names: " + comparer.DifferentNames.Count);
 
             Console.WriteLine();
 
-            Console.WriteLine("Different content:");
-            foreach (ItemComparison itemComparison in comparer.DifferentContent)
-            {
-                Console.WriteLine("1 - " + itemComparison.FullName1);
-                Console.WriteLine("2 - " + itemComparison.FullName2);
-            }
+            Console.WriteLine("Different content: " + comparer.DifferentContent.Count);
         }
     }
 }
