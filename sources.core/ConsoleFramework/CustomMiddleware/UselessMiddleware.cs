@@ -19,15 +19,8 @@ using DustInTheWind.ConsoleFramework.AppBuilder;
 
 namespace DustInTheWind.ConsoleFramework.CustomMiddleware
 {
-    internal class UselessMiddleware : IMiddleware
+    internal class UselessMiddleware : IConsoleMiddleware
     {
-        private readonly RequestDelegate next;
-
-        public UselessMiddleware(RequestDelegate next)
-        {
-            this.next = next;
-        }
-
         public async Task InvokeAsync(ConsoleRequestContext context, RequestDelegate next)
         {
             await next(context);

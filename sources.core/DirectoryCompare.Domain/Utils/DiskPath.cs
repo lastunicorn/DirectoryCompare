@@ -24,6 +24,10 @@ namespace DustInTheWind.DirectoryCompare.Domain.Utils
         private readonly string value;
         private bool? isValid;
 
+        public static DiskPath Empty { get; } = new DiskPath();
+
+        public bool IsEmpty => value == null;
+
         public bool IsValid
         {
             get
@@ -39,7 +43,7 @@ namespace DustInTheWind.DirectoryCompare.Domain.Utils
 
         public DiskPath(string value)
         {
-            this.value = value ?? throw new ArgumentNullException(nameof(value));
+            this.value = value;
             isValid = null;
         }
 
@@ -48,15 +52,8 @@ namespace DustInTheWind.DirectoryCompare.Domain.Utils
             if (value == null)
                 return false;
 
-            try
-            {
-                Path.GetFullPath(value);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            bool isSuccess = Uri.TryCreate(value, UriKind.RelativeOrAbsolute, out _);
+            return isSuccess;
         }
 
         public override string ToString()

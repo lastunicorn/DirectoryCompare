@@ -15,15 +15,14 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using FluentValidation;
-using FluentValidation.Validators;
 
 namespace DustInTheWind.DirectoryCompare.Infrastructure.Validation
 {
-    internal static class RuleBuilderExtensions
+    public static class RuleBuilderExtensions
     {
-        public static IRuleBuilderOptions<T, TProperty> IsPath<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder)
+        public static IRuleBuilderOptions<T, TProperty> IsValidPath<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder)
         {
-            return ruleBuilder.SetValidator((IPropertyValidator)new PathValidator());
+            return ruleBuilder.SetValidator(new PathValidator());
         }
     }
 }

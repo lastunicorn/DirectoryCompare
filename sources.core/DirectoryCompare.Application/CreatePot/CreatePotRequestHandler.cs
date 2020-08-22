@@ -32,18 +32,18 @@ namespace DustInTheWind.DirectoryCompare.Application.CreatePot
 
         protected override void Handle(CreatePotRequest request)
         {
-            Pot pot = potRepository.Get(request.Name);
+            Pot existingPot = potRepository.Get(request.Name);
 
-            if (pot != null)
+            if (existingPot != null)
                 throw new PotAlreadyExistsException();
 
-            pot = new Pot
+            Pot newPot = new Pot
             {
                 Name = request.Name,
                 Path = request.Path
             };
 
-            potRepository.Add(pot);
+            potRepository.Add(newPot);
         }
     }
 }

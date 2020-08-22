@@ -28,15 +28,15 @@ namespace DustInTheWind.ConsoleFramework.AppBuilder
             this.commands = commands ?? throw new ArgumentNullException(nameof(commands));
         }
 
-        public IMiddleware Create(Type middlewareType)
+        public IConsoleMiddleware Create(Type middlewareType)
         {
             if(middlewareType == typeof(CommandMiddleware))
                 return new CommandMiddleware(commands);
 
-            return Activator.CreateInstance(middlewareType) as IMiddleware;
+            return Activator.CreateInstance(middlewareType) as IConsoleMiddleware;
         }
 
-        public void Release(IMiddleware middleware)
+        public void Release(IConsoleMiddleware middleware)
         {
         }
     }

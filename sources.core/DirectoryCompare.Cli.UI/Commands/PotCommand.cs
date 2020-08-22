@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using DustInTheWind.ConsoleFramework;
+using DustInTheWind.ConsoleTools;
 using DustInTheWind.DirectoryCompare.Application;
 using DustInTheWind.DirectoryCompare.Application.CreatePot;
 using DustInTheWind.DirectoryCompare.Application.DeletePot;
@@ -24,7 +25,6 @@ using DustInTheWind.DirectoryCompare.Application.GetPot;
 using DustInTheWind.DirectoryCompare.Application.GetPots;
 using DustInTheWind.DirectoryCompare.Cli.UI.Views;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
-using DustInTheWind.DirectoryCompare.Domain.Utils;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
@@ -81,18 +81,15 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 
         private void ExecuteCreate(Arguments arguments, Argument createArgument)
         {
-            Argument pathArgument = arguments["p"];
-
-            if (pathArgument.IsEmpty)
-                throw new Exception("Path must be provided.");
-
             CreatePotRequest request = new CreatePotRequest
             {
                 Name = createArgument.Value,
-                Path = new DiskPath(pathArgument.Value)
+                Path = arguments["p"].Value
             };
 
             requestBus.PlaceRequest(request).Wait();
+
+            CustomConsole.WriteLineSuccess("Pot created successfully.");
         }
 
         private void ExecuteDelete(Argument deleteArgument)
@@ -103,6 +100,8 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
             };
 
             requestBus.PlaceRequest(request).Wait();
+
+            CustomConsole.WriteLineSuccess("Pot deleted successfully.");
         }
 
         private void ExecuteDisplayOne(Arguments arguments)

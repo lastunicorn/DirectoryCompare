@@ -30,6 +30,8 @@ namespace DustInTheWind.ConsoleFramework
 
         protected override void InsertItem(int index, CommandCollectionItem item)
         {
+            if (item == null) throw new ArgumentNullException(nameof(item));
+
             if (this.Any(x => x.Key == item.Key))
                 throw new ArgumentException("There is another command with the same key.", nameof(item.Key));
 

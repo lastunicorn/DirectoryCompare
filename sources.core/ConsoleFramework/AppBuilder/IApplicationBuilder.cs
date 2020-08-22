@@ -22,13 +22,11 @@ namespace DustInTheWind.ConsoleFramework.AppBuilder
     {
         IServiceProvider ApplicationServices { get; set; }
 
-        //IFeatureCollection ServerFeatures { get; }
-
-        //IDictionary<string, object> Properties { get; }
-
         IApplicationBuilder Use(Func<RequestDelegate, RequestDelegate> middleware);
-
-        //IApplicationBuilder New();
+        
+        IApplicationBuilder UseMiddleware<TMiddleware>();
+        
+        IApplicationBuilder UseMiddleware(Type middlewareType);
 
         RequestDelegate Build();
     }

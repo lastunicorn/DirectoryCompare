@@ -14,19 +14,27 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Infrastructure.Validation;
-using FluentValidation;
+using System;
+using System.Threading.Tasks;
+using DustInTheWind.ConsoleFramework.AppBuilder;
 
-namespace DustInTheWind.DirectoryCompare.Application.CreatePot
+namespace DustInTheWind.ConsoleFramework.CustomMiddleware
 {
-    public class CreatePotRequestValidator : AbstractValidator<CreatePotRequest>
+    internal class ExceptionHandlerMiddleware : IConsoleMiddleware
     {
-        public CreatePotRequestValidator()
+        public async Task InvokeAsync(ConsoleRequestContext context, RequestDelegate next)
         {
-            RuleFor(x => x.Name).NotEmpty();
-            
-            RuleFor(x => x.Path).NotEmpty();
-            RuleFor(x => x.Path).IsValidPath();
+            try
+            {
+                if (next != null)
+                    await next.Invoke(context);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+
+                await Task.FromResult(null as object);
+            }
         }
     }
 }

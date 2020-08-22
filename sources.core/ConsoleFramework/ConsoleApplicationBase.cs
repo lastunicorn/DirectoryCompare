@@ -105,21 +105,19 @@ namespace DustInTheWind.ConsoleFramework
         {
             RequestDelegate requestDelegate = app.Build();
 
-            ConsoleRequestContext context = new ConsoleRequestContext(arguments);
-            context.RequestServices = app.ApplicationServices;
+            ConsoleRequestContext context = new ConsoleRequestContext(arguments)
+            {
+                RequestServices = app.ApplicationServices
+            };
 
             requestDelegate.Invoke(context);
         }
 
         protected virtual void OnStart()
         {
-            app.Use(async (context, next) =>
-            {
-                await next();
-            });
-
-            app.UseUselessMiddleware();
             app.UseCommands();
+            app.UseUselessMiddleware();
+            app.UseExceptionHandler();
         }
 
         protected virtual void OnExit()

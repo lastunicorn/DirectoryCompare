@@ -14,19 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Infrastructure.Validation;
-using FluentValidation;
+using DustInTheWind.ConsoleFramework.AppBuilder;
 
-namespace DustInTheWind.DirectoryCompare.Application.CreatePot
+namespace DustInTheWind.ConsoleFramework.CustomMiddleware
 {
-    public class CreatePotRequestValidator : AbstractValidator<CreatePotRequest>
+    public static class ExceptionHandlerMiddlewareExtensions
     {
-        public CreatePotRequestValidator()
+        public static IApplicationBuilder UseExceptionHandler(this IApplicationBuilder builder)
         {
-            RuleFor(x => x.Name).NotEmpty();
-            
-            RuleFor(x => x.Path).NotEmpty();
-            RuleFor(x => x.Path).IsValidPath();
+            return builder.UseMiddleware<ExceptionHandlerMiddleware>();
         }
     }
 }

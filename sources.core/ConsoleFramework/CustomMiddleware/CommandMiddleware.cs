@@ -20,7 +20,7 @@ using DustInTheWind.ConsoleFramework.AppBuilder;
 
 namespace DustInTheWind.ConsoleFramework.CustomMiddleware
 {
-    internal class CommandMiddleware : IMiddleware
+    internal class CommandMiddleware : IConsoleMiddleware
     {
         private readonly CommandCollection commands;
 

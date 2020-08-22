@@ -105,7 +105,7 @@ namespace DustInTheWind.ConsoleFramework.AppBuilder
                     if (middlewareFactory == null)
                         throw new InvalidOperationException(string.Format("There is not instance of the {0} configured.", typeof(IMiddlewareFactory)));
 
-                    IMiddleware middleware = middlewareFactory.Create(middlewareType);
+                    IConsoleMiddleware middleware = middlewareFactory.Create(middlewareType);
 
                     if (middleware == null)
                         throw new InvalidOperationException(string.Format("The factory {0} cannot create a middleware of type {1}.", middlewareFactory.GetType(), middlewareType));

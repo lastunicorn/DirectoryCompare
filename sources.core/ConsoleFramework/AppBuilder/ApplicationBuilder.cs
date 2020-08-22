@@ -34,6 +34,39 @@ namespace DustInTheWind.ConsoleFramework.AppBuilder
             return this;
         }
 
+        public IApplicationBuilder UseMiddleware<TMiddleware>()
+        {
+            return UseMiddleware(typeof(TMiddleware));
+        }
+
+        public IApplicationBuilder UseMiddleware(Type middlewareType)
+        {
+            return Use(next =>
+            {
+                return async context =>
+                {
+                    IMiddlewareFactory middlewareFactory = (IMiddlewareFactory)context.RequestServices.GetService(typeof(IMiddlewareFactory));
+
+                    if (middlewareFactory == null)
+                        throw new InvalidOperationException(string.Format("There is not instance of the {0} configured.", typeof(IMiddlewareFactory)));
+
+                    IConsoleMiddleware middleware = middlewareFactory.Create(middlewareType);
+
+                    if (middleware == null)
+                        throw new InvalidOperationException(string.Format("The factory {0} cannot create a middleware of type {1}.", middlewareFactory.GetType(), middlewareType));
+
+                    try
+                    {
+                        await middleware.InvokeAsync(context, next);
+                    }
+                    finally
+                    {
+                        middlewareFactory.Release(middleware);
+                    }
+                };
+            });
+        }
+
         public RequestDelegate Build()
         {
             return requestDelegate;

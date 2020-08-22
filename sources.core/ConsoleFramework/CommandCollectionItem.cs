@@ -21,6 +21,7 @@ namespace DustInTheWind.ConsoleFramework
     public class CommandCollectionItem
     {
         public string Key { get; }
+        
         public ICommand Command { get; }
 
         public CommandCollectionItem(string key, ICommand command)

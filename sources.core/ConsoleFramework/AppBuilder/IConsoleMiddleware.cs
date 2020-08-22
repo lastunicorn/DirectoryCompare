@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace DustInTheWind.ConsoleFramework.AppBuilder
 {
-    public interface IMiddleware
+    public interface IConsoleMiddleware
     {
         Task InvokeAsync(ConsoleRequestContext context, RequestDelegate next);
     }
