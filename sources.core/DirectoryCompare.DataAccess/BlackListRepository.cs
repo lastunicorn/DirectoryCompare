@@ -24,9 +24,9 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
     {
         public PathCollection Get(string potName)
         {
-            PotDirectory potDirectory = new PotDirectory(potName);
+            PotDirectory potDirectory = PotDirectory.FromPotName(potName);
 
-            if (!potDirectory.Exists)
+            if (!potDirectory.IsValid)
                 throw new Exception($"There is no pot with name '{potName}'.");
 
             BlackListFile blackListFile = potDirectory.OpenBlackListFile("bl");
@@ -35,9 +35,9 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
 
         public void Add(string potName, DiskPath path)
         {
-            PotDirectory potDirectory = new PotDirectory(potName);
+            PotDirectory potDirectory = PotDirectory.FromPotName(potName);
 
-            if (!potDirectory.Exists)
+            if (!potDirectory.IsValid)
                 throw new Exception($"There is no pot with name '{potName}'.");
 
             BlackListFile blackListFile = potDirectory.OpenBlackListFile("bl");
@@ -47,9 +47,9 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
 
         public void Delete(string potName, DiskPath path)
         {
-            PotDirectory potDirectory = new PotDirectory(potName);
+            PotDirectory potDirectory = PotDirectory.FromPotName(potName);
 
-            if (!potDirectory.Exists)
+            if (!potDirectory.IsValid)
                 throw new Exception($"There is no pot with name '{potName}'.");
 
             BlackListFile blackListFile = potDirectory.OpenBlackListFile("bl");

@@ -16,6 +16,7 @@
 
 using System;
 using DustInTheWind.ConsoleFramework;
+using DustInTheWind.ConsoleTools;
 using DustInTheWind.DirectoryCompare.Application;
 using DustInTheWind.DirectoryCompare.Application.CreateSnapshot;
 using DustInTheWind.DirectoryCompare.Application.DeleteSnapshot;
@@ -73,6 +74,8 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 
         private void ExecuteCreate(Argument createArgument)
         {
+            CustomConsole.WriteLine("Creating new snapshot.");
+
             CreateSnapshotRequest request = new CreateSnapshotRequest
             {
                 PotName = createArgument.HasValue

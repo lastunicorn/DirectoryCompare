@@ -20,7 +20,6 @@ using System.IO;
 using System.Linq;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
-using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.DataAccess
 {
@@ -28,119 +27,64 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
     {
         public List<Pot> Get()
         {
-            return GetAllPots()
+            return Directory.GetDirectories(".")
+                .Select(x => new PotDirectory(x))
+                .Select(ToPot)
                 .ToList();
         }
 
         public Pot Get(string name)
         {
-            return GetAllPots()
-                .FirstOrDefault(x => x.Name == name);
+            PotDirectory potDirectory = PotDirectory.FromPotName(name);
+            return ToPot(potDirectory);
+        }
+
+        private static Pot ToPot(PotDirectory potDirectory)
+        {
+            if (!potDirectory.IsValid)
+                return null;
+
+            JPotInfoFile jPotInfoFile = potDirectory.GetInfoFile();
+            bool success = jPotInfoFile.TryOpen();
+
+            if (!success)
+                return null;
+
+            return new Pot
+            {
+                Guid = new Guid(Path.GetFileName(potDirectory.FullPath)),
+                Name = jPotInfoFile.JPotInfo.Name,
+                Path = jPotInfoFile.JPotInfo.Path
+            };
         }
 
         public bool Exists(string name)
         {
-            return GetAllPots()
-                .Any(x => x.Name == name);
-        }
-
-        private static IEnumerable<Pot> GetAllPots()
-        {
-            return Directory.GetDirectories(".")
-                .Select(x => new
-                {
-                    DirectoryName = Path.GetFileName(x),
-                    InfoFilePath = Path.Combine(x, "info.json")
-                })
-                .Where(x => File.Exists(x.InfoFilePath))
-                .Select(x => new
-                {
-                    DirectoryName = x.DirectoryName,
-                    InfoFileContent = File.ReadAllText(x.InfoFilePath)
-                })
-                .Select(x =>
-                {
-                    try
-                    {
-                        JInfo jInfo = JsonConvert.DeserializeObject<JInfo>(x.InfoFileContent);
-
-                        return new Pot
-                        {
-                            Guid = new Guid(x.DirectoryName),
-                            Name = jInfo.Name,
-                            Path = jInfo.Path
-                        };
-                    }
-                    catch
-                    {
-                        return null;
-                    }
-                })
-                .Where(x => x != null);
+            PotDirectory potDirectory = PotDirectory.FromPotName(name);
+            return potDirectory.IsValid;
         }
 
         public void Add(Pot pot)
         {
-            string directoryName = CreatePotDirectory();
-            CreateInfoFile(pot, directoryName);
-        }
+            PotDirectory potDirectory = PotDirectory.FromPotName(pot.Name);
+            potDirectory.Create();
 
-        private static string CreatePotDirectory()
-        {
-            for (int i = 0; i < 10000; i++)
-            {
-                Guid guid = Guid.NewGuid();
-                string path = guid.ToString("D");
-
-                if (Directory.Exists(path))
-                    continue;
-
-                Directory.CreateDirectory(path);
-                return path;
-            }
-
-            throw new Exception("Could not find a valid name for the pot's directory. All the tried name already exist.");
-        }
-
-        private static void CreateInfoFile(Pot pot, string directoryName)
-        {
-            JInfo jInfo = new JInfo
+            JPotInfoFile jPotInfoFile = potDirectory.GetInfoFile();
+            jPotInfoFile.JPotInfo = new JPotInfo
             {
                 Name = pot.Name,
                 Path = pot.Path
             };
 
-            string json = JsonConvert.SerializeObject(jInfo);
-
-            string infoFilePath = Path.Combine(directoryName, "info.json");
-            File.WriteAllText(infoFilePath, json);
+            jPotInfoFile.Save();
         }
 
         public void Delete(string name)
         {
-            string directoryName = Directory.GetDirectories(".")
-                .Select(x => new
-                {
-                    DirectoryName = Path.GetFileName(x),
-                    InfoFilePath = Path.Combine(x, "info.json")
-                })
-                .Where(x => File.Exists(x.InfoFilePath))
-                .Select(x => new
-                {
-                    DirectoryName = x.DirectoryName,
-                    InfoFileContent = File.ReadAllText(x.InfoFilePath)
-                })
-                .Select(x => new
-                {
-                    DirectoryName = x.DirectoryName,
-                    JInfo = JsonConvert.DeserializeObject<JInfo>(x.InfoFileContent)
-                })
-                .Where(x => x.JInfo.Name == name)
-                .Select(x => x.DirectoryName)
-                .FirstOrDefault();
+            PotDirectory potDirectory = PotDirectory.FromPotName(name);
 
-            if (directoryName != null && Directory.Exists(directoryName))
-                Directory.Delete(directoryName, true);
+            if (potDirectory.IsValid)
+                potDirectory.Delete();
             else
                 throw new Exception($"Pot '{name}' does not exist.");
         }

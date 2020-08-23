@@ -16,7 +16,7 @@
 
 namespace DustInTheWind.DirectoryCompare.DataAccess
 {
-    internal class JInfo
+    internal class JPotInfo
     {
         public string Name { get; set; }
 

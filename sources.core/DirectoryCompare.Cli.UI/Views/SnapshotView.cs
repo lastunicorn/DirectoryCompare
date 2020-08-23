@@ -31,7 +31,10 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Views
 
         public void Display()
         {
-            DisplayDirectory(snapshot, 0);
+            if (snapshot == null)
+                CustomConsole.WriteLine("There is no snapshot.");
+            else
+                DisplayDirectory(snapshot, 0);
         }
 
         private static void DisplayDirectory(HDirectory hDirectory, int index)

@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DustInTheWind.DirectoryCompare.JsonHashesFile;
-using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.DataAccess
 {
@@ -27,33 +26,75 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
     {
         private const string SnapshotsDirectoryName = "snapshots";
 
-        public string FullPath { get; }
+        public static PotDirectory Empty { get; } = new PotDirectory(null);
 
-        public bool Exists => FullPath != null && Directory.Exists(FullPath);
+        private string potName;
 
-        public PotDirectory(string potName)
+        public string FullPath { get; private set; }
+
+        public bool IsValid
         {
-            FullPath = Directory.GetDirectories(".")
-                .FirstOrDefault(x => IsPot(x, potName));
-        }
-
-        private static bool IsPot(string directoryPath, string potName)
-        {
-            try
+            get
             {
-                string infoFilePath = Path.Combine(directoryPath, "info.json");
-
-                if (!File.Exists(infoFilePath))
+                if (FullPath == null || !Directory.Exists(FullPath))
                     return false;
 
-                string json = File.ReadAllText(infoFilePath);
-                JInfo jInfo = JsonConvert.DeserializeObject<JInfo>(json);
-                return jInfo.Name == potName;
+                JPotInfoFile jPotInfoFile = GetInfoFile();
+                jPotInfoFile.TryOpen();
+                return jPotInfoFile.IsValid;
             }
-            catch
+        }
+
+        private PotDirectory()
+        {
+        }
+
+        public PotDirectory(string fullPath)
+        {
+            FullPath = fullPath;
+        }
+
+        public static PotDirectory FromPotName(string potName)
+        {
+            if (potName == null) throw new ArgumentNullException(nameof(potName));
+
+            PotDirectory potDirectory = Directory.GetDirectories(".")
+                .Select(x => new PotDirectory(x))
+                .Where(x =>
+                {
+                    JPotInfoFile jPotInfoFile = x.GetInfoFile();
+                    bool success = jPotInfoFile.TryOpen();
+                    return success && jPotInfoFile.JPotInfo.Name == potName;
+                })
+                .FirstOrDefault();
+
+            return potDirectory ?? new PotDirectory { potName = potName };
+        }
+
+        public void Create()
+        {
+            if (IsValid)
+                throw new Exception("The pot directory already exists.");
+
+            for (int i = 0; i < 10000; i++)
             {
-                return false;
+                Guid guid = Guid.NewGuid();
+                string path = guid.ToString("D");
+
+                if (Directory.Exists(path))
+                    continue;
+
+                Directory.CreateDirectory(path);
+                FullPath = path;
+                return;
             }
+
+            throw new Exception("Could not find a valid name for the pot's directory. All the tried name already exist.");
+        }
+
+        public void Delete()
+        {
+            Directory.Delete(FullPath, true);
         }
 
         public BlackListFile OpenBlackListFile(string blackListName)
@@ -83,6 +124,15 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
             string snapshotFilePath = Path.Combine(snapshotsDirectoryPath, snapshotFileName);
 
             return new SnapshotFile(snapshotFilePath);
+        }
+
+        public JPotInfoFile GetInfoFile()
+        {
+            if (FullPath == null)
+                return null;
+
+            string infoFilePath = Path.Combine(FullPath, "info.json");
+            return new JPotInfoFile(infoFilePath);
         }
     }
 }
