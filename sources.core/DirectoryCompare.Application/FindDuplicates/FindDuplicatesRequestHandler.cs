@@ -17,11 +17,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DustInTheWind.ConsoleFramework.Logging;
 using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
-using DustInTheWind.DirectoryCompare.Domain.Logging;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 using MediatR;
 

@@ -15,9 +15,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using DustInTheWind.ConsoleFramework.Logging;
 using DustInTheWind.DirectoryCompare.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
-using DustInTheWind.DirectoryCompare.Domain.Logging;
 using DustInTheWind.DirectoryCompare.Logging;
 using Ninject;
 

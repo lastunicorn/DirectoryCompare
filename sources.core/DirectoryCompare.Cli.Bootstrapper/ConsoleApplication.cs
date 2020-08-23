@@ -17,8 +17,8 @@
 using System;
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.ConsoleFramework.AppBuilder;
+using DustInTheWind.ConsoleFramework.Logging;
 using DustInTheWind.DirectoryCompare.Cli.Setup;
-using DustInTheWind.DirectoryCompare.Domain.Logging;
 using Ninject;
 
 namespace DustInTheWind.DirectoryCompare.Cli

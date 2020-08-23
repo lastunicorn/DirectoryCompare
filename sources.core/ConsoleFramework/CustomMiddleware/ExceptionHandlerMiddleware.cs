@@ -17,8 +17,8 @@
 using System;
 using System.Threading.Tasks;
 using DustInTheWind.ConsoleFramework.AppBuilder;
+using DustInTheWind.ConsoleFramework.Logging;
 using DustInTheWind.ConsoleTools;
-using DustInTheWind.DirectoryCompare.Domain.Logging;
 
 namespace DustInTheWind.ConsoleFramework.CustomMiddleware
 {

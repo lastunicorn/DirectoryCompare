@@ -18,7 +18,7 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using DustInTheWind.DirectoryCompare.Domain.Logging;
+using DustInTheWind.ConsoleFramework.Logging;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Infrastructure.Performance
