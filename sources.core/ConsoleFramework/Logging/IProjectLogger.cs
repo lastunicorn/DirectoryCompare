@@ -18,8 +18,6 @@ namespace DustInTheWind.DirectoryCompare.Domain.Logging
 {
     public interface IProjectLogger
     {
-        //void Open();
-        //void Close();
         void Debug(string format);
         void Debug(string format, params object[] arg);
         void Info(string format);

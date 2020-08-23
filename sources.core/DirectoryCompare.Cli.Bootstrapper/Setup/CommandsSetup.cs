@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.DirectoryCompare.Cli.UI.Commands;
 using Ninject;
@@ -22,17 +23,17 @@ namespace DustInTheWind.DirectoryCompare.Cli.Setup
 {
     internal static class CommandsSetup
     {
-        public static CommandCollection Create(IKernel dependencyContainer)
+        public static CommandCollection Create(IServiceProvider dependencyContainer)
         {
             return new CommandCollection
             {
-                { "pot", dependencyContainer.Get<PotCommand>() },
-                { "snapshot", dependencyContainer.Get<SnapshotCommand>() },
-                { "blacklist", dependencyContainer.Get<BlackListCommand>() },
-                { "read", dependencyContainer.Get<CreateSnapshotCommand>() },
-                { "compare", dependencyContainer.Get<CompareSnapshotsCommand>() },
-                { "find-duplicates", dependencyContainer.Get<FindDuplicatesCommand>() },
-                { "remove-duplicates", dependencyContainer.Get<RemoveDuplicatesCommand>() }
+                { "pot", dependencyContainer.GetService<PotCommand>() },
+                { "snapshot", dependencyContainer.GetService<SnapshotCommand>() },
+                { "blacklist", dependencyContainer.GetService<BlackListCommand>() },
+                { "read", dependencyContainer.GetService<CreateSnapshotCommand>() },
+                { "compare", dependencyContainer.GetService<CompareSnapshotsCommand>() },
+                { "find-duplicates", dependencyContainer.GetService<FindDuplicatesCommand>() },
+                { "remove-duplicates", dependencyContainer.GetService<RemoveDuplicatesCommand>() }
             };
         }
     }

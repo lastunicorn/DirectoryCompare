@@ -16,6 +16,7 @@
 
 using System;
 using DustInTheWind.ConsoleFramework;
+using DustInTheWind.ConsoleFramework.AppBuilder;
 using DustInTheWind.DirectoryCompare.Cli.Setup;
 using DustInTheWind.DirectoryCompare.Domain.Logging;
 using Ninject;
@@ -24,24 +25,29 @@ namespace DustInTheWind.DirectoryCompare.Cli
 {
     internal class ConsoleApplication : ConsoleApplicationBase
     {
-        private readonly KernelBase dependencyContainer;
-        private readonly IProjectLogger logger;
-
         public ConsoleApplication()
         {
-            dependencyContainer = DependencyContainerSetup.Setup();
-            MediatorSetup.Setup(dependencyContainer);
             Log4NetSetup.Configure();
-            logger = dependencyContainer.Get<IProjectLogger>();
+        }
+
+        protected override IServiceProvider CreateServiceProvider()
+        {
+            KernelBase serviceProvider = DependencyContainerSetup.Setup();
+            MediatorSetup.Setup(serviceProvider);
+
+            serviceProvider.Bind<IMiddlewareFactory>().To<MiddlewareFactory>();
+
+            return serviceProvider;
         }
 
         protected override CommandCollection CreateCommands()
         {
-            return CommandsSetup.Create(dependencyContainer);
+            return CommandsSetup.Create(ServiceProvider);
         }
 
         protected override void OnError(Exception ex)
         {
+            IProjectLogger logger = ServiceProvider.GetService<IProjectLogger>();
             logger.Error(ex.ToString());
         }
     }

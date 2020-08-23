@@ -20,7 +20,7 @@ namespace DustInTheWind.ConsoleFramework.CustomMiddleware
 {
     public static class ExceptionHandlerMiddlewareExtensions
     {
-        public static IApplicationBuilder UseExceptionHandler(this IApplicationBuilder builder)
+        public static MiddlewareCollection UseExceptionHandler(this MiddlewareCollection builder)
         {
             return builder.UseMiddleware<ExceptionHandlerMiddleware>();
         }

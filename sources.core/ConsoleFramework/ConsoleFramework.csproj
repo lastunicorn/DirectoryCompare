@@ -8,6 +8,7 @@
   <ItemGroup>
     <Compile Remove="AppBuilder\UseExtensions.cs" />
     <Compile Remove="AppBuilder\UseMiddlewareExtensions.cs" />
+    <Compile Remove="ApplicationServices.cs" />
   </ItemGroup>
 
   <ItemGroup>

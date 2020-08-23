@@ -24,16 +24,10 @@ namespace DustInTheWind.ConsoleFramework.AppBuilder
     public interface IMiddlewareFactory
     {
         /// <summary>
-        /// Creates a middleware instance for each request.
+        /// Creates a middleware instance.
         /// </summary>
         /// <param name="middlewareType">The concrete <see cref="Type"/> of the <see cref="IConsoleMiddleware"/>.</param>
         /// <returns>The <see cref="IConsoleMiddleware"/> instance.</returns>
         IConsoleMiddleware Create(Type middlewareType);
-
-        /// <summary>
-        /// Releases a <see cref="IConsoleMiddleware"/> instance at the end of each request.
-        /// </summary>
-        /// <param name="middleware">The <see cref="IConsoleMiddleware"/> instance to release.</param>
-        void Release(IConsoleMiddleware middleware);
     }
 }

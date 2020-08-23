@@ -20,7 +20,7 @@ namespace DustInTheWind.ConsoleFramework.CustomMiddleware
 {
     public static class CommandMiddlewareExtensions
     {
-        public static IApplicationBuilder UseCommands(this IApplicationBuilder builder)
+        public static MiddlewareCollection UseCommands(this MiddlewareCollection builder)
         {
             return builder.UseMiddleware<CommandMiddleware>();
         }

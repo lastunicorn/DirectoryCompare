@@ -28,6 +28,12 @@ namespace DustInTheWind.ConsoleFramework
             if (serviceType == typeof(IMiddlewareFactory))
                 return new MiddlewareFactory(Commands);
 
+            if (serviceType == typeof(MiddlewareCollection))
+            {
+                IMiddlewareFactory middlewareFactory = (IMiddlewareFactory)GetService(typeof(IMiddlewareFactory));
+                return new MiddlewareCollection(middlewareFactory);
+            }
+
             return Activator.CreateInstance(serviceType);
         }
     }

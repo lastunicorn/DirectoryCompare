@@ -17,11 +17,20 @@
 using System;
 using System.Threading.Tasks;
 using DustInTheWind.ConsoleFramework.AppBuilder;
+using DustInTheWind.ConsoleTools;
+using DustInTheWind.DirectoryCompare.Domain.Logging;
 
 namespace DustInTheWind.ConsoleFramework.CustomMiddleware
 {
     internal class ExceptionHandlerMiddleware : IConsoleMiddleware
     {
+        private readonly IProjectLogger logger;
+
+        public ExceptionHandlerMiddleware(IProjectLogger logger)
+        {
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
+
         public async Task InvokeAsync(ConsoleRequestContext context, RequestDelegate next)
         {
             try
@@ -31,7 +40,8 @@ namespace DustInTheWind.ConsoleFramework.CustomMiddleware
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                CustomConsole.WriteLineError(ex.Message);
+                logger.Error(ex.ToString());
 
                 await Task.FromResult(null as object);
             }

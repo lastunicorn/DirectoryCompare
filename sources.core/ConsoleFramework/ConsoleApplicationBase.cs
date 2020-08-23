@@ -24,26 +24,25 @@ using DustInTheWind.ConsoleTools.Spinners;
 
 namespace DustInTheWind.ConsoleFramework
 {
-    public class ConsoleApplicationBase
+    public abstract class ConsoleApplicationBase
     {
         private ApplicationHeader applicationHeader;
         private CommandCollection commands;
         private ApplicationFooter applicationFooter;
 
-        private readonly ApplicationBuilder app = new ApplicationBuilder();
+        private MiddlewareCollection middlewareCollection;
+        
+        protected IServiceProvider ServiceProvider { get; private set; }
 
         public bool UseSpinner { get; set; }
 
-        public ConsoleApplicationBase()
-        {
-            app.ApplicationServices = new ApplicationServices();
-        }
-
         public void Initialize()
         {
+            ServiceProvider = CreateServiceProvider();
+
             commands = CreateCommands() ?? new CommandCollection();
 
-            ((ApplicationServices)app.ApplicationServices).Commands = commands;
+            middlewareCollection = ServiceProvider.GetService<MiddlewareCollection>();
 
             CommandCollectionItem helpCommandItem = CreateHelpCommand();
 
@@ -53,6 +52,8 @@ namespace DustInTheWind.ConsoleFramework
             applicationHeader = CreateApplicationHeader();
             applicationFooter = CreateApplicationFooter();
         }
+
+        protected abstract IServiceProvider CreateServiceProvider();
 
         protected virtual ApplicationHeader CreateApplicationHeader()
         {
@@ -103,21 +104,19 @@ namespace DustInTheWind.ConsoleFramework
 
         private void ProcessRequest(Arguments arguments)
         {
-            RequestDelegate requestDelegate = app.Build();
-
             ConsoleRequestContext context = new ConsoleRequestContext(arguments)
             {
-                RequestServices = app.ApplicationServices
+                RequestServices = middlewareCollection.ApplicationServices
             };
 
-            requestDelegate.Invoke(context);
+            middlewareCollection.Execute(context);
         }
 
         protected virtual void OnStart()
         {
-            app.UseCommands();
-            app.UseUselessMiddleware();
-            app.UseExceptionHandler();
+            middlewareCollection.UseExceptionHandler();
+            middlewareCollection.UseUselessMiddleware();
+            middlewareCollection.UseCommands();
         }
 
         protected virtual void OnExit()

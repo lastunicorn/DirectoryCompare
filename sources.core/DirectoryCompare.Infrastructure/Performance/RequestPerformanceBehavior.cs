@@ -14,12 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Domain.Logging;
-using MediatR;
 using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using DustInTheWind.DirectoryCompare.Domain.Logging;
+using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Infrastructure.Performance
 {

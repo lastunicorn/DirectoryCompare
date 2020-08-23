@@ -16,18 +16,13 @@
 
 using System;
 
-namespace DustInTheWind.ConsoleFramework.AppBuilder
+namespace DustInTheWind.ConsoleFramework
 {
-    public interface IApplicationBuilder
+    public static class ServiceProviderExtensions
     {
-        IServiceProvider ApplicationServices { get; set; }
-
-        IApplicationBuilder Use(Func<RequestDelegate, RequestDelegate> middleware);
-        
-        IApplicationBuilder UseMiddleware<TMiddleware>();
-        
-        IApplicationBuilder UseMiddleware(Type middlewareType);
-
-        RequestDelegate Build();
+        public static T GetService<T>(this IServiceProvider serviceProvider)
+        {
+            return (T)serviceProvider.GetService(typeof(T));
+        }
     }
 }

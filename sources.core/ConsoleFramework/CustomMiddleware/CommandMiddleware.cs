@@ -29,12 +29,13 @@ namespace DustInTheWind.ConsoleFramework.CustomMiddleware
             this.commands = commands ?? throw new ArgumentNullException(nameof(commands));
         }
 
-        public Task InvokeAsync(ConsoleRequestContext context, RequestDelegate next)
+        public async Task InvokeAsync(ConsoleRequestContext context, RequestDelegate next)
         {
             ICommand command = commands.SelectCommand(context.Arguments.Command);
             command.Execute(context.Arguments);
 
-            return next?.Invoke(context);
+            if (next != null)
+                await next.Invoke(context);
         }
     }
 }

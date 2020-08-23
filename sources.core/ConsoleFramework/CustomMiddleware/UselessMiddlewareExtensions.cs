@@ -20,7 +20,7 @@ namespace DustInTheWind.ConsoleFramework.CustomMiddleware
 {
     public static class UselessMiddlewareExtensions
     {
-        public static IApplicationBuilder UseUselessMiddleware(this IApplicationBuilder builder)
+        public static MiddlewareCollection UseUselessMiddleware(this MiddlewareCollection builder)
         {
             return builder.UseMiddleware<UselessMiddleware>();
         }

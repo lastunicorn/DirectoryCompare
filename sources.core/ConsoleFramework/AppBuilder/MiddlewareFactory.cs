@@ -15,29 +15,24 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using DustInTheWind.ConsoleFramework.CustomMiddleware;
 
 namespace DustInTheWind.ConsoleFramework.AppBuilder
 {
     public class MiddlewareFactory : IMiddlewareFactory
     {
-        private readonly CommandCollection commands;
+        private readonly IServiceProvider serviceProvider;
 
-        public MiddlewareFactory(CommandCollection commands)
+        public MiddlewareFactory(IServiceProvider serviceProvider)
         {
-            this.commands = commands ?? throw new ArgumentNullException(nameof(commands));
+            this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
         public IConsoleMiddleware Create(Type middlewareType)
         {
-            if(middlewareType == typeof(CommandMiddleware))
-                return new CommandMiddleware(commands);
+            if (typeof(IConsoleMiddleware).IsAssignableFrom(middlewareType))
+                return (IConsoleMiddleware)serviceProvider.GetService(middlewareType);
 
-            return Activator.CreateInstance(middlewareType) as IConsoleMiddleware;
-        }
-
-        public void Release(IConsoleMiddleware middleware)
-        {
+            throw new Exception("The specified type is not a middleware.");
         }
     }
 }
