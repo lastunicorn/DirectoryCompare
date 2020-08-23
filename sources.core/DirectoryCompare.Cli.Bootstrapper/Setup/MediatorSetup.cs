@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
+using DustInTheWind.ConsoleFramework;
 using DustInTheWind.DirectoryCompare.Application.CreateSnapshot;
 using DustInTheWind.DirectoryCompare.Infrastructure.Performance;
 using DustInTheWind.DirectoryCompare.Infrastructure.Validation;
@@ -27,8 +29,10 @@ namespace DustInTheWind.DirectoryCompare.Cli.Setup
 {
     internal static class MediatorSetup
     {
-        public static void Setup(KernelBase dependencyContainer)
+        public static void Setup(IServiceCollection serviceCollection)
         {
+            KernelBase dependencyContainer = ((NinjectServiceCollection)serviceCollection).Kernel;
+
             dependencyContainer.Components.Add<IBindingResolver, ContravariantBindingResolver>();
 
             dependencyContainer.Bind(x => x.FromAssemblyContaining<IMediator>().SelectAllClasses().BindDefaultInterface());

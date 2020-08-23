@@ -38,9 +38,11 @@ namespace DustInTheWind.ConsoleFramework
 
         public void Initialize()
         {
-            ServiceProvider = CreateServiceProvider();
+            IServiceCollection serviceCollection = CreateServiceCollection();
+            ServiceProvider = serviceCollection.BuildServiceProvider();
 
             commands = CreateCommands() ?? new CommandCollection();
+            serviceCollection.AddSingleton(commands);
 
             middlewareCollection = ServiceProvider.GetService<MiddlewareCollection>();
 
@@ -53,7 +55,7 @@ namespace DustInTheWind.ConsoleFramework
             applicationFooter = CreateApplicationFooter();
         }
 
-        protected abstract IServiceProvider CreateServiceProvider();
+        protected abstract IServiceCollection CreateServiceCollection();
 
         protected virtual ApplicationHeader CreateApplicationHeader()
         {

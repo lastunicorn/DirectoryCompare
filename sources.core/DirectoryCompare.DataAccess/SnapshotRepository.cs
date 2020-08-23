@@ -14,61 +14,61 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Domain.DataAccess;
-using DustInTheWind.DirectoryCompare.Domain.Entities;
-using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DustInTheWind.DirectoryCompare.Domain.DataAccess;
+using DustInTheWind.DirectoryCompare.Domain.Entities;
+using DustInTheWind.DirectoryCompare.JsonHashesFile;
 
 namespace DustInTheWind.DirectoryCompare.DataAccess
 {
     public class SnapshotRepository : ISnapshotRepository
     {
-        private const string SnapshotsDirectoryName = "snapshots";
-
         public Stream CreateStream(string potName)
         {
-            string snapshotsDirectoryPath = GetSnapshotsDirectoryPath(potName);
-            EnsureDirectory(snapshotsDirectoryPath);
+            PotDirectory potDirectory = new PotDirectory(potName);
 
-            string snapshotFileName = string.Format("{0:yyyy MM dd HHmmss}.json", DateTime.UtcNow);
-            string snapshotFilePath = Path.Combine(snapshotsDirectoryPath, snapshotFileName);
+            if (!potDirectory.Exists)
+                throw new Exception($"There is no pot with name '{potName}'.");
 
-            return new FileStream(snapshotFilePath, FileMode.CreateNew);
+            SnapshotFile snapshotFile = potDirectory.CreateSnapshotFile(DateTime.UtcNow);
+            return snapshotFile.OpenStream();
         }
 
         public IEnumerable<Snapshot> GetByPot(string potName)
         {
-            string snapshotsDirectoryPath = GetSnapshotsDirectoryPath(potName);
+            PotDirectory potDirectory = new PotDirectory(potName);
 
-            if (!Directory.Exists(snapshotsDirectoryPath))
-                return Enumerable.Empty<Snapshot>();
+            if (!potDirectory.Exists)
+                throw new Exception($"There is no pot with name '{potName}'.");
 
-            return Directory.GetFiles(snapshotsDirectoryPath)
-                .OrderByDescending(x => x)
-                .Select(x =>
-                {
-                    JsonSnapshotFile file = JsonSnapshotFile.Load(x);
-                    return file.Snapshot;
-                });
+            IEnumerable<SnapshotFile> allSnapshotFiles = potDirectory.GetSnapshotFiles();
+
+            foreach (SnapshotFile snapshotFile in allSnapshotFiles)
+            {
+                snapshotFile.Open();
+                yield return snapshotFile.Snapshot;
+            }
         }
 
         public Snapshot GetByIndex(string potName, int index = 0)
         {
-            string snapshotsDirectoryPath = GetSnapshotsDirectoryPath(potName);
+            PotDirectory potDirectory = new PotDirectory(potName);
 
-            return Directory.GetFiles(snapshotsDirectoryPath)
-                .OrderByDescending(x => x)
+            if (!potDirectory.Exists)
+                throw new Exception($"There is no pot with name '{potName}'.");
+
+            SnapshotFile snapshotFile = potDirectory.GetSnapshotFiles()
                 .Skip(index)
-                .Select(x =>
-                {
-                    JsonSnapshotFile file = JsonSnapshotFile.Load(x);
-                    return file.Snapshot;
-                })
                 .FirstOrDefault();
+
+            if (snapshotFile == null)
+                return null;
+
+            snapshotFile.Open();
+            return snapshotFile.Snapshot;
         }
 
         public Snapshot GetLast(string potName)
@@ -78,60 +78,63 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
 
         public IEnumerable<Snapshot> GetByDate(string potName, DateTime dateTime)
         {
-            string searchedFileName = dateTime.ToString("yyyy MM dd");
-            string snapshotsDirectoryPath = GetSnapshotsDirectoryPath(potName);
+            PotDirectory potDirectory = new PotDirectory(potName);
 
-            return Directory.GetFiles(snapshotsDirectoryPath)
-                .Where(x => Path.GetFileName(x).StartsWith(searchedFileName))
-                .Select(x =>
-                {
-                    JsonSnapshotFile file = JsonSnapshotFile.Load(x);
-                    return file.Snapshot;
-                });
+            if (!potDirectory.Exists)
+                throw new Exception($"There is no pot with name '{potName}'.");
+
+            IEnumerable<SnapshotFile> snapshotFiles = potDirectory.GetSnapshotFiles()
+                .Where(x => x.CreationTime.HasValue && x.CreationTime.Value.Date == dateTime.Date);
+
+            foreach (SnapshotFile snapshotFile in snapshotFiles)
+            {
+                snapshotFile.Open();
+                yield return snapshotFile.Snapshot;
+            }
         }
 
         public Snapshot GetByExactDateTime(string potName, DateTime dateTime)
         {
-            string searchedFileName = dateTime.ToString("yyyy MM dd HHmmss") + ".json";
-            string snapshotsDirectoryPath = GetSnapshotsDirectoryPath(potName);
+            PotDirectory potDirectory = new PotDirectory(potName);
 
-            return Directory.GetFiles(snapshotsDirectoryPath)
-                .Where(x => Path.GetFileName(x) == searchedFileName)
-                .Select(x =>
-                {
-                    JsonSnapshotFile file = JsonSnapshotFile.Load(x);
-                    return file.Snapshot;
-                })
-                .FirstOrDefault();
+            if (!potDirectory.Exists)
+                throw new Exception($"There is no pot with name '{potName}'.");
+
+            SnapshotFile snapshotFile = potDirectory.GetSnapshotFiles()
+                .FirstOrDefault(x => x.CreationTime.HasValue && x.CreationTime.Value == dateTime);
+
+            if (snapshotFile == null)
+                return null;
+
+            snapshotFile.Open();
+            return snapshotFile.Snapshot;
         }
 
         public void Add(string potName, Snapshot snapshot)
         {
-            string snapshotsDirectoryPath = GetSnapshotsDirectoryPath(potName);
-            EnsureDirectory(snapshotsDirectoryPath);
+            PotDirectory potDirectory = new PotDirectory(potName);
 
-            string snapshotFileName = string.Format("{0:yyyy MM dd HHmmss}.json", snapshot.CreationTime);
-            string snapshotFilePath = Path.Combine(snapshotsDirectoryPath, snapshotFileName);
+            if (!potDirectory.Exists)
+                throw new Exception($"There is no pot with name '{potName}'.");
 
-            JsonSnapshotFile jsonSnapshotFile = new JsonSnapshotFile
-            {
-                Snapshot = snapshot
-            };
-
-            jsonSnapshotFile.Save(snapshotFilePath);
+            SnapshotFile snapshotFile = potDirectory.CreateSnapshotFile(snapshot.CreationTime);
+            snapshotFile.Open();
+            snapshotFile.Snapshot = snapshot;
+            snapshotFile.Save();
         }
 
         public void DeleteByIndex(string potName, int index = 0)
         {
-            string snapshotsDirectoryPath = GetSnapshotsDirectoryPath(potName);
+            PotDirectory potDirectory = new PotDirectory(potName);
 
-            string snapshotFileName = Directory.GetFiles(snapshotsDirectoryPath)
-                .OrderByDescending(x => x)
+            if (!potDirectory.Exists)
+                throw new Exception($"There is no pot with name '{potName}'.");
+
+            SnapshotFile snapshotFile = potDirectory.GetSnapshotFiles()
                 .Skip(index)
                 .FirstOrDefault();
 
-            if (snapshotFileName != null)
-                File.Delete(snapshotFileName);
+            snapshotFile?.Delete();
         }
 
         public void DeleteLast(string potName)
@@ -141,78 +144,40 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
 
         public bool DeleteSingleByDate(string potName, DateTime dateTime)
         {
-            string searchedFileName = dateTime.ToString("yyyy MM dd");
-            string snapshotsDirectoryPath = GetSnapshotsDirectoryPath(potName);
+            PotDirectory potDirectory = new PotDirectory(potName);
 
-            List<string> snapshotFileNames = Directory.GetFiles(snapshotsDirectoryPath)
-                .Where(x => Path.GetFileName(x).StartsWith(searchedFileName))
-                .ToList();
+            if (!potDirectory.Exists)
+                throw new Exception($"There is no pot with name '{potName}'.");
 
-            if (snapshotFileNames.Count == 0)
+            SnapshotFile[] snapshotFiles = potDirectory.GetSnapshotFiles()
+                .Where(x => x.CreationTime.HasValue && x.CreationTime.Value.Date == dateTime.Date)
+                .ToArray();
+
+            if (snapshotFiles.Length == 0)
                 return false;
 
-            if (snapshotFileNames.Count > 1)
+            if (snapshotFiles.Length > 1)
                 throw new Exception($"There are multiple snapshots that match the specified date. Pot = {potName}; Date = {dateTime}");
 
-            File.Delete(snapshotFileNames.First());
+            snapshotFiles.First().Delete();
             return true;
         }
 
         public bool DeleteByExactDateTime(string potName, DateTime dateTime)
         {
-            string searchedFileName = dateTime.ToString("yyyy MM dd HHmmss") + ".json";
-            string snapshotsDirectoryPath = GetSnapshotsDirectoryPath(potName);
+            PotDirectory potDirectory = new PotDirectory(potName);
 
-            string snapshotFileName = Directory.GetFiles(snapshotsDirectoryPath)
-                .FirstOrDefault(x => Path.GetFileName(x) == searchedFileName);
+            if (!potDirectory.Exists)
+                throw new Exception($"There is no pot with name '{potName}'.");
 
-            if (snapshotFileName == null)
+            SnapshotFile snapshotFile = potDirectory.GetSnapshotFiles()
+                .FirstOrDefault(x => x.CreationTime.HasValue && x.CreationTime.Value == dateTime);
+
+            if (snapshotFile == null)
                 return false;
 
-            File.Delete(snapshotFileName);
+            snapshotFile.Delete();
             return true;
-        }
-
-        private static string GetSnapshotsDirectoryPath(string potName)
-        {
-            string potDirectoryPath = GetPotRootPath(potName);
-            return Path.Combine(potDirectoryPath, SnapshotsDirectoryName);
-        }
-
-        private static string GetPotRootPath(string potName)
-        {
-            string potDirectoryPath = Directory.GetDirectories(".")
-                .FirstOrDefault(x => IsPot(x, potName));
-
-            if (potDirectoryPath == null)
-                throw new Exception($"There is no pot with the name: {potName}");
-
-            return potDirectoryPath;
-        }
-
-        private static bool IsPot(string directoryPath, string potName)
-        {
-            try
-            {
-                string infoFilePath = Path.Combine(directoryPath, "info.json");
-
-                if (!File.Exists(infoFilePath))
-                    return false;
-
-                string json = File.ReadAllText(infoFilePath);
-                JInfo jInfo = JsonConvert.DeserializeObject<JInfo>(json);
-                return jInfo.Name == potName;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        private static void EnsureDirectory(string directoryPath)
-        {
-            if (!Directory.Exists(directoryPath))
-                Directory.CreateDirectory(directoryPath);
         }
     }
 }

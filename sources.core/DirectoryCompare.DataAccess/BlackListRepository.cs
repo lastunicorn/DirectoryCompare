@@ -15,12 +15,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
-using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.DataAccess
 {
@@ -28,107 +24,37 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
     {
         public PathCollection Get(string potName)
         {
-            string potDirectoryPath = Directory.GetDirectories(".")
-                .FirstOrDefault(x => IsPot(x, potName));
+            PotDirectory potDirectory = new PotDirectory(potName);
 
-            if (potDirectoryPath == null)
+            if (!potDirectory.Exists)
                 throw new Exception($"There is no pot with name '{potName}'.");
 
-            string blackListFilePath = Path.Combine(potDirectoryPath, "bl");
-
-            if (!File.Exists(blackListFilePath))
-                return new PathCollection();
-
-            return ReadBlackList(blackListFilePath);
+            BlackListFile blackListFile = potDirectory.OpenBlackListFile("bl");
+            return blackListFile.Items;
         }
 
         public void Add(string potName, DiskPath path)
         {
-            string potDirectoryPath = Directory.GetDirectories(".")
-                .FirstOrDefault(x => IsPot(x, potName));
+            PotDirectory potDirectory = new PotDirectory(potName);
 
-            if (potDirectoryPath == null)
+            if (!potDirectory.Exists)
                 throw new Exception($"There is no pot with name '{potName}'.");
 
-            string blackListFilePath = Path.Combine(potDirectoryPath, "bl");
-
-            PathCollection blackList = File.Exists(blackListFilePath)
-                ? ReadBlackList(blackListFilePath)
-                : new PathCollection();
-
-            if (!blackList.Contains(path))
-            {
-                blackList.Add(path);
-                WriteBlackList(blackListFilePath, blackList);
-            }
+            BlackListFile blackListFile = potDirectory.OpenBlackListFile("bl");
+            blackListFile.Add(path);
+            blackListFile.Save();
         }
 
         public void Delete(string potName, DiskPath path)
         {
-            string potDirectoryPath = Directory.GetDirectories(".")
-                .FirstOrDefault(x => IsPot(x, potName));
+            PotDirectory potDirectory = new PotDirectory(potName);
 
-            if (potDirectoryPath == null)
+            if (!potDirectory.Exists)
                 throw new Exception($"There is no pot with name '{potName}'.");
 
-            string blackListFilePath = Path.Combine(potDirectoryPath, "bl");
-
-            PathCollection blackList = File.Exists(blackListFilePath)
-                ? ReadBlackList(blackListFilePath)
-                : new PathCollection();
-
-            blackList.Remove(path);
-            WriteBlackList(blackListFilePath, blackList);
-        }
-
-        private static bool IsPot(string directoryPath, string potName)
-        {
-            try
-            {
-                string infoFilePath = Path.Combine(directoryPath, "info.json");
-
-                if (!File.Exists(infoFilePath))
-                    return false;
-
-                string json = File.ReadAllText(infoFilePath);
-                JInfo jInfo = JsonConvert.DeserializeObject<JInfo>(json);
-                return jInfo.Name == potName;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        private static PathCollection ReadBlackList(string filePath)
-        {
-            List<string> list = File.Exists(filePath)
-                ? File.ReadAllLines(filePath)
-                    .Where(x => !string.IsNullOrEmpty(x))
-                    .Where(x => !x.StartsWith("#"))
-                    .ToList()
-                : new List<string>();
-
-            return new PathCollection(list);
-        }
-
-        private static void WriteBlackList(string filePath, PathCollection blackList)
-        {
-            string backupFilePath = filePath + ".bak";
-
-            if (File.Exists(backupFilePath))
-                File.Delete(backupFilePath);
-
-            if (File.Exists(filePath))
-                File.Move(filePath, backupFilePath);
-
-            string[] lines = blackList
-                .ToArray();
-
-            File.WriteAllLines(filePath, lines);
-
-            if (File.Exists(backupFilePath))
-                File.Delete(backupFilePath);
+            BlackListFile blackListFile = potDirectory.OpenBlackListFile("bl");
+            blackListFile.Remove(path);
+            blackListFile.Save();
         }
     }
 }

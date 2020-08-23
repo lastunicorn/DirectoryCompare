@@ -19,6 +19,9 @@ using DustInTheWind.ConsoleFramework;
 using DustInTheWind.ConsoleFramework.AppBuilder;
 using DustInTheWind.ConsoleFramework.Logging;
 using DustInTheWind.DirectoryCompare.Cli.Setup;
+using DustInTheWind.DirectoryCompare.DataAccess;
+using DustInTheWind.DirectoryCompare.Domain.DataAccess;
+using DustInTheWind.DirectoryCompare.Logging;
 using Ninject;
 
 namespace DustInTheWind.DirectoryCompare.Cli
@@ -30,14 +33,20 @@ namespace DustInTheWind.DirectoryCompare.Cli
             Log4NetSetup.Configure();
         }
 
-        protected override IServiceProvider CreateServiceProvider()
+        protected override IServiceCollection CreateServiceCollection()
         {
-            KernelBase serviceProvider = DependencyContainerSetup.Setup();
-            MediatorSetup.Setup(serviceProvider);
+            NinjectServiceCollection ninjectServiceCollection = new NinjectServiceCollection();
 
-            serviceProvider.Bind<IMiddlewareFactory>().To<MiddlewareFactory>();
+            ninjectServiceCollection.AddSingleton<IProjectLogger, Log4NetLogger>();
+            ninjectServiceCollection.AddTransient<IPotRepository, PotRepository>();
+            ninjectServiceCollection.AddTransient<IBlackListRepository, BlackListRepository>();
+            ninjectServiceCollection.AddTransient<ISnapshotRepository, SnapshotRepository>();
 
-            return serviceProvider;
+            MediatorSetup.Setup(ninjectServiceCollection);
+
+            ninjectServiceCollection.AddTransient<IMiddlewareFactory, MiddlewareFactory>();
+
+            return ninjectServiceCollection;
         }
 
         protected override CommandCollection CreateCommands()
