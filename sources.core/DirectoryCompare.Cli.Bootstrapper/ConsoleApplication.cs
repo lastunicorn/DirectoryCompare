@@ -15,14 +15,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.ConsoleFramework.AppBuilder;
 using DustInTheWind.ConsoleFramework.Logging;
 using DustInTheWind.DirectoryCompare.Cli.Setup;
+using DustInTheWind.DirectoryCompare.Cli.UI.Commands;
 using DustInTheWind.DirectoryCompare.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Logging;
-using Ninject;
 
 namespace DustInTheWind.DirectoryCompare.Cli
 {
@@ -35,29 +37,35 @@ namespace DustInTheWind.DirectoryCompare.Cli
 
         protected override IServiceCollection CreateServiceCollection()
         {
-            NinjectServiceCollection ninjectServiceCollection = new NinjectServiceCollection();
+            return new NinjectServiceCollection();
+        }
 
-            ninjectServiceCollection.AddSingleton<IProjectLogger, Log4NetLogger>();
-            ninjectServiceCollection.AddTransient<IPotRepository, PotRepository>();
-            ninjectServiceCollection.AddTransient<IBlackListRepository, BlackListRepository>();
-            ninjectServiceCollection.AddTransient<ISnapshotRepository, SnapshotRepository>();
+        protected override void ConfigureServices(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddSingleton<IProjectLogger, Log4NetLogger>();
+            serviceCollection.AddTransient<IPotRepository, PotRepository>();
+            serviceCollection.AddTransient<IBlackListRepository, BlackListRepository>();
+            serviceCollection.AddTransient<ISnapshotRepository, SnapshotRepository>();
 
-            MediatorSetup.Setup(ninjectServiceCollection);
+            MediatorSetup.Setup(serviceCollection);
 
-            ninjectServiceCollection.AddTransient<IMiddlewareFactory, MiddlewareFactory>();
+            serviceCollection.AddTransient<IMiddlewareFactory, MiddlewareFactory>();
 
-            return ninjectServiceCollection;
+            base.ConfigureServices(serviceCollection);
         }
 
         protected override CommandCollection CreateCommands()
         {
-            return CommandsSetup.Create(ServiceProvider);
+            CommandProvider commandProvider = ServiceProvider.GetService<CommandProvider>();
+
+            List<ICommand> commands = commandProvider.ProvideAll().ToList();
+            return new CommandCollection(commands);
         }
 
         protected override void OnError(Exception ex)
         {
             IProjectLogger logger = ServiceProvider.GetService<IProjectLogger>();
-            logger.Error(ex.ToString());
+            logger.WriteError(ex.ToString());
         }
     }
 }

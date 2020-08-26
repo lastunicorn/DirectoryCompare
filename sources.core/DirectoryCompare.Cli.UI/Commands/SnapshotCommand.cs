@@ -32,6 +32,8 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
     {
         private readonly RequestBus requestBus;
 
+        public string Key { get; } = "snapshot";
+
         public string Description => "Manages snapshots from a pot.";
 
         public SnapshotCommand(RequestBus requestBus)

@@ -14,17 +14,38 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
+
 namespace DustInTheWind.ConsoleFramework.Logging
 {
     public interface IProjectLogger
     {
-        void Debug(string format);
-        void Debug(string format, params object[] arg);
-        void Info(string format);
-        void Info(string format, params object[] arg);
-        void Warn(string format);
-        void Warn(string format, params object[] arg);
-        void Error(string format);
-        void Error(string format, params object[] arg);
+        void Write(LogLevel logLevel, string message);
+
+        void Write(LogLevel logLevel, string format, params object[] args);
+
+        void WriteDebug(string message);
+
+        void WriteDebug(string format, params object[] args);
+
+        void WriteInfo(string message);
+
+        void WriteInfo(string format, params object[] args);
+
+        void WriteWarning(string message);
+
+        void WriteWarning(string format, params object[] args);
+
+        void WriteWarning(string message, Exception ex);
+
+        void WriteWarning(Exception ex);
+
+        void WriteError(string message);
+
+        void WriteError(string format, params object[] args);
+
+        void WriteError(string message, Exception ex);
+
+        void WriteError(Exception ex);
     }
 }

@@ -41,7 +41,7 @@ namespace DustInTheWind.ConsoleFramework.CustomMiddleware
             catch (Exception ex)
             {
                 CustomConsole.WriteLineError(ex.Message);
-                logger.Error(ex.ToString());
+                logger.WriteError(ex);
 
                 await Task.FromResult(null as object);
             }

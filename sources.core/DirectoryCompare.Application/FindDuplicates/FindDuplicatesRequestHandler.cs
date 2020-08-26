@@ -42,7 +42,7 @@ namespace DustInTheWind.DirectoryCompare.Application.FindDuplicates
 
         protected override DuplicatesAnalysis Handle(FindDuplicatesRequest request)
         {
-            logger.Info("Searching for duplicates between pot '{0}' and '{1}'.", request.SnapshotLeft.PotName, request.SnapshotRight.PotName);
+            logger.WriteInfo("Searching for duplicates between pot '{0}' and '{1}'.", request.SnapshotLeft.PotName, request.SnapshotRight.PotName);
 
             FileDuplicates fileDuplicates = new FileDuplicates
             {

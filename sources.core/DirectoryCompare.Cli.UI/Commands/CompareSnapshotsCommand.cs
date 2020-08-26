@@ -27,6 +27,8 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
     {
         private readonly RequestBus requestBus;
 
+        public string Key { get; } = "compare";
+
         public string Description => "Compares two snapshots.";
 
         public CompareSnapshotsCommand(RequestBus requestBus)

@@ -25,6 +25,8 @@ namespace DustInTheWind.ConsoleFramework.Commands
     {
         private readonly CommandCollection commandCollection;
 
+        public string Key { get; } = "help";
+
         public string Description => "Displays information about the available commands.";
 
         public HelpCommand(CommandCollection commandCollection)
@@ -34,7 +36,7 @@ namespace DustInTheWind.ConsoleFramework.Commands
 
         public void Execute(Arguments arguments)
         {
-            IEnumerable<IGrouping<ICommand, CommandCollectionItem>> commandsGrouped = commandCollection.GroupBy(x => x.Command);
+            IEnumerable<IGrouping<ICommand, ICommand>> commandsGrouped = commandCollection.GroupBy(x => x);
 
             UsageControl usageControl = new UsageControl
             {
@@ -46,7 +48,7 @@ namespace DustInTheWind.ConsoleFramework.Commands
             usageControl.Display();
         }
 
-        private static string GetCommandNames(IEnumerable<CommandCollectionItem> group)
+        private static string GetCommandNames(IEnumerable<ICommand> group)
         {
             IEnumerable<string> commandNames = group.Select(x => x.Key);
             return string.Join(", ", commandNames);

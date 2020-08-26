@@ -64,7 +64,7 @@ namespace DustInTheWind.DirectoryCompare.Application.CreateSnapshot
 
         private void RunAnalysis(Pot pot, SnapshotProgress snapshotProgress)
         {
-            logger.Info("Scanning path: {0}", pot.Path);
+            logger.WriteInfo("Scanning path: {0}", pot.Path);
 
             using (Stream stream = snapshotRepository.CreateStream(pot.Name))
             using (StreamWriter streamWriter = new StreamWriter(stream))
@@ -86,7 +86,7 @@ namespace DustInTheWind.DirectoryCompare.Application.CreateSnapshot
 
                 snapshotProgress.ReportEnd();
 
-                logger.Info("Finished scanning path in {0}", stopwatch.Elapsed);
+                logger.WriteInfo("Finished scanning path in {0}", stopwatch.Elapsed);
             }
         }
 
@@ -94,19 +94,19 @@ namespace DustInTheWind.DirectoryCompare.Application.CreateSnapshot
         {
             if (e.BlackList.Count == 0)
             {
-                logger.Info("No blacklist entries.");
+                logger.WriteInfo("No blacklist entries.");
                 return;
             }
 
-            logger.Info("Computed black list:");
+            logger.WriteInfo("Computed black list:");
 
             foreach (string blackListItem in e.BlackList)
-                logger.Info("- " + blackListItem);
+                logger.WriteInfo("- " + blackListItem);
         }
 
         private void HandleDiskReaderErrorEncountered(object sender, ErrorEncounteredEventArgs e)
         {
-            logger.Error("Error while reading path '{0}': {1}", e.Path, e.Exception);
+            logger.WriteError("Error while reading path '{0}': {1}", e.Path, e.Exception);
         }
     }
 }

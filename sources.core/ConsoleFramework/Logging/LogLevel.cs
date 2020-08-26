@@ -14,14 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.ConsoleFramework
+namespace DustInTheWind.ConsoleFramework.Logging
 {
-    public interface ICommand
+    public enum LogLevel
     {
-        string Key { get; }
-
-        string Description { get; }
-
-        void Execute(Arguments arguments);
+        Debug,
+        Trace,
+        Info,
+        Warning,
+        Error
     }
 }

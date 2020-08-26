@@ -15,20 +15,26 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using DustInTheWind.ConsoleFramework.Commands;
 
 namespace DustInTheWind.ConsoleFramework
 {
-    public class CommandCollection : Collection<CommandCollectionItem>
+    public class CommandCollection : Collection<ICommand>
     {
-        public void Add(string key, ICommand command)
+        public CommandCollection()
         {
-            Add(new CommandCollectionItem(key, command));
         }
 
-        protected override void InsertItem(int index, CommandCollectionItem item)
+        public CommandCollection(IList<ICommand> list)
+            : base(list)
+        {
+        }
+
+        protected override void InsertItem(int index, ICommand item)
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
 
@@ -45,7 +51,7 @@ namespace DustInTheWind.ConsoleFramework
 
         public bool Contains(ICommand command)
         {
-            return command != null && this.Any(x => x.Command == command);
+            return command != null && this.Any(x => x == command);
         }
 
         public ICommand SelectCommand(string commandName)
@@ -55,7 +61,6 @@ namespace DustInTheWind.ConsoleFramework
             if (string.IsNullOrEmpty(commandName))
             {
                 command = Items
-                    .Select(x => x.Command)
                     .OfType<HelpCommand>()
                     .FirstOrDefault();
 
@@ -81,9 +86,7 @@ namespace DustInTheWind.ConsoleFramework
                     return null;
 
                 return Items
-                    .Where(x => x.Key == commandKey)
-                    .Select(x => x.Command)
-                    .FirstOrDefault();
+                    .FirstOrDefault(x => x.Key == commandKey);
             }
         }
     }

@@ -39,6 +39,7 @@ namespace DustInTheWind.ConsoleFramework
         public void Initialize()
         {
             IServiceCollection serviceCollection = CreateServiceCollection();
+            ConfigureServices(serviceCollection);
             ServiceProvider = serviceCollection.BuildServiceProvider();
 
             commands = CreateCommands() ?? new CommandCollection();
@@ -46,7 +47,7 @@ namespace DustInTheWind.ConsoleFramework
 
             middlewareCollection = ServiceProvider.GetService<MiddlewareCollection>();
 
-            CommandCollectionItem helpCommandItem = CreateHelpCommand();
+            ICommand helpCommandItem = CreateHelpCommand();
 
             if (helpCommandItem != null)
                 commands.Add(helpCommandItem);
@@ -56,6 +57,10 @@ namespace DustInTheWind.ConsoleFramework
         }
 
         protected abstract IServiceCollection CreateServiceCollection();
+
+        protected virtual void ConfigureServices(IServiceCollection serviceCollection)
+        {
+        }
 
         protected virtual ApplicationHeader CreateApplicationHeader()
         {
@@ -67,10 +72,9 @@ namespace DustInTheWind.ConsoleFramework
             return new CommandCollection();
         }
 
-        protected virtual CommandCollectionItem CreateHelpCommand()
+        protected virtual ICommand CreateHelpCommand()
         {
-            HelpCommand helpCommand = new HelpCommand(commands);
-            return new CommandCollectionItem("help", helpCommand);
+            return new HelpCommand(commands);
         }
 
         protected virtual ApplicationFooter CreateApplicationFooter()

@@ -31,6 +31,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
     public class PotCommand : ICommand
     {
         private readonly RequestBus requestBus;
+        public string Key { get; } = "pot";
 
         public string Description => "Manages a pot that holds snapshots for a single path on disk.";
 

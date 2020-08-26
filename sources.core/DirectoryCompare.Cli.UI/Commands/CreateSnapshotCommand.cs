@@ -27,6 +27,8 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
         private readonly RequestBus requestBus;
         private CreateSnapshotView createSnapshotView;
 
+        public string Key { get; } = "read";
+
         public string Description => "Creates a new snapshot in a specific pot.";
 
         public CreateSnapshotCommand(RequestBus requestBus)

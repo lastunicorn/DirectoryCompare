@@ -20,7 +20,6 @@ using System.Linq;
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.DirectoryCompare.Application;
 using DustInTheWind.DirectoryCompare.Application.FindDuplicates;
-using DustInTheWind.DirectoryCompare.Cli.UI.ResultExporters;
 using DustInTheWind.DirectoryCompare.Cli.UI.Views;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 
@@ -31,14 +30,16 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
         private readonly RequestBus requestBus;
         private readonly FindDuplicatesView findDuplicatesView;
 
+        public string Key { get; } = "find-duplicates";
+
+        public string Description => string.Empty;
+
         public FindDuplicatesCommand(RequestBus requestBus)
         {
             this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
 
             findDuplicatesView = new FindDuplicatesView();
         }
-
-        public string Description => string.Empty;
 
         public void Execute(Arguments arguments)
         {
