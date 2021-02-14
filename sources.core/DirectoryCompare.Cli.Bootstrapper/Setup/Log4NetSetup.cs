@@ -26,9 +26,11 @@ namespace DustInTheWind.DirectoryCompare.Cli.Setup
     {
         public static void Configure()
         {
-            ILoggerRepository loggerRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
+            Assembly assembly = Assembly.GetEntryAssembly();
+
+            ILoggerRepository loggerRepository = LogManager.GetRepository(assembly);
             
-            string assemblyFilePath = Assembly.GetEntryAssembly().Location;
+            string assemblyFilePath = assembly.Location;
             string applicationDirectoryPath = Path.GetDirectoryName(assemblyFilePath);
             string configFilePath = Path.Combine(applicationDirectoryPath, "Log4Net.config");
             FileInfo configFileInfo = new FileInfo(configFilePath);

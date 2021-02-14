@@ -15,7 +15,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -38,7 +37,7 @@ namespace DustInTheWind.ConsoleFramework
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
 
-            if (this.Any(x => x.Key == item.Key))
+            if (Items.Any(x => x.Key == item.Key))
                 throw new ArgumentException("There is another command with the same key.", nameof(item.Key));
 
             base.InsertItem(index, item);
@@ -46,12 +45,7 @@ namespace DustInTheWind.ConsoleFramework
 
         public bool Contains(string commandKey)
         {
-            return commandKey != null && this.Any(x => x.Key == commandKey);
-        }
-
-        public bool Contains(ICommand command)
-        {
-            return command != null && this.Any(x => x == command);
+            return commandKey != null && Items.Any(x => x.Key == commandKey);
         }
 
         public ICommand SelectCommand(string commandName)

@@ -2,18 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>DirectoryCompare.Infrastructure</AssemblyName>
-    <RootNamespace>DustInTheWind.DirectoryCompare.Infrastructure</RootNamespace>
+    <RootNamespace>DustInTheWind.DirectoryCompare.Cli.UI</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="9.0.1" />
-    <PackageReference Include="log4net" Version="2.0.12" />
-    <PackageReference Include="MediatR" Version="8.0.2" />
+    <PackageReference Include="ConsoleTools" Version="0.5.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ConsoleFramework\ConsoleFramework.csproj" PrivateAssets="All" />
+    <ProjectReference Include="..\DirectoryCompare.Application\DirectoryCompare.Application.csproj" PrivateAssets="All" />
     <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All" />
   </ItemGroup>
 

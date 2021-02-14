@@ -28,8 +28,6 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
 
         public static PotDirectory Empty { get; } = new PotDirectory(null);
 
-        private string potName;
-
         public string FullPath { get; private set; }
 
         public bool IsValid
@@ -68,7 +66,7 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
                 })
                 .FirstOrDefault();
 
-            return potDirectory ?? new PotDirectory { potName = potName };
+            return potDirectory ?? new PotDirectory();
         }
 
         public void Create()
