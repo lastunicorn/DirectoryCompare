@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
+namespace DustInTheWind.DirectoryCompare.JFiles
 {
     public sealed class JSnapshotReader : JReader
     {

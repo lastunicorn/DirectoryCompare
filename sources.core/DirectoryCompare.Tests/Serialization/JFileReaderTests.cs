@@ -2,6 +2,7 @@
 using System.IO;
 using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
+using DustInTheWind.DirectoryCompare.JFiles;
 using DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport;
 using Newtonsoft.Json;
 using NUnit.Framework;
