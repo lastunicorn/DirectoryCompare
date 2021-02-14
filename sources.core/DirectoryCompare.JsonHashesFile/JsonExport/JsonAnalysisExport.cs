@@ -25,8 +25,8 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
 {
     public class JsonAnalysisExport : IAnalysisExport
     {
-        private readonly Stack<JsonDirectoryWriter> directoryStack = new Stack<JsonDirectoryWriter>();
-        private JsonSnapshotWriter jsonSnapshotWriter;
+        private readonly Stack<JDirectoryWriter> directoryStack = new Stack<JDirectoryWriter>();
+        private JSnapshotWriter jSnapshotWriter;
 
         private readonly JsonTextWriter jsonTextWriter;
 
@@ -42,67 +42,62 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
 
         public void Open(string originalPath)
         {
-            jsonSnapshotWriter = new JsonSnapshotWriter(jsonTextWriter)
-            {
-                Id = Id,
-                OriginalPath = originalPath,
-                CreationTime = DateTime.UtcNow
-            };
+            jSnapshotWriter = new JSnapshotWriter(jsonTextWriter);
 
-            jsonSnapshotWriter.WriteStart();
+            jSnapshotWriter.WriteStart();
+            jSnapshotWriter.WriteId(Id);
+            jSnapshotWriter.WriteOriginalPath(originalPath);
+            jSnapshotWriter.WriteCreationTime(DateTime.UtcNow);
+
+            directoryStack.Push(jSnapshotWriter);
         }
 
         public void Open(Snapshot snapshot)
         {
-            jsonSnapshotWriter = new JsonSnapshotWriter(jsonTextWriter)
-            {
-                Id = Id,
-                OriginalPath = snapshot.OriginalPath,
-                CreationTime = snapshot.CreationTime
-            };
+            jSnapshotWriter = new JSnapshotWriter(jsonTextWriter);
 
-            jsonSnapshotWriter.WriteStart();
+            jSnapshotWriter.WriteStart();
+            jSnapshotWriter.WriteId(Id);
+            jSnapshotWriter.WriteOriginalPath(snapshot.OriginalPath);
+            jSnapshotWriter.WriteCreationTime(snapshot.CreationTime);
+
+            directoryStack.Push(jSnapshotWriter);
+        }
+
+        public void Add(HDirectory directory)
+        {
+            JDirectoryWriter topDirectoryWriter = directoryStack.Peek();
+            JDirectoryWriter newDirectoryWriter = topDirectoryWriter.CreateSubDirectory();
+            newDirectoryWriter.WriteStart();
+            newDirectoryWriter.WriteName(directory.Name);
+            newDirectoryWriter.WriteEnd();
         }
 
         public void AddAndOpen(HDirectory directory)
         {
-            if (directoryStack.Count == 0)
-            {
-                directoryStack.Push(jsonSnapshotWriter);
-            }
-            else
-            {
-                JsonDirectoryWriter topDirectoryWriter = directoryStack.Peek();
-                JsonDirectoryWriter newDirectoryWriter = topDirectoryWriter.WriteStartDirectory(directory.Name);
-                directoryStack.Push(newDirectoryWriter);
-            }
+            JDirectoryWriter topDirectoryWriter = directoryStack.Peek();
+            JDirectoryWriter newDirectoryWriter = topDirectoryWriter.CreateSubDirectory();
+            newDirectoryWriter.WriteStart();
+            newDirectoryWriter.WriteName(directory.Name);
+            directoryStack.Push(newDirectoryWriter);
         }
 
         public void CloseDirectory()
         {
-            JsonDirectoryWriter topDirectoryWriter = directoryStack.Pop();
+            JDirectoryWriter topDirectoryWriter = directoryStack.Pop();
             topDirectoryWriter.WriteEnd();
         }
 
         public void Add(HFile file)
         {
-            JsonDirectoryWriter topDirectoryWriter = directoryStack.Peek();
-            topDirectoryWriter.WriteFile(file);
-        }
-
-        public void Add(HDirectory directory)
-        {
-            if (directoryStack.Count == 0)
-            {
-                AddAndOpen(directory);
-                CloseDirectory();
-            }
-            else
-            {
-                JsonDirectoryWriter topDirectoryWriter = directoryStack.Peek();
-                JsonDirectoryWriter newDirectoryWriter = topDirectoryWriter.WriteStartDirectory(directory.Name);
-                newDirectoryWriter.WriteEnd();
-            }
+            JDirectoryWriter topDirectoryWriter = directoryStack.Peek();
+            JFileWriter jFileWriter = topDirectoryWriter.CreateFile();
+            jFileWriter.WriteStart();
+            jFileWriter.WriteName(file.Name);
+            jFileWriter.WriteSize(file.Size);
+            jFileWriter.WriteLastModifiedTime(file.LastModifiedTime);
+            jFileWriter.WriteHash(file.Hash);
+            jFileWriter.WriteEnd();
         }
 
         public void Close()

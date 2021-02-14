@@ -27,6 +27,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.JsonHashes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.Infrastructure", "DirectoryCompare.Infrastructure\DirectoryCompare.Infrastructure.csproj", "{21DFC865-34C1-4ECD-9D79-3F33F555E4D8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.JFiles", "DirectoryCompare.JFiles\DirectoryCompare.JFiles.csproj", "{0545F6ED-0FFD-4FD8-8808-DD45733098B8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -145,6 +147,18 @@ Global
 		{21DFC865-34C1-4ECD-9D79-3F33F555E4D8}.Release|x64.Build.0 = Release|Any CPU
 		{21DFC865-34C1-4ECD-9D79-3F33F555E4D8}.Release|x86.ActiveCfg = Release|Any CPU
 		{21DFC865-34C1-4ECD-9D79-3F33F555E4D8}.Release|x86.Build.0 = Release|Any CPU
+		{0545F6ED-0FFD-4FD8-8808-DD45733098B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0545F6ED-0FFD-4FD8-8808-DD45733098B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0545F6ED-0FFD-4FD8-8808-DD45733098B8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0545F6ED-0FFD-4FD8-8808-DD45733098B8}.Debug|x64.Build.0 = Debug|Any CPU
+		{0545F6ED-0FFD-4FD8-8808-DD45733098B8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0545F6ED-0FFD-4FD8-8808-DD45733098B8}.Debug|x86.Build.0 = Debug|Any CPU
+		{0545F6ED-0FFD-4FD8-8808-DD45733098B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0545F6ED-0FFD-4FD8-8808-DD45733098B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0545F6ED-0FFD-4FD8-8808-DD45733098B8}.Release|x64.ActiveCfg = Release|Any CPU
+		{0545F6ED-0FFD-4FD8-8808-DD45733098B8}.Release|x64.Build.0 = Release|Any CPU
+		{0545F6ED-0FFD-4FD8-8808-DD45733098B8}.Release|x86.ActiveCfg = Release|Any CPU
+		{0545F6ED-0FFD-4FD8-8808-DD45733098B8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

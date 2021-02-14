@@ -16,6 +16,7 @@
 
 using System;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
+using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
 using MediatR;
@@ -35,7 +36,8 @@ namespace DustInTheWind.DirectoryCompare.Application.ImportSnapshot
 
         protected override void Handle(ImportSnapshotRequest request)
         {
-            JsonSnapshotFile jsonSnapshotFile = JsonSnapshotFile.Load(request.FilePath);
+            JSnapshotDocument jSnapshotDocument = JSnapshotDocument.Load(request.FilePath);
+            Snapshot snapshot = jSnapshotDocument.Snapshot;
 
             Pot pot = potRepository.Get(request.PotName);
 
@@ -44,18 +46,18 @@ namespace DustInTheWind.DirectoryCompare.Application.ImportSnapshot
                 pot = new Pot
                 {
                     Name = request.PotName,
-                    Path = jsonSnapshotFile.Snapshot.OriginalPath
+                    Path = snapshot.OriginalPath
                 };
 
                 potRepository.Add(pot);
             }
             else
             {
-                if (pot.Path != jsonSnapshotFile.Snapshot.OriginalPath)
+                if (pot.Path != snapshot.OriginalPath)
                     throw new Exception("The url of the imported snapshot is different than the one of the pot.");
             }
 
-            snapshotRepository.Add(request.PotName, jsonSnapshotFile.Snapshot);
+            snapshotRepository.Add(request.PotName, snapshot);
         }
     }
 }

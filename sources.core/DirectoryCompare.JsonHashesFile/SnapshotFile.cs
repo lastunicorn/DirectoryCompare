@@ -27,7 +27,7 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile
     {
         private readonly string filePath;
 
-        private JsonSnapshot jsonSnapshot;
+        private JSnapshot jSnapshot;
 
         public bool Exists => filePath != null && File.Exists(filePath);
 
@@ -35,8 +35,8 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile
 
         public Snapshot Snapshot
         {
-            get => jsonSnapshot.ToSnapshot();
-            set => jsonSnapshot = new JsonSnapshot(value);
+            get => jSnapshot.ToSnapshot();
+            set => jSnapshot = new JSnapshot(value);
         }
 
         public SnapshotFile(string filePath)
@@ -74,7 +74,7 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile
             using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
             {
                 JsonSerializer serializer = new JsonSerializer();
-                jsonSnapshot = (JsonSnapshot)serializer.Deserialize(jsonTextReader, typeof(JsonSnapshot));
+                jSnapshot = (JSnapshot)serializer.Deserialize(jsonTextReader, typeof(JSnapshot));
             }
         }
 
@@ -85,7 +85,7 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile
             using (JsonTextWriter jsonTextWriter = new JsonTextWriter(streamWriter))
             {
                 JsonSerializer serializer = new JsonSerializer();
-                serializer.Serialize(jsonTextWriter, jsonSnapshot);
+                serializer.Serialize(jsonTextWriter, jSnapshot);
             }
         }
 

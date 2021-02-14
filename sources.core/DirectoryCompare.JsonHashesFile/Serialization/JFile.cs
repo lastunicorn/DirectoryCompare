@@ -20,7 +20,7 @@ using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
 {
-    internal class JsonFile
+    internal class JFile
     {
         [JsonProperty("n")]
         public string Name { get; set; }
@@ -34,11 +34,11 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
         [JsonProperty("h")]
         public byte[] Hash { get; set; }
 
-        public JsonFile()
+        public JFile()
         {
         }
 
-        public JsonFile(HFile file)
+        public JFile(HFile file)
         {
             if (file == null) throw new ArgumentNullException(nameof(file));
 

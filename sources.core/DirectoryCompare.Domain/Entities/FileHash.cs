@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net;
 
 namespace DustInTheWind.DirectoryCompare.Domain.Entities
 {
@@ -58,6 +59,12 @@ namespace DustInTheWind.DirectoryCompare.Domain.Entities
             }
 
             return true;
+        }
+
+        public static FileHash Parse(string value)
+        {
+            byte[] bytes = Convert.FromBase64String(value);
+            return new FileHash(bytes);
         }
 
         public override string ToString()

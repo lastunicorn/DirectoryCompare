@@ -15,46 +15,42 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using DustInTheWind.DirectoryCompare.Domain.Entities;
 using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
 {
-    internal class JsonDirectoryWriter
+    public class JDirectoryWriter
     {
         protected JsonTextWriter Writer { get; }
 
         private JsonNodeState directoriesNodeState;
         private JsonNodeState filesPropertyNodeState;
 
-        public JsonDirectoryWriter(JsonTextWriter jsonTextWriter)
+        public JDirectoryWriter(JsonTextWriter jsonTextWriter)
         {
             Writer = jsonTextWriter ?? throw new ArgumentNullException(nameof(jsonTextWriter));
-        }
-
-        public void WriteStart(string directoryName)
-        {
-            WriteStartDirectoryInternal(directoryName);
 
             directoriesNodeState = JsonNodeState.NotOpened;
             filesPropertyNodeState = JsonNodeState.NotOpened;
         }
 
-        protected virtual void WriteStartDirectoryInternal(string directoryName)
+        public void WriteStart()
         {
             Writer.WriteStartObject();
+        }
 
+        public void WriteName(string directoryName)
+        {
             Writer.WritePropertyName("n");
             Writer.WriteValue(directoryName);
         }
 
-        public void WriteFile(HFile file)
+        public JFileWriter CreateFile()
         {
             WriteEndDirectoriesArray();
             WriteStartFilesArray();
 
-            JsonFileWriter jsonFileWriter = new JsonFileWriter(Writer);
-            jsonFileWriter.Write(file);
+            return new JFileWriter(Writer);
         }
 
         private void WriteStartFilesArray()
@@ -79,6 +75,14 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
             }
         }
 
+        public JDirectoryWriter CreateSubDirectory()
+        {
+            WriteEndFilesArray();
+            WriteStartDirectoriesArray();
+
+            return new JDirectoryWriter(Writer);
+        }
+
         private void WriteEndFilesArray()
         {
             if (filesPropertyNodeState != JsonNodeState.Opened)
@@ -86,17 +90,6 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
 
             Writer.WriteEndArray();
             filesPropertyNodeState = JsonNodeState.Closed;
-        }
-
-        public JsonDirectoryWriter WriteStartDirectory(string directoryName)
-        {
-            WriteEndFilesArray();
-            WriteStartDirectoriesArray();
-
-            JsonDirectoryWriter jsonDirectoryWriter = new JsonDirectoryWriter(Writer);
-            jsonDirectoryWriter.WriteStart(directoryName);
-
-            return jsonDirectoryWriter;
         }
 
         private void WriteStartDirectoriesArray()

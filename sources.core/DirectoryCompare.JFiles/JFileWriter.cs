@@ -19,35 +19,47 @@ using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
 {
-    internal sealed class JsonSnapshotWriter : JsonDirectoryWriter
+    public class JFileWriter
     {
-        public Guid Id { get; set; }
+        protected JsonTextWriter Writer { get; }
 
-        public string OriginalPath { get; set; }
-
-        public DateTime CreationTime { get; set; }
-
-        public JsonSnapshotWriter(JsonTextWriter jsonTextWriter)
-            : base(jsonTextWriter)
+        public JFileWriter(JsonTextWriter jsonTextWriter)
         {
+            Writer = jsonTextWriter ?? throw new ArgumentNullException(nameof(jsonTextWriter));
         }
 
         public void WriteStart()
         {
             Writer.WriteStartObject();
-
-            Writer.WritePropertyName("serializer-id");
-            Writer.WriteValue(Id);
-
-            Writer.WritePropertyName("original-path");
-            Writer.WriteValue(OriginalPath);
-
-            Writer.WritePropertyName("creation-time");
-            Writer.WriteValue(CreationTime);
         }
 
-        protected override void WriteStartDirectoryInternal(string directoryName)
+        public void WriteName(string fileName)
         {
+            Writer.WritePropertyName("n");
+            Writer.WriteValue(fileName);
+        }
+
+        public void WriteSize(ulong fileSize)
+        {
+            Writer.WritePropertyName("s");
+            Writer.WriteValue(fileSize);
+        }
+
+        public void WriteLastModifiedTime(DateTime lastModifiedTime)
+        {
+            Writer.WritePropertyName("m");
+            Writer.WriteValue(lastModifiedTime);
+        }
+
+        public void WriteHash(byte[] hash)
+        {
+            Writer.WritePropertyName("h");
+            Writer.WriteValue(hash);
+        }
+
+        public void WriteEnd()
+        {
+            Writer.WriteEndObject();
         }
     }
 }

@@ -15,37 +15,33 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using DustInTheWind.DirectoryCompare.Domain.Entities;
 using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport
 {
-    internal class JsonFileWriter
+    public sealed class JSnapshotWriter : JDirectoryWriter
     {
-        protected JsonTextWriter Writer { get; }
-
-        public JsonFileWriter(JsonTextWriter jsonTextWriter)
+        public JSnapshotWriter(JsonTextWriter jsonTextWriter)
+            : base(jsonTextWriter)
         {
-            Writer = jsonTextWriter ?? throw new ArgumentNullException(nameof(jsonTextWriter));
         }
 
-        public void Write(HFile file)
+        public void WriteId(Guid id)
         {
-            Writer.WriteStartObject();
+            Writer.WritePropertyName("serializer-id");
+            Writer.WriteValue(id);
+        }
 
-            Writer.WritePropertyName("n");
-            Writer.WriteValue(file.Name);
+        public void WriteOriginalPath(string originalPath)
+        {
+            Writer.WritePropertyName("original-path");
+            Writer.WriteValue(originalPath);
+        }
 
-            Writer.WritePropertyName("s");
-            Writer.WriteValue(file.Size);
-
-            Writer.WritePropertyName("m");
-            Writer.WriteValue(file.LastModifiedTime);
-
-            Writer.WritePropertyName("h");
-            Writer.WriteValue(file.Hash);
-
-            Writer.WriteEndObject();
+        public void WriteCreationTime(DateTime creationTime)
+        {
+            Writer.WritePropertyName("creation-time");
+            Writer.WriteValue(creationTime);
         }
     }
 }

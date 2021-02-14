@@ -22,7 +22,7 @@ using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
 {
-    internal class JsonSnapshot
+    internal class JSnapshot
     {
         [JsonProperty("serializer")]
         public SerializerInfo SerializerInfo { get; set; }
@@ -34,16 +34,16 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
         public DateTime CreationTime { get; set; }
 
         [JsonProperty("d")]
-        public List<JsonDirectory> Directories { get; set; }
+        public List<JDirectory> Directories { get; set; }
 
         [JsonProperty("f")]
-        public List<JsonFile> Files { get; set; }
+        public List<JFile> Files { get; set; }
 
-        public JsonSnapshot()
+        public JSnapshot()
         {
         }
 
-        public JsonSnapshot(Snapshot snapshot)
+        public JSnapshot(Snapshot snapshot)
         {
             if (snapshot == null) throw new ArgumentNullException(nameof(snapshot));
 
@@ -54,14 +54,14 @@ namespace DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization
                 Directories = null;
             else
                 Directories = snapshot.Directories
-                    .Select(x => new JsonDirectory(x))
+                    .Select(x => new JDirectory(x))
                     .ToList();
 
             if (snapshot.Files == null)
                 Files = null;
             else
                 Files = snapshot.Files
-                    .Select(x => new JsonFile(x))
+                    .Select(x => new JFile(x))
                     .ToList();
         }
 
