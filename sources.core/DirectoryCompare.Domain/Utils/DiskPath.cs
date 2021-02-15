@@ -56,6 +56,20 @@ namespace DustInTheWind.DirectoryCompare.Domain.Utils
             return isSuccess;
         }
 
+        public DiskPath Prepend(string path)
+        {
+            return Path.IsPathRooted(value)
+                ? value
+                : Path.Combine(path, value);
+        }
+
+        public DiskPath Prepend(DiskPath path)
+        {
+            return Path.IsPathRooted(value)
+                ? value
+                : Path.Combine(path.value, value);
+        }
+
         public override string ToString()
         {
             return value;

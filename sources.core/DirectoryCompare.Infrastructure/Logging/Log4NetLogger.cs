@@ -18,7 +18,7 @@ using System;
 using DustInTheWind.ConsoleFramework.Logging;
 using log4net;
 
-namespace DustInTheWind.DirectoryCompare.Logging
+namespace DustInTheWind.DirectoryCompare.Infrastructure.Logging
 {
     public sealed class Log4NetLogger : IProjectLogger
     {

@@ -14,14 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Domain.Utils;
-
-namespace DustInTheWind.DirectoryCompare.Domain.SomeInterfaces
+namespace DustInTheWind.DirectoryCompare.Domain.Utils
 {
-    public interface IRemoveDuplicatesExporter
+    /// <summary>
+    /// The measurement unit for data.
+    /// </summary>
+    public enum DataSizeUnit
     {
-        void WriteRemove(string path);
-
-        void WriteSummary(int removedFiles, DataSize removedSize);
+        Unknown,
+        Byte,
+        Kilobyte,
+        Megabyte,
+        Gigabyte,
+        Terabyte
     }
 }

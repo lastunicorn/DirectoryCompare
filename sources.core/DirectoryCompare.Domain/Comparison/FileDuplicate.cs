@@ -18,6 +18,7 @@ using DustInTheWind.DirectoryCompare.Domain.Entities;
 using System;
 using System.IO;
 using System.Linq;
+using DustInTheWind.DirectoryCompare.Domain.Utils;
 
 namespace DustInTheWind.DirectoryCompare.Domain.Comparison
 {

@@ -16,28 +16,19 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 
-namespace DustInTheWind.DirectoryCompare.Domain.Utils
+namespace DustInTheWind.DirectoryCompare.JFiles.BlacklistFileModel
 {
-    public class PathCollection : Collection<DiskPath>
+    public class PathCollection : Collection<string>
     {
         public PathCollection()
         {
         }
 
-        public PathCollection(IList<DiskPath> items)
+        public PathCollection(IList<string> items)
             : base(items)
-        {
-        }
-
-        public PathCollection(IEnumerable<DiskPath> items)
-            : base(items.ToArray())
-        {
-        }
-
-        public PathCollection(IEnumerable<string> items)
-            : base(items.Select(x => new DiskPath(x)).ToArray())
         {
         }
 
@@ -47,16 +38,16 @@ namespace DustInTheWind.DirectoryCompare.Domain.Utils
         /// </summary>
         public PathCollection PrependPath(string path)
         {
-            DiskPath[] newItems = Items
-                .Select(x => x.Prepend(path))
+            string[] newItems = Items
+                .Select(x => Path.IsPathRooted(x) ? x : Path.Combine(path, x))
                 .ToArray();
 
             return new PathCollection(newItems);
         }
 
-        public void AddRange(IEnumerable<DiskPath> items)
+        public void AddRange(IEnumerable<string> items)
         {
-            foreach (DiskPath item in items)
+            foreach (string item in items)
                 Items.Add(item);
         }
     }

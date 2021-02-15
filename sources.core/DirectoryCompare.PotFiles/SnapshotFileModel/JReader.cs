@@ -1,0 +1,216 @@
+﻿// DirectoryCompare
+// Copyright (C) 2017-2020 Dust in the Wind
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+
+namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
+{
+    public class JReader
+    {
+        protected readonly JsonTextReader jsonTextReader;
+
+        protected JReaderState state = JReaderState.New;
+
+        protected JReader(JsonTextReader jsonTextReader)
+        {
+            this.jsonTextReader = jsonTextReader ?? throw new ArgumentNullException(nameof(jsonTextReader));
+        }
+
+        protected bool MoveToNextProperty()
+        {
+            while (true)
+            {
+                bool success = jsonTextReader.Read();
+
+                if (!success)
+                    return false;
+
+                switch (jsonTextReader.TokenType)
+                {
+                    case JsonToken.None:
+                    case JsonToken.StartObject:
+                    case JsonToken.StartArray:
+                    case JsonToken.StartConstructor:
+                    case JsonToken.Raw:
+                    case JsonToken.Integer:
+                    case JsonToken.Float:
+                    case JsonToken.String:
+                    case JsonToken.Boolean:
+                    case JsonToken.Null:
+                    case JsonToken.Undefined:
+                    case JsonToken.EndArray:
+                    case JsonToken.EndConstructor:
+                    case JsonToken.Date:
+                    case JsonToken.Bytes:
+                        throw new Exception("Invalid json token in directory object.");
+
+                    case JsonToken.Comment:
+                        break;
+
+                    case JsonToken.PropertyName:
+                        return true;
+
+                    case JsonToken.EndObject:
+                        state = JReaderState.Finished;
+                        return false;
+
+                    default:
+                        throw new Exception("Invalid json token in directory object.");
+                }
+            }
+        }
+
+        protected bool MoveToArrayStart()
+        {
+            while (true)
+            {
+                bool success = jsonTextReader.Read();
+
+                if (!success)
+                    return false;
+
+                switch (jsonTextReader.TokenType)
+                {
+                    case JsonToken.None:
+                    case JsonToken.StartObject:
+                    case JsonToken.StartConstructor:
+                    case JsonToken.PropertyName:
+                    case JsonToken.Raw:
+                    case JsonToken.Integer:
+                    case JsonToken.Float:
+                    case JsonToken.String:
+                    case JsonToken.Boolean:
+                    case JsonToken.Null:
+                    case JsonToken.Undefined:
+                    case JsonToken.EndObject:
+                    case JsonToken.EndArray:
+                    case JsonToken.EndConstructor:
+                    case JsonToken.Date:
+                    case JsonToken.Bytes:
+                        throw new Exception("Invalid json token in files collection.");
+
+                    case JsonToken.StartArray:
+                        return true;
+
+                    case JsonToken.Comment:
+                        break;
+
+                    default:
+                        throw new Exception("Invalid json token in files collection.");
+                }
+            }
+        }
+
+        protected bool MoveToObjectStart()
+        {
+            while (true)
+            {
+                bool success = jsonTextReader.Read();
+
+                if (!success)
+                    return false;
+
+                switch (jsonTextReader.TokenType)
+                {
+                    case JsonToken.None:
+                    case JsonToken.StartArray:
+                    case JsonToken.StartConstructor:
+                    case JsonToken.PropertyName:
+                    case JsonToken.Raw:
+                    case JsonToken.Integer:
+                    case JsonToken.Float:
+                    case JsonToken.String:
+                    case JsonToken.Boolean:
+                    case JsonToken.Null:
+                    case JsonToken.Undefined:
+                    case JsonToken.EndObject:
+                    case JsonToken.EndArray:
+                    case JsonToken.EndConstructor:
+                    case JsonToken.Date:
+                    case JsonToken.Bytes:
+                        throw new Exception("Invalid json token in files collection.");
+
+                    case JsonToken.StartObject:
+                        return true;
+
+                    case JsonToken.Comment:
+                        break;
+
+                    default:
+                        throw new Exception("Invalid json token in files collection.");
+                }
+            }
+        }
+
+        protected IEnumerable<JFileReader> ReadFilesCollection()
+        {
+            bool isFProperty = jsonTextReader.TokenType == JsonToken.PropertyName && jsonTextReader.ReadAsString() == "f";
+
+            if (isFProperty)
+            {
+                bool success = MoveToArrayStart();
+
+                if (!success)
+                    yield break;
+            }
+
+            bool isArrayStart = jsonTextReader.TokenType == JsonToken.StartArray;
+
+            if (!isArrayStart)
+                yield break;
+
+            while (true)
+            {
+                bool success = MoveToObjectStart();
+
+                if (!success)
+                    yield break;
+
+                yield return new JFileReader(jsonTextReader);
+            }
+        }
+
+        protected IEnumerable<JDirectoryReader> ReadDirectoriesCollection()
+        {
+            bool isDProperty = jsonTextReader.TokenType == JsonToken.PropertyName && jsonTextReader.ReadAsString() == "d";
+
+            if (isDProperty)
+            {
+                bool success = MoveToArrayStart();
+
+                if (!success)
+                    yield break;
+            }
+
+            bool isArrayStart = jsonTextReader.TokenType == JsonToken.StartArray;
+
+            if (!isArrayStart)
+                yield break;
+
+            while (true)
+            {
+                bool success = MoveToObjectStart();
+
+                if (!success)
+                    yield break;
+
+                yield return new JDirectoryReader(jsonTextReader);
+            }
+        }
+    }
+}

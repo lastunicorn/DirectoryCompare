@@ -14,14 +14,25 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Domain.Utils;
+using System;
+using DustInTheWind.DirectoryCompare.Domain.Entities;
+using DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel;
 
-namespace DustInTheWind.DirectoryCompare.Domain.SomeInterfaces
+namespace DustInTheWind.DirectoryCompare.DataAccess.Transformations
 {
-    public interface IRemoveDuplicatesExporter
+    internal static class HFileExtensions
     {
-        void WriteRemove(string path);
-
-        void WriteSummary(int removedFiles, DataSize removedSize);
+        public static JFile ToJFile(this HFile file)
+        {
+            if (file == null) throw new ArgumentNullException(nameof(file));
+            
+            return new JFile
+            {
+                Name = file.Name,
+                Size = file.Size,
+                Hash = file.Hash,
+                LastModifiedTime = file.LastModifiedTime
+            };
+        }
     }
 }

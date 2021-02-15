@@ -14,14 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Domain.Utils;
+using System;
+using Newtonsoft.Json;
 
-namespace DustInTheWind.DirectoryCompare.Domain.SomeInterfaces
+namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
 {
-    public interface IRemoveDuplicatesExporter
+    public class SerializerInfo
     {
-        void WriteRemove(string path);
-
-        void WriteSummary(int removedFiles, DataSize removedSize);
+        [JsonProperty("id")]
+        public Guid Id { get; set; }
     }
 }

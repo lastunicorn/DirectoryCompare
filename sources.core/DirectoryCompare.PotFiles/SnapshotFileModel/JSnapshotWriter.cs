@@ -15,24 +15,33 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using DustInTheWind.DirectoryCompare.Domain;
-using DustInTheWind.DirectoryCompare.Domain.SomeInterfaces;
-using DustInTheWind.DirectoryCompare.Domain.Utils;
+using Newtonsoft.Json;
 
-namespace DustInTheWind.DirectoryCompare.Cli.UI.ResultExporters
+namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
 {
-    internal class ConsoleRemoveDuplicatesExporter : IRemoveDuplicatesExporter
+    public sealed class JSnapshotWriter : JDirectoryWriter
     {
-        public void WriteRemove(string path)
+        public JSnapshotWriter(JsonTextWriter jsonTextWriter)
+            : base(jsonTextWriter)
         {
-            Console.WriteLine("removed: {0}", path);
         }
 
-        public void WriteSummary(int removedFiles, DataSize removedSize)
+        public void WriteId(Guid id)
         {
-            Console.WriteLine("Total removes: " + removedFiles);
-            Console.WriteLine("Total size: " + removedSize);
-            Console.WriteLine();
+            Writer.WritePropertyName("serializer-id");
+            Writer.WriteValue(id);
+        }
+
+        public void WriteOriginalPath(string originalPath)
+        {
+            Writer.WritePropertyName("original-path");
+            Writer.WriteValue(originalPath);
+        }
+
+        public void WriteCreationTime(DateTime creationTime)
+        {
+            Writer.WritePropertyName("creation-time");
+            Writer.WriteValue(creationTime);
         }
     }
 }

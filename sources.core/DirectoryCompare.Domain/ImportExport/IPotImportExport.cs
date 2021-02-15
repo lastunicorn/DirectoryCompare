@@ -14,14 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Domain.Utils;
+using DustInTheWind.DirectoryCompare.Domain.Entities;
 
-namespace DustInTheWind.DirectoryCompare.Domain.SomeInterfaces
+namespace DustInTheWind.DirectoryCompare.Domain.ImportExport
 {
-    public interface IRemoveDuplicatesExporter
+    public interface IPotImportExport
     {
-        void WriteRemove(string path);
+        Snapshot Import(string filePath);
 
-        void WriteSummary(int removedFiles, DataSize removedSize);
+        void Export(Snapshot snapshot, string filePath);
     }
 }

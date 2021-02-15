@@ -20,6 +20,8 @@ using System.IO;
 using System.Linq;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
+using DustInTheWind.DirectoryCompare.JFiles;
+using DustInTheWind.DirectoryCompare.JFiles.PotInfoFileModel;
 
 namespace DustInTheWind.DirectoryCompare.DataAccess
 {

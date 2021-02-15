@@ -18,9 +18,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DustInTheWind.DirectoryCompare.DataAccess.Transformations;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
-using DustInTheWind.DirectoryCompare.JsonHashesFile;
+using DustInTheWind.DirectoryCompare.JFiles;
 
 namespace DustInTheWind.DirectoryCompare.DataAccess
 {
@@ -49,7 +50,7 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
             foreach (SnapshotFile snapshotFile in allSnapshotFiles)
             {
                 snapshotFile.Open();
-                yield return snapshotFile.Snapshot;
+                yield return snapshotFile.Snapshot.ToSnapshot();
             }
         }
 
@@ -68,7 +69,7 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
                 return null;
 
             snapshotFile.Open();
-            return snapshotFile.Snapshot;
+            return snapshotFile.Snapshot.ToSnapshot();
         }
 
         public Snapshot GetLast(string potName)
@@ -89,7 +90,7 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
             foreach (SnapshotFile snapshotFile in snapshotFiles)
             {
                 snapshotFile.Open();
-                yield return snapshotFile.Snapshot;
+                yield return snapshotFile.Snapshot.ToSnapshot();
             }
         }
 
@@ -107,7 +108,7 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
                 return null;
 
             snapshotFile.Open();
-            return snapshotFile.Snapshot;
+            return snapshotFile.Snapshot.ToSnapshot();
         }
 
         public void Add(string potName, Snapshot snapshot)
@@ -119,7 +120,7 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
 
             SnapshotFile snapshotFile = potDirectory.CreateSnapshotFile(snapshot.CreationTime);
             snapshotFile.Open();
-            snapshotFile.Snapshot = snapshot;
+            snapshotFile.Snapshot = snapshot.ToJSnapshot();
             snapshotFile.Save();
         }
 

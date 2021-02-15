@@ -15,24 +15,28 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using DustInTheWind.DirectoryCompare.Domain;
-using DustInTheWind.DirectoryCompare.Domain.SomeInterfaces;
-using DustInTheWind.DirectoryCompare.Domain.Utils;
+using System.Linq;
+using DustInTheWind.DirectoryCompare.Domain.Entities;
+using DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel;
 
-namespace DustInTheWind.DirectoryCompare.Cli.UI.ResultExporters
+namespace DustInTheWind.DirectoryCompare.DataAccess.Transformations
 {
-    internal class ConsoleRemoveDuplicatesExporter : IRemoveDuplicatesExporter
+    internal static class HDirectoryExtensions
     {
-        public void WriteRemove(string path)
+        public static JDirectory ToJDirectory(this HDirectory directory)
         {
-            Console.WriteLine("removed: {0}", path);
-        }
+            if (directory == null) throw new ArgumentNullException(nameof(directory));
 
-        public void WriteSummary(int removedFiles, DataSize removedSize)
-        {
-            Console.WriteLine("Total removes: " + removedFiles);
-            Console.WriteLine("Total size: " + removedSize);
-            Console.WriteLine();
+            return new JDirectory
+            {
+                Name = directory.Name,
+                Directories = directory.Directories?
+                    .Select(x => x.ToJDirectory())
+                    .ToList(),
+                Files = directory.Files?
+                    .Select(x => x.ToJFile())
+                    .ToList()
+            };
         }
     }
 }

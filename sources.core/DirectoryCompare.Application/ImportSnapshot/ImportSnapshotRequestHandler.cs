@@ -17,8 +17,8 @@
 using System;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
+using DustInTheWind.DirectoryCompare.Domain.ImportExport;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
-using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.ImportSnapshot
@@ -27,17 +27,18 @@ namespace DustInTheWind.DirectoryCompare.Application.ImportSnapshot
     {
         private readonly IPotRepository potRepository;
         private readonly ISnapshotRepository snapshotRepository;
+        private readonly IPotImportExport potImportExport;
 
-        public ImportSnapshotRequestHandler(IPotRepository potRepository, ISnapshotRepository snapshotRepository)
+        public ImportSnapshotRequestHandler(IPotRepository potRepository, ISnapshotRepository snapshotRepository, IPotImportExport potImportExport)
         {
             this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
             this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
+            this.potImportExport = potImportExport ?? throw new ArgumentNullException(nameof(potImportExport));
         }
 
         protected override void Handle(ImportSnapshotRequest request)
         {
-            JSnapshotDocument jSnapshotDocument = JSnapshotDocument.Load(request.FilePath);
-            Snapshot snapshot = jSnapshotDocument.Snapshot;
+            Snapshot snapshot = potImportExport.Import(request.FilePath);
 
             Pot pot = potRepository.Get(request.PotName);
 

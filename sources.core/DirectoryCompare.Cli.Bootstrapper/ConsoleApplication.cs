@@ -24,7 +24,8 @@ using DustInTheWind.DirectoryCompare.Cli.Setup;
 using DustInTheWind.DirectoryCompare.Cli.UI.Commands;
 using DustInTheWind.DirectoryCompare.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
-using DustInTheWind.DirectoryCompare.Logging;
+using DustInTheWind.DirectoryCompare.Domain.ImportExport;
+using DustInTheWind.DirectoryCompare.Infrastructure.Logging;
 
 namespace DustInTheWind.DirectoryCompare.Cli
 {
@@ -46,6 +47,7 @@ namespace DustInTheWind.DirectoryCompare.Cli
             serviceCollection.AddTransient<IPotRepository, PotRepository>();
             serviceCollection.AddTransient<IBlackListRepository, BlackListRepository>();
             serviceCollection.AddTransient<ISnapshotRepository, SnapshotRepository>();
+            serviceCollection.AddTransient<IPotImportExport, PotImportExport>();
 
             MediatorSetup.Setup(serviceCollection);
 

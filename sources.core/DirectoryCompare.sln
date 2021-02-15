@@ -23,11 +23,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.Cli.Bootst
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.Cli.Presentation", "DirectoryCompare.Cli.UI\DirectoryCompare.Cli.Presentation.csproj", "{0609FA89-0257-4103-A74D-EAAA90340CAE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.JsonHashesFile", "DirectoryCompare.JsonHashesFile\DirectoryCompare.JsonHashesFile.csproj", "{BCF65B3C-360A-44F8-AB0F-6EEB83A0545E}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.Infrastructure", "DirectoryCompare.Infrastructure\DirectoryCompare.Infrastructure.csproj", "{21DFC865-34C1-4ECD-9D79-3F33F555E4D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.JFiles", "DirectoryCompare.JFiles\DirectoryCompare.JFiles.csproj", "{0545F6ED-0FFD-4FD8-8808-DD45733098B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.PotFiles", "DirectoryCompare.PotFiles\DirectoryCompare.PotFiles.csproj", "{0545F6ED-0FFD-4FD8-8808-DD45733098B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -123,18 +121,6 @@ Global
 		{0609FA89-0257-4103-A74D-EAAA90340CAE}.Release|x64.Build.0 = Release|Any CPU
 		{0609FA89-0257-4103-A74D-EAAA90340CAE}.Release|x86.ActiveCfg = Release|Any CPU
 		{0609FA89-0257-4103-A74D-EAAA90340CAE}.Release|x86.Build.0 = Release|Any CPU
-		{BCF65B3C-360A-44F8-AB0F-6EEB83A0545E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BCF65B3C-360A-44F8-AB0F-6EEB83A0545E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BCF65B3C-360A-44F8-AB0F-6EEB83A0545E}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{BCF65B3C-360A-44F8-AB0F-6EEB83A0545E}.Debug|x64.Build.0 = Debug|Any CPU
-		{BCF65B3C-360A-44F8-AB0F-6EEB83A0545E}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{BCF65B3C-360A-44F8-AB0F-6EEB83A0545E}.Debug|x86.Build.0 = Debug|Any CPU
-		{BCF65B3C-360A-44F8-AB0F-6EEB83A0545E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BCF65B3C-360A-44F8-AB0F-6EEB83A0545E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BCF65B3C-360A-44F8-AB0F-6EEB83A0545E}.Release|x64.ActiveCfg = Release|Any CPU
-		{BCF65B3C-360A-44F8-AB0F-6EEB83A0545E}.Release|x64.Build.0 = Release|Any CPU
-		{BCF65B3C-360A-44F8-AB0F-6EEB83A0545E}.Release|x86.ActiveCfg = Release|Any CPU
-		{BCF65B3C-360A-44F8-AB0F-6EEB83A0545E}.Release|x86.Build.0 = Release|Any CPU
 		{21DFC865-34C1-4ECD-9D79-3F33F555E4D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{21DFC865-34C1-4ECD-9D79-3F33F555E4D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{21DFC865-34C1-4ECD-9D79-3F33F555E4D8}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -169,8 +155,8 @@ Global
 		{C73C24C9-AF10-4D5E-958E-6F9B1E31FF55} = {52A15438-167C-4E52-B2D5-591109C38ECC}
 		{F4445650-0D0C-43F2-A113-FA5A38093F62} = {2CABD000-FEDF-4858-B3E1-51ADF6F56C1D}
 		{0609FA89-0257-4103-A74D-EAAA90340CAE} = {2CABD000-FEDF-4858-B3E1-51ADF6F56C1D}
-		{BCF65B3C-360A-44F8-AB0F-6EEB83A0545E} = {52A15438-167C-4E52-B2D5-591109C38ECC}
 		{21DFC865-34C1-4ECD-9D79-3F33F555E4D8} = {52A15438-167C-4E52-B2D5-591109C38ECC}
+		{0545F6ED-0FFD-4FD8-8808-DD45733098B8} = {88D27769-CFD0-417C-96BB-64A05415B47C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {86D5FACB-2648-4347-86B1-9D6DAAAD7AE9}

@@ -25,8 +25,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ConsoleFramework\ConsoleFramework.csproj" />
+    <ProjectReference Include="..\DirectoryCompare.DataAccess\DirectoryCompare.DataAccess.csproj" />
     <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" />
-    <ProjectReference Include="..\DirectoryCompare.JsonHashesFile\DirectoryCompare.JsonHashesFile.csproj" />
+    <ProjectReference Include="..\DirectoryCompare.PotFiles\DirectoryCompare.PotFiles.csproj" />
   </ItemGroup>
 
 </Project>

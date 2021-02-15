@@ -21,6 +21,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
+using DustInTheWind.DirectoryCompare.Domain.Utils;
 
 namespace DustInTheWind.DirectoryCompare.Application.FindDuplicates
 {

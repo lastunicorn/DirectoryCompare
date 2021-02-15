@@ -17,6 +17,7 @@
 using System;
 using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
+using DustInTheWind.DirectoryCompare.Domain.Utils;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Views
 {

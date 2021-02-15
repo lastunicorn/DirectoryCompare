@@ -22,7 +22,6 @@ using DustInTheWind.ConsoleFramework.Logging;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
-using DustInTheWind.DirectoryCompare.JsonHashesFile.JsonExport;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.CreateSnapshot

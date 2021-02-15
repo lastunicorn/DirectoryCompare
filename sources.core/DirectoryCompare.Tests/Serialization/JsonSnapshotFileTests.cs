@@ -16,8 +16,10 @@
 
 using System;
 using System.IO;
+using DustInTheWind.DirectoryCompare.DataAccess;
+using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
-using DustInTheWind.DirectoryCompare.JsonHashesFile.Serialization;
+using DustInTheWind.DirectoryCompare.Domain.Utils;
 using NUnit.Framework;
 
 namespace DustInTheWind.DirectoryCompare.Tests.Serialization
@@ -28,8 +30,7 @@ namespace DustInTheWind.DirectoryCompare.Tests.Serialization
         [Test]
         public void SerializeEmptySnapshot()
         {
-            JSnapshotDocument jSnapshotDocument = new JSnapshotDocument();
-            jSnapshotDocument.Snapshot = new Snapshot
+            Snapshot snapshot = new Snapshot
             {
                 CreationTime = new DateTime(2019, 5, 8, 19, 17, 0, DateTimeKind.Utc),
                 Name = "Snapshot 1",
@@ -41,20 +42,19 @@ namespace DustInTheWind.DirectoryCompare.Tests.Serialization
   ""original-path"": ""c:\\aaa"",
   ""creation-time"": ""2019-05-08T19:17:00Z""
 }";
-            PerformTest(jSnapshotDocument, expected);
+            PerformTest(snapshot, expected);
         }
 
         [Test]
         public void SerializeSnapshotWithOneDirectory()
         {
-            JSnapshotDocument jSnapshotDocument = new JSnapshotDocument();
-            jSnapshotDocument.Snapshot = new Snapshot
+            Snapshot snapshot = new Snapshot
             {
                 CreationTime = new DateTime(2019, 5, 8, 19, 17, 0, DateTimeKind.Utc),
                 Name = "Snapshot 1",
                 OriginalPath = @"c:\aaa"
             };
-            jSnapshotDocument.Snapshot.Directories.Add(new HDirectory
+            snapshot.Directories.Add(new HDirectory
             {
                 Name = "directory-name"
             });
@@ -69,22 +69,23 @@ namespace DustInTheWind.DirectoryCompare.Tests.Serialization
     }
   ]
 }";
-            PerformTest(jSnapshotDocument, expected);
+            PerformTest(snapshot, expected);
         }
 
         [Test]
         public void SerializeSnapshotWithOneFile()
         {
-            JSnapshotDocument jSnapshotDocument = new JSnapshotDocument();
-            jSnapshotDocument.Snapshot = new Snapshot
+            Snapshot snapshot = new Snapshot
             {
                 CreationTime = new DateTime(2019, 5, 8, 19, 17, 0, DateTimeKind.Utc),
                 Name = "Snapshot 1",
                 OriginalPath = @"c:\aaa"
             };
-            jSnapshotDocument.Snapshot.Files.Add(new HFile
+            snapshot.Files.Add(new HFile
             {
                 Name = "file.extension",
+                Size = DataSize.FromKilobytes(42),
+                LastModifiedTime = new DateTime(2011, 05, 13, 12,56,20),
                 Hash = new byte[] { 0, 1, 2 }
             });
 
@@ -95,19 +96,23 @@ namespace DustInTheWind.DirectoryCompare.Tests.Serialization
   ""f"": [
     {
       ""n"": ""file.extension"",
+      ""s"": 43008,
+      ""m"": ""2011-05-13T12:56:20"",
       ""h"": ""AAEC""
     }
   ]
 }";
-            PerformTest(jSnapshotDocument, expected);
+            PerformTest(snapshot, expected);
         }
 
-        private static void PerformTest(JSnapshotDocument jSnapshotDocument, string expected)
+        private static void PerformTest(Snapshot snapshot, string expected)
         {
+            PotImportExport potImportExport = new PotImportExport();
+
             using (MemoryStream memoryStream = new MemoryStream())
             {
                 StreamWriter streamWriter = new StreamWriter(memoryStream);
-                jSnapshotDocument.Save(streamWriter);
+                potImportExport.Export(snapshot, streamWriter);
                 streamWriter.Flush();
                 memoryStream.Flush();
 

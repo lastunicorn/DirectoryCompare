@@ -17,6 +17,10 @@
 using System;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
+using DustInTheWind.DirectoryCompare.JFiles;
+using DustInTheWind.DirectoryCompare.JFiles.BlacklistFileModel;
+using PathCollection = DustInTheWind.DirectoryCompare.Domain.Utils.PathCollection;
+
 
 namespace DustInTheWind.DirectoryCompare.DataAccess
 {
@@ -30,7 +34,7 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
                 throw new Exception($"There is no pot with name '{potName}'.");
 
             BlackListFile blackListFile = potDirectory.OpenBlackListFile("bl");
-            return blackListFile.Items;
+            return new PathCollection(blackListFile.Items);
         }
 
         public void Add(string potName, DiskPath path)

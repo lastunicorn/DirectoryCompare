@@ -23,7 +23,6 @@
     <ProjectReference Include="..\ConsoleFramework\ConsoleFramework.csproj" />
     <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All" />
     <ProjectReference Include="..\DirectoryCompare.Infrastructure\DirectoryCompare.Infrastructure.csproj" PrivateAssets="All" />
-    <ProjectReference Include="..\DirectoryCompare.JsonHashesFile\DirectoryCompare.JsonHashesFile.csproj" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>
