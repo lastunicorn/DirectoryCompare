@@ -16,18 +16,19 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using DustInTheWind.DirectoryCompare.DataAccess.Transformations;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
+using DustInTheWind.DirectoryCompare.Domain.ImportExport;
 using DustInTheWind.DirectoryCompare.JFiles;
+using DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel;
 
 namespace DustInTheWind.DirectoryCompare.DataAccess
 {
     public class SnapshotRepository : ISnapshotRepository
     {
-        public Stream CreateStream(string potName)
+        public ISnapshotWriter CreateWriter(string potName)
         {
             PotDirectory potDirectory = PotDirectory.FromPotName(potName);
 
@@ -35,7 +36,8 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
                 throw new Exception($"There is no pot with name '{potName}'.");
 
             SnapshotFile snapshotFile = potDirectory.CreateSnapshotFile(DateTime.UtcNow);
-            return snapshotFile.OpenStream();
+            JSnapshotWriter jSnapshotWriter = snapshotFile.OpenWriter();
+            return new JsonSnapshotWriter(jSnapshotWriter);
         }
 
         public IEnumerable<Snapshot> GetByPot(string potName)

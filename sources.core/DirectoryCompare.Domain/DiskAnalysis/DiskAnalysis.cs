@@ -15,16 +15,22 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Security.Cryptography;
+using System.Threading;
+using System.Threading.Tasks;
 using DustInTheWind.DirectoryCompare.Domain.DiskAnalysis.DiskCrawling;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
+using DustInTheWind.DirectoryCompare.Domain.ImportExport;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 
 namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
 {
-    public sealed class DiskAnalysis : IDisposable
+    public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
     {
+        private readonly Stopwatch stopwatch = new Stopwatch();
+        private readonly ManualResetEventSlim manualResetEventSlim = new ManualResetEventSlim(false);
         private readonly MD5 md5;
         private string rootPath;
         private long totalSize;
@@ -36,13 +42,17 @@ namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
             set => rootPath = value ?? string.Empty;
         }
 
-        public IAnalysisExport AnalysisExport { get; set; }
+        public ISnapshotWriter SnapshotWriter { get; set; }
 
-        public PathCollection BlackList { get; set; }
+        public DiskPathCollection BlackList { get; set; }
+
+        public DiskAnalysisState State { get; private set; }
 
         public event EventHandler<ErrorEncounteredEventArgs> ErrorEncountered;
         public event EventHandler<DiskReaderStartingEventArgs> Starting;
         public event EventHandler<DiskAnalysisProgressEventArgs> Progress;
+
+        public TimeSpan ElapsedTime => stopwatch.Elapsed;
 
         public DiskAnalysis()
         {
@@ -51,19 +61,35 @@ namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
 
         public void Run()
         {
-            PathCollection rootedBlackList = BlackList?.PrependPath(RootPath) ?? new PathCollection();
+            if (State == DiskAnalysisState.InProgress)
+                throw new DirectoryCompareException("Another analysis is still in progress.");
 
-            OnStarting(new DiskReaderStartingEventArgs(rootedBlackList));
+            State = DiskAnalysisState.InProgress;
+            stopwatch.Start();
+            manualResetEventSlim.Reset();
 
-            AnalysisExport?.Open(RootPath);
+            try
+            {
+                DiskPathCollection rootedBlackList = BlackList?.PrependPath(RootPath) ?? new DiskPathCollection();
 
-            totalSize = CalculateSize(rootedBlackList);
-            CalculateHashes(rootedBlackList);
+                OnStarting(new DiskReaderStartingEventArgs(rootedBlackList));
 
-            AnalysisExport?.Close();
+                SnapshotWriter?.Open(RootPath);
+
+                totalSize = CalculateSize(rootedBlackList);
+                CalculateHashes(rootedBlackList);
+
+                SnapshotWriter?.Close();
+            }
+            finally
+            {
+                stopwatch.Stop();
+                State = DiskAnalysisState.Ready;
+                manualResetEventSlim.Set();
+            }
         }
 
-        private long CalculateSize(PathCollection rootedBlackList)
+        private long CalculateSize(DiskPathCollection rootedBlackList)
         {
             DiskCrawler diskCrawler = new DiskCrawler(RootPath, rootedBlackList);
             long size = 0;
@@ -79,16 +105,16 @@ namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
                         break;
 
                     case CrawlerAction.FileFound:
-                    {
-                        try
                         {
-                            FileInfo fileInfo = new FileInfo(crawlerStep.Path);
-                            size += fileInfo.Length;
+                            try
+                            {
+                                FileInfo fileInfo = new FileInfo(crawlerStep.Path);
+                                size += fileInfo.Length;
+                            }
+                            catch
+                            {
+                            }
                         }
-                        catch
-                        {
-                        }
-                    }
                         break;
 
                     case CrawlerAction.Error:
@@ -102,7 +128,7 @@ namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
             return size;
         }
 
-        private void CalculateHashes(PathCollection rootedBlackList)
+        private void CalculateHashes(DiskPathCollection rootedBlackList)
         {
             DiskCrawler diskCrawler = new DiskCrawler(RootPath, rootedBlackList);
 
@@ -137,12 +163,12 @@ namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
             string directoryName = Path.GetFileName(crawlerStep.Path);
             HDirectory hDirectory = new HDirectory(directoryName);
 
-            AnalysisExport?.AddAndOpen(hDirectory);
+            SnapshotWriter?.AddAndOpen(hDirectory);
         }
 
         private void CloseDirectory()
         {
-            AnalysisExport?.CloseDirectory();
+            SnapshotWriter?.CloseDirectory();
         }
 
         private void AddFile(CrawlerStep crawlerStep)
@@ -178,7 +204,7 @@ namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
                 hFile.Error = ex.Message;
             }
 
-            AnalysisExport?.Add(hFile);
+            SnapshotWriter?.Add(hFile);
         }
 
         private void ProcessError(CrawlerStep crawlerStep)
@@ -191,7 +217,12 @@ namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
                 Error = crawlerStep.Exception.Message
             };
 
-            AnalysisExport?.Add(hDirectory);
+            SnapshotWriter?.Add(hDirectory);
+        }
+
+        public void WaitToEnd()
+        {
+            manualResetEventSlim.Wait();
         }
 
         public void Dispose()

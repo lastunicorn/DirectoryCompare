@@ -16,7 +16,7 @@
 
 using System;
 using DustInTheWind.ConsoleFramework;
-using DustInTheWind.DirectoryCompare.Application.CreateSnapshot;
+using DustInTheWind.DirectoryCompare.Application.SnapshotManagement.CreateSnapshot;
 using DustInTheWind.DirectoryCompare.Infrastructure.Performance;
 using DustInTheWind.DirectoryCompare.Infrastructure.Validation;
 using FluentValidation;

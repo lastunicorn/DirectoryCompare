@@ -22,25 +22,44 @@ namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
 {
     public class JReader
     {
-        protected readonly JsonTextReader jsonTextReader;
+        protected readonly JsonTextReader JsonTextReader;
 
-        protected JReaderState state = JReaderState.New;
+        protected JReaderState State = JReaderState.New;
 
         protected JReader(JsonTextReader jsonTextReader)
         {
-            this.jsonTextReader = jsonTextReader ?? throw new ArgumentNullException(nameof(jsonTextReader));
+            JsonTextReader = jsonTextReader ?? throw new ArgumentNullException(nameof(jsonTextReader));
+        }
+
+        protected void MoveToNextState()
+        {
+            switch (State)
+            {
+                case JReaderState.New:
+                    State = JReaderState.InProgress;
+                    break;
+
+                case JReaderState.InProgress:
+                    break;
+
+                case JReaderState.Finished:
+                    throw new Exception("The reader already finished reading the json object.");
+
+                default:
+                    throw new Exception("Invalid reader state.");
+            }
         }
 
         protected bool MoveToNextProperty()
         {
             while (true)
             {
-                bool success = jsonTextReader.Read();
+                bool success = JsonTextReader.Read();
 
                 if (!success)
                     return false;
 
-                switch (jsonTextReader.TokenType)
+                switch (JsonTextReader.TokenType)
                 {
                     case JsonToken.None:
                     case JsonToken.StartObject:
@@ -66,7 +85,7 @@ namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
                         return true;
 
                     case JsonToken.EndObject:
-                        state = JReaderState.Finished;
+                        State = JReaderState.Finished;
                         return false;
 
                     default:
@@ -79,12 +98,12 @@ namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
         {
             while (true)
             {
-                bool success = jsonTextReader.Read();
+                bool success = JsonTextReader.Read();
 
                 if (!success)
                     return false;
 
-                switch (jsonTextReader.TokenType)
+                switch (JsonTextReader.TokenType)
                 {
                     case JsonToken.None:
                     case JsonToken.StartObject:
@@ -120,12 +139,12 @@ namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
         {
             while (true)
             {
-                bool success = jsonTextReader.Read();
+                bool success = JsonTextReader.Read();
 
                 if (!success)
                     return false;
 
-                switch (jsonTextReader.TokenType)
+                switch (JsonTextReader.TokenType)
                 {
                     case JsonToken.None:
                     case JsonToken.StartArray:
@@ -159,7 +178,7 @@ namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
 
         protected IEnumerable<JFileReader> ReadFilesCollection()
         {
-            bool isFProperty = jsonTextReader.TokenType == JsonToken.PropertyName && jsonTextReader.ReadAsString() == "f";
+            bool isFProperty = JsonTextReader.TokenType == JsonToken.PropertyName && JsonTextReader.ReadAsString() == "f";
 
             if (isFProperty)
             {
@@ -169,7 +188,7 @@ namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
                     yield break;
             }
 
-            bool isArrayStart = jsonTextReader.TokenType == JsonToken.StartArray;
+            bool isArrayStart = JsonTextReader.TokenType == JsonToken.StartArray;
 
             if (!isArrayStart)
                 yield break;
@@ -181,13 +200,13 @@ namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
                 if (!success)
                     yield break;
 
-                yield return new JFileReader(jsonTextReader);
+                yield return new JFileReader(JsonTextReader);
             }
         }
 
         protected IEnumerable<JDirectoryReader> ReadDirectoriesCollection()
         {
-            bool isDProperty = jsonTextReader.TokenType == JsonToken.PropertyName && jsonTextReader.ReadAsString() == "d";
+            bool isDProperty = JsonTextReader.TokenType == JsonToken.PropertyName && JsonTextReader.ReadAsString() == "d";
 
             if (isDProperty)
             {
@@ -197,7 +216,7 @@ namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
                     yield break;
             }
 
-            bool isArrayStart = jsonTextReader.TokenType == JsonToken.StartArray;
+            bool isArrayStart = JsonTextReader.TokenType == JsonToken.StartArray;
 
             if (!isArrayStart)
                 yield break;
@@ -209,7 +228,7 @@ namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
                 if (!success)
                     yield break;
 
-                yield return new JDirectoryReader(jsonTextReader);
+                yield return new JDirectoryReader(JsonTextReader);
             }
         }
     }

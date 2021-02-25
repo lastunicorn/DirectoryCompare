@@ -19,9 +19,9 @@ using System.Collections.Generic;
 using System.Linq;
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.DirectoryCompare.Application;
-using DustInTheWind.DirectoryCompare.Application.AddBlackPath;
-using DustInTheWind.DirectoryCompare.Application.GetBlackList;
-using DustInTheWind.DirectoryCompare.Application.RemoveBlackPath;
+using DustInTheWind.DirectoryCompare.Application.BlackListManagement.AddBlackPath;
+using DustInTheWind.DirectoryCompare.Application.BlackListManagement.PresentBlackList;
+using DustInTheWind.DirectoryCompare.Application.BlackListManagement.RemoveBlackPath;
 using DustInTheWind.DirectoryCompare.Cli.UI.Views;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 
@@ -117,13 +117,13 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
         {
             IEnumerable<Argument> anonymousArguments = arguments.GetAnonymousArguments();
 
-            GetBlackListRequest request = new GetBlackListRequest
+            PresentBlackListRequest request = new PresentBlackListRequest
             {
                 PotName = arguments["p"].Value,
                 BlackList = anonymousArguments.FirstOrDefault().Value
             };
 
-            PathCollection blackList = requestBus.PlaceRequest<GetBlackListRequest, PathCollection>(request).Result;
+            DiskPathCollection blackList = requestBus.PlaceRequest<PresentBlackListRequest, DiskPathCollection>(request).Result;
 
             BlackListView blackListView = new BlackListView(blackList);
             blackListView.Display();

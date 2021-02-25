@@ -26,13 +26,13 @@ namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis.DiskCrawling
     internal class DirectoryCrawler : IEnumerable<CrawlerStep>
     {
         private readonly string path;
-        private readonly PathCollection blackList;
+        private readonly DiskPathCollection blackList;
 
         private string[] filePaths;
         private string[] directoryPaths;
         private Exception exception;
 
-        public DirectoryCrawler(string path, PathCollection blackList)
+        public DirectoryCrawler(string path, DiskPathCollection blackList)
         {
             this.path = path ?? throw new ArgumentNullException(nameof(path));
             this.blackList = blackList ?? throw new ArgumentNullException(nameof(blackList));

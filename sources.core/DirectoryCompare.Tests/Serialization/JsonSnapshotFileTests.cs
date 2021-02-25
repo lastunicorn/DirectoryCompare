@@ -112,7 +112,7 @@ namespace DustInTheWind.DirectoryCompare.Tests.Serialization
             using (MemoryStream memoryStream = new MemoryStream())
             {
                 StreamWriter streamWriter = new StreamWriter(memoryStream);
-                potImportExport.Export(snapshot, streamWriter);
+                potImportExport.WriteSnapshot(snapshot, streamWriter);
                 streamWriter.Flush();
                 memoryStream.Flush();
 

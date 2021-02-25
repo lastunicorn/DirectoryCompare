@@ -19,7 +19,7 @@ using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
 {
-    public class JDirectoryWriter
+    public class JDirectoryWriter : IDisposable
     {
         protected JsonTextWriter Writer { get; }
 
@@ -129,6 +129,18 @@ namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
             WriteEndDirectoriesArray();
 
             Writer.WriteEndObject();
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing) 
+                ((IDisposable)Writer)?.Dispose();
         }
     }
 }

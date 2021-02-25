@@ -17,8 +17,9 @@
 using System;
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.DirectoryCompare.Application;
-using DustInTheWind.DirectoryCompare.Application.CreateSnapshot;
+using DustInTheWind.DirectoryCompare.Application.SnapshotManagement.CreateSnapshot;
 using DustInTheWind.DirectoryCompare.Cli.UI.Views;
+using DustInTheWind.DirectoryCompare.Domain.DiskAnalysis;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
@@ -42,10 +43,15 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 
             CreateSnapshotRequest request = CreateRequest(arguments);
 
-            SnapshotProgress snapshotProgress = requestBus.PlaceRequest<CreateSnapshotRequest, SnapshotProgress>(request).Result;
-            snapshotProgress.ProgressChanged += (sender, value) => createSnapshotView.DisplayProgress(value);
+            IDiskAnalysisProgress pathAnalysisProgress = requestBus.PlaceRequest<CreateSnapshotRequest, IDiskAnalysisProgress>(request).Result;
+            pathAnalysisProgress.Progress += HandleAnalysisProgress;
 
-            snapshotProgress.WaitToEnd();
+            pathAnalysisProgress.WaitToEnd();
+        }
+
+        private void HandleAnalysisProgress(object sender, DiskAnalysisProgressEventArgs value)
+        {
+            createSnapshotView.DisplayProgress(value.Percentage);
         }
 
         private static CreateSnapshotRequest CreateRequest(Arguments arguments)

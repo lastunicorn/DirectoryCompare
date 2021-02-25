@@ -21,9 +21,9 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Views
 {
     internal class BlackListView
     {
-        private readonly PathCollection blackList;
+        private readonly DiskPathCollection blackList;
 
-        public BlackListView(PathCollection blackList)
+        public BlackListView(DiskPathCollection blackList)
         {
             this.blackList = blackList;
         }

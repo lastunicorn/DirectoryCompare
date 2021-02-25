@@ -53,7 +53,7 @@ namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
                 bool success = MoveToNextProperty();
 
                 CurrentPropertyType = success
-                    ? jsonTextReader.Value switch
+                    ? JsonTextReader.Value switch
                     {
                         "n" => JFileFieldType.FileName,
                         "s" => JFileFieldType.FileSize,
@@ -77,7 +77,7 @@ namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
             if (CurrentPropertyType != JFileFieldType.FileName)
                 throw new Exception("Current property is not the file name.");
 
-            return jsonTextReader.ReadAsString();
+            return JsonTextReader.ReadAsString();
         }
 
         public ulong ReadSize()
@@ -85,7 +85,7 @@ namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
             if (CurrentPropertyType != JFileFieldType.FileSize)
                 throw new Exception("Current property is not the file size.");
 
-            string rawValue = jsonTextReader.ReadAsString();
+            string rawValue = JsonTextReader.ReadAsString();
             return ulong.Parse(rawValue);
         }
 
@@ -94,7 +94,7 @@ namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
             if (CurrentPropertyType != JFileFieldType.LastModifiedTime)
                 throw new Exception("Current property is not the last modified time.");
 
-            DateTime? readAsDateTime = jsonTextReader.ReadAsDateTime();
+            DateTime? readAsDateTime = JsonTextReader.ReadAsDateTime();
             return readAsDateTime.Value;
         }
 
@@ -103,7 +103,7 @@ namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
             if (CurrentPropertyType != JFileFieldType.Hash)
                 throw new Exception("Current property is not the file hash.");
 
-            byte[] bytes = jsonTextReader.ReadAsBytes();
+            byte[] bytes = JsonTextReader.ReadAsBytes();
             return bytes;
         }
     }

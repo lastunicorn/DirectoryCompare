@@ -20,7 +20,7 @@ namespace DustInTheWind.DirectoryCompare.Domain.DataAccess
 {
     public interface IBlackListRepository
     {
-        PathCollection Get(string potName);
+        DiskPathCollection Get(string potName);
         
         void Add(string potName, DiskPath path);
         

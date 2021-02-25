@@ -19,10 +19,10 @@ using System.Collections.Generic;
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.DirectoryCompare.Application;
-using DustInTheWind.DirectoryCompare.Application.CreatePot;
-using DustInTheWind.DirectoryCompare.Application.DeletePot;
-using DustInTheWind.DirectoryCompare.Application.GetPot;
-using DustInTheWind.DirectoryCompare.Application.GetPots;
+using DustInTheWind.DirectoryCompare.Application.PotManagement.CreatePot;
+using DustInTheWind.DirectoryCompare.Application.PotManagement.DeletePot;
+using DustInTheWind.DirectoryCompare.Application.PotManagement.PresentPot;
+using DustInTheWind.DirectoryCompare.Application.PotManagement.PresentPots;
 using DustInTheWind.DirectoryCompare.Cli.UI.Views;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 
@@ -107,11 +107,11 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 
         private void ExecuteDisplayOne(Arguments arguments)
         {
-            GetPotRequest request = new GetPotRequest
+            PresentPotRequest request = new PresentPotRequest
             {
                 PotName = arguments.GetStringValue(0)
             };
-            Pot pot = requestBus.PlaceRequest<GetPotRequest, Pot>(request).Result;
+            Pot pot = requestBus.PlaceRequest<PresentPotRequest, Pot>(request).Result;
 
             PotView potView = new PotView(pot);
             potView.Display();
@@ -119,8 +119,8 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 
         private void ExecuteDisplayAll()
         {
-            GetPotsRequest request = new GetPotsRequest();
-            List<Pot> pots = requestBus.PlaceRequest<GetPotsRequest, List<Pot>>(request).Result;
+            PresentPotsRequest request = new PresentPotsRequest();
+            List<Pot> pots = requestBus.PlaceRequest<PresentPotsRequest, List<Pot>>(request).Result;
 
             PotsView potsView = new PotsView(pots);
             potsView.Display();

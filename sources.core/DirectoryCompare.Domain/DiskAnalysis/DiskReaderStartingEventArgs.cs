@@ -21,9 +21,9 @@ namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
 {
     public class DiskReaderStartingEventArgs : EventArgs
     {
-        public PathCollection BlackList { get; }
+        public DiskPathCollection BlackList { get; }
 
-        public DiskReaderStartingEventArgs(PathCollection blackList)
+        public DiskReaderStartingEventArgs(DiskPathCollection blackList)
         {
             BlackList = blackList;
         }

@@ -20,8 +20,8 @@ namespace DustInTheWind.DirectoryCompare.Domain.ImportExport
 {
     public interface IPotImportExport
     {
-        Snapshot Import(string filePath);
+        Snapshot ReadSnapshot(string filePath);
 
-        void Export(Snapshot snapshot, string filePath);
+        void WriteSnapshot(Snapshot snapshot, string filePath);
     }
 }

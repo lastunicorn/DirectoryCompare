@@ -60,17 +60,29 @@ namespace DustInTheWind.DirectoryCompare.JFiles
             }
         }
 
-        public void Delete()
+        public JSnapshotReader OpenReader()
         {
-            File.Delete(filePath);
+            if (!File.Exists(filePath))
+                throw new Exception($"File {filePath} does not exist.");
+
+            StreamReader streamReader = new StreamReader(filePath);
+            JsonTextReader jsonTextReader = new JsonTextReader(streamReader);
+            return new JSnapshotReader(jsonTextReader);
         }
 
-        public Stream OpenStream()
+        public JSnapshotWriter OpenWriter()
         {
             string directoryPath = Path.GetDirectoryName(filePath);
             Directory.CreateDirectory(directoryPath);
 
-            return new FileStream(filePath, FileMode.CreateNew);
+            StreamWriter streamWriter = new StreamWriter(filePath);
+            JsonTextWriter jsonTextWriter = new JsonTextWriter(streamWriter);
+            return new JSnapshotWriter(jsonTextWriter);
+        }
+
+        public void Delete()
+        {
+            File.Delete(filePath);
         }
     }
 }

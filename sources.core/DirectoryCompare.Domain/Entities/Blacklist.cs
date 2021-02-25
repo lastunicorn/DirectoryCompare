@@ -23,7 +23,7 @@ namespace DustInTheWind.DirectoryCompare.Domain.Entities
 {
     public class BlackList : Collection<BlackPath>
     {
-        public BlackList(PathCollection paths)
+        public BlackList(DiskPathCollection paths)
         {
             IEnumerable<BlackPath> blackPaths = paths.Select(x => new BlackPath(x));
             AddRange(blackPaths);

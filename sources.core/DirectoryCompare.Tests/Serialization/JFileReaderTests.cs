@@ -1,9 +1,7 @@
 ﻿using System;
 using System.IO;
-using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
-using DustInTheWind.DirectoryCompare.JFiles;
 using DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel;
 using Newtonsoft.Json;
 using NUnit.Framework;

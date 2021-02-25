@@ -31,10 +31,10 @@ namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
 
         public JDirectoryFieldType MoveToNext()
         {
-            switch (state)
+            switch (State)
             {
                 case JReaderState.New:
-                    state = JReaderState.InProgress;
+                    State = JReaderState.InProgress;
                     break;
 
                 case JReaderState.InProgress:
@@ -52,7 +52,7 @@ namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
                 bool success = MoveToNextProperty();
 
                 CurrentPropertyType = success
-                    ? jsonTextReader.Value switch
+                    ? JsonTextReader.Value switch
                     {
                         "n" => JDirectoryFieldType.DirectoryName,
                         "f" => JDirectoryFieldType.FileCollection,
@@ -75,7 +75,7 @@ namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
             if (CurrentPropertyType != JDirectoryFieldType.DirectoryName)
                 throw new Exception("Current property is not the directory name.");
 
-            return jsonTextReader.ReadAsString();
+            return JsonTextReader.ReadAsString();
         }
 
         public IEnumerable<JFileReader> ReadFiles()

@@ -29,39 +29,24 @@ namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
         {
         }
 
-        public JSnapshotFieldType MoveToNext()
+        public bool MoveNext()
         {
-            switch (state)
-            {
-                case JReaderState.New:
-                    state = JReaderState.InProgress;
-                    break;
-
-                case JReaderState.InProgress:
-                    break;
-
-                case JReaderState.Finished:
-                    throw new Exception("The reader already finished reading the json object.");
-
-                default:
-                    throw new Exception("Invalid reader state.");
-            }
+            MoveToNextState();
 
             try
             {
                 bool success = MoveToNextProperty();
 
-                CurrentPropertyType = success
-                    ? jsonTextReader.Value switch
-                    {
-                        "serializer-id" => JSnapshotFieldType.SerializerId,
-                        "original-path" => JSnapshotFieldType.OriginalPath,
-                        "creation-time" => JSnapshotFieldType.CreationTime,
-                        _ => throw new Exception("Invalid field in directory object.")
-                    }
-                    : JSnapshotFieldType.None;
-
-                return CurrentPropertyType;
+                if (success)
+                {
+                    CurrentPropertyType = CalculateFieldType();
+                    return true;
+                }
+                else
+                {
+                    CurrentPropertyType = JSnapshotFieldType.None;
+                    return false;
+                }
             }
             catch
             {
@@ -70,12 +55,23 @@ namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
             }
         }
 
+        private JSnapshotFieldType CalculateFieldType()
+        {
+            return JsonTextReader.Value switch
+            {
+                "serializer-id" => JSnapshotFieldType.SerializerId,
+                "original-path" => JSnapshotFieldType.OriginalPath,
+                "creation-time" => JSnapshotFieldType.CreationTime,
+                _ => throw new Exception("Invalid field in directory object.")
+            };
+        }
+
         public Guid ReadSerializerId()
         {
             if (CurrentPropertyType != JSnapshotFieldType.SerializerId)
                 throw new Exception("Current property is not the serializer id.");
 
-            string rawValue = jsonTextReader.ReadAsString();
+            string rawValue = JsonTextReader.ReadAsString();
 
             return Guid.Parse(rawValue);
         }
@@ -85,7 +81,7 @@ namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
             if (CurrentPropertyType != JSnapshotFieldType.OriginalPath)
                 throw new Exception("Current property is not the original path.");
 
-            return jsonTextReader.ReadAsString();
+            return JsonTextReader.ReadAsString();
         }
 
         public DateTime ReadCreationTime()
@@ -93,7 +89,7 @@ namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
             if (CurrentPropertyType != JSnapshotFieldType.CreationTime)
                 throw new Exception("Current property is not the creation time.");
 
-            DateTime? readAsDateTime = jsonTextReader.ReadAsDateTime();
+            DateTime? readAsDateTime = JsonTextReader.ReadAsDateTime();
             return readAsDateTime.Value;
         }
 
@@ -112,152 +108,5 @@ namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
 
             return ReadDirectoriesCollection();
         }
-
-        //public void Read()
-        //{
-        //    ReadStartObject();
-
-        //    while (true)
-        //    {
-        //        string propertyName = ReadNextPropertyName();
-
-        //        switch (propertyName)
-        //        {
-        //            case "serializer-id":
-        //                Guid id = ReadGuidValue();
-
-        //                if (id != Id)
-        //                {
-        //                    // Warning !!! The json file was serialized with a different serializer. It may not be compatible with the current deserializer.
-        //                }
-
-        //                break;
-
-        //            case "original-path":
-        //                string originalPath = ReadStringValue();
-        //                //snapshotBuilder.SetOriginalPath(originalPath);
-        //                break;
-
-        //            case "creation-time":
-        //                DateTime creationTime = ReadDateValue();
-        //                //snapshotBuilder.SetCreationTime(creationTime);
-        //                break;
-
-        //            case "d":
-        //                jsonTextReader.Read();
-        //                if (jsonTextReader.TokenType == JsonToken.StartArray)
-        //                {
-        //                    while (jsonTextReader.Read())
-        //                    {
-        //                        if (jsonTextReader.TokenType == JsonToken.StartObject)
-        //                        {
-        //                            //JDirectoryReader jDirectoryReader = new JDirectoryReader(jsonTextReader, snapshotBuilder);
-        //                            //HDirectory directory = jDirectoryReader.Read();
-        //                        }
-        //                        else if (jsonTextReader.TokenType == JsonToken.EndArray)
-        //                        {
-        //                            break;
-        //                        }
-        //                    }
-        //                }
-
-        //                break;
-
-        //            case null:
-        //                return;
-        //        }
-        //    }
-        //}
-
-        //private void ReadStartObject()
-        //{
-        //    if (!jsonTextReader.Read())
-        //        throw new Exception("Object cannot be read. There is no more data to read.");
-
-        //    if (jsonTextReader.TokenType != JsonToken.StartObject)
-        //        throw new Exception("The read token is not an object.");
-        //}
-
-        //private string ReadNextPropertyName()
-        //{
-        //    while (true)
-        //    {
-        //        if (!jsonTextReader.Read())
-        //            throw new Exception("Property cannot be read. There is no more data to read.");
-
-        //        switch (jsonTextReader.TokenType)
-        //        {
-        //            case JsonToken.None:
-        //            case JsonToken.StartObject:
-        //            case JsonToken.StartArray:
-        //            case JsonToken.StartConstructor:
-        //            case JsonToken.Comment:
-        //            case JsonToken.Raw:
-        //            case JsonToken.Integer:
-        //            case JsonToken.Float:
-        //            case JsonToken.String:
-        //            case JsonToken.Boolean:
-        //            case JsonToken.Null:
-        //            case JsonToken.Undefined:
-        //            case JsonToken.EndArray:
-        //            case JsonToken.EndConstructor:
-        //            case JsonToken.Date:
-        //            case JsonToken.Bytes:
-        //                break;
-
-        //            case JsonToken.EndObject:
-        //                return null;
-
-        //            case JsonToken.PropertyName:
-        //                return jsonTextReader.Value as string;
-
-        //            default:
-        //                throw new ArgumentOutOfRangeException();
-        //        }
-        //    }
-        //}
-
-        //private string ReadStringValue()
-        //{
-        //    if (!jsonTextReader.Read())
-        //        throw new Exception("Property cannot be read. There is no more data to read.");
-
-        //    if (jsonTextReader.TokenType != JsonToken.String)
-        //        throw new Exception("The read token is not a string.");
-
-        //    return jsonTextReader.Value as string;
-        //}
-
-        //private DateTime ReadDateValue()
-        //{
-        //    if (!jsonTextReader.Read())
-        //        throw new Exception("Property cannot be read. There is no more data to read.");
-
-        //    if (jsonTextReader.TokenType != JsonToken.Date)
-        //        throw new Exception("The read token is not a date.");
-
-        //    return (DateTime)jsonTextReader.Value;
-        //}
-
-        //private Guid ReadGuidValue()
-        //{
-        //    if (!jsonTextReader.Read())
-        //        throw new Exception("Property cannot be read. There is no more data to read.");
-
-        //    if (jsonTextReader.TokenType != JsonToken.String)
-        //        throw new Exception("The read token is not a guid.");
-
-        //    if (!(jsonTextReader.Value is string value))
-        //        throw new Exception("The read token is not a guid.");
-
-        //    try
-        //    {
-        //        return new Guid(value);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception("The read token is not a guid.", ex);
-        //    }
-        //}
     }
 }

@@ -2,7 +2,7 @@
   "profiles": {
     "DirectoryCompare.Cli": {
       "commandName": "Project",
-      "commandLineArgs": "snapshot -c test7"
+      "commandLineArgs": "read test12"
     }
   }
 }

@@ -18,12 +18,13 @@ using System;
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.DirectoryCompare.Application;
-using DustInTheWind.DirectoryCompare.Application.CreateSnapshot;
-using DustInTheWind.DirectoryCompare.Application.DeleteSnapshot;
-using DustInTheWind.DirectoryCompare.Application.GetSnapshot;
-using DustInTheWind.DirectoryCompare.Application.ImportSnapshot;
+using DustInTheWind.DirectoryCompare.Application.SnapshotManagement.CreateSnapshot;
+using DustInTheWind.DirectoryCompare.Application.SnapshotManagement.DeleteSnapshot;
+using DustInTheWind.DirectoryCompare.Application.SnapshotManagement.GetSnapshot;
+using DustInTheWind.DirectoryCompare.Application.SnapshotManagement.ImportSnapshot;
 using DustInTheWind.DirectoryCompare.Cli.UI.Views;
 using DustInTheWind.DirectoryCompare.Domain;
+using DustInTheWind.DirectoryCompare.Domain.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
@@ -85,16 +86,16 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
                     : null
             };
 
-            SnapshotProgress snapshotProgress = requestBus.PlaceRequest<CreateSnapshotRequest, SnapshotProgress>(request).Result;
-            DisplayCreationProgress(snapshotProgress);
+            IDiskAnalysisProgress pathAnalysisProgress = requestBus.PlaceRequest<CreateSnapshotRequest, IDiskAnalysisProgress>(request).Result;
+            DisplayCreationProgress(pathAnalysisProgress);
         }
 
-        private static void DisplayCreationProgress(SnapshotProgress snapshotProgress)
+        private static void DisplayCreationProgress(IDiskAnalysisProgress pathAnalysisProgress)
         {
             CreateSnapshotView createSnapshotView = new CreateSnapshotView();
-            snapshotProgress.ProgressChanged += (sender, value) => createSnapshotView.DisplayProgress(value);
+            pathAnalysisProgress.Progress += (sender, value) => createSnapshotView.DisplayProgress(value.Percentage);
 
-            snapshotProgress.WaitToEnd();
+            pathAnalysisProgress.WaitToEnd();
         }
 
         private void ExecuteDelete(Arguments arguments, Argument deleteArgument)

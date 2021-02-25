@@ -25,9 +25,9 @@ namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis.DiskCrawling
     internal class DiskCrawler : IEnumerable<CrawlerStep>
     {
         private readonly string path;
-        private readonly PathCollection blackList;
+        private readonly DiskPathCollection blackList;
 
-        public DiskCrawler(string path, PathCollection blackList)
+        public DiskCrawler(string path, DiskPathCollection blackList)
         {
             this.path = path ?? throw new ArgumentNullException(nameof(path));
             this.blackList = blackList ?? throw new ArgumentNullException(nameof(blackList));

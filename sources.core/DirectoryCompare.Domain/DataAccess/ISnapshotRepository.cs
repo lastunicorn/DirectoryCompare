@@ -18,12 +18,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
+using DustInTheWind.DirectoryCompare.Domain.ImportExport;
 
 namespace DustInTheWind.DirectoryCompare.Domain.DataAccess
 {
     public interface ISnapshotRepository
     {
-        Stream CreateStream(string potName);
+        ISnapshotWriter CreateWriter(string potName);
 
         IEnumerable<Snapshot> GetByPot(string potName);
 

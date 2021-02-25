@@ -16,7 +16,6 @@
 
 using System.IO;
 using DustInTheWind.DirectoryCompare.DataAccess.Transformations;
-using DustInTheWind.DirectoryCompare.Domain.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.ImportExport;
 using DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel;
@@ -26,7 +25,7 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
 {
     public class PotImportExport : IPotImportExport
     {
-        public Snapshot Import(string filePath)
+        public Snapshot ReadSnapshot(string filePath)
         {
             using (StreamReader streamReader = File.OpenText(filePath))
             using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
@@ -38,38 +37,23 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
             }
         }
 
-        public void Export(Snapshot snapshot, string filePath)
+        public void WriteSnapshot(Snapshot snapshot, string filePath)
         {
             using StreamWriter streamWriter = new StreamWriter(filePath);
-            Export(snapshot, streamWriter);
-
-        }
-        public void Export(Snapshot snapshot, StreamWriter streamWriter)
-        {
-            JsonAnalysisExport jsonAnalysisExport = new JsonAnalysisExport(streamWriter);
-
-            jsonAnalysisExport.Open(snapshot);
-
-            foreach (HDirectory subDirectory in snapshot.Directories)
-                SaveDirectory(jsonAnalysisExport, subDirectory);
-
-            foreach (HFile file in snapshot.Files)
-                jsonAnalysisExport.Add(file);
-
-            jsonAnalysisExport.Close();
+            WriteSnapshot(snapshot, streamWriter);
         }
 
-        private static void SaveDirectory(IAnalysisExport analysisExport, HDirectory directory)
+        internal void WriteSnapshot(Snapshot snapshot, StreamWriter streamWriter)
         {
-            analysisExport.AddAndOpen(directory);
+            using JsonTextWriter jsonTextWriter = new JsonTextWriter(streamWriter);
+            using JSnapshotWriter jSnapshotWriter = new JSnapshotWriter(jsonTextWriter);
+            WriteSnapshot(snapshot, jSnapshotWriter);
+        }
 
-            foreach (HDirectory subDirectory in directory.Directories)
-                SaveDirectory(analysisExport, subDirectory);
-
-            foreach (HFile file in directory.Files)
-                analysisExport.Add(file);
-
-            analysisExport.CloseDirectory();
+        internal void WriteSnapshot(Snapshot snapshot, JSnapshotWriter jSnapshotWriter)
+        {
+            JsonSnapshotWriter jsonSnapshotWriter = new JsonSnapshotWriter(jSnapshotWriter);
+            jsonSnapshotWriter.Write(snapshot);
         }
     }
 }
