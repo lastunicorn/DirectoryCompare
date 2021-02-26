@@ -18,13 +18,13 @@ using System;
 using System.Collections.Generic;
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.ConsoleTools;
-using DustInTheWind.DirectoryCompare.Application;
 using DustInTheWind.DirectoryCompare.Application.PotManagement.CreatePot;
 using DustInTheWind.DirectoryCompare.Application.PotManagement.DeletePot;
 using DustInTheWind.DirectoryCompare.Application.PotManagement.PresentPot;
 using DustInTheWind.DirectoryCompare.Application.PotManagement.PresentPots;
 using DustInTheWind.DirectoryCompare.Cli.UI.Views;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
+using DustInTheWind.DirectoryCompare.Infrastructure;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {

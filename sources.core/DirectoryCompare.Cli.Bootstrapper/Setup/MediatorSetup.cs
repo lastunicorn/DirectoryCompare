@@ -31,28 +31,29 @@ namespace DustInTheWind.DirectoryCompare.Cli.Setup
     {
         public static void Setup(IServiceCollection serviceCollection)
         {
-            KernelBase dependencyContainer = ((NinjectServiceCollection)serviceCollection).Kernel;
+            KernelBase kernel = ((NinjectServiceCollection)serviceCollection).Kernel;
 
-            dependencyContainer.Components.Add<IBindingResolver, ContravariantBindingResolver>();
+            kernel.Components.Add<IBindingResolver, ContravariantBindingResolver>();
 
-            dependencyContainer.Bind(x => x.FromAssemblyContaining<IMediator>().SelectAllClasses().BindDefaultInterface());
-            dependencyContainer.Bind(x => x.FromAssemblyContaining<CreateSnapshotRequest>().SelectAllClasses().InheritedFrom(typeof(IRequestHandler<,>)).BindAllInterfaces());
-            dependencyContainer.Bind(x => x.FromAssemblyContaining<CreateSnapshotRequestValidator>().SelectAllClasses().InheritedFrom(typeof(AbstractValidator<>)).BindDefaultInterfaces());
+            kernel.Bind(x => x.FromAssemblyContaining<IMediator>().SelectAllClasses().BindDefaultInterface());
+            kernel.Bind(x => x.FromAssemblyContaining<CreateSnapshotRequest>().SelectAllClasses().InheritedFrom(typeof(IRequestHandler<,>)).BindAllInterfaces());
+            kernel.Bind(x => x.FromAssemblyContaining<CreateSnapshotRequestValidator>().SelectAllClasses().InheritedFrom(typeof(AbstractValidator<>)).BindDefaultInterfaces());
 
-            dependencyContainer
+            kernel
                 .Bind(typeof(IPipelineBehavior<,>))
                 .To(typeof(RequestPerformanceBehavior<,>));
-            dependencyContainer
+
+            kernel
                 .Bind(typeof(IPipelineBehavior<,>))
                 .To(typeof(RequestValidationBehavior<,>));
 
-            dependencyContainer
+            kernel
                 .Bind<ServiceFactory>()
                 .ToMethod(x =>
                 {
                     return t =>
                     {
-                        object a = dependencyContainer.TryGet(t);
+                        object a = kernel.TryGet(t);
                         return x.Kernel.TryGet(t);
                     };
                 });

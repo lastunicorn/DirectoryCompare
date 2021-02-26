@@ -18,7 +18,7 @@ using System;
 using System.Threading.Tasks;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application
+namespace DustInTheWind.DirectoryCompare.Infrastructure
 {
     public class RequestBus
     {

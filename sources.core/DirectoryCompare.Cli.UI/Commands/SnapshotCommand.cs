@@ -17,7 +17,6 @@
 using System;
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.ConsoleTools;
-using DustInTheWind.DirectoryCompare.Application;
 using DustInTheWind.DirectoryCompare.Application.SnapshotManagement.CreateSnapshot;
 using DustInTheWind.DirectoryCompare.Application.SnapshotManagement.DeleteSnapshot;
 using DustInTheWind.DirectoryCompare.Application.SnapshotManagement.GetSnapshot;
@@ -26,6 +25,7 @@ using DustInTheWind.DirectoryCompare.Cli.UI.Views;
 using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
+using DustInTheWind.DirectoryCompare.Infrastructure;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
@@ -122,7 +122,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
         {
             if (arguments.Values.Count <= 0 || arguments.Values[0].HasName)
                 throw new Exception("Snapshot path must be provided.");
-            
+
             SnapshotLocation snapshotLocation = arguments.Values[0].Value;
 
             GetSnapshotRequest request = new GetSnapshotRequest

@@ -18,12 +18,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DustInTheWind.ConsoleFramework;
-using DustInTheWind.DirectoryCompare.Application;
 using DustInTheWind.DirectoryCompare.Application.BlackListManagement.AddBlackPath;
 using DustInTheWind.DirectoryCompare.Application.BlackListManagement.PresentBlackList;
 using DustInTheWind.DirectoryCompare.Application.BlackListManagement.RemoveBlackPath;
 using DustInTheWind.DirectoryCompare.Cli.UI.Views;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
+using DustInTheWind.DirectoryCompare.Infrastructure;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
