@@ -24,11 +24,11 @@ namespace DustInTheWind.ConsoleFramework.CustomMiddleware
 {
     internal class ExceptionHandlerMiddleware : IConsoleMiddleware
     {
-        private readonly IProjectLogger logger;
+        private readonly ILog log;
 
-        public ExceptionHandlerMiddleware(IProjectLogger logger)
+        public ExceptionHandlerMiddleware(ILog log)
         {
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.log = log ?? throw new ArgumentNullException(nameof(log));
         }
 
         public async Task InvokeAsync(ConsoleRequestContext context, RequestDelegate next)
@@ -41,7 +41,7 @@ namespace DustInTheWind.ConsoleFramework.CustomMiddleware
             catch (Exception ex)
             {
                 CustomConsole.WriteLineError(ex.Message);
-                logger.WriteError(ex);
+                log.WriteError(ex);
 
                 await Task.FromResult(null as object);
             }

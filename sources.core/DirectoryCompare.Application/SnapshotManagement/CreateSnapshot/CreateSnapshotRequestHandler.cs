@@ -15,12 +15,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.IO;
 using System.Threading.Tasks;
-using DustInTheWind.ConsoleFramework.Logging;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Domain.ImportExport;
+using DustInTheWind.DirectoryCompare.Domain.Logging;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using MediatR;
 
@@ -28,15 +27,15 @@ namespace DustInTheWind.DirectoryCompare.Application.SnapshotManagement.CreateSn
 {
     public class CreateSnapshotRequestHandler : RequestHandler<CreateSnapshotRequest, IDiskAnalysisProgress>
     {
-        private readonly IProjectLogger logger;
+        private readonly ILog log;
         private readonly IPotRepository potRepository;
         private readonly IBlackListRepository blackListRepository;
         private readonly ISnapshotRepository snapshotRepository;
 
-        public CreateSnapshotRequestHandler(IProjectLogger logger, IPotRepository potRepository,
+        public CreateSnapshotRequestHandler(ILog log, IPotRepository potRepository,
             IBlackListRepository blackListRepository, ISnapshotRepository snapshotRepository)
         {
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.log = log ?? throw new ArgumentNullException(nameof(log));
             this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
             this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
             this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
@@ -60,7 +59,7 @@ namespace DustInTheWind.DirectoryCompare.Application.SnapshotManagement.CreateSn
 
         private DiskAnalysis StartPathAnalysis2(Pot pot)
         {
-            logger.WriteInfo("Scanning path: {0}", pot.Path);
+            log.WriteInfo("Scanning path: {0}", pot.Path);
 
             ISnapshotWriter snapshotWriter = snapshotRepository.CreateWriter(pot.Name);
 
@@ -82,7 +81,7 @@ namespace DustInTheWind.DirectoryCompare.Application.SnapshotManagement.CreateSn
                 }
                 finally
                 {
-                    logger.WriteInfo("Finished scanning path in {0}", diskAnalysis.ElapsedTime);
+                    log.WriteInfo("Finished scanning path in {0}", diskAnalysis.ElapsedTime);
                     snapshotWriter.Dispose();
                 }
             });
@@ -128,19 +127,19 @@ namespace DustInTheWind.DirectoryCompare.Application.SnapshotManagement.CreateSn
         {
             if (e.BlackList.Count == 0)
             {
-                logger.WriteInfo("No blacklist entries.");
+                log.WriteInfo("No blacklist entries.");
                 return;
             }
 
-            logger.WriteInfo("Computed black list:");
+            log.WriteInfo("Computed black list:");
 
             foreach (string blackListItem in e.BlackList)
-                logger.WriteInfo("- " + blackListItem);
+                log.WriteInfo("- " + blackListItem);
         }
 
         private void HandleDiskReaderErrorEncountered(object sender, ErrorEncounteredEventArgs e)
         {
-            logger.WriteError("Error while reading path '{0}': {1}", e.Path, e.Exception);
+            log.WriteError("Error while reading path '{0}': {1}", e.Path, e.Exception);
         }
     }
 }

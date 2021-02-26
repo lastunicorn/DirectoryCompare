@@ -19,9 +19,12 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.Other.CompareSnapshots
 {
-    public class CompareSnapshotsRequest : IRequest<SnapshotComparer>
+    public class CompareSnapshotsRequest : IRequest<CompareSnapshotsResponse>
     {
         public string PotName1 { get; set; }
+
         public string PotName2 { get; set; }
+        
+        public string ExportFileName { get; set; }
     }
 }

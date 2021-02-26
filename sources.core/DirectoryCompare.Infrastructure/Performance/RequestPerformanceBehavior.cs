@@ -18,7 +18,7 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using DustInTheWind.ConsoleFramework.Logging;
+using DustInTheWind.DirectoryCompare.Domain.Logging;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Infrastructure.Performance
@@ -26,11 +26,11 @@ namespace DustInTheWind.DirectoryCompare.Infrastructure.Performance
     public class RequestPerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
         private readonly Stopwatch timer;
-        private readonly IProjectLogger logger;
+        private readonly ILog log;
 
-        public RequestPerformanceBehavior(IProjectLogger logger)
+        public RequestPerformanceBehavior(ILog log)
         {
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.log = log ?? throw new ArgumentNullException(nameof(log));
             timer = new Stopwatch();
         }
 
@@ -39,7 +39,7 @@ namespace DustInTheWind.DirectoryCompare.Infrastructure.Performance
             timer.Start();
 
             string name = typeof(TRequest).Name;
-            logger.WriteDebug("Request {0} started.", name);
+            log.WriteDebug("Request {0} started.", name);
 
             try
             {
@@ -48,7 +48,7 @@ namespace DustInTheWind.DirectoryCompare.Infrastructure.Performance
             finally
             {
                 timer.Stop();
-                logger.WriteDebug("Request {0} finished in {1:n0} milliseconds", name, timer.ElapsedMilliseconds);
+                log.WriteDebug("Request {0} finished in {1:n0} milliseconds", name, timer.ElapsedMilliseconds);
             }
         }
     }

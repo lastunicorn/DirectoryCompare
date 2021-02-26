@@ -16,29 +16,28 @@
 
 using System;
 using System.IO;
-using DustInTheWind.ConsoleTools;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 
-namespace DustInTheWind.DirectoryCompare.Cli.UI.ResultExporters
+namespace DustInTheWind.DirectoryCompare.Application.Other.CompareSnapshots
 {
     internal class FileComparisonExporter
     {
         public string ResultsDirectory { get; set; }
+
+        public string ExportDirectoryPath { get; private set; }
 
         public void Export(SnapshotComparer comparer)
         {
             if (string.IsNullOrWhiteSpace(ResultsDirectory))
                 throw new Exception("Cannot export comparison result. No file name was provided.");
 
-            string exportDirectoryPath = CreateExportDirectory();
+            ExportDirectoryPath = CreateExportDirectory();
 
-            ExportInfoFile(comparer, exportDirectoryPath);
-            ExportOnlyInSnapshot1(comparer, exportDirectoryPath);
-            ExportOnlyInSnapshot2(comparer, exportDirectoryPath);
-            ExportContentDifferentName(comparer, exportDirectoryPath);
-            ExportSameNameDifferentContent(comparer, exportDirectoryPath);
-
-            CustomConsole.WriteLine("Results exported into directory: {0}", exportDirectoryPath);
+            ExportInfoFile(comparer, ExportDirectoryPath);
+            ExportOnlyInSnapshot1(comparer, ExportDirectoryPath);
+            ExportOnlyInSnapshot2(comparer, ExportDirectoryPath);
+            ExportContentDifferentName(comparer, ExportDirectoryPath);
+            ExportSameNameDifferentContent(comparer, ExportDirectoryPath);
         }
 
         private string CreateExportDirectory()

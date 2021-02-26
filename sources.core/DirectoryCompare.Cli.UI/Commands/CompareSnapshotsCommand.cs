@@ -16,10 +16,10 @@
 
 using System;
 using DustInTheWind.ConsoleFramework;
+using DustInTheWind.ConsoleTools;
 using DustInTheWind.DirectoryCompare.Application;
 using DustInTheWind.DirectoryCompare.Application.Other.CompareSnapshots;
-using DustInTheWind.DirectoryCompare.Cli.UI.ResultExporters;
-using DustInTheWind.DirectoryCompare.Domain.Comparison;
+using DustInTheWind.DirectoryCompare.Cli.UI.Views;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
@@ -39,29 +39,38 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
         public void Execute(Arguments arguments)
         {
             CompareSnapshotsRequest request = CreateRequest(arguments);
-            SnapshotComparer snapshotComparer = requestBus.PlaceRequest<CompareSnapshotsRequest, SnapshotComparer>(request).Result;
+            CompareSnapshotsResponse response = requestBus.PlaceRequest<CompareSnapshotsRequest, CompareSnapshotsResponse>(request).Result;
 
-            bool exportToFile = arguments.Count >= 3;
+            bool exportedToFile = !string.IsNullOrEmpty(response.ExportDirectoryPath);
 
-            if (exportToFile)
+            if (exportedToFile)
             {
-                FileComparisonExporter exporter = new FileComparisonExporter { ResultsDirectory = arguments.GetStringValue(2) };
-                exporter.Export(snapshotComparer);
+                CustomConsole.WriteLine("Results exported into directory: {0}", response.ExportDirectoryPath);
             }
             else
             {
-                ConsoleComparisonExporter exporter = new ConsoleComparisonExporter();
-                exporter.Export(snapshotComparer);
+                ConsoleComparisonView view = new ConsoleComparisonView
+                {
+                    Comparer = response.SnapshotComparer
+                };
+                view.Display();
             }
         }
 
         private static CompareSnapshotsRequest CreateRequest(Arguments arguments)
         {
-            return new CompareSnapshotsRequest
+            CompareSnapshotsRequest request = new CompareSnapshotsRequest
             {
                 PotName1 = arguments.GetStringValue(0),
                 PotName2 = arguments.GetStringValue(1)
             };
+
+            bool exportToFile = arguments.Count >= 3;
+
+            if (exportToFile)
+                request.ExportFileName = arguments.GetStringValue(2);
+
+            return request;
         }
     }
 }

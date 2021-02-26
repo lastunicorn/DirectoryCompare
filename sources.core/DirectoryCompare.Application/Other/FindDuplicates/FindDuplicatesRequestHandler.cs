@@ -17,11 +17,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DustInTheWind.ConsoleFramework.Logging;
 using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
+using DustInTheWind.DirectoryCompare.Domain.Logging;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 using MediatR;
 
@@ -31,18 +31,18 @@ namespace DustInTheWind.DirectoryCompare.Application.Other.FindDuplicates
     {
         private readonly ISnapshotRepository snapshotRepository;
         private readonly IBlackListRepository blackListRepository;
-        private readonly IProjectLogger logger;
+        private readonly ILog log;
 
-        public FindDuplicatesRequestHandler(ISnapshotRepository snapshotRepository, IBlackListRepository blackListRepository, IProjectLogger logger)
+        public FindDuplicatesRequestHandler(ISnapshotRepository snapshotRepository, IBlackListRepository blackListRepository, ILog log)
         {
             this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
             this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.log = log ?? throw new ArgumentNullException(nameof(log));
         }
 
         protected override DuplicatesAnalysis Handle(FindDuplicatesRequest request)
         {
-            logger.WriteInfo("Searching for duplicates between pot '{0}' and '{1}'.", request.SnapshotLeft.PotName, request.SnapshotRight.PotName);
+            log.WriteInfo("Searching for duplicates between pot '{0}' and '{1}'.", request.SnapshotLeft.PotName, request.SnapshotRight.PotName);
 
             FileDuplicates fileDuplicates = new FileDuplicates
             {

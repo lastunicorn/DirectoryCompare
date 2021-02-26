@@ -17,33 +17,30 @@
 using System;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 
-namespace DustInTheWind.DirectoryCompare.Cli.UI.ResultExporters
+namespace DustInTheWind.DirectoryCompare.Cli.UI.Views
 {
-    internal class ConsoleComparisonExporter
+    internal class ConsoleComparisonView
     {
-        public void Export(SnapshotComparer comparer)
-        {
-            DisplayResults(comparer);
-        }
+        public SnapshotComparer Comparer { get; set; }
 
-        public static void DisplayResults(SnapshotComparer comparer)
+        public void Display()
         {
             Console.WriteLine();
 
             Console.WriteLine("Files only in snapshot 1:");
-            foreach (string path in comparer.OnlyInSnapshot1)
+            foreach (string path in Comparer.OnlyInSnapshot1)
                 Console.WriteLine(path);
 
             Console.WriteLine();
 
             Console.WriteLine("Files only in snapshot 2:");
-            foreach (string path in comparer.OnlyInSnapshot2)
+            foreach (string path in Comparer.OnlyInSnapshot2)
                 Console.WriteLine(path);
 
             Console.WriteLine();
 
             Console.WriteLine("Different names:");
-            foreach (ItemComparison itemComparison in comparer.DifferentNames)
+            foreach (ItemComparison itemComparison in Comparer.DifferentNames)
             {
                 Console.WriteLine("1 - " + itemComparison.FullName1);
                 Console.WriteLine("2 - " + itemComparison.FullName2);
@@ -52,7 +49,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.ResultExporters
             Console.WriteLine();
 
             Console.WriteLine("Different content:");
-            foreach (ItemComparison itemComparison in comparer.DifferentContent)
+            foreach (ItemComparison itemComparison in Comparer.DifferentContent)
             {
                 Console.WriteLine("1 - " + itemComparison.FullName1);
                 Console.WriteLine("2 - " + itemComparison.FullName2);

@@ -18,7 +18,7 @@ using System;
 
 namespace DustInTheWind.ConsoleFramework.Logging
 {
-    public interface IProjectLogger
+    public interface ILog
     {
         void Write(LogLevel logLevel, string message);
 

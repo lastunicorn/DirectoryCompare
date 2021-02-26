@@ -21,7 +21,6 @@ using DustInTheWind.ConsoleFramework;
 using DustInTheWind.ConsoleFramework.AppBuilder;
 using DustInTheWind.ConsoleFramework.Logging;
 using DustInTheWind.DirectoryCompare.Cli.Setup;
-using DustInTheWind.DirectoryCompare.Cli.UI.Commands;
 using DustInTheWind.DirectoryCompare.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.ImportExport;
@@ -43,7 +42,8 @@ namespace DustInTheWind.DirectoryCompare.Cli
 
         protected override void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddSingleton<IProjectLogger, Log4NetLogger>();
+            serviceCollection.AddSingleton<ILog, Log>();
+            serviceCollection.AddSingleton<Domain.Logging.ILog, Infrastructure.Logging.Log>();
             serviceCollection.AddTransient<IPotRepository, PotRepository>();
             serviceCollection.AddTransient<IBlackListRepository, BlackListRepository>();
             serviceCollection.AddTransient<ISnapshotRepository, SnapshotRepository>();
@@ -66,8 +66,8 @@ namespace DustInTheWind.DirectoryCompare.Cli
 
         protected override void OnError(Exception ex)
         {
-            IProjectLogger logger = ServiceProvider.GetService<IProjectLogger>();
-            logger.WriteError(ex.ToString());
+            ILog log = ServiceProvider.GetService<ILog>();
+            log.WriteError(ex.ToString());
         }
     }
 }

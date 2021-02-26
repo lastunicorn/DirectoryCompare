@@ -22,7 +22,7 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.Other.CompareSnapshots
 {
-    public class CompareSnapshotsRequestHandler : RequestHandler<CompareSnapshotsRequest, SnapshotComparer>
+    public class CompareSnapshotsRequestHandler : RequestHandler<CompareSnapshotsRequest, CompareSnapshotsResponse>
     {
         private readonly ISnapshotRepository snapshotRepository;
 
@@ -31,22 +31,52 @@ namespace DustInTheWind.DirectoryCompare.Application.Other.CompareSnapshots
             this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
         }
 
-        protected override SnapshotComparer Handle(CompareSnapshotsRequest request)
+        protected override CompareSnapshotsResponse Handle(CompareSnapshotsRequest request)
         {
-            Snapshot snapshot1 = snapshotRepository.GetLast(request.PotName1);
+            Snapshot snapshot1 = RetrieveSnapshot(request.PotName1);
+            Snapshot snapshot2 = RetrieveSnapshot(request.PotName2);
+            SnapshotComparer comparer = CompareSnapshots(snapshot1, snapshot2);
+            string exportDirectoryPath = ExportToDiskIfRequested(comparer, request);
 
-            if (snapshot1 == null)
-                throw new Exception($"There is no pot with the name '{request.PotName1}'.");
+            return new CompareSnapshotsResponse
+            {
+                SnapshotComparer = comparer,
+                ExportDirectoryPath = exportDirectoryPath
+            };
+        }
 
-            Snapshot snapshot2 = snapshotRepository.GetLast(request.PotName2);
+        private Snapshot RetrieveSnapshot(string potName)
+        {
+            Snapshot snapshot = snapshotRepository.GetLast(potName);
 
-            if (snapshot2 == null)
-                throw new Exception($"There is no pot with the name '{request.PotName2}'.");
+            if (snapshot == null)
+                throw new Exception($"There is no pot with the name '{potName}'.");
 
+            return snapshot;
+        }
+
+        private static SnapshotComparer CompareSnapshots(Snapshot snapshot1, Snapshot snapshot2)
+        {
             SnapshotComparer comparer = new SnapshotComparer(snapshot1, snapshot2);
             comparer.Compare();
-
             return comparer;
+        }
+
+        private static string ExportToDiskIfRequested(SnapshotComparer comparer, CompareSnapshotsRequest request)
+        {
+            bool shouldExport = string.IsNullOrEmpty(request.ExportFileName);
+
+            if (!shouldExport)
+                return null;
+
+            FileComparisonExporter exporter = new FileComparisonExporter
+            {
+                ResultsDirectory = request.ExportFileName
+            };
+
+            exporter.Export(comparer);
+
+            return exporter.ExportDirectoryPath;
         }
     }
 }

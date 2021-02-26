@@ -27,9 +27,9 @@ namespace DustInTheWind.DirectoryCompare.Cli
     public class CommandProvider
     {
         private readonly IServiceProvider serviceProvider;
-        private readonly IProjectLogger log;
+        private readonly ILog log;
 
-        public CommandProvider(IServiceProvider serviceProvider, IProjectLogger log)
+        public CommandProvider(IServiceProvider serviceProvider, ILog log)
         {
             this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
             this.log = log ?? throw new ArgumentNullException(nameof(log));
