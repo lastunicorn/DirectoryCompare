@@ -17,10 +17,10 @@
 using System;
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.ConsoleTools;
-using DustInTheWind.DirectoryCompare.Application.SnapshotManagement.CreateSnapshot;
-using DustInTheWind.DirectoryCompare.Application.SnapshotManagement.DeleteSnapshot;
-using DustInTheWind.DirectoryCompare.Application.SnapshotManagement.GetSnapshot;
-using DustInTheWind.DirectoryCompare.Application.SnapshotManagement.ImportSnapshot;
+using DustInTheWind.DirectoryCompare.Application.SnapshotArea.CreateSnapshot;
+using DustInTheWind.DirectoryCompare.Application.SnapshotArea.DeleteSnapshot;
+using DustInTheWind.DirectoryCompare.Application.SnapshotArea.ImportSnapshot;
+using DustInTheWind.DirectoryCompare.Application.SnapshotArea.PresentSnapshot;
 using DustInTheWind.DirectoryCompare.Cli.UI.Views;
 using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.DiskAnalysis;
@@ -125,12 +125,12 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 
             SnapshotLocation snapshotLocation = arguments.Values[0].Value;
 
-            GetSnapshotRequest request = new GetSnapshotRequest
+            PresentSnapshotRequest request = new PresentSnapshotRequest
             {
                 Location = snapshotLocation
             };
 
-            Snapshot snapshot = requestBus.PlaceRequest<GetSnapshotRequest, Snapshot>(request).Result;
+            Snapshot snapshot = requestBus.PlaceRequest<PresentSnapshotRequest, Snapshot>(request).Result;
 
             SnapshotView snapshotView = new SnapshotView(snapshot);
             snapshotView.Display();

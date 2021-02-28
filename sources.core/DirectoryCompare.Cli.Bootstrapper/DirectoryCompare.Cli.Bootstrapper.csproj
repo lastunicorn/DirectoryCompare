@@ -11,6 +11,7 @@
     <ProjectReference Include="..\DirectoryCompare.DataAccess\DirectoryCompare.DataAccess.csproj" PrivateAssets="All" />
     <ProjectReference Include="..\ConsoleFramework\ConsoleFramework.csproj" PrivateAssets="All" />
     <ProjectReference Include="..\DirectoryCompare.Infrastructure\DirectoryCompare.Infrastructure.csproj" PrivateAssets="All" />
+    <ProjectReference Include="..\DirectoryCompare.Logging\DirectoryCompare.Logging.csproj" />
   </ItemGroup>
 
   <ItemGroup>

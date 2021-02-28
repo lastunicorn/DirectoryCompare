@@ -24,7 +24,6 @@ using DustInTheWind.DirectoryCompare.Cli.Setup;
 using DustInTheWind.DirectoryCompare.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.ImportExport;
-using DustInTheWind.DirectoryCompare.Infrastructure.Logging;
 
 namespace DustInTheWind.DirectoryCompare.Cli
 {
@@ -43,7 +42,7 @@ namespace DustInTheWind.DirectoryCompare.Cli
         protected override void ConfigureServices(IServiceCollection serviceCollection)
         {
             serviceCollection.AddSingleton<ILog, Log>();
-            serviceCollection.AddSingleton<Domain.Logging.ILog, Infrastructure.Logging.Log>();
+            serviceCollection.AddSingleton<Domain.Logging.ILog, Logging.Log>();
             serviceCollection.AddTransient<IPotRepository, PotRepository>();
             serviceCollection.AddTransient<IBlackListRepository, BlackListRepository>();
             serviceCollection.AddTransient<ISnapshotRepository, SnapshotRepository>();

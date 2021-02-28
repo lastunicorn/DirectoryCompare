@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+      <AssemblyName>DirectoryCompare.Logging</AssemblyName>
+      <RootNamespace>DustInTheWind.DirectoryCompare.Logging</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="log4net" Version="2.0.12" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="SnapshotManagement\CreateSnapshot\PathAnalysisProgress.cs" />
+    <Compile Remove="SnapshotArea\CreateSnapshot\PathAnalysisProgress.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,6 +26,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All" />
     <ProjectReference Include="..\DirectoryCompare.Infrastructure\DirectoryCompare.Infrastructure.csproj" />
+    <ProjectReference Include="..\DirectoryCompare.Validation\DirectoryCompare.Validation.csproj" />
   </ItemGroup>
 
 </Project>

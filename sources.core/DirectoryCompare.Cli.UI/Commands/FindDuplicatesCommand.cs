@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DustInTheWind.ConsoleFramework;
-using DustInTheWind.DirectoryCompare.Application.Other.FindDuplicates;
+using DustInTheWind.DirectoryCompare.Application.MiscelaneousArea.FindDuplicates;
 using DustInTheWind.DirectoryCompare.Cli.UI.Views;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Infrastructure;
