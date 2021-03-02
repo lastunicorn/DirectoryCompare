@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Threading.Tasks;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.ImportExport;
@@ -23,20 +24,20 @@ using DustInTheWind.RequestR;
 
 namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.ImportSnapshot
 {
-    public class ImportSnapshotRequestHandler : IRequestHandler<ImportSnapshotRequest>
+    public class ImportSnapshotUseCase : IUseCase<ImportSnapshotRequest>
     {
         private readonly IPotRepository potRepository;
         private readonly ISnapshotRepository snapshotRepository;
         private readonly IPotImportExport potImportExport;
 
-        public ImportSnapshotRequestHandler(IPotRepository potRepository, ISnapshotRepository snapshotRepository, IPotImportExport potImportExport)
+        public ImportSnapshotUseCase(IPotRepository potRepository, ISnapshotRepository snapshotRepository, IPotImportExport potImportExport)
         {
             this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
             this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
             this.potImportExport = potImportExport ?? throw new ArgumentNullException(nameof(potImportExport));
         }
 
-        public void Handle(ImportSnapshotRequest request)
+        public Task Execute(ImportSnapshotRequest request)
         {
             //ISnapshotReader reader = null;
             //ISnapshotWriter writer = null;
@@ -106,6 +107,8 @@ namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.ImportSnapshot
             }
 
             snapshotRepository.Add(request.PotName, snapshot);
+
+            return Task.CompletedTask;
         }
     }
 }

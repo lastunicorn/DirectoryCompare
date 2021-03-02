@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Threading.Tasks;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
@@ -22,27 +23,28 @@ using DustInTheWind.RequestR;
 
 namespace DustInTheWind.DirectoryCompare.Application.MiscelaneousArea.CompareSnapshots
 {
-    public class CompareSnapshotsRequestHandler : IRequestHandler<CompareSnapshotsRequest, CompareSnapshotsResponse>
+    public class CompareSnapshotsUseCase : IUseCase<CompareSnapshotsRequest, CompareSnapshotsResponse>
     {
         private readonly ISnapshotRepository snapshotRepository;
 
-        public CompareSnapshotsRequestHandler(ISnapshotRepository snapshotRepository)
+        public CompareSnapshotsUseCase(ISnapshotRepository snapshotRepository)
         {
             this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
         }
 
-        public CompareSnapshotsResponse Handle(CompareSnapshotsRequest request)
+        public Task<CompareSnapshotsResponse> Execute(CompareSnapshotsRequest request)
         {
             Snapshot snapshot1 = RetrieveSnapshot(request.PotName1);
             Snapshot snapshot2 = RetrieveSnapshot(request.PotName2);
             SnapshotComparer comparer = CompareSnapshots(snapshot1, snapshot2);
             string exportDirectoryPath = ExportToDiskIfRequested(comparer, request);
 
-            return new CompareSnapshotsResponse
+            CompareSnapshotsResponse response = new CompareSnapshotsResponse
             {
                 SnapshotComparer = comparer,
                 ExportDirectoryPath = exportDirectoryPath
             };
+            return Task.FromResult(response);
         }
 
         private Snapshot RetrieveSnapshot(string potName)

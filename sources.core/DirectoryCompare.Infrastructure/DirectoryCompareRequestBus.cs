@@ -31,13 +31,13 @@ namespace DustInTheWind.DirectoryCompare.Infrastructure
 
         public async Task<TResponse> SendAsync<TRequest, TResponse>(TRequest request)
         {
-            object response = await requestBus.SendAsync<TRequest, TResponse>(request);
+            object response = await requestBus.ProcessAsync<TRequest, TResponse>(request);
             return (TResponse)response;
         }
 
         public async Task SendAsync<TRequest>(TRequest request)
         {
-            await requestBus.SendAsync(request);
+            await requestBus.ProcessAsync(request);
         }
     }
 }

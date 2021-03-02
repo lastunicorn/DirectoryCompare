@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
@@ -25,14 +26,14 @@ using DustInTheWind.RequestR;
 
 namespace DustInTheWind.DirectoryCompare.Application.MiscelaneousArea.RemoveDuplicates
 {
-    public class RemoveDuplicatesRequestHandler : IRequestHandler<RemoveDuplicatesRequest>
+    public class RemoveDuplicatesUseCase : IUseCase<RemoveDuplicatesRequest>
     {
         private readonly ISnapshotRepository snapshotRepository;
         private readonly IBlackListRepository blackListRepository;
 
         private RemoveDuplicatesRequest request;
 
-        public RemoveDuplicatesRequestHandler(ISnapshotRepository snapshotRepository, IBlackListRepository blackListRepository)
+        public RemoveDuplicatesUseCase(ISnapshotRepository snapshotRepository, IBlackListRepository blackListRepository)
         {
             this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
             this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
@@ -41,7 +42,7 @@ namespace DustInTheWind.DirectoryCompare.Application.MiscelaneousArea.RemoveDupl
         // todo: Instead of receiving an IRemoveDuplicatesExporter, make this handler async and return a promise.
         // The real work will run asynchronously, while the promise will raise events whenever something important
         // happened that the presentation layer should handle.
-        public void Handle(RemoveDuplicatesRequest request)
+        public Task Execute(RemoveDuplicatesRequest request)
         {
             this.request = request;
             
@@ -59,6 +60,8 @@ namespace DustInTheWind.DirectoryCompare.Application.MiscelaneousArea.RemoveDupl
             };
 
             RemoveDuplicates(fileDuplicates);
+
+            return Task.CompletedTask;
         }
 
         private void RemoveDuplicates(IEnumerable<FileDuplicate> fileDuplicates)

@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
@@ -27,20 +28,20 @@ using DustInTheWind.RequestR;
 
 namespace DustInTheWind.DirectoryCompare.Application.MiscelaneousArea.FindDuplicates
 {
-    public class FindDuplicatesRequestHandler : IRequestHandler<FindDuplicatesRequest, DuplicatesAnalysis>
+    public class FindDuplicatesUseCase : IUseCase<FindDuplicatesRequest, DuplicatesAnalysis>
     {
         private readonly ISnapshotRepository snapshotRepository;
         private readonly IBlackListRepository blackListRepository;
         private readonly ILog log;
 
-        public FindDuplicatesRequestHandler(ISnapshotRepository snapshotRepository, IBlackListRepository blackListRepository, ILog log)
+        public FindDuplicatesUseCase(ISnapshotRepository snapshotRepository, IBlackListRepository blackListRepository, ILog log)
         {
             this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
             this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
             this.log = log ?? throw new ArgumentNullException(nameof(log));
         }
 
-        public DuplicatesAnalysis Handle(FindDuplicatesRequest request)
+        public Task<DuplicatesAnalysis> Execute(FindDuplicatesRequest request)
         {
             log.WriteInfo("Searching for duplicates between pot '{0}' and '{1}'.", request.SnapshotLeft.PotName, request.SnapshotRight.PotName);
 
@@ -55,7 +56,7 @@ namespace DustInTheWind.DirectoryCompare.Application.MiscelaneousArea.FindDuplic
 
             duplicatesAnalysis.RunAsync();
 
-            return duplicatesAnalysis;
+            return Task.FromResult(duplicatesAnalysis);
         }
 
         private List<HFile> GetFiles(SnapshotLocation snapshotLocation)

@@ -3,21 +3,16 @@ using DustInTheWind.RequestR;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Setup
 {
-    internal class RequestHandlerFactory : IRequestHandlerFactory
+    internal class UseCaseFactory : UseCaseFactoryBase
     {
         private readonly IServiceProvider serviceProvider;
 
-        public RequestHandlerFactory(IServiceProvider serviceProvider)
+        public UseCaseFactory(IServiceProvider serviceProvider)
         {
             this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
-        public T Create<T>()
-        {
-            return (T)serviceProvider.GetService(typeof(T));
-        }
-
-        public object Create(Type type)
+        protected override object CreateInternal(Type type)
         {
             return serviceProvider.GetService(type);
         }

@@ -25,14 +25,14 @@ using DustInTheWind.RequestR;
 
 namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.CreateSnapshot
 {
-    public class CreateSnapshotRequestHandler : IRequestHandler<CreateSnapshotRequest, IDiskAnalysisProgress>
+    public class CreateSnapshotUseCase : IUseCase<CreateSnapshotRequest, IDiskAnalysisProgress>
     {
         private readonly ILog log;
         private readonly IPotRepository potRepository;
         private readonly IBlackListRepository blackListRepository;
         private readonly ISnapshotRepository snapshotRepository;
 
-        public CreateSnapshotRequestHandler(ILog log, IPotRepository potRepository,
+        public CreateSnapshotUseCase(ILog log, IPotRepository potRepository,
             IBlackListRepository blackListRepository, ISnapshotRepository snapshotRepository)
         {
             this.log = log ?? throw new ArgumentNullException(nameof(log));
@@ -41,10 +41,11 @@ namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.CreateSnapshot
             this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
         }
 
-        public IDiskAnalysisProgress Handle(CreateSnapshotRequest request)
+        public Task<IDiskAnalysisProgress> Execute(CreateSnapshotRequest request)
         {
             Pot pot = RetrievePot(request);
-            return StartPathAnalysis2(pot);
+            DiskAnalysis diskAnalysis = StartPathAnalysis2(pot);
+            return Task.FromResult<IDiskAnalysisProgress>(diskAnalysis);
         }
 
         private Pot RetrievePot(CreateSnapshotRequest request)

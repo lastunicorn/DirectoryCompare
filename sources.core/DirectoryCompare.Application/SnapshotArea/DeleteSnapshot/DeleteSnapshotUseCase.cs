@@ -15,21 +15,22 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Threading.Tasks;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.RequestR;
 
 namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.DeleteSnapshot
 {
-    public class DeleteSnapshotRequestHandler : IRequestHandler<DeleteSnapshotRequest>
+    public class DeleteSnapshotUseCase : IUseCase<DeleteSnapshotRequest>
     {
         private readonly ISnapshotRepository snapshotRepository;
 
-        public DeleteSnapshotRequestHandler(ISnapshotRepository snapshotRepository)
+        public DeleteSnapshotUseCase(ISnapshotRepository snapshotRepository)
         {
             this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
         }
 
-        public void Handle(DeleteSnapshotRequest request)
+        public Task Execute(DeleteSnapshotRequest request)
         {
             if (string.IsNullOrEmpty(request.Location.PotName))
                 throw new Exception("Pot name was not provided.");
@@ -45,7 +46,7 @@ namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.DeleteSnapshot
                 bool foundEndDeleted = snapshotRepository.DeleteByExactDateTime(request.Location.PotName, searchedDate);
 
                 if (foundEndDeleted)
-                    return;
+                    return Task.CompletedTask;
 
                 if (searchedDate.TimeOfDay == TimeSpan.Zero)
                     snapshotRepository.DeleteSingleByDate(request.Location.PotName, searchedDate);
@@ -54,6 +55,8 @@ namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.DeleteSnapshot
             {
                 snapshotRepository.DeleteLast(request.Location.PotName);
             }
+
+            return Task.CompletedTask;
         }
     }
 }

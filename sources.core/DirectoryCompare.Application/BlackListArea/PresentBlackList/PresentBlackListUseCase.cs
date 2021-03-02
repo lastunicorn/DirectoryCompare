@@ -15,23 +15,26 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Threading.Tasks;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
+using DustInTheWind.DirectoryCompare.Domain.Utils;
 using DustInTheWind.RequestR;
 
-namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.AddBlackPath
+namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.PresentBlackList
 {
-    public class AddBlackPathRequestHandler : IRequestHandler<AddBlackPathRequest>
+    public class PresentBlackListUseCase : IUseCase<PresentBlackListRequest, DiskPathCollection>
     {
         private readonly IBlackListRepository blackListRepository;
 
-        public AddBlackPathRequestHandler(IBlackListRepository blackListRepository)
+        public PresentBlackListUseCase(IBlackListRepository blackListRepository)
         {
             this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
         }
 
-        public void Handle(AddBlackPathRequest request)
+        public Task<DiskPathCollection> Execute(PresentBlackListRequest request)
         {
-            blackListRepository.Add(request.PotName, request.Path);
+            DiskPathCollection diskPathCollection = blackListRepository.Get(request.PotName);
+            return Task.FromResult(diskPathCollection);
         }
     }
 }

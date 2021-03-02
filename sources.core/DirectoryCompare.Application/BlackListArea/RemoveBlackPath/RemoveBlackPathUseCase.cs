@@ -15,28 +15,26 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
-using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.RequestR;
 
-namespace DustInTheWind.DirectoryCompare.Application.PotArea.PresentPots
+namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.RemoveBlackPath
 {
-    public class PresentPotsRequestHandler : IRequestHandler<PresentPotsRequest, List<Pot>>
+    public class RemoveBlackPathUseCase : IUseCase<RemoveBlackPathRequest>
     {
-        private readonly IPotRepository potRepository;
+        private readonly IBlackListRepository blackListRepository;
 
-        public PresentPotsRequestHandler(IPotRepository potRepository)
+        public RemoveBlackPathUseCase(IBlackListRepository blackListRepository)
         {
-            this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
+            this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
         }
 
-        public List<Pot> Handle(PresentPotsRequest request)
+        public Task Execute(RemoveBlackPathRequest request)
         {
-            return potRepository.Get()
-                .OrderBy(x => x.Name)
-                .ToList();
+            blackListRepository.Delete(request.PotName, request.Path);
+
+            return Task.CompletedTask;
         }
     }
 }

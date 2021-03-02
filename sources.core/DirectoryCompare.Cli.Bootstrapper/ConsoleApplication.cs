@@ -59,7 +59,7 @@ namespace DustInTheWind.DirectoryCompare.Cli
         protected override void Configure()
         {
             RequestBus requestBus = ServiceProvider.GetService<RequestBus>();
-            requestBus.RegisterAllHandlers();
+            requestBus.RegisterAllUseCases();
         }
 
         protected override CommandCollection CreateCommands()

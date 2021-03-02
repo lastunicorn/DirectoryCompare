@@ -15,25 +15,28 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Threading.Tasks;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.RequestR;
 
 namespace DustInTheWind.DirectoryCompare.Application.PotArea.CreatePot
 {
-    public class CreatePotRequestHandler : IRequestHandler<CreatePotRequest>
+    public class CreatePotUseCase : IUseCase<CreatePotRequest>
     {
         private readonly IPotRepository potRepository;
 
-        public CreatePotRequestHandler(IPotRepository potRepository)
+        public CreatePotUseCase(IPotRepository potRepository)
         {
             this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
         }
 
-        public void Handle(CreatePotRequest request)
+        public Task Execute(CreatePotRequest request)
         {
             VerifyPotDoesNotExist(request.Name);
             CreateNewPot(request);
+
+            return Task.CompletedTask;
         }
 
         private void VerifyPotDoesNotExist(string potName)

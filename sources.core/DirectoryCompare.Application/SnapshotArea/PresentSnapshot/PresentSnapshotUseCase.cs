@@ -17,22 +17,29 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.RequestR;
 
 namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.PresentSnapshot
 {
-    public class PresentSnapshotRequestHandler : IRequestHandler<PresentSnapshotRequest, Snapshot>
+    public class PresentSnapshotUseCase : IUseCase<PresentSnapshotRequest, Snapshot>
     {
         private readonly ISnapshotRepository snapshotRepository;
 
-        public PresentSnapshotRequestHandler(ISnapshotRepository snapshotRepository)
+        public PresentSnapshotUseCase(ISnapshotRepository snapshotRepository)
         {
             this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
         }
 
-        public Snapshot Handle(PresentSnapshotRequest request)
+        public Task<Snapshot> Execute(PresentSnapshotRequest request)
+        {
+            Snapshot snapshot = RetrieveSnapshot(request);
+            return Task.FromResult(snapshot);
+        }
+
+        private Snapshot RetrieveSnapshot(PresentSnapshotRequest request)
         {
             if (string.IsNullOrEmpty(request.Location.PotName))
                 throw new Exception("Pot name was not provided.");

@@ -15,23 +15,31 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Linq;
+using System.Threading.Tasks;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
+using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.RequestR;
 
-namespace DustInTheWind.DirectoryCompare.Application.PotArea.DeletePot
+namespace DustInTheWind.DirectoryCompare.Application.PotArea.PresentPot
 {
-    public class DeletePotRequestHandler : IRequestHandler<DeletePotRequest>
+    public class PresentPotUseCase : IUseCase<PresentPotRequest, Pot>
     {
         private readonly IPotRepository potRepository;
+        private readonly ISnapshotRepository snapshotRepository;
 
-        public DeletePotRequestHandler(IPotRepository potRepository)
+        public PresentPotUseCase(IPotRepository potRepository, ISnapshotRepository snapshotRepository)
         {
             this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
+            this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
         }
 
-        public void Handle(DeletePotRequest request)
+        public Task<Pot> Execute(PresentPotRequest request)
         {
-            potRepository.Delete(request.PotName);
+            Pot pot = potRepository.Get(request.PotName);
+            pot.Snapshots = snapshotRepository.GetByPot(request.PotName).ToList();
+
+            return Task.FromResult(pot);
         }
     }
 }

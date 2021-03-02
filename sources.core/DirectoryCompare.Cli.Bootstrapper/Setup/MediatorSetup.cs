@@ -26,37 +26,9 @@ namespace DustInTheWind.DirectoryCompare.Cli.Setup
     {
         public static void Setup(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddTransient<IRequestHandlerFactory, RequestHandlerFactory>();
+            serviceCollection.AddTransient<UseCaseFactoryBase, UseCaseFactory>();
             serviceCollection.AddSingleton<RequestBus>();
             serviceCollection.AddAllHandlersAndValidators();
-
-
-            //KernelBase kernel = ((NinjectServiceCollection)serviceCollection).Kernel;
-
-            //kernel.Components.Add<IBindingResolver, ContravariantBindingResolver>();
-
-            //kernel.Bind(x => x.FromAssemblyContaining<IMediator>().SelectAllClasses().BindDefaultInterface());
-            //kernel.Bind(x => x.FromAssemblyContaining<CreateSnapshotRequest>().SelectAllClasses().InheritedFrom(typeof(IRequestHandler<,>)).BindAllInterfaces());
-            //kernel.Bind(x => x.FromAssemblyContaining<CreateSnapshotRequestValidator>().SelectAllClasses().InheritedFrom(typeof(AbstractValidator<>)).BindDefaultInterfaces());
-
-            //kernel
-            //    .Bind(typeof(IPipelineBehavior<,>))
-            //    .To(typeof(RequestPerformanceBehavior<,>));
-
-            //kernel
-            //    .Bind(typeof(IPipelineBehavior<,>))
-            //    .To(typeof(RequestValidationBehavior<,>));
-
-            //kernel
-            //    .Bind<ServiceFactory>()
-            //    .ToMethod(x =>
-            //    {
-            //        return t =>
-            //        {
-            //            object a = kernel.TryGet(t);
-            //            return x.Kernel.TryGet(t);
-            //        };
-            //    });
         }
 
         private static void AddAllHandlersAndValidators(this IServiceCollection serviceCollection)
@@ -69,9 +41,9 @@ namespace DustInTheWind.DirectoryCompare.Cli.Setup
 
             foreach (Assembly assembly in assemblies)
             {
-                IEnumerable<Type> requestHandlersOrValidators = assembly.GetAllRequestHandlersOrValidators();
+                IEnumerable<Type> useCasesOrValidators = assembly.GetAllUseCasesAndRequestValidators();
 
-                foreach (Type handlerOrValidatorType in requestHandlersOrValidators)
+                foreach (Type handlerOrValidatorType in useCasesOrValidators)
                     serviceCollection.AddTransient(handlerOrValidatorType);
             }
         }
