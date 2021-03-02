@@ -18,11 +18,11 @@ using System;
 using System.Linq;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
-using MediatR;
+using DustInTheWind.RequestR;
 
 namespace DustInTheWind.DirectoryCompare.Application.PotArea.PresentPot
 {
-    public class PresentPotRequestHandler : RequestHandler<PresentPotRequest, Pot>
+    public class PresentPotRequestHandler : IRequestHandler<PresentPotRequest, Pot>
     {
         private readonly IPotRepository potRepository;
         private readonly ISnapshotRepository snapshotRepository;
@@ -33,7 +33,7 @@ namespace DustInTheWind.DirectoryCompare.Application.PotArea.PresentPot
             this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
         }
 
-        protected override Pot Handle(PresentPotRequest request)
+        public Pot Handle(PresentPotRequest request)
         {
             Pot pot = potRepository.Get(request.PotName);
             pot.Snapshots = snapshotRepository.GetByPot(request.PotName).ToList();

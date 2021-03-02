@@ -19,11 +19,11 @@ using System.Collections.Generic;
 using System.Linq;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
-using MediatR;
+using DustInTheWind.RequestR;
 
 namespace DustInTheWind.DirectoryCompare.Application.PotArea.PresentPots
 {
-    public class PresentPotsRequestHandler : RequestHandler<PresentPotsRequest, List<Pot>>
+    public class PresentPotsRequestHandler : IRequestHandler<PresentPotsRequest, List<Pot>>
     {
         private readonly IPotRepository potRepository;
 
@@ -32,7 +32,7 @@ namespace DustInTheWind.DirectoryCompare.Application.PotArea.PresentPots
             this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
         }
 
-        protected override List<Pot> Handle(PresentPotsRequest request)
+        public List<Pot> Handle(PresentPotsRequest request)
         {
             return potRepository.Get()
                 .OrderBy(x => x.Name)

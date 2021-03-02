@@ -19,11 +19,11 @@ using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.ImportExport;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
-using MediatR;
+using DustInTheWind.RequestR;
 
 namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.ImportSnapshot
 {
-    public class ImportSnapshotRequestHandler : RequestHandler<ImportSnapshotRequest>
+    public class ImportSnapshotRequestHandler : IRequestHandler<ImportSnapshotRequest>
     {
         private readonly IPotRepository potRepository;
         private readonly ISnapshotRepository snapshotRepository;
@@ -36,7 +36,7 @@ namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.ImportSnapshot
             this.potImportExport = potImportExport ?? throw new ArgumentNullException(nameof(potImportExport));
         }
 
-        protected override void Handle(ImportSnapshotRequest request)
+        public void Handle(ImportSnapshotRequest request)
         {
             //ISnapshotReader reader = null;
             //ISnapshotWriter writer = null;

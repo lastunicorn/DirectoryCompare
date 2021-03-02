@@ -16,11 +16,11 @@
 
 using System;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
-using MediatR;
+using DustInTheWind.RequestR;
 
 namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.DeleteSnapshot
 {
-    public class DeleteSnapshotRequestHandler : RequestHandler<DeleteSnapshotRequest>
+    public class DeleteSnapshotRequestHandler : IRequestHandler<DeleteSnapshotRequest>
     {
         private readonly ISnapshotRepository snapshotRepository;
 
@@ -29,7 +29,7 @@ namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.DeleteSnapshot
             this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
         }
 
-        protected override void Handle(DeleteSnapshotRequest request)
+        public void Handle(DeleteSnapshotRequest request)
         {
             if (string.IsNullOrEmpty(request.Location.PotName))
                 throw new Exception("Pot name was not provided.");

@@ -31,13 +31,13 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
     public class SnapshotCommand : ICommand
     {
-        private readonly RequestBus requestBus;
+        private readonly DirectoryCompareRequestBus requestBus;
 
         public string Key { get; } = "snapshot";
 
         public string Description => "Manages snapshots from a pot.";
 
-        public SnapshotCommand(RequestBus requestBus)
+        public SnapshotCommand(DirectoryCompareRequestBus requestBus)
         {
             this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
         }
@@ -86,7 +86,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
                     : null
             };
 
-            IDiskAnalysisProgress pathAnalysisProgress = requestBus.PlaceRequest<CreateSnapshotRequest, IDiskAnalysisProgress>(request).Result;
+            IDiskAnalysisProgress pathAnalysisProgress = requestBus.SendAsync<CreateSnapshotRequest, IDiskAnalysisProgress>(request).Result;
             DisplayCreationProgress(pathAnalysisProgress);
         }
 
@@ -105,7 +105,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
                 Location = deleteArgument.Value
             };
 
-            requestBus.PlaceRequest(request).Wait();
+            requestBus.SendAsync(request).Wait();
         }
 
         private void ExecuteImport(Arguments arguments, Argument importArgument)
@@ -115,7 +115,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
                 FilePath = importArgument.Value,
                 PotName = arguments.GetStringValue("p")
             };
-            requestBus.PlaceRequest(request).Wait();
+            requestBus.SendAsync(request).Wait();
         }
 
         private void ExecuteDisplay(Arguments arguments)
@@ -130,7 +130,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
                 Location = snapshotLocation
             };
 
-            Snapshot snapshot = requestBus.PlaceRequest<PresentSnapshotRequest, Snapshot>(request).Result;
+            Snapshot snapshot = requestBus.SendAsync<PresentSnapshotRequest, Snapshot>(request).Result;
 
             SnapshotView snapshotView = new SnapshotView(snapshot);
             snapshotView.Display();

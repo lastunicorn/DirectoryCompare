@@ -25,14 +25,14 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
     public class CreateSnapshotCommand : ICommand
     {
-        private readonly RequestBus requestBus;
+        private readonly DirectoryCompareRequestBus requestBus;
         private CreateSnapshotView createSnapshotView;
 
         public string Key { get; } = "read";
 
         public string Description => "Creates a new snapshot in a specific pot.";
 
-        public CreateSnapshotCommand(RequestBus requestBus)
+        public CreateSnapshotCommand(DirectoryCompareRequestBus requestBus)
         {
             this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
         }
@@ -43,7 +43,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 
             CreateSnapshotRequest request = CreateRequest(arguments);
 
-            IDiskAnalysisProgress pathAnalysisProgress = requestBus.PlaceRequest<CreateSnapshotRequest, IDiskAnalysisProgress>(request).Result;
+            IDiskAnalysisProgress pathAnalysisProgress = requestBus.SendAsync<CreateSnapshotRequest, IDiskAnalysisProgress>(request).Result;
             pathAnalysisProgress.Progress += HandleAnalysisProgress;
 
             pathAnalysisProgress.WaitToEnd();

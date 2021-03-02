@@ -15,11 +15,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.Domain;
-using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.DeleteSnapshot
 {
-    public class DeleteSnapshotRequest : IRequest
+    public class DeleteSnapshotRequest
     {
         public SnapshotLocation Location { get; set; }
     }

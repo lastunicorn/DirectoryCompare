@@ -15,11 +15,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.Domain;
-using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.MiscelaneousArea.FindDuplicates
 {
-    public class FindDuplicatesRequest : IRequest<DuplicatesAnalysis>
+    public class FindDuplicatesRequest
     {
         public SnapshotLocation SnapshotLeft { get; set; }
 

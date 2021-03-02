@@ -15,14 +15,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 using DustInTheWind.ConsoleFramework;
-using DustInTheWind.DirectoryCompare.Application.SnapshotArea.CreateSnapshot;
-using DustInTheWind.DirectoryCompare.Infrastructure.RequestHandlingPipeline;
-using FluentValidation;
-using MediatR;
-using Ninject;
-using Ninject.Extensions.Conventions;
-using Ninject.Planning.Bindings.Resolvers;
+using DustInTheWind.RequestR;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Setup
 {
@@ -30,32 +26,54 @@ namespace DustInTheWind.DirectoryCompare.Cli.Setup
     {
         public static void Setup(IServiceCollection serviceCollection)
         {
-            KernelBase kernel = ((NinjectServiceCollection)serviceCollection).Kernel;
+            serviceCollection.AddTransient<IRequestHandlerFactory, RequestHandlerFactory>();
+            serviceCollection.AddSingleton<RequestBus>();
+            serviceCollection.AddAllHandlersAndValidators();
 
-            kernel.Components.Add<IBindingResolver, ContravariantBindingResolver>();
 
-            kernel.Bind(x => x.FromAssemblyContaining<IMediator>().SelectAllClasses().BindDefaultInterface());
-            kernel.Bind(x => x.FromAssemblyContaining<CreateSnapshotRequest>().SelectAllClasses().InheritedFrom(typeof(IRequestHandler<,>)).BindAllInterfaces());
-            kernel.Bind(x => x.FromAssemblyContaining<CreateSnapshotRequestValidator>().SelectAllClasses().InheritedFrom(typeof(AbstractValidator<>)).BindDefaultInterfaces());
+            //KernelBase kernel = ((NinjectServiceCollection)serviceCollection).Kernel;
 
-            kernel
-                .Bind(typeof(IPipelineBehavior<,>))
-                .To(typeof(RequestPerformanceBehavior<,>));
+            //kernel.Components.Add<IBindingResolver, ContravariantBindingResolver>();
 
-            kernel
-                .Bind(typeof(IPipelineBehavior<,>))
-                .To(typeof(RequestValidationBehavior<,>));
+            //kernel.Bind(x => x.FromAssemblyContaining<IMediator>().SelectAllClasses().BindDefaultInterface());
+            //kernel.Bind(x => x.FromAssemblyContaining<CreateSnapshotRequest>().SelectAllClasses().InheritedFrom(typeof(IRequestHandler<,>)).BindAllInterfaces());
+            //kernel.Bind(x => x.FromAssemblyContaining<CreateSnapshotRequestValidator>().SelectAllClasses().InheritedFrom(typeof(AbstractValidator<>)).BindDefaultInterfaces());
 
-            kernel
-                .Bind<ServiceFactory>()
-                .ToMethod(x =>
-                {
-                    return t =>
-                    {
-                        object a = kernel.TryGet(t);
-                        return x.Kernel.TryGet(t);
-                    };
-                });
+            //kernel
+            //    .Bind(typeof(IPipelineBehavior<,>))
+            //    .To(typeof(RequestPerformanceBehavior<,>));
+
+            //kernel
+            //    .Bind(typeof(IPipelineBehavior<,>))
+            //    .To(typeof(RequestValidationBehavior<,>));
+
+            //kernel
+            //    .Bind<ServiceFactory>()
+            //    .ToMethod(x =>
+            //    {
+            //        return t =>
+            //        {
+            //            object a = kernel.TryGet(t);
+            //            return x.Kernel.TryGet(t);
+            //        };
+            //    });
+        }
+
+        private static void AddAllHandlersAndValidators(this IServiceCollection serviceCollection)
+        {
+            if (serviceCollection == null) throw new ArgumentNullException(nameof(serviceCollection));
+
+            AppDomain appDomain = AppDomain.CurrentDomain;
+
+            Assembly[] assemblies = appDomain.GetAssemblies();
+
+            foreach (Assembly assembly in assemblies)
+            {
+                IEnumerable<Type> requestHandlersOrValidators = assembly.GetAllRequestHandlersOrValidators();
+
+                foreach (Type handlerOrValidatorType in requestHandlersOrValidators)
+                    serviceCollection.AddTransient(handlerOrValidatorType);
+            }
         }
     }
 }

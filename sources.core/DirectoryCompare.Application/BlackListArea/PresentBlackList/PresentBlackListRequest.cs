@@ -14,12 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Domain.Utils;
-using MediatR;
-
 namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.PresentBlackList
 {
-    public class PresentBlackListRequest : IRequest<DiskPathCollection>
+    public class PresentBlackListRequest
     {
         public string PotName { get; set; }
 

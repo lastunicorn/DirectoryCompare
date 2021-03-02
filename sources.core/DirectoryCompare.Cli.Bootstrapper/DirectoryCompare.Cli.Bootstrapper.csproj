@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="9.0.1" PrivateAssets="All" />
-    <PackageReference Include="MediatR" Version="8.0.2" PrivateAssets="All" />
     <PackageReference Include="Ninject" Version="3.3.4" PrivateAssets="All" />
     <PackageReference Include="Ninject.Extensions.Conventions" Version="3.3.0" PrivateAssets="All" />
     <PackageReference Include="Ninject.Extensions.Factory" Version="3.3.2" PrivateAssets="All" />

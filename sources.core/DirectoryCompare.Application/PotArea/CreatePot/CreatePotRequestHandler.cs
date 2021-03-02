@@ -17,11 +17,11 @@
 using System;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
-using MediatR;
+using DustInTheWind.RequestR;
 
 namespace DustInTheWind.DirectoryCompare.Application.PotArea.CreatePot
 {
-    public class CreatePotRequestHandler : RequestHandler<CreatePotRequest>
+    public class CreatePotRequestHandler : IRequestHandler<CreatePotRequest>
     {
         private readonly IPotRepository potRepository;
 
@@ -30,7 +30,7 @@ namespace DustInTheWind.DirectoryCompare.Application.PotArea.CreatePot
             this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
         }
 
-        protected override void Handle(CreatePotRequest request)
+        public void Handle(CreatePotRequest request)
         {
             VerifyPotDoesNotExist(request.Name);
             CreateNewPot(request);

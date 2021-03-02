@@ -15,12 +15,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.Domain;
-using DustInTheWind.DirectoryCompare.Domain.Entities;
-using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.PresentSnapshot
 {
-    public class PresentSnapshotRequest : IRequest<Snapshot>
+    public class PresentSnapshotRequest
     {
         public SnapshotLocation Location { get; set; }
     }

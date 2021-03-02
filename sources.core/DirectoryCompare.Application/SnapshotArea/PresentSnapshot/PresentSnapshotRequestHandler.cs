@@ -19,11 +19,11 @@ using System.Collections.Generic;
 using System.Linq;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
-using MediatR;
+using DustInTheWind.RequestR;
 
 namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.PresentSnapshot
 {
-    public class PresentSnapshotRequestHandler : RequestHandler<PresentSnapshotRequest, Snapshot>
+    public class PresentSnapshotRequestHandler : IRequestHandler<PresentSnapshotRequest, Snapshot>
     {
         private readonly ISnapshotRepository snapshotRepository;
 
@@ -32,7 +32,7 @@ namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.PresentSnapsho
             this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
         }
 
-        protected override Snapshot Handle(PresentSnapshotRequest request)
+        public Snapshot Handle(PresentSnapshotRequest request)
         {
             if (string.IsNullOrEmpty(request.Location.PotName))
                 throw new Exception("Pot name was not provided.");

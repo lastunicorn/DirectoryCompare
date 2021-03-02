@@ -14,11 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using MediatR;
-
 namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.ImportSnapshot
 {
-    public class ImportSnapshotRequest : IRequest
+    public class ImportSnapshotRequest
     {
         public string FilePath { get; set; }
 

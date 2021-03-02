@@ -27,14 +27,14 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
     public class FindDuplicatesCommand : ICommand
     {
-        private readonly RequestBus requestBus;
+        private readonly DirectoryCompareRequestBus requestBus;
         private readonly FindDuplicatesView findDuplicatesView;
 
         public string Key { get; } = "find-duplicates";
 
         public string Description => string.Empty;
 
-        public FindDuplicatesCommand(RequestBus requestBus)
+        public FindDuplicatesCommand(DirectoryCompareRequestBus requestBus)
         {
             this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
 
@@ -44,7 +44,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
         public void Execute(Arguments arguments)
         {
             FindDuplicatesRequest request = CreateRequest(arguments);
-            DuplicatesAnalysis analysis = requestBus.PlaceRequest<FindDuplicatesRequest, DuplicatesAnalysis>(request).Result;
+            DuplicatesAnalysis analysis = requestBus.SendAsync<FindDuplicatesRequest, DuplicatesAnalysis>(request).Result;
             analysis.DuplicateFound += HandleDuplicateFound;
 
             DisplayDuplicatesFromBuffer(analysis);

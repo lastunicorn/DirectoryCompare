@@ -24,6 +24,7 @@ using DustInTheWind.DirectoryCompare.Cli.Setup;
 using DustInTheWind.DirectoryCompare.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.ImportExport;
+using DustInTheWind.RequestR;
 
 namespace DustInTheWind.DirectoryCompare.Cli
 {
@@ -53,6 +54,12 @@ namespace DustInTheWind.DirectoryCompare.Cli
             serviceCollection.AddTransient<IMiddlewareFactory, MiddlewareFactory>();
 
             base.ConfigureServices(serviceCollection);
+        }
+
+        protected override void Configure()
+        {
+            RequestBus requestBus = ServiceProvider.GetService<RequestBus>();
+            requestBus.RegisterAllHandlers();
         }
 
         protected override CommandCollection CreateCommands()

@@ -15,11 +15,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.Domain.Utils;
-using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.AddBlackPath
 {
-    public class AddBlackPathRequest : IRequest
+    public class AddBlackPathRequest
     {
         public string PotName { get; set; }
 

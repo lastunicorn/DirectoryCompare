@@ -29,13 +29,13 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
     public class BlackListCommand : ICommand
     {
-        private readonly RequestBus requestBus;
+        private readonly DirectoryCompareRequestBus requestBus;
 
         public string Key { get; } = "blacklist";
 
         public string Description => string.Empty;
 
-        public BlackListCommand(RequestBus requestBus)
+        public BlackListCommand(DirectoryCompareRequestBus requestBus)
         {
             this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
         }
@@ -99,7 +99,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
                 BlackList = arguments["b"].Value,
                 Path = addPathArgument.Value
             };
-            requestBus.PlaceRequest(request).Wait();
+            requestBus.SendAsync(request).Wait();
         }
 
         private void ExecuteRemovePath(Arguments arguments, Argument removePathArgument)
@@ -110,7 +110,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
                 BlackList = arguments["b"].Value,
                 Path = removePathArgument.Value
             };
-            requestBus.PlaceRequest(request).Wait();
+            requestBus.SendAsync(request).Wait();
         }
 
         private void ExecuteDisplay(Arguments arguments)
@@ -123,7 +123,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
                 BlackList = anonymousArguments.FirstOrDefault().Value
             };
 
-            DiskPathCollection blackList = requestBus.PlaceRequest<PresentBlackListRequest, DiskPathCollection>(request).Result;
+            DiskPathCollection blackList = requestBus.SendAsync<PresentBlackListRequest, DiskPathCollection>(request).Result;
 
             BlackListView blackListView = new BlackListView(blackList);
             blackListView.Display();

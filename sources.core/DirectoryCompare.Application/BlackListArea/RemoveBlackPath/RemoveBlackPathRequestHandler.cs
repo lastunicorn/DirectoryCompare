@@ -16,11 +16,11 @@
 
 using System;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
-using MediatR;
+using DustInTheWind.RequestR;
 
 namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.RemoveBlackPath
 {
-    public class RemoveBlackPathRequestHandler : RequestHandler<RemoveBlackPathRequest>
+    public class RemoveBlackPathRequestHandler : IRequestHandler<RemoveBlackPathRequest>
     {
         private readonly IBlackListRepository blackListRepository;
 
@@ -29,7 +29,7 @@ namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.RemoveBlackPa
             this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
         }
 
-        protected override void Handle(RemoveBlackPathRequest request)
+        public void Handle(RemoveBlackPathRequest request)
         {
             blackListRepository.Delete(request.PotName, request.Path);
         }

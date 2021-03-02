@@ -16,11 +16,11 @@
 
 using System;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
-using MediatR;
+using DustInTheWind.RequestR;
 
 namespace DustInTheWind.DirectoryCompare.Application.PotArea.DeletePot
 {
-    public class DeletePotRequestHandler : RequestHandler<DeletePotRequest>
+    public class DeletePotRequestHandler : IRequestHandler<DeletePotRequest>
     {
         private readonly IPotRepository potRepository;
 
@@ -29,7 +29,7 @@ namespace DustInTheWind.DirectoryCompare.Application.PotArea.DeletePot
             this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
         }
 
-        protected override void Handle(DeletePotRequest request)
+        public void Handle(DeletePotRequest request)
         {
             potRepository.Delete(request.PotName);
         }

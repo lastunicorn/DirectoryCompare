@@ -17,11 +17,10 @@
 using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Domain.SomeInterfaces;
-using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.MiscelaneousArea.RemoveDuplicates
 {
-    public class RemoveDuplicatesRequest : IRequest
+    public class RemoveDuplicatesRequest
     {
         public SnapshotLocation SnapshotLeft { get; set; }
         

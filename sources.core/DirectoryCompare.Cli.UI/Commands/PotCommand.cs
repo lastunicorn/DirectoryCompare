@@ -30,12 +30,12 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
     public class PotCommand : ICommand
     {
-        private readonly RequestBus requestBus;
+        private readonly DirectoryCompareRequestBus requestBus;
         public string Key { get; } = "pot";
 
         public string Description => "Manages a pot that holds snapshots for a single path on disk.";
 
-        public PotCommand(RequestBus requestBus)
+        public PotCommand(DirectoryCompareRequestBus requestBus)
         {
             this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
         }
@@ -88,7 +88,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
                 Path = arguments["p"].Value
             };
 
-            requestBus.PlaceRequest(request).Wait();
+            requestBus.SendAsync(request).Wait();
 
             CustomConsole.WriteLineSuccess("Pot created successfully.");
         }
@@ -100,7 +100,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
                 PotName = deleteArgument.Value
             };
 
-            requestBus.PlaceRequest(request).Wait();
+            requestBus.SendAsync(request).Wait();
 
             CustomConsole.WriteLineSuccess("Pot deleted successfully.");
         }
@@ -111,7 +111,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
             {
                 PotName = arguments.GetStringValue(0)
             };
-            Pot pot = requestBus.PlaceRequest<PresentPotRequest, Pot>(request).Result;
+            Pot pot = requestBus.SendAsync<PresentPotRequest, Pot>(request).Result;
 
             PotView potView = new PotView(pot);
             potView.Display();
@@ -120,7 +120,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
         private void ExecuteDisplayAll()
         {
             PresentPotsRequest request = new PresentPotsRequest();
-            List<Pot> pots = requestBus.PlaceRequest<PresentPotsRequest, List<Pot>>(request).Result;
+            List<Pot> pots = requestBus.SendAsync<PresentPotsRequest, List<Pot>>(request).Result;
 
             PotsView potsView = new PotsView(pots);
             potsView.Display();

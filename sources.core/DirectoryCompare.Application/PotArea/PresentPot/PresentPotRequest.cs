@@ -15,11 +15,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
-using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.PotArea.PresentPot
 {
-    public class PresentPotRequest : IRequest<Pot>
+    public class PresentPotRequest
     {
         public string PotName { get; set; }
     }

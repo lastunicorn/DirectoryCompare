@@ -23,6 +23,9 @@ namespace DustInTheWind.ConsoleFramework
         void AddSingleton<TService>(TService implementationInstance)
             where TService : class;
         
+        void AddSingleton<TService>()
+            where TService : class;
+        
         void AddSingleton<TService, TImplementation>()
             where TService : class
             where TImplementation : class, TService;
@@ -32,6 +35,8 @@ namespace DustInTheWind.ConsoleFramework
             where TImplementation : class, TService;
 
         void AddTransient(Type serviceType, Type implementationType);
+
+        void AddTransient(Type serviceType);
 
         IServiceProvider BuildServiceProvider();
     }

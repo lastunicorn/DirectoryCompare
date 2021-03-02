@@ -18,11 +18,11 @@ using System;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
-using MediatR;
+using DustInTheWind.RequestR;
 
 namespace DustInTheWind.DirectoryCompare.Application.MiscelaneousArea.CompareSnapshots
 {
-    public class CompareSnapshotsRequestHandler : RequestHandler<CompareSnapshotsRequest, CompareSnapshotsResponse>
+    public class CompareSnapshotsRequestHandler : IRequestHandler<CompareSnapshotsRequest, CompareSnapshotsResponse>
     {
         private readonly ISnapshotRepository snapshotRepository;
 
@@ -31,7 +31,7 @@ namespace DustInTheWind.DirectoryCompare.Application.MiscelaneousArea.CompareSna
             this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
         }
 
-        protected override CompareSnapshotsResponse Handle(CompareSnapshotsRequest request)
+        public CompareSnapshotsResponse Handle(CompareSnapshotsRequest request)
         {
             Snapshot snapshot1 = RetrieveSnapshot(request.PotName1);
             Snapshot snapshot2 = RetrieveSnapshot(request.PotName2);

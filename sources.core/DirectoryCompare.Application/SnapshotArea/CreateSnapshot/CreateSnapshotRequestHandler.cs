@@ -21,11 +21,11 @@ using DustInTheWind.DirectoryCompare.Domain.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Domain.ImportExport;
 using DustInTheWind.DirectoryCompare.Domain.Logging;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
-using MediatR;
+using DustInTheWind.RequestR;
 
 namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.CreateSnapshot
 {
-    public class CreateSnapshotRequestHandler : RequestHandler<CreateSnapshotRequest, IDiskAnalysisProgress>
+    public class CreateSnapshotRequestHandler : IRequestHandler<CreateSnapshotRequest, IDiskAnalysisProgress>
     {
         private readonly ILog log;
         private readonly IPotRepository potRepository;
@@ -41,7 +41,7 @@ namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.CreateSnapshot
             this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
         }
 
-        protected override IDiskAnalysisProgress Handle(CreateSnapshotRequest request)
+        public IDiskAnalysisProgress Handle(CreateSnapshotRequest request)
         {
             Pot pot = RetrievePot(request);
             return StartPathAnalysis2(pot);

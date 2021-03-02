@@ -46,11 +46,14 @@ namespace DustInTheWind.ConsoleFramework
             serviceCollection.AddSingleton(commands);
 
             middlewareCollection = ServiceProvider.GetService<MiddlewareCollection>();
+            middlewareCollection.ApplicationServices = ServiceProvider;
 
             ICommand helpCommandItem = CreateHelpCommand();
 
             if (helpCommandItem != null)
                 commands.Add(helpCommandItem);
+
+            Configure();
 
             applicationHeader = CreateApplicationHeader();
             applicationFooter = CreateApplicationFooter();
@@ -59,6 +62,10 @@ namespace DustInTheWind.ConsoleFramework
         protected abstract IServiceCollection CreateServiceCollection();
 
         protected virtual void ConfigureServices(IServiceCollection serviceCollection)
+        {
+        }
+
+        protected virtual void Configure()
         {
         }
 

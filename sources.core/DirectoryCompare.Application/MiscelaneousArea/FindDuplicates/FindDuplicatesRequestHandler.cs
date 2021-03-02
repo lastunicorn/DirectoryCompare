@@ -23,11 +23,11 @@ using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.Logging;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
-using MediatR;
+using DustInTheWind.RequestR;
 
 namespace DustInTheWind.DirectoryCompare.Application.MiscelaneousArea.FindDuplicates
 {
-    public class FindDuplicatesRequestHandler : RequestHandler<FindDuplicatesRequest, DuplicatesAnalysis>
+    public class FindDuplicatesRequestHandler : IRequestHandler<FindDuplicatesRequest, DuplicatesAnalysis>
     {
         private readonly ISnapshotRepository snapshotRepository;
         private readonly IBlackListRepository blackListRepository;
@@ -40,7 +40,7 @@ namespace DustInTheWind.DirectoryCompare.Application.MiscelaneousArea.FindDuplic
             this.log = log ?? throw new ArgumentNullException(nameof(log));
         }
 
-        protected override DuplicatesAnalysis Handle(FindDuplicatesRequest request)
+        public DuplicatesAnalysis Handle(FindDuplicatesRequest request)
         {
             log.WriteInfo("Searching for duplicates between pot '{0}' and '{1}'.", request.SnapshotLeft.PotName, request.SnapshotRight.PotName);
 

@@ -16,28 +16,28 @@
 
 using System;
 using System.Threading.Tasks;
-using MediatR;
+using DustInTheWind.RequestR;
 
 namespace DustInTheWind.DirectoryCompare.Infrastructure
 {
-    public class RequestBus
+    public class DirectoryCompareRequestBus : IRequestBus
     {
-        private readonly IMediator mediator;
+        private readonly RequestBus requestBus;
 
-        public RequestBus(IMediator mediator)
+        public DirectoryCompareRequestBus(RequestBus requestBus)
         {
-            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
         }
 
-        public async Task<TResponse> PlaceRequest<TRequest, TResponse>(TRequest request)
+        public async Task<TResponse> SendAsync<TRequest, TResponse>(TRequest request)
         {
-            object response = await mediator.Send(request);
+            object response = await requestBus.SendAsync<TRequest, TResponse>(request);
             return (TResponse)response;
         }
 
-        public async Task PlaceRequest<TRequest>(TRequest request)
+        public async Task SendAsync<TRequest>(TRequest request)
         {
-            await mediator.Send(request);
+            await requestBus.SendAsync(request);
         }
     }
 }

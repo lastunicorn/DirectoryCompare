@@ -16,11 +16,11 @@
 
 using System;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
-using MediatR;
+using DustInTheWind.RequestR;
 
 namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.AddBlackPath
 {
-    public class AddBlackPathRequestHandler : RequestHandler<AddBlackPathRequest>
+    public class AddBlackPathRequestHandler : IRequestHandler<AddBlackPathRequest>
     {
         private readonly IBlackListRepository blackListRepository;
 
@@ -29,7 +29,7 @@ namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.AddBlackPath
             this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
         }
 
-        protected override void Handle(AddBlackPathRequest request)
+        public void Handle(AddBlackPathRequest request)
         {
             blackListRepository.Add(request.PotName, request.Path);
         }

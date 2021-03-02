@@ -21,11 +21,11 @@ using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
-using MediatR;
+using DustInTheWind.RequestR;
 
 namespace DustInTheWind.DirectoryCompare.Application.MiscelaneousArea.RemoveDuplicates
 {
-    public class RemoveDuplicatesRequestHandler : RequestHandler<RemoveDuplicatesRequest>
+    public class RemoveDuplicatesRequestHandler : IRequestHandler<RemoveDuplicatesRequest>
     {
         private readonly ISnapshotRepository snapshotRepository;
         private readonly IBlackListRepository blackListRepository;
@@ -41,7 +41,7 @@ namespace DustInTheWind.DirectoryCompare.Application.MiscelaneousArea.RemoveDupl
         // todo: Instead of receiving an IRemoveDuplicatesExporter, make this handler async and return a promise.
         // The real work will run asynchronously, while the promise will raise events whenever something important
         // happened that the presentation layer should handle.
-        protected override void Handle(RemoveDuplicatesRequest request)
+        public void Handle(RemoveDuplicatesRequest request)
         {
             this.request = request;
             

@@ -36,6 +36,11 @@ namespace DustInTheWind.DirectoryCompare.Cli
             Kernel.Bind<TService>().ToConstant(implementationInstance).InSingletonScope();
         }
 
+        public void AddSingleton<TService>() where TService : class
+        {
+            Kernel.Bind<TService>().ToSelf().InSingletonScope();
+        }
+
         public void AddSingleton<TService, TImplementation>()
             where TService : class
             where TImplementation : class, TService
@@ -56,6 +61,13 @@ namespace DustInTheWind.DirectoryCompare.Cli
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
 
             Kernel.Bind(serviceType).To(implementationType);
+        }
+
+        public void AddTransient(Type serviceType)
+        {
+            if (serviceType == null) throw new ArgumentNullException(nameof(serviceType));
+
+            Kernel.Bind(serviceType).ToSelf();
         }
 
         public IServiceProvider BuildServiceProvider()

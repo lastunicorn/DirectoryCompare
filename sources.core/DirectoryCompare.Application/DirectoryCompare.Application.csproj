@@ -20,12 +20,11 @@
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="9.0.1" />
-    <PackageReference Include="MediatR" Version="8.0.2" />
+    <PackageReference Include="RequestR" Version="1.1.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All" />
-    <ProjectReference Include="..\DirectoryCompare.Infrastructure\DirectoryCompare.Infrastructure.csproj" />
     <ProjectReference Include="..\DirectoryCompare.Validation\DirectoryCompare.Validation.csproj" />
   </ItemGroup>
 

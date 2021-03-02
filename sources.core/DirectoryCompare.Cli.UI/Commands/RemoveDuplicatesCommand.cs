@@ -26,13 +26,13 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
     public class RemoveDuplicatesCommand : ICommand
     {
-        private readonly RequestBus requestBus;
+        private readonly DirectoryCompareRequestBus requestBus;
 
         public string Key { get; } = "remove-duplicates";
 
         public string Description => string.Empty;
 
-        public RemoveDuplicatesCommand(RequestBus requestBus)
+        public RemoveDuplicatesCommand(DirectoryCompareRequestBus requestBus)
         {
             this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
         }
@@ -40,7 +40,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
         public void Execute(Arguments arguments)
         {
             RemoveDuplicatesRequest request = CreateRequest(arguments);
-            requestBus.PlaceRequest(request).Wait();
+            requestBus.SendAsync(request).Wait();
         }
 
         private static RemoveDuplicatesRequest CreateRequest(Arguments arguments)

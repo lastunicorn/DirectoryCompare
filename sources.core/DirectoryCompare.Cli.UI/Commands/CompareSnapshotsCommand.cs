@@ -25,13 +25,13 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
     public class CompareSnapshotsCommand : ICommand
     {
-        private readonly RequestBus requestBus;
+        private readonly DirectoryCompareRequestBus requestBus;
 
         public string Key { get; } = "compare";
 
         public string Description => "Compares two snapshots.";
 
-        public CompareSnapshotsCommand(RequestBus requestBus)
+        public CompareSnapshotsCommand(DirectoryCompareRequestBus requestBus)
         {
             this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
         }
@@ -39,7 +39,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
         public void Execute(Arguments arguments)
         {
             CompareSnapshotsRequest request = CreateRequest(arguments);
-            CompareSnapshotsResponse response = requestBus.PlaceRequest<CompareSnapshotsRequest, CompareSnapshotsResponse>(request).Result;
+            CompareSnapshotsResponse response = requestBus.SendAsync<CompareSnapshotsRequest, CompareSnapshotsResponse>(request).Result;
 
             bool exportedToFile = !string.IsNullOrEmpty(response.ExportDirectoryPath);
 
