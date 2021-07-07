@@ -2,7 +2,7 @@
   "profiles": {
     "DirectoryCompare.Cli": {
       "commandName": "Project",
-      "commandLineArgs": "pot test12"
+      "commandLineArgs": "pot"
     }
   }
 }
