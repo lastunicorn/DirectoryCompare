@@ -19,7 +19,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Security.Cryptography;
 using System.Threading;
-using System.Threading.Tasks;
 using DustInTheWind.DirectoryCompare.Domain.DiskAnalysis.DiskCrawling;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.ImportExport;
@@ -190,12 +189,12 @@ namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
 
                     hFile.Size = size;
                     readSize += size;
+                }
 
-                    if (totalSize > 0)
-                    {
-                        long percentage = readSize * 100 / totalSize;
-                        OnProgress(new DiskAnalysisProgressEventArgs(percentage));
-                    }
+                if (totalSize > 0)
+                {
+                    long percentage = readSize * 100 / totalSize;
+                    OnProgress(new DiskAnalysisProgressEventArgs(percentage));
                 }
             }
             catch (Exception ex)

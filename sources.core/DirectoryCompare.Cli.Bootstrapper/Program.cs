@@ -19,7 +19,7 @@ using DustInTheWind.ConsoleTools;
 
 namespace DustInTheWind.DirectoryCompare.Cli
 {
-    internal class Program
+    internal static class Program
     {
         private static void Main(string[] args)
         {

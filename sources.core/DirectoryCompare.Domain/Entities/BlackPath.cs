@@ -19,7 +19,7 @@ using System.Linq;
 
 namespace DustInTheWind.DirectoryCompare.Domain.Entities
 {
-    public struct BlackPath
+    public readonly struct BlackPath
     {
         private readonly bool isRooted;
         private readonly bool isDirectoryOnly;

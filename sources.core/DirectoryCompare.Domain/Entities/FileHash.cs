@@ -19,7 +19,7 @@ using System.Collections.Generic;
 
 namespace DustInTheWind.DirectoryCompare.Domain.Entities
 {
-    public struct FileHash : IEquatable<FileHash>
+    public readonly struct FileHash : IEquatable<FileHash>
     {
         private readonly byte[] bytes;
 
