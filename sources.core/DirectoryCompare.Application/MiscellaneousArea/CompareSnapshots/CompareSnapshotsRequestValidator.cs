@@ -14,17 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Domain;
-using MediatR;
+using FluentValidation;
 
-namespace DustInTheWind.DirectoryCompare.Application.MiscelaneousArea.CompareSnapshots
+namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.CompareSnapshots
 {
-    public class CompareSnapshotsRequest : IRequest<CompareSnapshotsResponse>
+    public class CompareSnapshotsRequestValidator : AbstractValidator<CompareSnapshotsRequest>
     {
-        public SnapshotLocation Snapshot1 { get; set; }
-
-        public SnapshotLocation Snapshot2 { get; set; }
-        
-        public string ExportFileName { get; set; }
+        public CompareSnapshotsRequestValidator()
+        {
+            RuleFor(x => x.Snapshot1).NotEmpty();
+            RuleFor(x => x.Snapshot2).NotEmpty();
+        }
     }
 }

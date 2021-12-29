@@ -14,20 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Domain.Utils;
-
-namespace DustInTheWind.DirectoryCompare.Application.MiscelaneousArea.FindDuplicates
+namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.FindDuplicates
 {
-    public struct DuplicatesAnalysisSummary
+    public enum AnalysisState
     {
-        public int DuplicateCount { get; }
-
-        public DataSize TotalSize { get; }
-
-        public DuplicatesAnalysisSummary(int duplicateCount, DataSize totalSize)
-        {
-            DuplicateCount = duplicateCount;
-            TotalSize = totalSize;
-        }
+        NotStarted = 0,
+        Running,
+        Finished
     }
 }

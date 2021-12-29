@@ -15,16 +15,22 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.Domain;
+using DustInTheWind.DirectoryCompare.Domain.Comparison;
+using DustInTheWind.DirectoryCompare.Domain.SomeInterfaces;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.MiscelaneousArea.FindDuplicates
+namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.RemoveDuplicates
 {
-    public class FindDuplicatesRequest : IRequest<DuplicatesAnalysis>
+    public class RemoveDuplicatesRequest : IRequest
     {
         public SnapshotLocation SnapshotLeft { get; set; }
-
+        
         public SnapshotLocation SnapshotRight { get; set; }
-
-        public bool CheckFilesExist { get; set; }
+        
+        public IRemoveDuplicatesExporter Exporter { get; set; }
+        
+        public ComparisonSide FileToRemove { get; set; }
+        
+        public string DestinationDirectory { get; set; }
     }
 }

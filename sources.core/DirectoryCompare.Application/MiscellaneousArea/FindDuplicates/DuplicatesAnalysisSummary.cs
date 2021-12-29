@@ -14,18 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using FluentValidation;
+using DustInTheWind.DirectoryCompare.Domain.Utils;
 
-namespace DustInTheWind.DirectoryCompare.Application.MiscelaneousArea.RemoveDuplicates
+namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.FindDuplicates
 {
-    public class RemoveDuplicatesRequestValidator : AbstractValidator<RemoveDuplicatesRequest>
+    public struct DuplicatesAnalysisSummary
     {
-        public RemoveDuplicatesRequestValidator()
+        public int DuplicateCount { get; }
+
+        public DataSize TotalSize { get; }
+
+        public DuplicatesAnalysisSummary(int duplicateCount, DataSize totalSize)
         {
-            RuleFor(x => x.SnapshotLeft).NotEmpty();
-            RuleFor(x => x.SnapshotRight).NotEmpty();
-            RuleFor(x => x.Exporter).NotNull();
-            RuleFor(x => x.FileToRemove).IsInEnum();
+            DuplicateCount = duplicateCount;
+            TotalSize = totalSize;
         }
     }
 }

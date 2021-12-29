@@ -17,7 +17,7 @@
 using System;
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.ConsoleTools;
-using DustInTheWind.DirectoryCompare.Application.MiscelaneousArea.CompareSnapshots;
+using DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.CompareSnapshots;
 using DustInTheWind.DirectoryCompare.Cli.UI.Views;
 using DustInTheWind.DirectoryCompare.Infrastructure;
 

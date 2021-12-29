@@ -14,15 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using FluentValidation;
+using DustInTheWind.DirectoryCompare.Domain;
+using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.MiscelaneousArea.FindDuplicates
+namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.FindDuplicates
 {
-    public class FindDuplicatesRequestValidator : AbstractValidator<FindDuplicatesRequest>
+    public class FindDuplicatesRequest : IRequest<DuplicatesAnalysis>
     {
-        public FindDuplicatesRequestValidator()
-        {
-            RuleFor(x => x.SnapshotLeft).NotEmpty();
-        }
+        public SnapshotLocation SnapshotLeft { get; set; }
+
+        public SnapshotLocation SnapshotRight { get; set; }
+
+        public bool CheckFilesExist { get; set; }
     }
 }

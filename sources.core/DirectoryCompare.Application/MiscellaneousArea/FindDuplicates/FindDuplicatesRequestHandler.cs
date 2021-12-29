@@ -25,7 +25,7 @@ using DustInTheWind.DirectoryCompare.Domain.Logging;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.MiscelaneousArea.FindDuplicates
+namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.FindDuplicates
 {
     public class FindDuplicatesRequestHandler : RequestHandler<FindDuplicatesRequest, DuplicatesAnalysis>
     {

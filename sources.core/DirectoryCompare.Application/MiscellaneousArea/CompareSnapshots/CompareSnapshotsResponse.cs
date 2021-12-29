@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 
-namespace DustInTheWind.DirectoryCompare.Application.MiscelaneousArea.CompareSnapshots
+namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.CompareSnapshots
 {
     public class CompareSnapshotsResponse
     {

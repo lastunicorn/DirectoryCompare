@@ -23,7 +23,7 @@ using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.MiscelaneousArea.RemoveDuplicates
+namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.RemoveDuplicates
 {
     public class RemoveDuplicatesRequestHandler : RequestHandler<RemoveDuplicatesRequest>
     {

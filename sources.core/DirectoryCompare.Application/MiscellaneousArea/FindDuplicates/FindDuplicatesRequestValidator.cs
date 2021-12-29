@@ -16,14 +16,13 @@
 
 using FluentValidation;
 
-namespace DustInTheWind.DirectoryCompare.Application.MiscelaneousArea.CompareSnapshots
+namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.FindDuplicates
 {
-    public class CompareSnapshotsRequestValidator : AbstractValidator<CompareSnapshotsRequest>
+    public class FindDuplicatesRequestValidator : AbstractValidator<FindDuplicatesRequest>
     {
-        public CompareSnapshotsRequestValidator()
+        public FindDuplicatesRequestValidator()
         {
-            RuleFor(x => x.Snapshot1).NotEmpty();
-            RuleFor(x => x.Snapshot2).NotEmpty();
+            RuleFor(x => x.SnapshotLeft).NotEmpty();
         }
     }
 }

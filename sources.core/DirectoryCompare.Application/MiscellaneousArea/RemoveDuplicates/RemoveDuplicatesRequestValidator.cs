@@ -14,23 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Domain;
-using DustInTheWind.DirectoryCompare.Domain.Comparison;
-using DustInTheWind.DirectoryCompare.Domain.SomeInterfaces;
-using MediatR;
+using FluentValidation;
 
-namespace DustInTheWind.DirectoryCompare.Application.MiscelaneousArea.RemoveDuplicates
+namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.RemoveDuplicates
 {
-    public class RemoveDuplicatesRequest : IRequest
+    public class RemoveDuplicatesRequestValidator : AbstractValidator<RemoveDuplicatesRequest>
     {
-        public SnapshotLocation SnapshotLeft { get; set; }
-        
-        public SnapshotLocation SnapshotRight { get; set; }
-        
-        public IRemoveDuplicatesExporter Exporter { get; set; }
-        
-        public ComparisonSide FileToRemove { get; set; }
-        
-        public string DestinationDirectory { get; set; }
+        public RemoveDuplicatesRequestValidator()
+        {
+            RuleFor(x => x.SnapshotLeft).NotEmpty();
+            RuleFor(x => x.SnapshotRight).NotEmpty();
+            RuleFor(x => x.Exporter).NotNull();
+            RuleFor(x => x.FileToRemove).IsInEnum();
+        }
     }
 }
