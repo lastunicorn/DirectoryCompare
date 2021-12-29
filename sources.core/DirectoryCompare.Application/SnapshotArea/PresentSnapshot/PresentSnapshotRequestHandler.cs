@@ -15,52 +15,24 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
+using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.PresentSnapshot
 {
     public class PresentSnapshotRequestHandler : RequestHandler<PresentSnapshotRequest, Snapshot>
     {
-        private readonly ISnapshotRepository snapshotRepository;
+        private readonly SnapshotFactory snapshotFactory;
 
-        public PresentSnapshotRequestHandler(ISnapshotRepository snapshotRepository)
+        public PresentSnapshotRequestHandler(SnapshotFactory snapshotFactory)
         {
-            this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
+            this.snapshotFactory = snapshotFactory ?? throw new ArgumentNullException(nameof(snapshotFactory));
         }
 
         protected override Snapshot Handle(PresentSnapshotRequest request)
         {
-            if (string.IsNullOrEmpty(request.Location.PotName))
-                throw new Exception("Pot name was not provided.");
-
-            if (request.Location.SnapshotIndex.HasValue)
-                return snapshotRepository.GetByIndex(request.Location.PotName, request.Location.SnapshotIndex.Value);
-
-            if (request.Location.SnapshotDate.HasValue)
-            {
-                DateTime searchedDate = request.Location.SnapshotDate.Value;
-
-                Snapshot snapshot = snapshotRepository.GetByExactDateTime(request.Location.PotName, searchedDate);
-
-                if (snapshot == null && searchedDate.TimeOfDay == TimeSpan.Zero)
-                {
-                    List<Snapshot> snapshots = snapshotRepository.GetByDate(request.Location.PotName, searchedDate)
-                        .ToList();
-
-                    if (snapshots.Count == 1)
-                        snapshot = snapshots[0];
-                    else if (snapshots.Count > 1)
-                        throw new Exception($"There are multiple snapshots that match the specified date. Pot = {request.Location.PotName}; Date = {searchedDate}");
-                }
-
-                return snapshot;
-            }
-
-            return snapshotRepository.GetLast(request.Location.PotName);
+            return snapshotFactory.RetrieveSnapshot(request.Location);
         }
     }
 }

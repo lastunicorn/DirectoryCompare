@@ -15,32 +15,39 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections.Generic;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Views
 {
     internal class ConsoleComparisonView
     {
-        public SnapshotComparer Comparer { get; set; }
+        public IReadOnlyList<string> OnlyInSnapshot1 { get; set; }
+
+        public IReadOnlyList<string> OnlyInSnapshot2 { get; set; }
+
+        public IReadOnlyList<ItemComparison> DifferentNames { get; set; }
+
+        public IReadOnlyList<ItemComparison> DifferentContent { get; set; }
 
         public void Display()
         {
             Console.WriteLine();
 
             Console.WriteLine("Files only in snapshot 1:");
-            foreach (string path in Comparer.OnlyInSnapshot1)
+            foreach (string path in OnlyInSnapshot1)
                 Console.WriteLine(path);
 
             Console.WriteLine();
 
             Console.WriteLine("Files only in snapshot 2:");
-            foreach (string path in Comparer.OnlyInSnapshot2)
+            foreach (string path in OnlyInSnapshot2)
                 Console.WriteLine(path);
 
             Console.WriteLine();
 
             Console.WriteLine("Different names:");
-            foreach (ItemComparison itemComparison in Comparer.DifferentNames)
+            foreach (ItemComparison itemComparison in DifferentNames)
             {
                 Console.WriteLine("1 - " + itemComparison.FullName1);
                 Console.WriteLine("2 - " + itemComparison.FullName2);
@@ -49,7 +56,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Views
             Console.WriteLine();
 
             Console.WriteLine("Different content:");
-            foreach (ItemComparison itemComparison in Comparer.DifferentContent)
+            foreach (ItemComparison itemComparison in DifferentContent)
             {
                 Console.WriteLine("1 - " + itemComparison.FullName1);
                 Console.WriteLine("2 - " + itemComparison.FullName2);

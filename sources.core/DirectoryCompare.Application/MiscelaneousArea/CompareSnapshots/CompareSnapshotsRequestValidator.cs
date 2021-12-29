@@ -22,8 +22,8 @@ namespace DustInTheWind.DirectoryCompare.Application.MiscelaneousArea.CompareSna
     {
         public CompareSnapshotsRequestValidator()
         {
-            RuleFor(x => x.PotName1).NotEmpty();
-            RuleFor(x => x.PotName2).NotEmpty();
+            RuleFor(x => x.Snapshot1).NotEmpty();
+            RuleFor(x => x.Snapshot2).NotEmpty();
         }
     }
 }

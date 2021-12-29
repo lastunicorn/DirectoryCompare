@@ -49,9 +49,12 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
             }
             else
             {
-                ConsoleComparisonView view = new ConsoleComparisonView
+                ConsoleComparisonView view = new()
                 {
-                    Comparer = response.SnapshotComparer
+                    OnlyInSnapshot1 = response.OnlyInSnapshot1,
+                    OnlyInSnapshot2 = response.OnlyInSnapshot2,
+                    DifferentNames = response.DifferentNames,
+                    DifferentContent = response.DifferentContent,
                 };
                 view.Display();
             }
@@ -61,8 +64,8 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
         {
             CompareSnapshotsRequest request = new CompareSnapshotsRequest
             {
-                PotName1 = arguments.GetStringValue(0),
-                PotName2 = arguments.GetStringValue(1)
+                Snapshot1 = arguments.GetStringValue(0),
+                Snapshot2 = arguments.GetStringValue(1)
             };
 
             bool exportToFile = arguments.Count >= 3;
