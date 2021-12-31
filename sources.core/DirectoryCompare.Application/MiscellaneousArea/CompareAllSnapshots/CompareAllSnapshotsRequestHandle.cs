@@ -41,7 +41,7 @@ namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.CompareAl
         {
             Snapshot[] snapshots = RetrieveAllSnapshots(request);
 
-            for (int i = 0; i < snapshots.Length; i++)
+            for (int i = 0; i < snapshots.Length - 1; i++)
             {
                 Snapshot currentSnapshot = snapshots[i];
                 Snapshot previousSnapshot = snapshots[i + 1];

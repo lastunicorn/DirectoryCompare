@@ -65,13 +65,9 @@ namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.CompareSn
         private static void ExportInfoFile(SnapshotComparer comparer, string exportDirectoryPath)
         {
             string filePath = Path.Combine(exportDirectoryPath, "info.txt");
-
             using StreamWriter streamWriter = new(filePath);
 
-            streamWriter.WriteLine("Snapshot 1: {0}", comparer.Snapshot1.OriginalPath);
-            streamWriter.WriteLine("Snapshot 2: {0}", comparer.Snapshot2.OriginalPath);
-
-            streamWriter.WriteLine();
+            WriteFileHeader(streamWriter, comparer);
 
             streamWriter.WriteLine("StartTime (UTC) : {0}", comparer.StartTimeUtc);
             streamWriter.WriteLine("EndTime (UTC)   : {0}", comparer.EndTimeUtc);
@@ -81,13 +77,9 @@ namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.CompareSn
         private static void ExportOnlyInSnapshot1(SnapshotComparer comparer, string exportDirectoryPath)
         {
             string filePath = Path.Combine(exportDirectoryPath, "only-in-snapshot1.txt");
-
             using StreamWriter streamWriter = new(filePath);
 
-            streamWriter.WriteLine("Snapshot 1: {0}", comparer.Snapshot1.OriginalPath);
-            streamWriter.WriteLine("Snapshot 2: {0}", comparer.Snapshot2.OriginalPath);
-
-            streamWriter.WriteLine();
+            WriteFileHeader(streamWriter, comparer);
 
             streamWriter.WriteLine("Files only in snapshot 1:");
             foreach (string path in comparer.OnlyInSnapshot1)
@@ -97,13 +89,9 @@ namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.CompareSn
         private static void ExportOnlyInSnapshot2(SnapshotComparer comparer, string exportDirectoryPath)
         {
             string filePath = Path.Combine(exportDirectoryPath, "only-in-snapshot2.txt");
-
             using StreamWriter streamWriter = new(filePath);
 
-            streamWriter.WriteLine("Snapshot 1: {0}", comparer.Snapshot1.OriginalPath);
-            streamWriter.WriteLine("Snapshot 2: {0}", comparer.Snapshot2.OriginalPath);
-
-            streamWriter.WriteLine();
+            WriteFileHeader(streamWriter, comparer);
 
             streamWriter.WriteLine("Files only in snapshot 2:");
             foreach (string path in comparer.OnlyInSnapshot2)
@@ -115,13 +103,9 @@ namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.CompareSn
         private static void ExportContentDifferentName(SnapshotComparer comparer, string exportDirectoryPath)
         {
             string filePath = Path.Combine(exportDirectoryPath, "same-content-different-name.txt");
-
             using StreamWriter streamWriter = new(filePath);
 
-            streamWriter.WriteLine("Snapshot 1: {0}", comparer.Snapshot1.OriginalPath);
-            streamWriter.WriteLine("Snapshot 2: {0}", comparer.Snapshot2.OriginalPath);
-
-            streamWriter.WriteLine();
+            WriteFileHeader(streamWriter, comparer);
 
             streamWriter.WriteLine("Different names:");
             foreach (ItemComparison itemComparison in comparer.DifferentNames)
@@ -134,17 +118,26 @@ namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.CompareSn
         private static void ExportSameNameDifferentContent(SnapshotComparer comparer, string exportDirectoryPath)
         {
             string filePath = Path.Combine(exportDirectoryPath, "same-name-different-content.txt");
-
             using StreamWriter streamWriter = new(filePath);
 
-            streamWriter.WriteLine("Snapshot 1: {0}", comparer.Snapshot1.OriginalPath);
-            streamWriter.WriteLine("Snapshot 2: {0}", comparer.Snapshot2.OriginalPath);
-
-            streamWriter.WriteLine();
+            WriteFileHeader(streamWriter, comparer);
 
             streamWriter.WriteLine("Different content:");
             foreach (ItemComparison itemComparison in comparer.DifferentContent)
                 streamWriter.WriteLine(itemComparison.FullName1);
+        }
+
+        private static void WriteFileHeader(TextWriter streamWriter, SnapshotComparer comparer)
+        {
+            string snapshot1OriginalPath = comparer.Snapshot1.OriginalPath;
+            DateTime snapshot1CreationTime = comparer.Snapshot1.CreationTime;
+            streamWriter.WriteLine("Snapshot 1: {0} [{1:yyyy MM dd HHmmss}]", snapshot1OriginalPath, snapshot1CreationTime);
+
+            string snapshot2OriginalPath = comparer.Snapshot2.OriginalPath;
+            DateTime snapshot2CreationTime = comparer.Snapshot2.CreationTime;
+            streamWriter.WriteLine("Snapshot 2: {0} [{1:yyyy MM dd HHmmss}]", snapshot2OriginalPath, snapshot2CreationTime);
+
+            streamWriter.WriteLine();
         }
     }
 }

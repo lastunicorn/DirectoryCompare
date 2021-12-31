@@ -32,6 +32,7 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
             return Directory.GetDirectories(".")
                 .Select(x => new PotDirectory(x))
                 .Select(ToPot)
+                .Where(x => x != null)
                 .ToList();
         }
 
