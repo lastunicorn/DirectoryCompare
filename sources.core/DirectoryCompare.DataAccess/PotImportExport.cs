@@ -27,32 +27,29 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
     {
         public Snapshot ReadSnapshot(string filePath)
         {
-            using (StreamReader streamReader = File.OpenText(filePath))
-            using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                JSnapshot jSnapshot = (JSnapshot)serializer.Deserialize(jsonTextReader, typeof(JSnapshot));
+            using StreamReader streamReader = File.OpenText(filePath);
+            using JsonTextReader jsonTextReader = new(streamReader);
+            
+            JsonSerializer serializer = new();
+            JSnapshot jSnapshot = (JSnapshot)serializer.Deserialize(jsonTextReader, typeof(JSnapshot));
 
-                return jSnapshot.ToSnapshot();
-            }
+            return jSnapshot.ToSnapshot();
         }
 
         public void WriteSnapshot(Snapshot snapshot, string filePath)
         {
-            using StreamWriter streamWriter = new StreamWriter(filePath);
+            using StreamWriter streamWriter = new(filePath);
             WriteSnapshot(snapshot, streamWriter);
         }
 
         internal void WriteSnapshot(Snapshot snapshot, StreamWriter streamWriter)
         {
-            using JsonTextWriter jsonTextWriter = new JsonTextWriter(streamWriter);
-            using JSnapshotWriter jSnapshotWriter = new JSnapshotWriter(jsonTextWriter);
-            WriteSnapshot(snapshot, jSnapshotWriter);
-        }
-
-        internal void WriteSnapshot(Snapshot snapshot, JSnapshotWriter jSnapshotWriter)
-        {
-            JsonSnapshotWriter jsonSnapshotWriter = new JsonSnapshotWriter(jSnapshotWriter);
+            JsonTextWriter jsonTextWriter = new(streamWriter);
+            jsonTextWriter.Formatting = Formatting.Indented;
+            
+            JSnapshotWriter jSnapshotWriter = new(jsonTextWriter);
+            JsonSnapshotWriter jsonSnapshotWriter = new(jSnapshotWriter);
+            
             jsonSnapshotWriter.Write(snapshot);
         }
     }

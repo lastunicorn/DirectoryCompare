@@ -17,15 +17,14 @@
 using System;
 using System.IO;
 using DustInTheWind.DirectoryCompare.DataAccess;
-using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 using NUnit.Framework;
 
-namespace DustInTheWind.DirectoryCompare.Tests.Serialization
+namespace DustInTheWind.DirectoryCompare.Tests.DataAccess
 {
     [TestFixture]
-    public class JsonSnapshotFileTests
+    public class PotImportExportTests
     {
         [Test]
         public void SerializeEmptySnapshot()
@@ -85,7 +84,7 @@ namespace DustInTheWind.DirectoryCompare.Tests.Serialization
             {
                 Name = "file.extension",
                 Size = DataSize.FromKilobytes(42),
-                LastModifiedTime = new DateTime(2011, 05, 13, 12,56,20),
+                LastModifiedTime = new DateTime(2011, 05, 13, 12, 56, 20),
                 Hash = new byte[] { 0, 1, 2 }
             });
 
@@ -107,22 +106,21 @@ namespace DustInTheWind.DirectoryCompare.Tests.Serialization
 
         private static void PerformTest(Snapshot snapshot, string expected)
         {
-            PotImportExport potImportExport = new PotImportExport();
+            using MemoryStream memoryStream = new();
+            using StreamWriter streamWriter = new(memoryStream);
 
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                StreamWriter streamWriter = new StreamWriter(memoryStream);
-                potImportExport.WriteSnapshot(snapshot, streamWriter);
-                streamWriter.Flush();
-                memoryStream.Flush();
+            PotImportExport potImportExport = new();
+            potImportExport.WriteSnapshot(snapshot, streamWriter);
+            
+            streamWriter.Flush();
+            memoryStream.Flush();
 
-                memoryStream.Position = 0;
+            memoryStream.Position = 0;
 
-                StreamReader streamReader = new StreamReader(memoryStream);
-                string json = streamReader.ReadToEnd();
+            using StreamReader streamReader = new(memoryStream);
+            string json = streamReader.ReadToEnd();
 
-                Assert.That(json, Is.EqualTo(expected));
-            }
+            Assert.That(json, Is.EqualTo(expected));
         }
     }
 }

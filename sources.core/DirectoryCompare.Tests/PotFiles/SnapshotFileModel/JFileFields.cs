@@ -14,7 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Runtime.CompilerServices;
+using System;
+using DustInTheWind.DirectoryCompare.Domain.Entities;
+using DustInTheWind.DirectoryCompare.Domain.Utils;
 
-[assembly: InternalsVisibleTo("DustInTheWind.DirectoryCompare.Tests")]
-[assembly: InternalsVisibleTo("DustInTheWind.DirectoryCompare.IntegrationTests")]
+namespace DustInTheWind.DirectoryCompare.Tests.PotFiles.SnapshotFileModel
+{
+    internal class JFileFields
+    {
+        public string FileName { get; set; }
+
+        public DataSize? FileSize { get; set; }
+
+        public DateTime? LastModifiedTime { get; set; }
+
+        public FileHash? FileHash { get; set; }
+    }
+}

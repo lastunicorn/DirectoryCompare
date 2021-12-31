@@ -25,9 +25,9 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
     public sealed class JsonSnapshotWriter : ISnapshotWriter
     {
         private readonly JSnapshotWriter jSnapshotWriter;
-        private readonly Stack<JDirectoryWriter> directoryStack = new Stack<JDirectoryWriter>();
+        private readonly Stack<JDirectoryWriter> directoryStack = new();
 
-        public Guid Id => new Guid("9E93055D-7BDE-4F55-B340-DD5A4880D96E");
+        public Guid Id => new("9E93055D-7BDE-4F55-B340-DD5A4880D96E");
 
         public JsonSnapshotWriter(JSnapshotWriter jSnapshotWriter)
         {

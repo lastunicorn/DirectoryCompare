@@ -28,8 +28,8 @@ namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
 {
     public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
     {
-        private readonly Stopwatch stopwatch = new Stopwatch();
-        private readonly ManualResetEventSlim manualResetEventSlim = new ManualResetEventSlim(false);
+        private readonly Stopwatch stopwatch = new();
+        private readonly ManualResetEventSlim manualResetEventSlim = new(false);
         private readonly MD5 md5;
         private string rootPath;
         private long totalSize;
@@ -90,7 +90,7 @@ namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
 
         private long CalculateSize(DiskPathCollection rootedBlackList)
         {
-            DiskCrawler diskCrawler = new DiskCrawler(RootPath, rootedBlackList);
+            DiskCrawler diskCrawler = new(RootPath, rootedBlackList);
             long size = 0;
 
             foreach (CrawlerStep crawlerStep in diskCrawler)
@@ -107,7 +107,7 @@ namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
                         {
                             try
                             {
-                                FileInfo fileInfo = new FileInfo(crawlerStep.Path);
+                                FileInfo fileInfo = new(crawlerStep.Path);
                                 size += fileInfo.Length;
                             }
                             catch
@@ -129,18 +129,20 @@ namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
 
         private void CalculateHashes(DiskPathCollection rootedBlackList)
         {
-            DiskCrawler diskCrawler = new DiskCrawler(RootPath, rootedBlackList);
+            DiskCrawler diskCrawler = new(RootPath, rootedBlackList);
 
             foreach (CrawlerStep crawlerStep in diskCrawler)
             {
                 switch (crawlerStep.Action)
                 {
                     case CrawlerAction.DirectoryOpened:
-                        AddDirectory(crawlerStep);
+                        if (crawlerStep.Path != RootPath)
+                            AddDirectory(crawlerStep);
                         break;
 
                     case CrawlerAction.DirectoryClosed:
-                        CloseDirectory();
+                        if (crawlerStep.Path != RootPath)
+                            CloseDirectory();
                         break;
 
                     case CrawlerAction.FileFound:
@@ -160,7 +162,7 @@ namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
         private void AddDirectory(CrawlerStep crawlerStep)
         {
             string directoryName = Path.GetFileName(crawlerStep.Path);
-            HDirectory hDirectory = new HDirectory(directoryName);
+            HDirectory hDirectory = new(directoryName);
 
             SnapshotWriter?.AddAndOpen(hDirectory);
         }
@@ -172,14 +174,14 @@ namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
 
         private void AddFile(CrawlerStep crawlerStep)
         {
-            HFile hFile = new HFile
+            HFile hFile = new()
             {
                 Name = Path.GetFileName(crawlerStep.Path)
             };
 
             try
             {
-                FileInfo fileInfo = new FileInfo(crawlerStep.Path);
+                FileInfo fileInfo = new(crawlerStep.Path);
                 hFile.LastModifiedTime = fileInfo.LastWriteTimeUtc;
 
                 using (FileStream stream = File.OpenRead(crawlerStep.Path))
@@ -210,7 +212,7 @@ namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
         {
             OnErrorEncountered(new ErrorEncounteredEventArgs(crawlerStep.Exception, crawlerStep.Path));
 
-            HDirectory hDirectory = new HDirectory
+            HDirectory hDirectory = new()
             {
                 Name = Path.GetFileName(crawlerStep.Path),
                 Error = crawlerStep.Exception.Message

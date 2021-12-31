@@ -63,7 +63,7 @@ namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.CreateSnapshot
 
             ISnapshotWriter snapshotWriter = snapshotRepository.CreateWriter(pot.Name);
 
-            DiskAnalysis diskAnalysis = new DiskAnalysis
+            DiskAnalysis diskAnalysis = new()
             {
                 RootPath = pot.Path,
                 SnapshotWriter = snapshotWriter,

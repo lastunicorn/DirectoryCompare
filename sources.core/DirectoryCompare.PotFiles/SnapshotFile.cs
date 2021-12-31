@@ -41,23 +41,21 @@ namespace DustInTheWind.DirectoryCompare.JFiles
             if (!File.Exists(filePath))
                 return;
 
-            using (StreamReader streamReader = File.OpenText(filePath))
-            using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                Snapshot = (JSnapshot)serializer.Deserialize(jsonTextReader, typeof(JSnapshot));
-            }
+            using StreamReader streamReader = File.OpenText(filePath);
+            using JsonTextReader jsonTextReader = new(streamReader);
+            
+            JsonSerializer serializer = new();
+            Snapshot = (JSnapshot)serializer.Deserialize(jsonTextReader, typeof(JSnapshot));
         }
 
         public void Save()
         {
-            using (FileStream stream = File.OpenWrite(filePath))
-            using (StreamWriter streamWriter = new StreamWriter(stream))
-            using (JsonTextWriter jsonTextWriter = new JsonTextWriter(streamWriter))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                serializer.Serialize(jsonTextWriter, Snapshot);
-            }
+            using FileStream stream = File.OpenWrite(filePath);
+            using StreamWriter streamWriter = new(stream);
+            using JsonTextWriter jsonTextWriter = new(streamWriter);
+            
+            JsonSerializer serializer = new();
+            serializer.Serialize(jsonTextWriter, Snapshot);
         }
 
         public JSnapshotReader OpenReader()
@@ -65,8 +63,8 @@ namespace DustInTheWind.DirectoryCompare.JFiles
             if (!File.Exists(filePath))
                 throw new Exception($"File {filePath} does not exist.");
 
-            StreamReader streamReader = new StreamReader(filePath);
-            JsonTextReader jsonTextReader = new JsonTextReader(streamReader);
+            StreamReader streamReader = new(filePath);
+            JsonTextReader jsonTextReader = new(streamReader);
             return new JSnapshotReader(jsonTextReader);
         }
 
@@ -75,8 +73,8 @@ namespace DustInTheWind.DirectoryCompare.JFiles
             string directoryPath = Path.GetDirectoryName(filePath);
             Directory.CreateDirectory(directoryPath);
 
-            StreamWriter streamWriter = new StreamWriter(filePath);
-            JsonTextWriter jsonTextWriter = new JsonTextWriter(streamWriter);
+            StreamWriter streamWriter = new(filePath);
+            JsonTextWriter jsonTextWriter = new(streamWriter);
             return new JSnapshotWriter(jsonTextWriter);
         }
 

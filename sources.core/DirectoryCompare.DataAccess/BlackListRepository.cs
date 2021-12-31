@@ -20,7 +20,6 @@ using DustInTheWind.DirectoryCompare.Domain.Utils;
 using DustInTheWind.DirectoryCompare.JFiles;
 using DustInTheWind.DirectoryCompare.JFiles.BlacklistFileModel;
 
-
 namespace DustInTheWind.DirectoryCompare.DataAccess
 {
     public class BlackListRepository : IBlackListRepository
