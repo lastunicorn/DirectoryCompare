@@ -47,7 +47,7 @@ namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.CompareSn
                 ExportDirectoryPath = exportDirectoryPath
             };
         }
-        
+
         private static SnapshotComparer CompareSnapshots(Snapshot snapshot1, Snapshot snapshot2)
         {
             SnapshotComparer comparer = new(snapshot1, snapshot2);
@@ -57,14 +57,17 @@ namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.CompareSn
 
         private static string ExportToDiskIfRequested(SnapshotComparer comparer, CompareSnapshotsRequest request)
         {
-            bool shouldExport = !string.IsNullOrEmpty(request.ExportFileName);
+            return request.IsExportRequested
+                ? ExportToDisk(comparer, request.ExportFileName)
+                : null;
+        }
 
-            if (!shouldExport)
-                return null;
-
+        private static string ExportToDisk(SnapshotComparer comparer, string exportFileName)
+        {
             FileComparisonExporter exporter = new()
             {
-                ResultsDirectory = request.ExportFileName
+                ExportName = exportFileName,
+                AddTimeStamp = true
             };
 
             exporter.Export(comparer);

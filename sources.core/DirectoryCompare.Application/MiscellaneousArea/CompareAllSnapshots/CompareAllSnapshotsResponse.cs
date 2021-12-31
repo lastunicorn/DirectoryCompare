@@ -1,4 +1,4 @@
-﻿// DirectoryCompare
+// DirectoryCompare
 // Copyright (C) 2017-2020 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -14,19 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Domain;
-using MediatR;
-
-namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.CompareSnapshots
+namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.CompareAllSnapshots
 {
-    public class CompareSnapshotsRequest : IRequest<CompareSnapshotsResponse>
+    public class CompareAllSnapshotsResponse
     {
-        public SnapshotLocation Snapshot1 { get; set; }
-
-        public SnapshotLocation Snapshot2 { get; set; }
         
-        public string ExportFileName { get; set; }
-
-        public bool IsExportRequested => !string.IsNullOrEmpty(ExportFileName);
     }
 }
