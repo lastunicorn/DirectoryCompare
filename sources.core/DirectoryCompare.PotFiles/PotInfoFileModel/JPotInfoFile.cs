@@ -64,7 +64,7 @@ namespace DustInTheWind.DirectoryCompare.JFiles.PotInfoFileModel
 
         public void Save()
         {
-            string json = JsonConvert.SerializeObject(JPotInfo);
+            string json = JsonConvert.SerializeObject(JPotInfo, Formatting.Indented);
             File.WriteAllText(filePath, json);
         }
     }

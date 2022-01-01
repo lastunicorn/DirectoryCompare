@@ -27,9 +27,35 @@ namespace DustInTheWind.DirectoryCompare.JFiles
     {
         private const string SnapshotsDirectoryName = "snapshots";
 
-        public static PotDirectory Empty { get; } = new PotDirectory(null);
+        public static PotDirectory Empty { get; } = new(null);
 
         public string FullPath { get; private set; }
+
+        public Guid PotGuid
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(FullPath))
+                    throw new Exception("Invalid pot directory path.");
+
+                string directoryName = Path.GetFileName(FullPath);
+
+                if (directoryName == string.Empty)
+                {
+                    string parentDirectoryPath = Path.GetDirectoryName(FullPath);
+                    directoryName = Path.GetFileName(parentDirectoryPath);
+                }
+
+                try
+                {
+                    return new Guid(directoryName);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Invalid pot directory path.", ex);
+                }
+            }
+        }
 
         public bool IsValid
         {

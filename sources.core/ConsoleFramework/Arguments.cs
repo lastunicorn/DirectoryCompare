@@ -24,7 +24,7 @@ namespace DustInTheWind.ConsoleFramework
     {
         public string Command { get; }
 
-        public List<Argument> Values { get; } = new List<Argument>();
+        public List<Argument> Values { get; } = new();
 
         public int Count => Values.Count;
 
@@ -50,7 +50,7 @@ namespace DustInTheWind.ConsoleFramework
 
             Command = args[0];
 
-            ArgumentsEnumerator argumentsEnumerator = new ArgumentsEnumerator(args.Skip(1));
+            ArgumentsEnumerator argumentsEnumerator = new(args.Skip(1));
 
             while (argumentsEnumerator.MoveNext())
             {

@@ -55,9 +55,10 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
 
             return new Pot
             {
-                Guid = new Guid(Path.GetFileName(potDirectory.FullPath)),
+                Guid = potDirectory.PotGuid,
                 Name = jPotInfoFile.JPotInfo.Name,
-                Path = jPotInfoFile.JPotInfo.Path
+                Path = jPotInfoFile.JPotInfo.Path,
+                Description = jPotInfoFile.JPotInfo.Description
             };
         }
 
@@ -76,7 +77,8 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
             jPotInfoFile.JPotInfo = new JPotInfo
             {
                 Name = pot.Name,
-                Path = pot.Path
+                Path = pot.Path,
+                Description = pot.Description
             };
 
             jPotInfoFile.Save();

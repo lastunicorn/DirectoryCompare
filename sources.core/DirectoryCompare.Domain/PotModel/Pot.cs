@@ -28,6 +28,8 @@ namespace DustInTheWind.DirectoryCompare.Domain.PotModel
         public string Name { get; set; }
 
         public DiskPath Path { get; set; }
+        
+        public string Description { get; set; }
 
         public List<Snapshot> Snapshots { get; set; }
     }

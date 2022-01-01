@@ -44,6 +44,12 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Views
             CustomConsole.Write("Path: ");
             CustomConsole.WriteLineEmphasies(pot.Path);
 
+            if (pot.Description != null)
+            {
+                CustomConsole.Write("Description: ");
+                CustomConsole.WriteLineEmphasies(pot.Description);
+            }
+
             if (pot.Snapshots != null && pot.Snapshots.Count > 0)
             {
                 CustomConsole.WriteLine("Snapshots: ");
