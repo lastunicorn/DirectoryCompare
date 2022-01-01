@@ -18,19 +18,15 @@ using System;
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.CompareAllSnapshots;
-using DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.CompareSnapshots;
-using DustInTheWind.DirectoryCompare.Cli.UI.Views;
 using DustInTheWind.DirectoryCompare.Infrastructure;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
+    [Command("compare-all")]
+    [CommandDescription("Compares all snapshots in a pot with the previous snapshot.")]
     public class CompareAllSnapshotsCommand : ICommand
     {
         private readonly RequestBus requestBus;
-
-        public string Key { get; } = "compare-all";
-
-        public string Description => "Compares all snapshots in a pot with the previous snapshot.";
 
         public CompareAllSnapshotsCommand(RequestBus requestBus)
         {

@@ -31,10 +31,6 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
     {
         private readonly RequestBus requestBus;
 
-        public string Key { get; } = "blacklist";
-
-        public string Description => string.Empty;
-
         public BlackListCommand(RequestBus requestBus)
         {
             this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));

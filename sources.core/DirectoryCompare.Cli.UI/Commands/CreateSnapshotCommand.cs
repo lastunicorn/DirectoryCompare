@@ -23,14 +23,12 @@ using DustInTheWind.DirectoryCompare.Infrastructure;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
+    [Command("read")]
+    [CommandDescription("Creates a new snapshot in a specific pot.")]
     public class CreateSnapshotCommand : ICommand
     {
         private readonly RequestBus requestBus;
         private CreateSnapshotView createSnapshotView;
-
-        public string Key { get; } = "read";
-
-        public string Description => "Creates a new snapshot in a specific pot.";
 
         public CreateSnapshotCommand(RequestBus requestBus)
         {

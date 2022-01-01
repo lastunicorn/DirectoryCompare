@@ -1,4 +1,4 @@
-﻿// DirectoryCompare
+// DirectoryCompare
 // Copyright (C) 2017-2020 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -18,16 +18,20 @@ using System;
 
 namespace DustInTheWind.ConsoleFramework
 {
-    public class CommandCollectionItem
+    [AttributeUsage(AttributeTargets.Class)]
+    public class CommandAttribute : Attribute
     {
-        public string Key { get; }
-        
-        public ICommand Command { get; }
+        public string Name { get; set; }
 
-        public CommandCollectionItem(string key, ICommand command)
+        public bool IsHelp { get; set; }
+
+        public CommandAttribute()
         {
-            Key = key ?? throw new ArgumentNullException(nameof(key));
-            Command = command ?? throw new ArgumentNullException(nameof(command));
+        }
+
+        public CommandAttribute(string name)
+        {
+            Name = name ?? throw new ArgumentNullException(nameof(name));
         }
     }
 }

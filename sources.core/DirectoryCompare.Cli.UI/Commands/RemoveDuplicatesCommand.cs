@@ -24,13 +24,10 @@ using DustInTheWind.DirectoryCompare.Infrastructure;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
+    [Command("remove-duplicates")]
     public class RemoveDuplicatesCommand : ICommand
     {
         private readonly RequestBus requestBus;
-
-        public string Key { get; } = "remove-duplicates";
-
-        public string Description => string.Empty;
 
         public RemoveDuplicatesCommand(RequestBus requestBus)
         {

@@ -15,8 +15,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.ConsoleFramework.AppBuilder;
 using DustInTheWind.ConsoleFramework.Logging;
@@ -53,14 +51,6 @@ namespace DustInTheWind.DirectoryCompare.Cli
             serviceCollection.AddTransient<IMiddlewareFactory, MiddlewareFactory>();
 
             base.ConfigureServices(serviceCollection);
-        }
-
-        protected override CommandCollection CreateCommands()
-        {
-            CommandProvider commandProvider = ServiceProvider.GetService<CommandProvider>();
-
-            List<ICommand> commands = commandProvider.ProvideAll().ToList();
-            return new CommandCollection(commands);
         }
 
         protected override void OnError(Exception ex)

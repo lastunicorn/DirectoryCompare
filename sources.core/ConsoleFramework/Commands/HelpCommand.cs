@@ -21,24 +21,21 @@ using DustInTheWind.ConsoleFramework.UserControls;
 
 namespace DustInTheWind.ConsoleFramework.Commands
 {
+    [CommandDescription("Displays information about the available commands.")]
     public class HelpCommand : ICommand
     {
-        private readonly CommandCollection commandCollection;
+        private readonly CommandInfoCollection commands;
 
-        public string Key { get; } = "help";
-
-        public string Description => "Displays information about the available commands.";
-
-        public HelpCommand(CommandCollection commandCollection)
+        public HelpCommand(CommandInfoCollection commands)
         {
-            this.commandCollection = commandCollection ?? throw new ArgumentNullException(nameof(commandCollection));
+            this.commands = commands ?? throw new ArgumentNullException(nameof(commands));
         }
 
         public void Execute(Arguments arguments)
         {
-            IEnumerable<IGrouping<ICommand, ICommand>> commandsGrouped = commandCollection.GroupBy(x => x);
+            IEnumerable<IGrouping<CommandInfo, CommandInfo>> commandsGrouped = commands.GroupBy(x => x);
 
-            UsageControl usageControl = new UsageControl
+            UsageControl usageControl = new()
             {
                 CommandNames = commandsGrouped
                     .Select(GetCommandNames)
@@ -48,9 +45,9 @@ namespace DustInTheWind.ConsoleFramework.Commands
             usageControl.Display();
         }
 
-        private static string GetCommandNames(IEnumerable<ICommand> group)
+        private static string GetCommandNames(IEnumerable<CommandInfo> group)
         {
-            IEnumerable<string> commandNames = group.Select(x => x.Key);
+            IEnumerable<string> commandNames = group.Select(x => x.Name);
             return string.Join(", ", commandNames);
         }
     }

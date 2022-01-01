@@ -28,12 +28,22 @@ using DustInTheWind.DirectoryCompare.Infrastructure;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
+    [CommandDescription("Manages a pot that holds snapshots for a single path on disk.")]
     public class PotCommand : ICommand
     {
         private readonly RequestBus requestBus;
-        public string Key { get; } = "pot";
+       
+        //[CommandParameter(Index = 1)]
+        public string DisplayPotName { get; set; }
 
-        public string Description => "Manages a pot that holds snapshots for a single path on disk.";
+        //[CommandParameter("c")]
+        public string CreatePotName { get; set; }
+
+        //[CommandParameter("p")]
+        public string PotTargetPath { get; set; }
+
+        //[CommandParameter("d")]
+        public string DeletePotName { get; set; }
 
         public PotCommand(RequestBus requestBus)
         {
@@ -82,7 +92,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 
         private void ExecuteCreate(Arguments arguments, Argument createArgument)
         {
-            CreatePotRequest request = new CreatePotRequest
+            CreatePotRequest request = new()
             {
                 Name = createArgument.Value,
                 Path = arguments["p"].Value
@@ -95,7 +105,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 
         private void ExecuteDelete(Argument deleteArgument)
         {
-            DeletePotRequest request = new DeletePotRequest
+            DeletePotRequest request = new()
             {
                 PotName = deleteArgument.Value
             };
@@ -107,22 +117,22 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 
         private void ExecuteDisplayOne(Arguments arguments)
         {
-            PresentPotRequest request = new PresentPotRequest
+            PresentPotRequest request = new()
             {
                 PotName = arguments.GetStringValue(0)
             };
             Pot pot = requestBus.PlaceRequest<PresentPotRequest, Pot>(request).Result;
 
-            PotView potView = new PotView(pot);
+            PotView potView = new(pot);
             potView.Display();
         }
 
         private void ExecuteDisplayAll()
         {
-            PresentPotsRequest request = new PresentPotsRequest();
+            PresentPotsRequest request = new();
             List<Pot> pots = requestBus.PlaceRequest<PresentPotsRequest, List<Pot>>(request).Result;
 
-            PotsView potsView = new PotsView(pots);
+            PotsView potsView = new(pots);
             potsView.Display();
         }
     }

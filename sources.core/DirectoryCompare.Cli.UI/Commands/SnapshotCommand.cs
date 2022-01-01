@@ -29,13 +29,10 @@ using DustInTheWind.DirectoryCompare.Infrastructure;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
+    [CommandDescription("Manages snapshots from a pot.")]
     public class SnapshotCommand : ICommand
     {
         private readonly RequestBus requestBus;
-
-        public string Key { get; } = "snapshot";
-
-        public string Description => "Manages snapshots from a pot.";
 
         public SnapshotCommand(RequestBus requestBus)
         {

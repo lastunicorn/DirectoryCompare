@@ -23,13 +23,11 @@ using DustInTheWind.DirectoryCompare.Infrastructure;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
+    [Command("compare")]
+    [CommandDescription("Compares two snapshots.")]
     public class CompareSnapshotsCommand : ICommand
     {
         private readonly RequestBus requestBus;
-
-        public string Key { get; } = "compare";
-
-        public string Description => "Compares two snapshots.";
 
         public CompareSnapshotsCommand(RequestBus requestBus)
         {

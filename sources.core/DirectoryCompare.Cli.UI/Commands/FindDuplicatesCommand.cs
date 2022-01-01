@@ -25,14 +25,11 @@ using DustInTheWind.DirectoryCompare.Infrastructure;
 
 namespace DustInTheWind.DirectoryCompare.Cli.UI.Commands
 {
+    [Command("find-duplicates")]
     public class FindDuplicatesCommand : ICommand
     {
         private readonly RequestBus requestBus;
         private readonly FindDuplicatesView findDuplicatesView;
-
-        public string Key { get; } = "find-duplicates";
-
-        public string Description => string.Empty;
 
         public FindDuplicatesCommand(RequestBus requestBus)
         {

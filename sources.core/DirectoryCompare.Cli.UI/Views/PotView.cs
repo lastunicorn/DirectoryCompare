@@ -34,12 +34,12 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.Views
             if (pot == null)
                 return;
 
+            CustomConsole.Write("Name: ");
+            CustomConsole.WriteLineEmphasies(pot.Name);
+
             string guid = pot.Guid.ToString();
             CustomConsole.Write("GUID: ");
             CustomConsole.WriteLineEmphasies(guid);
-
-            CustomConsole.Write("Name: ");
-            CustomConsole.WriteLineEmphasies(pot.Name);
 
             CustomConsole.Write("Path: ");
             CustomConsole.WriteLineEmphasies(pot.Path);
