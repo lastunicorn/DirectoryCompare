@@ -22,26 +22,19 @@ namespace DustInTheWind.ConsoleFramework.CustomMiddleware
 {
     internal class CommandMiddleware : IConsoleMiddleware
     {
-        private readonly CommandInfoCollection commands;
+        private readonly CommandPool commandPool;
         private readonly ICommandFactory commandFactory;
 
-        public CommandMiddleware(CommandInfoCollection commands, ICommandFactory commandFactory)
+        public CommandMiddleware(CommandPool commandPool, ICommandFactory commandFactory)
         {
-            this.commands = commands ?? throw new ArgumentNullException(nameof(commands));
+            this.commandPool = commandPool ?? throw new ArgumentNullException(nameof(commandPool));
             this.commandFactory = commandFactory ?? throw new ArgumentNullException(nameof(commandFactory));
         }
 
         public async Task InvokeAsync(ConsoleRequestContext context, RequestDelegate next)
         {
-            CommandInfo commandInfo = commands.SelectCommand(context.Arguments.Command);
-
-            if (commandInfo == null)
-                throw new ConsoleFrameworkException("Invalid command.");
-
-            ICommand command = commandFactory.Create(commandInfo.Type);
-            
-            // todo: using reflection, inject parameters into the command.
-            
+            CommandSeed commandSeed = commandPool.GetMatchingCommand(context.Arguments);
+            ICommand command = commandSeed.CreateCommand(commandFactory);
             command.Execute(context.Arguments);
 
             if (next != null)

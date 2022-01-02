@@ -16,10 +16,11 @@
 
 using System;
 using System.Reflection;
+using DustInTheWind.ConsoleFramework.CustomMiddleware;
 
 namespace DustInTheWind.ConsoleFramework
 {
-    public class CommandInfo
+    internal class CommandInfo
     {
         private readonly CommandAttribute commandAttribute;
         private readonly CommandDescriptionAttribute commandDescriptionAttribute;
@@ -62,11 +63,11 @@ namespace DustInTheWind.ConsoleFramework
             Type = type;
             IsValidCommand = CalculateIsValidCommand();
 
-            if (!IsValidCommand)
-                return;
-
-            commandAttribute = Type?.GetCustomAttribute<CommandAttribute>();
-            commandDescriptionAttribute = Type?.GetCustomAttribute<CommandDescriptionAttribute>();
+            if (IsValidCommand)
+            {
+                commandAttribute = Type?.GetCustomAttribute<CommandAttribute>();
+                commandDescriptionAttribute = Type?.GetCustomAttribute<CommandDescriptionAttribute>();
+            }
         }
 
         private bool CalculateIsValidCommand()
@@ -75,6 +76,11 @@ namespace DustInTheWind.ConsoleFramework
                    Type.IsClass &&
                    !Type.IsAbstract &&
                    typeof(ICommand).IsAssignableFrom(Type);
+        }
+
+        public CommandSeed GenerateSeed(Arguments arguments = null)
+        {
+            return new CommandSeed(Type, arguments);
         }
     }
 }

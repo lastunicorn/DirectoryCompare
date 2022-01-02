@@ -43,6 +43,10 @@ namespace DustInTheWind.ConsoleFramework
 
         public Argument this[string name] => Values.FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.InvariantCulture));
 
+        public Arguments()
+        {
+        }
+
         public Arguments(IReadOnlyList<string> args)
         {
             if (args == null || args.Count == 0)
@@ -100,6 +104,46 @@ namespace DustInTheWind.ConsoleFramework
         {
             Argument argument = Values.FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.InvariantCulture));
             return !argument.IsEmpty;
+        }
+
+        public Argument? GetArgumentFor(CommandParameterAttribute attribute)
+        {
+            if (attribute.ShortName != null)
+            {
+                Argument argument = this[attribute.ShortName];
+
+                if (!argument.IsEmpty)
+                    return argument;
+            }
+
+            if (attribute.LongName != null)
+            {
+                Argument argument = this[attribute.LongName];
+
+                if (!argument.IsEmpty)
+                    return argument;
+            }
+
+            if (attribute.Index >= 0)
+            {
+                Argument argument = GetAnonymous(attribute.Index);
+
+                if (!argument.IsEmpty)
+                    return argument;
+            }
+
+            return null;
+        }
+
+        private Argument GetAnonymous(int index)
+        {
+            if (index <= 0) throw new ArgumentOutOfRangeException(nameof(index));
+
+            return Values
+                .Where(x => x.Name == null)
+                .Skip(index - 1)
+                .Take(1)
+                .FirstOrDefault();
         }
     }
 }

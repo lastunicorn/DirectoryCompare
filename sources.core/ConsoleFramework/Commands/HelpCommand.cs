@@ -22,11 +22,11 @@ using DustInTheWind.ConsoleFramework.UserControls;
 namespace DustInTheWind.ConsoleFramework.Commands
 {
     [CommandDescription("Displays information about the available commands.")]
-    public class HelpCommand : ICommand
+    internal class HelpCommand : ICommand
     {
-        private readonly CommandInfoCollection commands;
+        private readonly CommandPool commands;
 
-        public HelpCommand(CommandInfoCollection commands)
+        public HelpCommand(CommandPool commands)
         {
             this.commands = commands ?? throw new ArgumentNullException(nameof(commands));
         }

@@ -30,7 +30,7 @@ namespace DustInTheWind.ConsoleFramework
     public abstract class ConsoleApplicationBase
     {
         private ApplicationHeader applicationHeader;
-        private CommandInfoCollection commands;
+        private CommandPool commands;
         private ApplicationFooter applicationFooter;
 
         private MiddlewareCollection middlewareCollection;
@@ -48,7 +48,7 @@ namespace DustInTheWind.ConsoleFramework
 
             ServiceProvider = serviceCollection.BuildServiceProvider();
 
-            commands = CreateCommands() ?? new CommandInfoCollection();
+            commands = CreateCommands() ?? new CommandPool();
             serviceCollection.AddSingleton(commands);
 
             middlewareCollection = ServiceProvider.GetService<MiddlewareCollection>();
@@ -73,21 +73,13 @@ namespace DustInTheWind.ConsoleFramework
             return new ApplicationFooter();
         }
 
-        protected virtual CommandInfoCollection CreateCommands()
+        private CommandPool CreateCommands()
         {
-            // AppDomain currentAppDomain = AppDomain.CurrentDomain;
-            // Assembly[] assemblies = currentAppDomain.GetAssemblies();
-            // CommandInfo[] commandInfos = assemblies
-            //     .SelectMany(x => x.GetTypes())
-            //     .Select(x => new CommandInfo(x))
-            //     .Where(x => x.IsValidCommand)
-            //     .ToArray();
-
             CommandInfo[] commandInfos = DiscoverCommands().ToArray();
-            return new CommandInfoCollection(commandInfos);
+            return new CommandPool(commandInfos);
         }
 
-        public IEnumerable<CommandInfo> DiscoverCommands()
+        private IEnumerable<CommandInfo> DiscoverCommands()
         {
             Assembly executingAssembly = Assembly.GetExecutingAssembly();
             string rootDirectoryPath = Path.GetDirectoryName(executingAssembly.Location);
