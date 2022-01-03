@@ -14,21 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Reflection;
+using System;
+using DustInTheWind.ConsoleFramework;
 
-namespace DustInTheWind.ConsoleFramework
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.BlackListCommands
 {
-    internal class CommandParameterSeed
+    public class DisplayBlackListCommandView : ICommandView<DisplayBlackListCommandModel>
     {
-        public PropertyInfo PropertyInfo { get; set; }
-        
-        public CommandParameterAttribute Attribute { get; set; }
-
-        public object Value { get; set; }
-
-        public void SetPropertyValueOn(ICommandModel commandModel)
+        public void Display(DisplayBlackListCommandModel commandModel)
         {
-            PropertyInfo?.SetValue(commandModel, Value);
+            if (commandModel.BlackList == null)
+                return;
+
+            foreach (string path in commandModel.BlackList)
+                Console.WriteLine(path);
         }
     }
 }

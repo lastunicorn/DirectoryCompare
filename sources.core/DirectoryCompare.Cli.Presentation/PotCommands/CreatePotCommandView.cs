@@ -14,21 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Reflection;
+using DustInTheWind.ConsoleFramework;
+using DustInTheWind.ConsoleTools;
 
-namespace DustInTheWind.ConsoleFramework
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands
 {
-    internal class CommandParameterSeed
+    public class CreatePotCommandView : ICommandView<CreatePotCommandModel>
     {
-        public PropertyInfo PropertyInfo { get; set; }
-        
-        public CommandParameterAttribute Attribute { get; set; }
-
-        public object Value { get; set; }
-
-        public void SetPropertyValueOn(ICommandModel commandModel)
+        public void Display(CreatePotCommandModel commandModel)
         {
-            PropertyInfo?.SetValue(commandModel, Value);
+            CustomConsole.WriteLineSuccess("Pot created successfully.");
         }
     }
 }

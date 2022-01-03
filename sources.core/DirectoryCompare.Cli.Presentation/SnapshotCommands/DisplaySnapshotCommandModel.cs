@@ -15,37 +15,40 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Threading.Tasks;
 using DustInTheWind.ConsoleFramework;
-using DustInTheWind.ConsoleTools;
+using DustInTheWind.DirectoryCompare.Application.SnapshotArea.PresentSnapshot;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
+using DustInTheWind.DirectoryCompare.Infrastructure;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands
 {
-    public class DisplaySnapshotCommandView : ICommandView<DisplaySnapshotCommandModel>
+    // Example:
+    // snapshot <snapshot-location>
+
+    [Command("snapshot")]
+    public class DisplaySnapshotCommandModel : ICommandModel
     {
-        public void Display(DisplaySnapshotCommandModel commandModel)
+        private readonly RequestBus requestBus;
+
+        [CommandParameter(Index = 1)]
+        public string SnapshotLocation { get; set; }
+
+        public Snapshot Snapshot { get; private set; }
+        
+        public DisplaySnapshotCommandModel(RequestBus requestBus)
         {
-            if (commandModel.Snapshot == null)
-                CustomConsole.WriteLine("There is no snapshot.");
-            else
-                DisplayDirectory(commandModel.Snapshot, 0);
+            this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
         }
 
-        private static void DisplayDirectory(HDirectory hDirectory, int index)
+        public async Task Execute(Arguments arguments)
         {
-            string indent = new(' ', index);
-
-            foreach (HDirectory xSubdirectory in hDirectory.Directories)
+            PresentSnapshotRequest request = new()
             {
-                Console.WriteLine(indent + xSubdirectory.Name);
-                DisplayDirectory(xSubdirectory, index + 1);
-            }
+                Location = SnapshotLocation
+            };
 
-            foreach (HFile xFile in hDirectory.Files)
-            {
-                Console.Write(indent + xFile.Name);
-                CustomConsole.WriteLine(ConsoleColor.DarkGray, " [" + xFile.Hash + "]");
-            }
+            Snapshot = await requestBus.PlaceRequest<PresentSnapshotRequest, Snapshot>(request);
         }
     }
 }

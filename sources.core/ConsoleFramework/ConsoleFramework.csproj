@@ -7,13 +7,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Remove="AppBuilder\UseExtensions.cs"/>
-        <Compile Remove="AppBuilder\UseMiddlewareExtensions.cs"/>
-        <Compile Remove="ApplicationServices.cs"/>
+        <Compile Remove="AppBuilder\UseExtensions.cs" />
+        <Compile Remove="AppBuilder\UseMiddlewareExtensions.cs" />
+        <Compile Remove="ApplicationServices.cs" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="ConsoleTools" Version="0.5.3"/>
+        <PackageReference Include="ConsoleTools" Version="0.5.3" />
     </ItemGroup>
 
 </Project>

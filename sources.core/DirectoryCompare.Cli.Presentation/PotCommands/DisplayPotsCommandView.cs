@@ -1,4 +1,4 @@
-// DirectoryCompare
+﻿// DirectoryCompare
 // Copyright (C) 2017-2020 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -16,14 +16,29 @@
 
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.ConsoleTools;
+using DustInTheWind.DirectoryCompare.Domain.PotModel;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands
 {
-    public class ImportSnapshotCommandView : ICommandView<ImportSnapshotCommandModel>
+    internal class DisplayPotsCommandView : ICommandView<DisplayPotsCommandModel>
     {
-        public void Display(ImportSnapshotCommandModel commandModel)
+        public void Display(DisplayPotsCommandModel commandModel)
         {
-            CustomConsole.WriteLineSuccess($"Snapshot '{commandModel.SnapshotFilePath}' successfully imported in pot '{commandModel.PotName}'.");
+            if (commandModel.Pots == null)
+                return;
+
+            foreach (Pot pot in commandModel.Pots)
+            {
+                string guid = pot.Guid.ToString().Substring(0, 8);
+                CustomConsole.Write(guid);
+                CustomConsole.Write(" ");
+
+                CustomConsole.WriteEmphasies(pot.Name);
+                CustomConsole.Write(" - ");
+
+                CustomConsole.WriteEmphasies(pot.Path);
+                CustomConsole.WriteLine();
+            }
         }
     }
 }

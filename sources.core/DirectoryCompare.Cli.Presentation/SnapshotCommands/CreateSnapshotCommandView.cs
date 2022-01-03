@@ -21,14 +21,14 @@ using DustInTheWind.ConsoleTools;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands
 {
-    internal class CreateSnapshotCommandView : ILongCommandView<CreateSnapshotCommand>
+    internal class CreateSnapshotCommandView : ILongCommandView<CreateSnapshotCommandModel>
     {
         private int lastValue;
 
-        public void Display(CreateSnapshotCommand command)
+        public void Display(CreateSnapshotCommandModel commandModel)
         {
             lastValue = -1;
-            command.Progress += HandleProgress;
+            commandModel.Progress += HandleProgress;
         }
 
         private void HandleProgress(object sender, ProgressChangedEventArgs e)
@@ -42,10 +42,10 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands
             }
         }
 
-        public void FinishDisplay(CreateSnapshotCommand command)
+        public void FinishDisplay(CreateSnapshotCommandModel commandModel)
         {
             Console.WriteLine("Done");
-            CustomConsole.WriteLineSuccess($"Snapshot '{command.SnapshotLocation}' created successfully.");
+            CustomConsole.WriteLineSuccess($"Snapshot '{commandModel.SnapshotLocation}' created successfully.");
         }
     }
 }

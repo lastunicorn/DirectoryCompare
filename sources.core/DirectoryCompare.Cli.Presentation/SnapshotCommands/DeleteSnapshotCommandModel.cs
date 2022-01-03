@@ -15,35 +15,38 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.ComponentModel;
+using System.Threading.Tasks;
 using DustInTheWind.ConsoleFramework;
+using DustInTheWind.DirectoryCompare.Application.SnapshotArea.DeleteSnapshot;
+using DustInTheWind.DirectoryCompare.Infrastructure;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands
 {
-    internal class ReadSnapshotCommandView : ILongCommandView<ReadSnapshotCommandModel>
+    // Example:
+    // snapshot -d <snapshot-location>
+    // snapshot --delete <snapshot-location>
+    
+    [Command("snapshot")]
+    public class DeleteSnapshotCommandModel : ICommandModel
     {
-        private int lastValue;
+        private readonly RequestBus requestBus;
 
-        public void Display(ReadSnapshotCommandModel commandModel)
+        [CommandParameter(ShortName = "d", LongName = "delete")]
+        public string SnapshotLocation { get; set; }
+
+        public DeleteSnapshotCommandModel(RequestBus requestBus)
         {
-            lastValue = -1;
-            commandModel.Progress += HandleProgress;
+            this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
         }
 
-        private void HandleProgress(object sender, ProgressChangedEventArgs e)
+        public async Task Execute(Arguments arguments)
         {
-            int percentage = e.ProgressPercentage;
-
-            if (Math.Abs(lastValue - percentage) > 0.1)
+            DeleteSnapshotRequest request = new()
             {
-                Console.WriteLine($"Progress: {percentage}%");
-                lastValue = percentage;
-            }
-        }
+                Location = SnapshotLocation
+            };
 
-        public void FinishDisplay(ReadSnapshotCommandModel commandModel)
-        {
-            Console.WriteLine("Done");
+            await requestBus.PlaceRequest(request);
         }
     }
 }

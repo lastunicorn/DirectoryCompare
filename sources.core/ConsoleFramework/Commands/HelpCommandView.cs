@@ -18,16 +18,16 @@ using System;
 
 namespace DustInTheWind.ConsoleFramework.Commands
 {
-    internal class HelpCommandView : IView<HelpCommand>
+    internal class HelpCommandView : ICommandView<HelpCommandModel>
     {
-        public void Display(HelpCommand command)
+        public void Display(HelpCommandModel commandModel)
         {
-            if (command.Commands == null)
+            if (commandModel.Commands == null)
                 return;
 
             Console.WriteLine("Usage:");
 
-            foreach (CommandViewModel commandViewModel in command.Commands)
+            foreach (CommandViewModel commandViewModel in commandModel.Commands)
                 Console.WriteLine($"{commandViewModel.Name} - {commandViewModel.Description}");
         }
     }

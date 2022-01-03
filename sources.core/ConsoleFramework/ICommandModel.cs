@@ -1,4 +1,4 @@
-// DirectoryCompare
+﻿// DirectoryCompare
 // Copyright (C) 2017-2020 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -14,21 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Reflection;
+using System.Threading.Tasks;
 
 namespace DustInTheWind.ConsoleFramework
 {
-    internal class CommandParameterSeed
+    public interface ICommandModel
     {
-        public PropertyInfo PropertyInfo { get; set; }
-        
-        public CommandParameterAttribute Attribute { get; set; }
-
-        public object Value { get; set; }
-
-        public void SetPropertyValueOn(ICommandModel commandModel)
-        {
-            PropertyInfo?.SetValue(commandModel, Value);
-        }
+        Task Execute(Arguments arguments);
     }
 }

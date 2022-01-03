@@ -25,39 +25,28 @@ namespace DustInTheWind.ConsoleFramework.CustomMiddleware
     internal class CommandMiddleware : IConsoleMiddleware
     {
         private readonly CommandPool commandPool;
-        private readonly ICommandFactory commandFactory;
-        private readonly IViewFactory viewFactory;
+        private readonly ICommandModelFactory commandModelFactory;
+        private readonly ICommandViewFactory commandViewFactory;
 
-        public CommandMiddleware(CommandPool commandPool, ICommandFactory commandFactory, IViewFactory viewFactory)
+        public CommandMiddleware(CommandPool commandPool, ICommandModelFactory commandModelFactory, ICommandViewFactory commandViewFactory)
         {
             this.commandPool = commandPool ?? throw new ArgumentNullException(nameof(commandPool));
-            this.commandFactory = commandFactory ?? throw new ArgumentNullException(nameof(commandFactory));
-            this.viewFactory = viewFactory ?? throw new ArgumentNullException(nameof(viewFactory));
+            this.commandModelFactory = commandModelFactory ?? throw new ArgumentNullException(nameof(commandModelFactory));
+            this.commandViewFactory = commandViewFactory ?? throw new ArgumentNullException(nameof(commandViewFactory));
         }
 
         public async Task InvokeAsync(ConsoleRequestContext context, RequestDelegate next)
         {
             CommandSeed commandSeed = commandPool.GetMatchingCommand(context.Arguments);
 
-            ICommand command = commandSeed.CreateCommand(commandFactory);
-            object view = commandSeed.CreateView(viewFactory);
+            ICommandModel commandModel = commandSeed.CreateModel(commandModelFactory);
+            object commandView = commandSeed.CreateView(commandViewFactory);
 
-            bool isLongCommandView = IsLongCommandView(view);
-
-            if (view != null && isLongCommandView)
-            {
-                ExecuteView(view, command);
-            }
-
-            await command.Execute(context.Arguments);
-
-            if (view != null)
-            {
-                if (isLongCommandView)
-                    ExecuteFinishView(view, command);
-                else
-                    ExecuteView(view, command);
-            }
+            bool isLongCommandView = IsLongCommandView(commandView);
+            if (isLongCommandView)
+                await ExecuteLongCommand(commandModel, commandView, context);
+            else
+                await ExecuteCommand(commandModel, commandView, context);
 
             if (next != null)
                 await next.Invoke(context);
@@ -72,16 +61,35 @@ namespace DustInTheWind.ConsoleFramework.CustomMiddleware
                 .Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(ILongCommandView<>));
         }
 
-        private static void ExecuteView(object view, ICommand command)
+        private static async Task ExecuteLongCommand(ICommandModel commandModel, object commandView, ConsoleRequestContext context)
         {
-            MethodInfo methodInfo = view.GetType().GetMethod(nameof(IView<ICommand>.Display));
-            methodInfo?.Invoke(view, new object[] { command });
+            if (commandView != null)
+                ExecuteView(commandView, commandModel);
+
+            await commandModel.Execute(context.Arguments);
+
+            if (commandView != null)
+                ExecuteFinishView(commandView, commandModel);
         }
 
-        private static void ExecuteFinishView(object view, ICommand command)
+        private static async Task ExecuteCommand(ICommandModel commandModel, object commandView, ConsoleRequestContext context)
         {
-            MethodInfo methodInfo = view.GetType().GetMethod(nameof(ILongCommandView<ICommand>.FinishDisplay));
-            methodInfo?.Invoke(view, new object[] { command });
+            await commandModel.Execute(context.Arguments);
+
+            if (commandView != null)
+                ExecuteView(commandView, commandModel);
+        }
+
+        private static void ExecuteView(object view, ICommandModel commandModel)
+        {
+            MethodInfo methodInfo = view.GetType().GetMethod(nameof(ICommandView<ICommandModel>.Display));
+            methodInfo?.Invoke(view, new object[] { commandModel });
+        }
+
+        private static void ExecuteFinishView(object view, ICommandModel commandModel)
+        {
+            MethodInfo methodInfo = view.GetType().GetMethod(nameof(ILongCommandView<ICommandModel>.FinishDisplay));
+            methodInfo?.Invoke(view, new object[] { commandModel });
         }
     }
 }

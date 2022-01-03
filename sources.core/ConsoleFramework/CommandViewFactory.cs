@@ -14,21 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Reflection;
+using System;
 
 namespace DustInTheWind.ConsoleFramework
 {
-    internal class CommandParameterSeed
+    internal class CommandViewFactory : ICommandViewFactory
     {
-        public PropertyInfo PropertyInfo { get; set; }
-        
-        public CommandParameterAttribute Attribute { get; set; }
+        private readonly IServiceProvider serviceProvider;
 
-        public object Value { get; set; }
-
-        public void SetPropertyValueOn(ICommandModel commandModel)
+        public CommandViewFactory(IServiceProvider serviceProvider)
         {
-            PropertyInfo?.SetValue(commandModel, Value);
+            this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+        }
+
+        public object Create(Type type)
+        {
+            return serviceProvider.GetService(type);
         }
     }
 }

@@ -78,7 +78,7 @@ namespace DustInTheWind.ConsoleFramework
             return type != null &&
                    type.IsClass &&
                    !type.IsAbstract &&
-                   typeof(ICommand).IsAssignableFrom(type);
+                   typeof(ICommandModel).IsAssignableFrom(type);
         }
 
         public static bool IsView(Type type)
@@ -86,7 +86,7 @@ namespace DustInTheWind.ConsoleFramework
             return type != null &&
                    type.IsClass &&
                    !type.IsAbstract &&
-                   type.GetInterfaces().Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IView<>));
+                   type.GetInterfaces().Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(ICommandView<>));
         }
 
         public CommandSeed GenerateSeed(Arguments arguments = null)

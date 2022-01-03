@@ -19,11 +19,11 @@ using DustInTheWind.ConsoleTools;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.BlackListCommands
 {
-    public class RemoveBlackListPathCommandView : IView<RemoveBlackListPathCommand>
+    public class RemoveBlackListPathCommandView : ICommandView<RemoveBlackListPathCommandModel>
     {
-        public void Display(RemoveBlackListPathCommand command)
+        public void Display(RemoveBlackListPathCommandModel commandModel)
         {
-            CustomConsole.WriteLineSuccess($"Black list path successfully removed from '{command.PotName}>{command.BlackListName}'.");
+            CustomConsole.WriteLineSuccess($"Black list path successfully removed from '{commandModel.PotName}>{commandModel.BlackListName}'.");
         }
     }
 }

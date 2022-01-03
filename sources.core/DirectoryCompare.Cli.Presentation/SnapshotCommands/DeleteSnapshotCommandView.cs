@@ -19,11 +19,11 @@ using DustInTheWind.ConsoleTools;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands
 {
-    public class DeleteSnapshotCommandView : IView<DeleteSnapshotCommand>
+    public class DeleteSnapshotCommandView : ICommandView<DeleteSnapshotCommandModel>
     {
-        public void Display(DeleteSnapshotCommand command)
+        public void Display(DeleteSnapshotCommandModel commandModel)
         {
-            CustomConsole.WriteLineSuccess($"Snapshot '{command.SnapshotLocation}' deleted successfully.");
+            CustomConsole.WriteLineSuccess($"Snapshot '{commandModel.SnapshotLocation}' deleted successfully.");
         }
     }
 }

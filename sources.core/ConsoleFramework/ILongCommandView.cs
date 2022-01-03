@@ -16,8 +16,8 @@
 
 namespace DustInTheWind.ConsoleFramework
 {
-    public interface ILongCommandView<in TCommand> : IView<TCommand>
-        where TCommand : ICommand
+    public interface ILongCommandView<in TCommand> : ICommandView<TCommand>
+        where TCommand : ICommandModel
     {
         void FinishDisplay(TCommand command);
     }

@@ -44,8 +44,8 @@ namespace DustInTheWind.ConsoleFramework
             IServiceCollection serviceCollection = CreateServiceCollection();
             ConfigureServices(serviceCollection);
             serviceCollection.AddSingleton(serviceCollection);
-            serviceCollection.AddTransient<ICommandFactory, CommandFactory>();
-            serviceCollection.AddTransient<IViewFactory, ViewFactory>();
+            serviceCollection.AddTransient<ICommandModelFactory, CommandModelFactory>();
+            serviceCollection.AddTransient<ICommandViewFactory, CommandViewFactory>();
 
             ServiceProvider = serviceCollection.BuildServiceProvider();
 
@@ -128,7 +128,7 @@ namespace DustInTheWind.ConsoleFramework
                     if (!x.IsGenericType)
                         return false;
 
-                    if (x.GetGenericTypeDefinition() != typeof(IView<>))
+                    if (x.GetGenericTypeDefinition() != typeof(ICommandView<>))
                         return false;
 
                     Type[] genericArguments = x.GetGenericArguments();

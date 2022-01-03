@@ -59,25 +59,25 @@ namespace DustInTheWind.ConsoleFramework
             IsUsingAllArguments = arguments == null || ParametersSeeds.Count == arguments.Count;
         }
 
-        public ICommand CreateCommand(ICommandFactory commandFactory)
+        public ICommandModel CreateModel(ICommandModelFactory commandModelFactory)
         {
-            ICommand command = commandFactory.Create(CommandType);
+            ICommandModel commandModel = commandModelFactory.Create(CommandType);
 
-            if (command == null)
+            if (commandModel == null)
                 throw new InvalidCommandException();
 
             foreach (CommandParameterSeed parameterInfo in ParametersSeeds)
-                parameterInfo.SetPropertyValueOn(command);
+                parameterInfo.SetPropertyValueOn(commandModel);
 
-            return command;
+            return commandModel;
         }
 
-        public object CreateView(IViewFactory viewFactory)
+        public object CreateView(ICommandViewFactory commandViewFactory)
         {
             if (ViewType == null)
                 return null;
 
-            object view = viewFactory.Create(ViewType);
+            object view = commandViewFactory.Create(ViewType);
 
             if (view == null)
                 throw new InvalidCommandException();
