@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using DustInTheWind.ConsoleFramework.CustomMiddleware;
@@ -50,13 +51,25 @@ namespace DustInTheWind.ConsoleFramework
                     string rawValue = argument?.Value;
 
                     if (rawValue != null)
-                        x.Value = Convert.ChangeType(rawValue, x.PropertyInfo.PropertyType);
+                        x.Value = ConvertValue(rawValue, x.PropertyInfo.PropertyType);
 
                     return x;
                 })
                 .ToList();
 
             IsUsingAllArguments = arguments == null || ParametersSeeds.Count == arguments.Count;
+        }
+
+        private static object ConvertValue(string value, Type targetType)
+        {
+            TypeConverter converter = TypeDescriptor.GetConverter(targetType);
+            bool canConvert = converter.CanConvertFrom(value.GetType());
+
+            return canConvert
+                ? converter.ConvertFrom(value)
+                : targetType.IsEnum
+                    ? Enum.Parse(targetType, value, true)
+                    : Convert.ChangeType(value, targetType);
         }
 
         public ICommandModel CreateModel(ICommandModelFactory commandModelFactory)

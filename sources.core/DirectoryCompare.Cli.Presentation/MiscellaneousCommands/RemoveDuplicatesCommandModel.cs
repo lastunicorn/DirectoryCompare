@@ -29,6 +29,18 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands
     {
         private readonly RequestBus requestBus;
 
+        [CommandParameter(Index = 1)]
+        public SnapshotLocation LeftSnapshotLocation { get; set; }
+
+        [CommandParameter(Index = 2)]
+        public SnapshotLocation RightSnapshotLocation { get; set; }
+
+        [CommandParameter(Index = 3)]
+        public ComparisonSide FileToRemove { get; set; }
+
+        [CommandParameter(Index = 4, Optional = true)]
+        public string DestinationDirectory { get; set; }
+
         public RemoveDuplicatesCommandModel(RequestBus requestBus)
         {
             this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
@@ -36,30 +48,16 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands
 
         public async Task Execute(Arguments arguments)
         {
-            RemoveDuplicatesRequest request = CreateRequest(arguments);
-            await requestBus.PlaceRequest(request);
-        }
-
-        private static RemoveDuplicatesRequest CreateRequest(Arguments arguments)
-        {
-            if (arguments.Count < 3)
-                throw new Exception("Invalid command parameters.");
-
-            SnapshotLocation snapshotLeft = arguments.GetStringValue(0);
-            SnapshotLocation snapshotRight = arguments.GetStringValue(1);
-            ComparisonSide fileToRemove = (ComparisonSide)Enum.Parse(typeof(ComparisonSide), arguments.GetStringValue(2));
-            string destinationDirectory = arguments.Count >= 4
-                ? arguments.GetStringValue(3)
-                : null;
-
-            return new RemoveDuplicatesRequest
+            RemoveDuplicatesRequest request = new()
             {
-                SnapshotLeft = snapshotLeft,
-                SnapshotRight = snapshotRight,
+                SnapshotLeft = LeftSnapshotLocation,
+                SnapshotRight = RightSnapshotLocation,
                 Exporter = new ConsoleRemoveDuplicatesExporter(),
-                FileToRemove = fileToRemove,
-                DestinationDirectory = destinationDirectory
+                FileToRemove = FileToRemove,
+                DestinationDirectory = DestinationDirectory
             };
+
+            await requestBus.PlaceRequest(request);
         }
     }
 }

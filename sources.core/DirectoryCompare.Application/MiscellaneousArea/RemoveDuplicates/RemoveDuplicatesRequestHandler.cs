@@ -46,12 +46,12 @@ namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.RemoveDup
             this.request = request;
             
             DiskPathCollection blackListPathsLeft = blackListRepository.Get(request.SnapshotLeft.PotName);
-            BlackList blackListLeft = new BlackList(blackListPathsLeft);
+            BlackList blackListLeft = new(blackListPathsLeft);
 
             DiskPathCollection blackListPathsRight = blackListRepository.Get(request.SnapshotRight.PotName);
-            BlackList blackListRight = new BlackList(blackListPathsRight);
+            BlackList blackListRight = new(blackListPathsRight);
 
-            FileDuplicates fileDuplicates = new FileDuplicates
+            FileDuplicates fileDuplicates = new()
             {
                 FilesLeft = snapshotRepository.EnumerateFiles(request.SnapshotLeft, blackListLeft).ToList(),
                 FilesRight = snapshotRepository.EnumerateFiles(request.SnapshotRight, blackListRight).ToList(),

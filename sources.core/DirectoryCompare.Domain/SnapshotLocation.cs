@@ -15,9 +15,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.ComponentModel;
 
 namespace DustInTheWind.DirectoryCompare.Domain
 {
+    [TypeConverter(typeof(SnapshotLocationConverter))]
     public struct SnapshotLocation
     {
         private readonly string rawValue;
