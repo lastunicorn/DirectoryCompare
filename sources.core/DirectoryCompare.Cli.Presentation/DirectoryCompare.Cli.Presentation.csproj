@@ -2,22 +2,23 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
-        <RootNamespace>DustInTheWind.DirectoryCompare.Cli.UI</RootNamespace>
+        <AssemblyName>DustInTheWind.DirectoryCompare.Cli.Presentation</AssemblyName>
+        <RootNamespace>DustInTheWind.DirectoryCompare.Cli.Presentation</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Remove="ResultExporters\ConsoleComparisonReducedExporter.cs"/>
+        <Compile Remove="ResultExporters\ConsoleComparisonReducedExporter.cs" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="ConsoleTools" Version="0.5.3"/>
+        <PackageReference Include="ConsoleTools" Version="0.5.3" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ConsoleFramework\ConsoleFramework.csproj" PrivateAssets="All"/>
-        <ProjectReference Include="..\DirectoryCompare.Application\DirectoryCompare.Application.csproj" PrivateAssets="All"/>
-        <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All"/>
-        <ProjectReference Include="..\DirectoryCompare.Infrastructure\DirectoryCompare.Infrastructure.csproj"/>
+        <ProjectReference Include="..\ConsoleFramework\ConsoleFramework.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.Application\DirectoryCompare.Application.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.Infrastructure\DirectoryCompare.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>

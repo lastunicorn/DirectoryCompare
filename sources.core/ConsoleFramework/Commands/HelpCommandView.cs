@@ -1,4 +1,4 @@
-﻿// DirectoryCompare
+// DirectoryCompare
 // Copyright (C) 2017-2020 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -15,26 +15,20 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Threading.Tasks;
-using DustInTheWind.ConsoleTools;
 
-namespace DustInTheWind.DirectoryCompare.Cli
+namespace DustInTheWind.ConsoleFramework.Commands
 {
-    internal static class Program
+    internal class HelpCommandView : IView<HelpCommand>
     {
-        private static async Task Main(string[] args)
+        public void Display(HelpCommand command)
         {
-            try
-            {
-                ConsoleApplication consoleApplication = new();
-                consoleApplication.Initialize();
-            
-                await consoleApplication.Run(args);
-            }
-            catch (Exception ex)
-            {
-                CustomConsole.WriteLineError(ex);
-            }
+            if (command.Commands == null)
+                return;
+
+            Console.WriteLine("Usage:");
+
+            foreach (CommandViewModel commandViewModel in command.Commands)
+                Console.WriteLine($"{commandViewModel.Name} - {commandViewModel.Description}");
         }
     }
 }

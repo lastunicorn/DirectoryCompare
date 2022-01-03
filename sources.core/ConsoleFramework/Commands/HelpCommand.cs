@@ -18,7 +18,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DustInTheWind.ConsoleFramework.UserControls;
 
 namespace DustInTheWind.ConsoleFramework.Commands
 {
@@ -27,6 +26,8 @@ namespace DustInTheWind.ConsoleFramework.Commands
     {
         private readonly CommandPool commands;
 
+        public IList<CommandViewModel> Commands { get; private set; }
+        
         public HelpCommand(CommandPool commands)
         {
             this.commands = commands ?? throw new ArgumentNullException(nameof(commands));
@@ -34,24 +35,15 @@ namespace DustInTheWind.ConsoleFramework.Commands
 
         public Task Execute(Arguments arguments)
         {
-            IEnumerable<IGrouping<CommandInfo, CommandInfo>> commandsGrouped = commands.GroupBy(x => x);
-
-            UsageControl usageControl = new()
-            {
-                CommandNames = commandsGrouped
-                    .Select(GetCommandNames)
-                    .ToList()
-            };
-
-            usageControl.Display();
+            Commands = commands
+                .Select(x => new CommandViewModel
+                {
+                    Name = x.Name,
+                    Description = x.Description
+                })
+                .ToList();
 
             return Task.CompletedTask;
-        }
-
-        private static string GetCommandNames(IEnumerable<CommandInfo> group)
-        {
-            IEnumerable<string> commandNames = group.Select(x => x.Name);
-            return string.Join(", ", commandNames);
         }
     }
 }

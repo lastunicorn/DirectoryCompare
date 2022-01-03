@@ -2,29 +2,27 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
+        <AssemblyName>DustInTheWind.DirectoryCompare.IntegrationTests</AssemblyName>
+        <RootNamespace>DustInTheWind.DirectoryCompare.IntegrationTests</RootNamespace>
 
         <IsPackable>false</IsPackable>
-
-        <AssemblyName>DustInTheWind.DirectoryCompare.IntegrationTests</AssemblyName>
-
-        <RootNamespace>DustInTheWind.DirectoryCompare.IntegrationTests</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
-        <PackageReference Include="NUnit" Version="3.13.1" />
-        <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
-        <PackageReference Include="coverlet.collector" Version="3.0.2" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4"/>
+        <PackageReference Include="NUnit" Version="3.13.1"/>
+        <PackageReference Include="NUnit3TestAdapter" Version="3.17.0"/>
+        <PackageReference Include="coverlet.collector" Version="3.0.2"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="PotFiles" />
+        <Folder Include="PotFiles"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\DirectoryCompare.DataAccess\DirectoryCompare.DataAccess.csproj" />
-      <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" />
-      <ProjectReference Include="..\DirectoryCompare.PotFiles\DirectoryCompare.PotFiles.csproj" />
+        <ProjectReference Include="..\DirectoryCompare.DataAccess\DirectoryCompare.DataAccess.csproj"/>
+        <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj"/>
+        <ProjectReference Include="..\DirectoryCompare.PotFiles\DirectoryCompare.PotFiles.csproj"/>
     </ItemGroup>
 
 </Project>

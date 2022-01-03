@@ -1,18 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <AssemblyName>DirectoryCompare.Infrastructure</AssemblyName>
-    <RootNamespace>DustInTheWind.DirectoryCompare.Infrastructure</RootNamespace>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <AssemblyName>DustInTheWind.DirectoryCompare.Infrastructure</AssemblyName>
+        <RootNamespace>DustInTheWind.DirectoryCompare.Infrastructure</RootNamespace>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="9.0.1" />
-    <PackageReference Include="MediatR" Version="8.0.2" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="FluentValidation" Version="9.0.1"/>
+        <PackageReference Include="MediatR" Version="8.0.2"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All"/>
+    </ItemGroup>
 
 </Project>

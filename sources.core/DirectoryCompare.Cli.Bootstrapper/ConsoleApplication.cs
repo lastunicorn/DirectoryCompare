@@ -19,6 +19,7 @@ using DustInTheWind.ConsoleFramework;
 using DustInTheWind.ConsoleFramework.AppBuilder;
 using DustInTheWind.ConsoleFramework.Logging;
 using DustInTheWind.DirectoryCompare.Cli.Setup;
+using DustInTheWind.DirectoryCompare.Cli.UI;
 using DustInTheWind.DirectoryCompare.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.ImportExport;
@@ -30,6 +31,9 @@ namespace DustInTheWind.DirectoryCompare.Cli
         public ConsoleApplication()
         {
             Log4NetSetup.Configure();
+
+            // This is a trick to force loading the presentation assembly.
+            DummyClass dummyClass = new DummyClass();
         }
 
         protected override IServiceCollection CreateServiceCollection()

@@ -1,4 +1,4 @@
-﻿// DirectoryCompare
+// DirectoryCompare
 // Copyright (C) 2017-2020 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -14,25 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-
-namespace DustInTheWind.ConsoleFramework.UserControls
+namespace DustInTheWind.DirectoryCompare.Cli.UI
 {
-    internal class UsageControl
+    /// <summary>
+    /// This class exists only to be instantiated from the bootstrapper and force, in this way,
+    /// the loading of the entire assembly containing the commands. 
+    /// </summary>
+    public class DummyClass
     {
-        public IList<string> CommandNames { get; set; }
-
-
-        public void Display()
-        {
-            if (CommandNames == null)
-                return;
-
-            Console.WriteLine("Usage:");
-
-            foreach (string commandName in CommandNames)
-                Console.WriteLine(commandName);
-        }
     }
 }
