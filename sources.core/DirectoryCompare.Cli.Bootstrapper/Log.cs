@@ -17,7 +17,7 @@
 using System;
 using DustInTheWind.ConsoleFramework.Logging;
 
-namespace DustInTheWind.DirectoryCompare.Cli
+namespace DustInTheWind.DirectoryCompare.Cli.Bootstrapper
 {
     internal class Log : ILog
     {

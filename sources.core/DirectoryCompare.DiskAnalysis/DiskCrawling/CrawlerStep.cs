@@ -16,7 +16,7 @@
 
 using System;
 
-namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis.DiskCrawling
+namespace DustInTheWind.DirectoryCompare.DiskAnalysis.DiskCrawling
 {
     internal struct CrawlerStep
     {

@@ -16,18 +16,15 @@
 
 using System;
 
-namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
+namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 {
-    public class ErrorEncounteredEventArgs : EventArgs
+    public class DiskAnalysisProgressEventArgs : EventArgs
     {
-        public Exception Exception { get; }
-      
-        public string Path { get; }
+        public float Percentage { get; }
 
-        public ErrorEncounteredEventArgs(Exception exception, string path)
+        public DiskAnalysisProgressEventArgs(float percentage)
         {
-            Exception = exception ?? throw new ArgumentNullException(nameof(exception));
-            Path = path ?? throw new ArgumentNullException(nameof(path));
+            Percentage = percentage;
         }
     }
 }

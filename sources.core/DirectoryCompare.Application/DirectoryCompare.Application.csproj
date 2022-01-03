@@ -25,6 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\DirectoryCompare.DiskAnalysis\DirectoryCompare.DiskAnalysis.csproj" />
         <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.Infrastructure\DirectoryCompare.Infrastructure.csproj" />
         <ProjectReference Include="..\DirectoryCompare.Validation\DirectoryCompare.Validation.csproj" />

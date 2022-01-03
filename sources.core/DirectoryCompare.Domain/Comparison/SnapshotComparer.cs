@@ -23,10 +23,10 @@ namespace DustInTheWind.DirectoryCompare.Domain.Comparison
 {
     public class SnapshotComparer
     {
-        private readonly List<string> onlyInSnapshot1 = new List<string>();
-        private readonly List<string> onlyInSnapshot2 = new List<string>();
-        private readonly List<ItemComparison> differentNames = new List<ItemComparison>();
-        private readonly List<ItemComparison> differentContent = new List<ItemComparison>();
+        private readonly List<string> onlyInSnapshot1 = new();
+        private readonly List<string> onlyInSnapshot2 = new();
+        private readonly List<ItemComparison> differentNames = new();
+        private readonly List<ItemComparison> differentContent = new();
 
         public Snapshot Snapshot1 { get; }
         
@@ -92,7 +92,7 @@ namespace DustInTheWind.DirectoryCompare.Domain.Comparison
                 {
                     foreach (HFile file2 in file2Matches)
                     {
-                        ItemComparison itemComparison = new ItemComparison
+                        ItemComparison itemComparison = new()
                         {
                             RootPath = rootPath,
                             Item1 = file1,

@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.DirectoryCompare.Application.SnapshotArea.CreateSnapshot;
 using DustInTheWind.DirectoryCompare.Infrastructure.RequestHandlingPipeline;
@@ -24,7 +23,7 @@ using Ninject;
 using Ninject.Extensions.Conventions;
 using Ninject.Planning.Bindings.Resolvers;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Setup
+namespace DustInTheWind.DirectoryCompare.Cli.Bootstrapper.Setup
 {
     internal static class MediatorSetup
     {
@@ -50,11 +49,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Setup
                 .Bind<ServiceFactory>()
                 .ToMethod(x =>
                 {
-                    return t =>
-                    {
-                        object a = kernel.TryGet(t);
-                        return x.Kernel.TryGet(t);
-                    };
+                    return type => x.Kernel.TryGet(type);
                 });
         }
     }

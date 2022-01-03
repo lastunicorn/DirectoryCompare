@@ -26,6 +26,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands
     // Example:
     // snapshot <snapshot-location>
 
+    [Command("snapshot")]
     public class DisplaySnapshotCommand : ICommand
     {
         private readonly RequestBus requestBus;

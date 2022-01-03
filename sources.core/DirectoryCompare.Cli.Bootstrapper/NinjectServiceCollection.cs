@@ -18,7 +18,7 @@ using System;
 using DustInTheWind.ConsoleFramework;
 using Ninject;
 
-namespace DustInTheWind.DirectoryCompare.Cli
+namespace DustInTheWind.DirectoryCompare.Cli.Bootstrapper
 {
     internal class NinjectServiceCollection : IServiceCollection
     {

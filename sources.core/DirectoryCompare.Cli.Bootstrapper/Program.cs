@@ -18,7 +18,7 @@ using System;
 using System.Threading.Tasks;
 using DustInTheWind.ConsoleTools;
 
-namespace DustInTheWind.DirectoryCompare.Cli
+namespace DustInTheWind.DirectoryCompare.Cli.Bootstrapper
 {
     internal static class Program
     {

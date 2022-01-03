@@ -20,12 +20,13 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
-using DustInTheWind.DirectoryCompare.Domain.DiskAnalysis.DiskCrawling;
+using DustInTheWind.DirectoryCompare.DiskAnalysis.DiskCrawling;
+using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.ImportExport;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 
-namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
+namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 {
     public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
     {

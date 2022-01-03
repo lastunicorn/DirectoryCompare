@@ -38,6 +38,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CommonFiles", "CommonFiles"
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.DiskAnalysis", "DirectoryCompare.DiskAnalysis\DirectoryCompare.DiskAnalysis.csproj", "{07F29242-4FEA-441D-AB9D-58D379518126}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -192,6 +194,18 @@ Global
 		{37021573-59A3-4CBE-8F3B-F49DA40E8F3F}.Release|x64.Build.0 = Release|Any CPU
 		{37021573-59A3-4CBE-8F3B-F49DA40E8F3F}.Release|x86.ActiveCfg = Release|Any CPU
 		{37021573-59A3-4CBE-8F3B-F49DA40E8F3F}.Release|x86.Build.0 = Release|Any CPU
+		{07F29242-4FEA-441D-AB9D-58D379518126}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07F29242-4FEA-441D-AB9D-58D379518126}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07F29242-4FEA-441D-AB9D-58D379518126}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{07F29242-4FEA-441D-AB9D-58D379518126}.Debug|x64.Build.0 = Debug|Any CPU
+		{07F29242-4FEA-441D-AB9D-58D379518126}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{07F29242-4FEA-441D-AB9D-58D379518126}.Debug|x86.Build.0 = Debug|Any CPU
+		{07F29242-4FEA-441D-AB9D-58D379518126}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07F29242-4FEA-441D-AB9D-58D379518126}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07F29242-4FEA-441D-AB9D-58D379518126}.Release|x64.ActiveCfg = Release|Any CPU
+		{07F29242-4FEA-441D-AB9D-58D379518126}.Release|x64.Build.0 = Release|Any CPU
+		{07F29242-4FEA-441D-AB9D-58D379518126}.Release|x86.ActiveCfg = Release|Any CPU
+		{07F29242-4FEA-441D-AB9D-58D379518126}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -206,6 +220,7 @@ Global
 		{0545F6ED-0FFD-4FD8-8808-DD45733098B8} = {88D27769-CFD0-417C-96BB-64A05415B47C}
 		{C337B27B-3B07-4E9A-9EE9-B85279EC1CDF} = {52A15438-167C-4E52-B2D5-591109C38ECC}
 		{3322FAA7-0CCA-49C8-8CC1-C5B5BEC686F3} = {52A15438-167C-4E52-B2D5-591109C38ECC}
+		{07F29242-4FEA-441D-AB9D-58D379518126} = {52A15438-167C-4E52-B2D5-591109C38ECC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {86D5FACB-2648-4347-86B1-9D6DAAAD7AE9}

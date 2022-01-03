@@ -23,7 +23,7 @@ using Ninject.Infrastructure;
 using Ninject.Planning.Bindings;
 using Ninject.Planning.Bindings.Resolvers;
 
-namespace DustInTheWind.DirectoryCompare.Cli
+namespace DustInTheWind.DirectoryCompare.Cli.Bootstrapper
 {
     public class ContravariantBindingResolver : NinjectComponent, IBindingResolver
     {

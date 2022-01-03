@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <AssemblyName>DustInTheWind.DirectoryCompare.DiskAnalysis</AssemblyName>
+        <RootNamespace>DustInTheWind.DirectoryCompare.DiskAnalysis</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" />
+    </ItemGroup>
+
+</Project>

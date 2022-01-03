@@ -25,6 +25,8 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands
     // Example:
     // snapshot -d <snapshot-location>
     // snapshot --delete <snapshot-location>
+    
+    [Command("snapshot")]
     public class DeleteSnapshotCommand : ICommand
     {
         private readonly RequestBus requestBus;

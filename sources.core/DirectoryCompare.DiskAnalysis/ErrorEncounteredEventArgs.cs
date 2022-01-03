@@ -14,13 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis.DiskCrawling
+using System;
+
+namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 {
-    internal enum CrawlerAction
+    public class ErrorEncounteredEventArgs : EventArgs
     {
-        DirectoryOpened,
-        DirectoryClosed,
-        FileFound,
-        Error
+        public Exception Exception { get; }
+      
+        public string Path { get; }
+
+        public ErrorEncounteredEventArgs(Exception exception, string path)
+        {
+            Exception = exception ?? throw new ArgumentNullException(nameof(exception));
+            Path = path ?? throw new ArgumentNullException(nameof(path));
+        }
     }
 }

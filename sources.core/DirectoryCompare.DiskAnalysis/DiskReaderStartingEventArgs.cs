@@ -14,11 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
+using System;
+using DustInTheWind.DirectoryCompare.Domain.Utils;
+
+namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 {
-    public enum DiskAnalysisState
+    public class DiskReaderStartingEventArgs : EventArgs
     {
-        Ready,
-        InProgress
+        public DiskPathCollection BlackList { get; }
+
+        public DiskReaderStartingEventArgs(DiskPathCollection blackList)
+        {
+            BlackList = blackList;
+        }
     }
 }

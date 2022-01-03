@@ -26,6 +26,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands
     // snapshot -i <file-path> -p <pot-name>
     // snapshot --import <file-path> --pot <pot-name>
 
+    [Command("snapshot")]
     public class ImportSnapshotCommand : ICommand
     {
         private readonly RequestBus requestBus;

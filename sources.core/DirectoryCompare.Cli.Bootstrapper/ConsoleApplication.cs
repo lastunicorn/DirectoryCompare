@@ -18,19 +18,19 @@ using System;
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.ConsoleFramework.AppBuilder;
 using DustInTheWind.ConsoleFramework.Logging;
+using DustInTheWind.DirectoryCompare.Cli.Bootstrapper.Setup;
 using DustInTheWind.DirectoryCompare.Cli.Presentation;
-using DustInTheWind.DirectoryCompare.Cli.Setup;
 using DustInTheWind.DirectoryCompare.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.ImportExport;
 
-namespace DustInTheWind.DirectoryCompare.Cli
+namespace DustInTheWind.DirectoryCompare.Cli.Bootstrapper
 {
     internal class ConsoleApplication : ConsoleApplicationBase
     {
         public ConsoleApplication()
         {
-            Log4NetSetup.Configure();
+            Log4NetSetup.Setup();
 
             // This is a trick to force loading the presentation assembly.
             DummyClass dummyClass = new DummyClass();

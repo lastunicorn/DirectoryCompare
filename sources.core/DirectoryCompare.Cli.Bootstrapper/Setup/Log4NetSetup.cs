@@ -20,11 +20,11 @@ using log4net;
 using log4net.Config;
 using log4net.Repository;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Setup
+namespace DustInTheWind.DirectoryCompare.Cli.Bootstrapper.Setup
 {
     internal class Log4NetSetup
     {
-        public static void Configure()
+        public static void Setup()
         {
             Assembly assembly = Assembly.GetEntryAssembly();
 
@@ -33,7 +33,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Setup
             string assemblyFilePath = assembly.Location;
             string applicationDirectoryPath = Path.GetDirectoryName(assemblyFilePath);
             string configFilePath = Path.Combine(applicationDirectoryPath, "Log4Net.config");
-            FileInfo configFileInfo = new FileInfo(configFilePath);
+            FileInfo configFileInfo = new(configFilePath);
 
             XmlConfigurator.Configure(loggerRepository, configFileInfo);
         }

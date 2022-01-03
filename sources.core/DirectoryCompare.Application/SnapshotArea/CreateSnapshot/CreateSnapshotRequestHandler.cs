@@ -16,8 +16,8 @@
 
 using System;
 using System.Threading.Tasks;
+using DustInTheWind.DirectoryCompare.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
-using DustInTheWind.DirectoryCompare.Domain.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Domain.ImportExport;
 using DustInTheWind.DirectoryCompare.Domain.Logging;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
@@ -57,11 +57,11 @@ namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.CreateSnapshot
             return pot;
         }
 
-        private DiskAnalysis StartPathAnalysis2(Pot pot)
+        private DiskAnalysis.DiskAnalysis StartPathAnalysis2(Pot pot)
         {
             log.WriteInfo("Scanning path: {0}", pot.Path);
 
-            DiskAnalysis diskAnalysis = new()
+            DiskAnalysis.DiskAnalysis diskAnalysis = new()
             {
                 RootPath = pot.Path,
                 SnapshotWriter = snapshotRepository.CreateWriter(pot.Name),
@@ -79,7 +79,7 @@ namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.CreateSnapshot
 
         private void HandleDiskAnalysisFinished(object sender, EventArgs e)
         {
-            if (sender is DiskAnalysis diskAnalysis)
+            if (sender is DiskAnalysis.DiskAnalysis diskAnalysis)
             {
                 log.WriteInfo("Finished scanning path in {0}", diskAnalysis.ElapsedTime);
                 diskAnalysis.SnapshotWriter.Dispose();

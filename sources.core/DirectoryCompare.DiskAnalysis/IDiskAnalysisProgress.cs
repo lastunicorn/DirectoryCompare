@@ -16,15 +16,15 @@
 
 using System;
 
-namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
+namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 {
-    public class DiskAnalysisProgressEventArgs : EventArgs
+    public interface IDiskAnalysisProgress
     {
-        public float Percentage { get; }
+        event EventHandler<ErrorEncounteredEventArgs> ErrorEncountered;
+        event EventHandler<DiskReaderStartingEventArgs> Starting;
+        event EventHandler<DiskAnalysisProgressEventArgs> Progress;
+        public event EventHandler Finished;
 
-        public DiskAnalysisProgressEventArgs(float percentage)
-        {
-            Percentage = percentage;
-        }
+        void WaitToEnd();
     }
 }

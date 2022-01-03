@@ -44,7 +44,7 @@ namespace DustInTheWind.DirectoryCompare.Domain.Comparison
                     {
                         HFile fileRight = FilesLeft[j];
 
-                        FileDuplicate fileDuplicate = new FileDuplicate(fileLeft, fileRight, CheckFilesExist);
+                        FileDuplicate fileDuplicate = new(fileLeft, fileRight, CheckFilesExist);
 
                         if (fileDuplicate.AreEqual)
                             yield return fileDuplicate;
