@@ -55,7 +55,7 @@ namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.RemoveDup
             {
                 FilesLeft = snapshotRepository.EnumerateFiles(request.SnapshotLeft, blackListLeft).ToList(),
                 FilesRight = snapshotRepository.EnumerateFiles(request.SnapshotRight, blackListRight).ToList(),
-                CheckFilesExist = true
+                CheckFilesExistance = true
             };
 
             RemoveDuplicates(fileDuplicates);

@@ -33,17 +33,15 @@ namespace DustInTheWind.DirectoryCompare.Domain.Comparison
         {
             get
             {
-                if (!areEqual.HasValue)
-                    CalculateEquality();
-
+                areEqual ??= CalculateEquality();
                 return areEqual.Value;
             }
         }
 
         public DataSize Size => fileLeft.Size;
-        
+
         public string FullPathLeft => fileLeft.GetOriginalPath();
-        
+
         public string FullPathRight => fileRight.GetOriginalPath();
 
         public bool FileLeftExists
@@ -71,26 +69,13 @@ namespace DustInTheWind.DirectoryCompare.Domain.Comparison
             this.checkFilesExist = checkFilesExist;
         }
 
-        private void CalculateEquality()
+        private bool CalculateEquality()
         {
-            if (fileLeft.Hash == fileRight.Hash && fileLeft.Size == fileRight.Size)
-            {
-                areEqual = false;
+            bool filesAreEqual = fileLeft.Hash == fileRight.Hash && fileLeft.Size == fileRight.Size;
 
-                if (checkFilesExist)
-                {
-                    if (FileLeftExists && FileRightExists)
-                        areEqual = true;
-                }
-                else
-                {
-                    areEqual = true;
-                }
-            }
-            else
-            {
-                areEqual = false;
-            }
+            return checkFilesExist
+                ? filesAreEqual && FileLeftExists && FileRightExists
+                : filesAreEqual;
         }
 
         public void DeleteLeft()

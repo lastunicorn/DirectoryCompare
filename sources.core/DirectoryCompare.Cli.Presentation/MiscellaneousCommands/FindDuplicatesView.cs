@@ -15,14 +15,23 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using DustInTheWind.ConsoleFramework;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands
 {
-    internal class FindDuplicatesView
+    internal class FindDuplicatesView : IView<FindDuplicatesCommand>
     {
-        public void WriteDuplicate(FileDuplicate duplicate)
+        public void Display(FindDuplicatesCommand command)
+        {
+            foreach (FileDuplicate fileDuplicate in command.FileDuplicates) 
+                WriteDuplicate(fileDuplicate);
+            
+            WriteSummary(command.DuplicateCount, command.TotalSize);
+        }
+        
+        private static void WriteDuplicate(FileDuplicate duplicate)
         {
             Console.WriteLine(duplicate.FullPathLeft);
             Console.WriteLine(duplicate.FullPathRight);
@@ -31,7 +40,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands
             Console.WriteLine();
         }
 
-        public void WriteSummary(int duplicateCount, DataSize totalSize)
+        private static void WriteSummary(int duplicateCount, DataSize totalSize)
         {
             Console.WriteLine($"Total duplicates: {duplicateCount:n0} files");
             Console.WriteLine($"Total size: {totalSize} ({totalSize.ToString(DataSizeUnit.Byte)})");

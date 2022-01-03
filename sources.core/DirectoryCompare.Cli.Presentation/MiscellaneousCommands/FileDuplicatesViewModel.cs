@@ -1,4 +1,4 @@
-﻿// DirectoryCompare
+// DirectoryCompare
 // Copyright (C) 2017-2020 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -15,30 +15,29 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Runtime.Serialization;
+using System.Collections;
+using System.Collections.Generic;
+using DustInTheWind.DirectoryCompare.Domain.Comparison;
 
-namespace DustInTheWind.DirectoryCompare.Domain
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands
 {
-    [Serializable]
-    public class DirectoryCompareException : Exception
+    internal class FileDuplicatesViewModel : IEnumerable<FileDuplicate>
     {
-        public DirectoryCompareException()
+        private readonly FileDuplicates fileDuplicates;
+
+        public FileDuplicatesViewModel(FileDuplicates fileDuplicates)
         {
+            this.fileDuplicates = fileDuplicates ?? throw new ArgumentNullException(nameof(fileDuplicates));
         }
 
-        public DirectoryCompareException(string message)
-            : base(message)
+        public IEnumerator<FileDuplicate> GetEnumerator()
         {
+            return fileDuplicates.GetEnumerator();
         }
 
-        public DirectoryCompareException(string message, Exception inner)
-            : base(message, inner)
+        IEnumerator IEnumerable.GetEnumerator()
         {
-        }
-
-        protected DirectoryCompareException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
+            return GetEnumerator();
         }
     }
 }

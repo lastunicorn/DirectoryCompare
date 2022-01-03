@@ -27,7 +27,7 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.FindDuplicates
 {
-    public class FindDuplicatesRequestHandler : RequestHandler<FindDuplicatesRequest, DuplicatesAnalysis>
+    public class FindDuplicatesRequestHandler : RequestHandler<FindDuplicatesRequest, FileDuplicates>
     {
         private readonly ISnapshotRepository snapshotRepository;
         private readonly IBlackListRepository blackListRepository;
@@ -40,22 +40,18 @@ namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.FindDupli
             this.log = log ?? throw new ArgumentNullException(nameof(log));
         }
 
-        protected override DuplicatesAnalysis Handle(FindDuplicatesRequest request)
+        protected override FileDuplicates Handle(FindDuplicatesRequest request)
         {
             log.WriteInfo("Searching for duplicates between pot '{0}' and '{1}'.", request.SnapshotLeft.PotName, request.SnapshotRight.PotName);
 
-            FileDuplicates fileDuplicates = new FileDuplicates
+            return new FileDuplicates
             {
                 FilesLeft = GetFiles(request.SnapshotLeft),
-                FilesRight = string.IsNullOrEmpty(request.SnapshotRight.PotName) ? null : GetFiles(request.SnapshotRight),
-                CheckFilesExist = request.CheckFilesExist
+                FilesRight = string.IsNullOrEmpty(request.SnapshotRight.PotName)
+                    ? null
+                    : GetFiles(request.SnapshotRight),
+                CheckFilesExistance = request.CheckFilesExistence
             };
-
-            DuplicatesAnalysis duplicatesAnalysis = new DuplicatesAnalysis(fileDuplicates);
-
-            duplicatesAnalysis.RunAsync();
-
-            return duplicatesAnalysis;
         }
 
         private List<HFile> GetFiles(SnapshotLocation snapshotLocation)

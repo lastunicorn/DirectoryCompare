@@ -15,89 +15,60 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.FindDuplicates;
+using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
+using DustInTheWind.DirectoryCompare.Domain.Utils;
 using DustInTheWind.DirectoryCompare.Infrastructure;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands
 {
+    // Example:
+    // find-duplicates snap1 snap2 -x
+    // find-duplicates snap1 snap2 --check-files-existence
+    // find-duplicates snap1 -x
+    // find-duplicates snap1 --check-files-existence
+
     [Command("find-duplicates")]
-    public class FindDuplicatesCommand : ICommand
+    internal class FindDuplicatesCommand : ICommand
     {
         private readonly RequestBus requestBus;
-        private readonly FindDuplicatesView findDuplicatesView;
+        private FileDuplicates fileDuplicates;
+
+        [CommandParameter(Index = 1)]
+        public string Snapshot1Location { get; set; }
+
+        [CommandParameter(Index = 2, Optional = true)]
+        public string Snapshot2Location { get; set; }
+
+        [CommandParameter(ShortName = "x", LongName = "check-files-existence", Optional = true)]
+        public bool CheckFilesExistence { get; set; }
+
+        public FileDuplicatesViewModel FileDuplicates { get; private set; }
+
+        public int DuplicateCount => fileDuplicates?.DuplicateCount ?? 0;
+
+        public DataSize TotalSize => fileDuplicates?.TotalSize ?? DataSize.Zero;
 
         public FindDuplicatesCommand(RequestBus requestBus)
         {
             this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
-
-            findDuplicatesView = new FindDuplicatesView();
         }
 
-        public Task Execute(Arguments arguments)
+        public async Task Execute(Arguments arguments)
         {
-            FindDuplicatesRequest request = CreateRequest(arguments);
-            DuplicatesAnalysis analysis = requestBus.PlaceRequest<FindDuplicatesRequest, DuplicatesAnalysis>(request).Result;
-            analysis.DuplicateFound += HandleDuplicateFound;
-
-            DisplayDuplicatesFromBuffer(analysis);
-
-            analysis.WaitToEnd();
-
-            DisplaySummary(analysis);
-
-            return Task.CompletedTask;
-        }
-
-        private void HandleDuplicateFound(object sender, EventArgs e)
-        {
-            if (sender is DuplicatesAnalysis analysis)
-                DisplayDuplicatesFromBuffer(analysis);
-        }
-
-        private void DisplayDuplicatesFromBuffer(DuplicatesAnalysis analysis)
-        {
-            IEnumerable<FileDuplicate> duplicates = analysis.GetDuplicatesFromBuffer();
-
-            foreach (FileDuplicate fileDuplicate in duplicates)
-                findDuplicatesView.WriteDuplicate(fileDuplicate);
-        }
-
-        private void DisplaySummary(DuplicatesAnalysis analysis)
-        {
-            findDuplicatesView.WriteSummary(analysis.Summary.DuplicateCount, analysis.Summary.TotalSize);
-        }
-
-        private static FindDuplicatesRequest CreateRequest(Arguments arguments)
-        {
-            if (arguments.Count == 0)
-                throw new Exception("Invalid command parameters.");
-
-            Argument[] anonymousArguments = arguments.GetAnonymousArguments().ToArray();
-
-            if (anonymousArguments.Length == 0)
-                throw new Exception("Invalid command parameters.");
-
-            string left = anonymousArguments.Length >= 1
-                ? anonymousArguments[0].Value
-                : null;
-
-            string right = anonymousArguments.Length >= 2
-                ? anonymousArguments[1].Value
-                : null;
-
-            bool checkFilesExist = arguments.GetBoolValue("x");
-
-            return new FindDuplicatesRequest
+            FindDuplicatesRequest request = new()
             {
-                SnapshotLeft = left,
-                SnapshotRight = right,
-                CheckFilesExist = checkFilesExist
+                SnapshotLeft = Snapshot1Location,
+                SnapshotRight = Snapshot2Location,
+                CheckFilesExistence = CheckFilesExistence
             };
+            
+            fileDuplicates = await requestBus.PlaceRequest<FindDuplicatesRequest, FileDuplicates>(request);
+
+            FileDuplicates = new FileDuplicatesViewModel(fileDuplicates);
         }
     }
 }

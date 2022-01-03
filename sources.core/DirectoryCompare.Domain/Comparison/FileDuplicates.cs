@@ -18,6 +18,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
+using DustInTheWind.DirectoryCompare.Domain.Utils;
 
 namespace DustInTheWind.DirectoryCompare.Domain.Comparison
 {
@@ -27,40 +28,54 @@ namespace DustInTheWind.DirectoryCompare.Domain.Comparison
 
         public List<HFile> FilesRight { get; set; }
 
-        public bool CheckFilesExist { get; set; }
+        public bool CheckFilesExistance { get; set; }
+
+        public int DuplicateCount { get; private set; }
+
+        public DataSize TotalSize { get; private set; }
 
         public IEnumerator<FileDuplicate> GetEnumerator()
         {
+            DuplicateCount = 0;
+            TotalSize = 0;
+
             if (FilesLeft == null)
                 yield break;
 
-            if (FilesRight == null)
+            IEnumerable<FileDuplicate> duplicates = FilesRight == null
+                ? GeneratePairs(FilesLeft)
+                : GeneratePairs(FilesLeft, FilesRight);
+
+            duplicates = duplicates
+                .Where(x => x.AreEqual);
+
+            foreach (FileDuplicate fileDuplicate in duplicates)
             {
-                for (int i = 0; i < FilesLeft.Count; i++)
+                DuplicateCount++;
+                TotalSize += fileDuplicate.Size;
+                yield return fileDuplicate;
+            }
+        }
+
+        private IEnumerable<FileDuplicate> GeneratePairs(IReadOnlyList<HFile> files)
+        {
+            for (int i = 0; i < files.Count; i++)
+            {
+                HFile fileLeft = files[i];
+
+                for (int j = i + 1; j < files.Count; j++)
                 {
-                    HFile fileLeft = FilesLeft[i];
+                    HFile fileRight = files[j];
 
-                    for (int j = i + 1; j < FilesLeft.Count; j++)
-                    {
-                        HFile fileRight = FilesLeft[j];
-
-                        FileDuplicate fileDuplicate = new(fileLeft, fileRight, CheckFilesExist);
-
-                        if (fileDuplicate.AreEqual)
-                            yield return fileDuplicate;
-                    }
+                    yield return new FileDuplicate(fileLeft, fileRight, CheckFilesExistance);
                 }
             }
-            else
-            {
-                IEnumerable<FileDuplicate> duplicates = FilesLeft
-                    .Select(fileLeft => FilesRight.Select(fileRight => new FileDuplicate(fileLeft, fileRight, CheckFilesExist)))
-                    .SelectMany(fileDuplicates => fileDuplicates)
-                    .Where(x => x.AreEqual);
+        }
 
-                foreach (FileDuplicate fileDuplicate in duplicates)
-                    yield return fileDuplicate;
-            }
+        private IEnumerable<FileDuplicate> GeneratePairs(IEnumerable<HFile> filesLeft, IEnumerable<HFile> filesRight)
+        {
+            return filesLeft
+                .SelectMany(fileLeft => filesRight.Select(fileRight => new FileDuplicate(fileLeft, fileRight, CheckFilesExistance)));
         }
 
         IEnumerator IEnumerable.GetEnumerator()
