@@ -14,21 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Reflection;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
 
-namespace DustInTheWind.ConsoleFramework.CustomMiddleware
+namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.DeleteBlackList
 {
-    internal class CommandParameterSeed
+    internal class DeleteBlackListRequestHandler : IRequestHandler<DeleteBlackListRequest>
     {
-        public PropertyInfo PropertyInfo { get; set; }
-        
-        public CommandParameterAttribute Attribute { get; set; }
-
-        public object Value { get; set; }
-
-        public void SetPropertyValueOn(ICommand command)
+        public Task<Unit> Handle(DeleteBlackListRequest request, CancellationToken cancellationToken)
         {
-            PropertyInfo?.SetValue(command, Value);
+            throw new NotImplementedException();
         }
     }
 }

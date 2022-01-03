@@ -16,10 +16,20 @@
 
 using System;
 
-namespace DustInTheWind.ConsoleFramework.CustomMiddleware
+namespace DustInTheWind.ConsoleFramework
 {
-    public interface ICommandFactory
+    internal class ViewFactory : IViewFactory
     {
-        ICommand Create(Type type);
+        private readonly IServiceProvider serviceProvider;
+
+        public ViewFactory(IServiceProvider serviceProvider)
+        {
+            this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+        }
+
+        public object Create(Type type)
+        {
+            return serviceProvider.GetService(type);
+        }
     }
 }

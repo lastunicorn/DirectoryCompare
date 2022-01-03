@@ -14,14 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using MediatR;
+using System;
 
-namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.CompareAllSnapshots
+namespace DustInTheWind.ConsoleFramework
 {
-    public class CompareAllSnapshotsRequest : IRequest<CompareAllSnapshotsResponse>
+    internal class CommandFactory : ICommandFactory
     {
-        public string PotName { get; set; }
-        
-        public string ExportName { get; set; }
+        private readonly IServiceProvider serviceProvider;
+
+        public CommandFactory(IServiceProvider serviceProvider)
+        {
+            this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+        }
+
+        public ICommand Create(Type type)
+        {
+            return serviceProvider.GetService(type) as ICommand;
+        }
     }
 }

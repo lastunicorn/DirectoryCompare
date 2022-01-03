@@ -1,4 +1,4 @@
-﻿// DirectoryCompare
+// DirectoryCompare
 // Copyright (C) 2017-2020 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -15,23 +15,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using DustInTheWind.DirectoryCompare.Domain.SomeInterfaces;
-using DustInTheWind.DirectoryCompare.Domain.Utils;
 
-namespace DustInTheWind.DirectoryCompare.Cli.UI.ResultExporters
+namespace DustInTheWind.ConsoleFramework
 {
-    internal class ConsoleRemoveDuplicatesExporter : IRemoveDuplicatesExporter
+    internal interface IViewFactory
     {
-        public void WriteRemove(string path)
-        {
-            Console.WriteLine("removed: {0}", path);
-        }
-
-        public void WriteSummary(int removedFiles, DataSize removedSize)
-        {
-            Console.WriteLine("Total removes: " + removedFiles);
-            Console.WriteLine("Total size: " + removedSize);
-            Console.WriteLine();
-        }
+        object Create(Type type);
     }
 }

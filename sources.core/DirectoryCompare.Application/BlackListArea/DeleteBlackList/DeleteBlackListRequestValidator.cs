@@ -14,14 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using MediatR;
+using FluentValidation;
 
-namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.CompareAllSnapshots
+namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.DeleteBlackList
 {
-    public class CompareAllSnapshotsRequest : IRequest<CompareAllSnapshotsResponse>
+    internal class DeleteBlackListRequestValidator : AbstractValidator<DeleteBlackListRequest>
     {
-        public string PotName { get; set; }
-        
-        public string ExportName { get; set; }
+        public DeleteBlackListRequestValidator()
+        {
+            RuleFor(x => x.BlackListName).NotEmpty();
+            RuleFor(x => x.PotName).NotEmpty();
+        }
     }
 }

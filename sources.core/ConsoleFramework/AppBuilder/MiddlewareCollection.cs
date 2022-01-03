@@ -73,10 +73,10 @@ namespace DustInTheWind.ConsoleFramework.AppBuilder
             return this;
         }
 
-        public void Execute(ConsoleRequestContext context)
+        public async Task Execute(ConsoleRequestContext context)
         {
             RequestDelegate requestDelegate = Build();
-            requestDelegate.Invoke(context);
+            await requestDelegate.Invoke(context);
         }
 
         private RequestDelegate Build()

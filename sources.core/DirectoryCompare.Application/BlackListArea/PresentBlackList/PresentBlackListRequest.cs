@@ -23,6 +23,6 @@ namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.PresentBlackL
     {
         public string PotName { get; set; }
 
-        public string BlackList { get; set; }
+        public string BlackListName { get; set; }
     }
 }

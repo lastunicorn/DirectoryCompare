@@ -19,6 +19,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Security.Cryptography;
 using System.Threading;
+using System.Threading.Tasks;
 using DustInTheWind.DirectoryCompare.Domain.DiskAnalysis.DiskCrawling;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.ImportExport;
@@ -50,6 +51,7 @@ namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
         public event EventHandler<ErrorEncounteredEventArgs> ErrorEncountered;
         public event EventHandler<DiskReaderStartingEventArgs> Starting;
         public event EventHandler<DiskAnalysisProgressEventArgs> Progress;
+        public event EventHandler Finished;
 
         public TimeSpan ElapsedTime => stopwatch.Elapsed;
 
@@ -58,7 +60,12 @@ namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
             md5 = MD5.Create();
         }
 
-        public void Run()
+        public void StartRun()
+        {
+            Task.Run(Run);
+        }
+
+        private void Run()
         {
             if (State == DiskAnalysisState.InProgress)
                 throw new DirectoryCompareException("Another analysis is still in progress.");
@@ -85,6 +92,8 @@ namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
                 stopwatch.Stop();
                 State = DiskAnalysisState.Ready;
                 manualResetEventSlim.Set();
+                
+                OnFinished();
             }
         }
 
@@ -244,6 +253,11 @@ namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
         private void OnProgress(DiskAnalysisProgressEventArgs e)
         {
             Progress?.Invoke(this, e);
+        }
+
+        private void OnFinished()
+        {
+            Finished?.Invoke(this, EventArgs.Empty);
         }
     }
 }

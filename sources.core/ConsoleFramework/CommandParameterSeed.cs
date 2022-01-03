@@ -14,14 +14,21 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using MediatR;
+using System.Reflection;
 
-namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.CompareAllSnapshots
+namespace DustInTheWind.ConsoleFramework
 {
-    public class CompareAllSnapshotsRequest : IRequest<CompareAllSnapshotsResponse>
+    internal class CommandParameterSeed
     {
-        public string PotName { get; set; }
+        public PropertyInfo PropertyInfo { get; set; }
         
-        public string ExportName { get; set; }
+        public CommandParameterAttribute Attribute { get; set; }
+
+        public object Value { get; set; }
+
+        public void SetPropertyValueOn(ICommand command)
+        {
+            PropertyInfo?.SetValue(command, Value);
+        }
     }
 }

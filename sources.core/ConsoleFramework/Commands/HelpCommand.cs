@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using DustInTheWind.ConsoleFramework.UserControls;
 
 namespace DustInTheWind.ConsoleFramework.Commands
@@ -31,7 +32,7 @@ namespace DustInTheWind.ConsoleFramework.Commands
             this.commands = commands ?? throw new ArgumentNullException(nameof(commands));
         }
 
-        public void Execute(Arguments arguments)
+        public Task Execute(Arguments arguments)
         {
             IEnumerable<IGrouping<CommandInfo, CommandInfo>> commandsGrouped = commands.GroupBy(x => x);
 
@@ -43,6 +44,8 @@ namespace DustInTheWind.ConsoleFramework.Commands
             };
 
             usageControl.Display();
+
+            return Task.CompletedTask;
         }
 
         private static string GetCommandNames(IEnumerable<CommandInfo> group)

@@ -15,20 +15,29 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Linq;
+using System.Threading.Tasks;
+using DustInTheWind.ConsoleFramework;
 using DustInTheWind.ConsoleTools;
 
 namespace DustInTheWind.DirectoryCompare.Cli
 {
     internal static class Program
     {
-        private static void Main(string[] args)
+        private static async Task Main(string[] args)
         {
+            // Type viewType = typeof(CreatePotView);
+            // Type interfaceType = viewType.GetInterfaces()
+            //     .FirstOrDefault(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IView<>));
+            //
+            // Type genericParameterType = interfaceType.GetGenericArguments().FirstOrDefault();
+
             try
             {
                 ConsoleApplication consoleApplication = new ConsoleApplication();
                 consoleApplication.Initialize();
-
-                consoleApplication.Run(args);
+            
+                await consoleApplication.Run(args);
             }
             catch (Exception ex)
             {

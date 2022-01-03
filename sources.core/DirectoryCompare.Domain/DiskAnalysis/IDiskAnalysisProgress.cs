@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Threading.Tasks;
 
 namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
 {
@@ -23,6 +24,7 @@ namespace DustInTheWind.DirectoryCompare.Domain.DiskAnalysis
         event EventHandler<ErrorEncounteredEventArgs> ErrorEncountered;
         event EventHandler<DiskReaderStartingEventArgs> Starting;
         event EventHandler<DiskAnalysisProgressEventArgs> Progress;
+        public event EventHandler Finished;
 
         void WaitToEnd();
     }

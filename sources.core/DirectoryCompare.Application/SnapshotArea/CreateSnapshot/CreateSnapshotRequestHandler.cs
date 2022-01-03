@@ -61,32 +61,29 @@ namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.CreateSnapshot
         {
             log.WriteInfo("Scanning path: {0}", pot.Path);
 
-            ISnapshotWriter snapshotWriter = snapshotRepository.CreateWriter(pot.Name);
-
             DiskAnalysis diskAnalysis = new()
             {
                 RootPath = pot.Path,
-                SnapshotWriter = snapshotWriter,
+                SnapshotWriter = snapshotRepository.CreateWriter(pot.Name),
                 BlackList = blackListRepository.Get(pot.Name)
             };
 
             diskAnalysis.Starting += HandleDiskReaderStarting;
             diskAnalysis.ErrorEncountered += HandleDiskReaderErrorEncountered;
+            diskAnalysis.Finished += HandleDiskAnalysisFinished;
 
-            Task.Run(() =>
-            {
-                try
-                {
-                    diskAnalysis.Run();
-                }
-                finally
-                {
-                    log.WriteInfo("Finished scanning path in {0}", diskAnalysis.ElapsedTime);
-                    snapshotWriter.Dispose();
-                }
-            });
+            diskAnalysis.StartRun();
 
             return diskAnalysis;
+        }
+
+        private void HandleDiskAnalysisFinished(object sender, EventArgs e)
+        {
+            if (sender is DiskAnalysis diskAnalysis)
+            {
+                log.WriteInfo("Finished scanning path in {0}", diskAnalysis.ElapsedTime);
+                diskAnalysis.SnapshotWriter.Dispose();
+            }
         }
 
         private void HandleDiskReaderStarting(object sender, DiskReaderStartingEventArgs e)

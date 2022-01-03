@@ -16,9 +16,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using DustInTheWind.ConsoleFramework.AppBuilder;
 using DustInTheWind.ConsoleFramework.CustomMiddleware;
 using DustInTheWind.ConsoleFramework.UserControls;
@@ -45,6 +45,7 @@ namespace DustInTheWind.ConsoleFramework
             ConfigureServices(serviceCollection);
             serviceCollection.AddSingleton(serviceCollection);
             serviceCollection.AddTransient<ICommandFactory, CommandFactory>();
+            serviceCollection.AddTransient<IViewFactory, ViewFactory>();
 
             ServiceProvider = serviceCollection.BuildServiceProvider();
 
@@ -81,40 +82,62 @@ namespace DustInTheWind.ConsoleFramework
 
         private IEnumerable<CommandInfo> DiscoverCommands()
         {
-            Assembly executingAssembly = Assembly.GetExecutingAssembly();
-            string rootDirectoryPath = Path.GetDirectoryName(executingAssembly.Location);
+            Assembly entryAssembly = Assembly.GetEntryAssembly();
+            AssemblyName[] allAssemblyNames = entryAssembly.GetReferencedAssemblies();
 
-            string[] assemblyFileNames = Directory.GetFiles(rootDirectoryPath, "*.dll");
+            Assembly[] loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-            return assemblyFileNames
-                .Select(LoadAssembly)
-                .Where(x => x != null)
-                .Where(x => x.FullName != executingAssembly.FullName)
-                .SelectMany(GetAllTypes)
-                .Select(x => new CommandInfo(x))
+            IEnumerable<AssemblyName> assemblyNamesToBeLoaded = allAssemblyNames
+                .Where(x => loadedAssemblies.Count(z => z.GetName() == x) == 0)
+                .ToList();
+
+            foreach (AssemblyName assemblyName in assemblyNamesToBeLoaded)
+                AppDomain.CurrentDomain.Load(assemblyName);
+
+            Assembly[] allAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+            IEnumerable<Type> allTypes = allAssemblies
+                .SelectMany(GetAllTypes);
+
+            List<Type> commandTypes = new();
+            List<Type> viewTypes = new();
+
+            foreach (Type type in allTypes)
+            {
+                if (CommandInfo.IsCommand(type))
+                    commandTypes.Add(type);
+                else if (CommandInfo.IsView(type))
+                    viewTypes.Add(type);
+            }
+
+            return commandTypes
+                .Select(x =>
+                {
+                    Type viewType = viewTypes
+                        .FirstOrDefault(z => IsViewForCommand(z, x));
+
+                    return new CommandInfo(x, viewType);
+                })
                 .Where(x => x.IsValidCommand);
         }
 
-        private Assembly LoadAssembly(string x)
+        private static bool IsViewForCommand(Type viewType, Type commandType)
         {
-            try
-            {
-                return Assembly.LoadFile(x);
-            }
-            catch (BadImageFormatException)
-            {
-                string message = string.Format("Dll file is not a .NET assembly. File name = {0}", x);
-                //log.WriteInfo(message);
+            return viewType.GetInterfaces()
+                .Any(x =>
+                {
+                    if (!x.IsGenericType)
+                        return false;
 
-                return null;
-            }
-            catch (Exception ex)
-            {
-                string message = string.Format("Warning: Could not load an Assembly while searching for installer plugin instances. File name = {0}", x);
-                //log.WriteWarning(message, ex);
+                    if (x.GetGenericTypeDefinition() != typeof(IView<>))
+                        return false;
 
-                return null;
-            }
+                    Type[] genericArguments = x.GetGenericArguments();
+
+                    if (genericArguments.Length != 1)
+                        return false;
+
+                    return genericArguments[0] == commandType;
+                });
         }
 
         private IEnumerable<Type> GetAllTypes(Assembly x)
@@ -125,7 +148,7 @@ namespace DustInTheWind.ConsoleFramework
             }
             catch (ReflectionTypeLoadException ex)
             {
-                //log.WriteWarning("Warning: Could not load a Type while searching for installer plugin instances. Loader Exceptions follows:", ex);
+                //log.WriteWarning("Warning: Could not load a Type while searching for command instances. Loader Exceptions follows:", ex);
 
                 // foreach (Exception exLoaderException in ex.LoaderExceptions)
                 //     log.WriteWarning(exLoaderException);
@@ -134,12 +157,12 @@ namespace DustInTheWind.ConsoleFramework
             }
             catch (Exception ex)
             {
-                //log.WriteWarning("Warning: Could not load a Type while searching for UiPackage instances.", ex);
+                //log.WriteWarning("Warning: Could not load a Type while searching for command instances.", ex);
                 return null;
             }
         }
 
-        public void Run(string[] args)
+        public async Task Run(string[] args)
         {
             try
             {
@@ -150,9 +173,9 @@ namespace DustInTheWind.ConsoleFramework
                 Arguments arguments = new(args);
 
                 if (UseSpinner)
-                    Spinner.Run(() => ProcessRequest(arguments));
+                    await Spinner.Run(async () => await ProcessRequest(arguments));
                 else
-                    ProcessRequest(arguments);
+                    await ProcessRequest(arguments);
             }
             catch (Exception ex)
             {
@@ -165,14 +188,14 @@ namespace DustInTheWind.ConsoleFramework
             }
         }
 
-        private void ProcessRequest(Arguments arguments)
+        private async Task ProcessRequest(Arguments arguments)
         {
             ConsoleRequestContext context = new(arguments)
             {
                 RequestServices = middlewareCollection.ApplicationServices
             };
 
-            middlewareCollection.Execute(context);
+            await middlewareCollection.Execute(context);
         }
 
         protected virtual void OnStart()
@@ -189,21 +212,6 @@ namespace DustInTheWind.ConsoleFramework
         protected virtual void OnError(Exception ex)
         {
             CustomConsole.WriteLineError(ex);
-        }
-    }
-
-    internal class CommandFactory : ICommandFactory
-    {
-        private readonly IServiceProvider serviceProvider;
-
-        public CommandFactory(IServiceProvider serviceProvider)
-        {
-            this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-        }
-
-        public ICommand Create(Type type)
-        {
-            return serviceProvider.GetService(type) as ICommand;
         }
     }
 }

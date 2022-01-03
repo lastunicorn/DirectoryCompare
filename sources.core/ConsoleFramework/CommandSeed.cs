@@ -18,22 +18,26 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using DustInTheWind.ConsoleFramework.CustomMiddleware;
 
-namespace DustInTheWind.ConsoleFramework.CustomMiddleware
+namespace DustInTheWind.ConsoleFramework
 {
     internal class CommandSeed
     {
-        public Type Type { get; }
+        public Type CommandType { get; }
+
+        public Type ViewType { get; }
 
         public List<CommandParameterSeed> ParametersSeeds { get; }
 
         public bool IsUsingAllArguments { get; }
 
-        public CommandSeed(Type type, Arguments arguments = null)
+        public CommandSeed(Type commandType, Type viewType, Arguments arguments = null)
         {
-            Type = type ?? throw new ArgumentNullException(nameof(type));
+            CommandType = commandType ?? throw new ArgumentNullException(nameof(commandType));
+            ViewType = viewType;
 
-            ParametersSeeds = type.GetProperties()
+            ParametersSeeds = commandType.GetProperties()
                 .Select(x => new CommandParameterSeed
                 {
                     PropertyInfo = x,
@@ -57,7 +61,7 @@ namespace DustInTheWind.ConsoleFramework.CustomMiddleware
 
         public ICommand CreateCommand(ICommandFactory commandFactory)
         {
-            ICommand command = commandFactory.Create(Type);
+            ICommand command = commandFactory.Create(CommandType);
 
             if (command == null)
                 throw new InvalidCommandException();
@@ -66,6 +70,19 @@ namespace DustInTheWind.ConsoleFramework.CustomMiddleware
                 parameterInfo.SetPropertyValueOn(command);
 
             return command;
+        }
+
+        public object CreateView(IViewFactory viewFactory)
+        {
+            if (ViewType == null)
+                return null;
+
+            object view = viewFactory.Create(ViewType);
+
+            if (view == null)
+                throw new InvalidCommandException();
+
+            return view;
         }
     }
 }

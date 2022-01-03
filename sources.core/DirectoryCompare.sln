@@ -21,7 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataAccess", "DataAccess", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.Cli.Bootstrapper", "DirectoryCompare.Cli.Bootstrapper\DirectoryCompare.Cli.Bootstrapper.csproj", "{F4445650-0D0C-43F2-A113-FA5A38093F62}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.Cli.Presentation", "DirectoryCompare.Cli.UI\DirectoryCompare.Cli.Presentation.csproj", "{0609FA89-0257-4103-A74D-EAAA90340CAE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.Cli.Presentation", "DirectoryCompare.Cli.Presentation\DirectoryCompare.Cli.Presentation.csproj", "{0609FA89-0257-4103-A74D-EAAA90340CAE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.Infrastructure", "DirectoryCompare.Infrastructure\DirectoryCompare.Infrastructure.csproj", "{21DFC865-34C1-4ECD-9D79-3F33F555E4D8}"
 EndProject

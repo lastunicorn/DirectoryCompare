@@ -67,6 +67,17 @@ namespace DustInTheWind.ConsoleFramework
             return Values.Where(x => x.Name == null);
         }
 
+        private Argument GetAnonymous(int index)
+        {
+            if (index <= 0) throw new ArgumentOutOfRangeException(nameof(index));
+
+            return Values
+                .Where(x => x.Name == null)
+                .Skip(index - 1)
+                .Take(1)
+                .FirstOrDefault();
+        }
+
         public string GetStringValue(string name)
         {
             Argument argument = Values.FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.InvariantCulture));
@@ -133,17 +144,6 @@ namespace DustInTheWind.ConsoleFramework
             }
 
             return null;
-        }
-
-        private Argument GetAnonymous(int index)
-        {
-            if (index <= 0) throw new ArgumentOutOfRangeException(nameof(index));
-
-            return Values
-                .Where(x => x.Name == null)
-                .Skip(index - 1)
-                .Take(1)
-                .FirstOrDefault();
         }
     }
 }

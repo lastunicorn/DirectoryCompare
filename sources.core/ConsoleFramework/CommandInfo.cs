@@ -15,19 +15,20 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Linq;
 using System.Reflection;
-using DustInTheWind.ConsoleFramework.CustomMiddleware;
+using DustInTheWind.ConsoleFramework.Commands;
 
 namespace DustInTheWind.ConsoleFramework
 {
     internal class CommandInfo
     {
+        private readonly Type commandType;
+        private readonly Type viewType;
         private readonly CommandAttribute commandAttribute;
         private readonly CommandDescriptionAttribute commandDescriptionAttribute;
 
         public bool IsValidCommand { get; }
-
-        public Type Type { get; }
 
         public string Name
         {
@@ -39,9 +40,9 @@ namespace DustInTheWind.ConsoleFramework
                 if (commandAttribute != null)
                     return commandAttribute.Name;
 
-                return Type.Name.EndsWith("Command")
-                    ? Type.Name.Substring(0, Type.Name.Length - "Command".Length)
-                    : Type.Name;
+                return commandType.Name.EndsWith("Command")
+                    ? commandType.Name.Substring(0, commandType.Name.Length - "Command".Length)
+                    : commandType.Name;
             }
         }
 
@@ -58,29 +59,44 @@ namespace DustInTheWind.ConsoleFramework
 
         public bool IsHelpCommand => commandAttribute?.IsHelp ?? false;
 
-        public CommandInfo(Type type)
+        public CommandInfo(Type commandType, Type viewType)
         {
-            Type = type;
-            IsValidCommand = CalculateIsValidCommand();
+            this.commandType = commandType ?? throw new ArgumentNullException(nameof(commandType));
+            this.viewType = viewType;
+            
+            IsValidCommand = IsCommand(commandType);
 
             if (IsValidCommand)
             {
-                commandAttribute = Type?.GetCustomAttribute<CommandAttribute>();
-                commandDescriptionAttribute = Type?.GetCustomAttribute<CommandDescriptionAttribute>();
+                commandAttribute = this.commandType?.GetCustomAttribute<CommandAttribute>();
+                commandDescriptionAttribute = this.commandType?.GetCustomAttribute<CommandDescriptionAttribute>();
             }
         }
 
-        private bool CalculateIsValidCommand()
+        public static bool IsCommand(Type type)
         {
-            return Type != null &&
-                   Type.IsClass &&
-                   !Type.IsAbstract &&
-                   typeof(ICommand).IsAssignableFrom(Type);
+            return type != null &&
+                   type.IsClass &&
+                   !type.IsAbstract &&
+                   typeof(ICommand).IsAssignableFrom(type);
+        }
+
+        public static bool IsView(Type type)
+        {
+            return type != null &&
+                   type.IsClass &&
+                   !type.IsAbstract &&
+                   type.GetInterfaces().Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IView<>));
         }
 
         public CommandSeed GenerateSeed(Arguments arguments = null)
         {
-            return new CommandSeed(Type, arguments);
+            return new CommandSeed(commandType, viewType, arguments);
+        }
+
+        public override string ToString()
+        {
+            return $"{Name} - {commandType.FullName}";
         }
     }
 }

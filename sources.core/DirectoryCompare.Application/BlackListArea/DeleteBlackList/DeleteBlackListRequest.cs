@@ -16,12 +16,12 @@
 
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.CompareAllSnapshots
+namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.DeleteBlackList
 {
-    public class CompareAllSnapshotsRequest : IRequest<CompareAllSnapshotsResponse>
+    public class DeleteBlackListRequest : IRequest
     {
         public string PotName { get; set; }
         
-        public string ExportName { get; set; }
+        public string BlackListName { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿// DirectoryCompare
+// DirectoryCompare
 // Copyright (C) 2017-2020 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -15,26 +15,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using DustInTheWind.DirectoryCompare.Domain.Utils;
 
-namespace DustInTheWind.DirectoryCompare.Cli.UI.Views
+namespace DustInTheWind.ConsoleFramework
 {
-    internal class BlackListView
+    public interface ICommandFactory
     {
-        private readonly DiskPathCollection blackList;
-
-        public BlackListView(DiskPathCollection blackList)
-        {
-            this.blackList = blackList;
-        }
-
-        public void Display()
-        {
-            if (blackList == null)
-                return;
-
-            foreach (string path in blackList)
-                Console.WriteLine(path);
-        }
+        ICommand Create(Type type);
     }
 }
