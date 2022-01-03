@@ -22,7 +22,7 @@ using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Infrastructure;
 
-namespace DustInTheWind.DirectoryCompare.Cli.UI.MiscellaneousCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands
 {
     [Command("remove-duplicates")]
     public class RemoveDuplicatesCommand : ICommand

@@ -17,7 +17,7 @@
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.ConsoleTools;
 
-namespace DustInTheWind.DirectoryCompare.Cli.UI.BlackListCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.BlackListCommands
 {
     public class RemoveBlackListPathCommandView : IView<RemoveBlackListPathCommand>
     {

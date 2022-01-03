@@ -19,11 +19,10 @@ using DustInTheWind.ConsoleFramework;
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 
-namespace DustInTheWind.DirectoryCompare.Cli.UI.MiscellaneousCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands
 {
     internal class CompareSnapshotsCommandView : IView<CompareSnapshotsCommand>
     {
-
         public void Display(CompareSnapshotsCommand command)
         {
             Console.WriteLine();

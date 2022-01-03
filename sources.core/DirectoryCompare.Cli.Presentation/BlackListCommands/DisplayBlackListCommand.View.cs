@@ -17,7 +17,7 @@
 using System;
 using DustInTheWind.ConsoleFramework;
 
-namespace DustInTheWind.DirectoryCompare.Cli.UI.BlackListCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.BlackListCommands
 {
     public class DisplayBlackListCommandView : IView<DisplayBlackListCommand>
     {

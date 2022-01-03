@@ -21,7 +21,7 @@ using DustInTheWind.DirectoryCompare.Application.BlackListArea.PresentBlackList;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 using DustInTheWind.DirectoryCompare.Infrastructure;
 
-namespace DustInTheWind.DirectoryCompare.Cli.UI.BlackListCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.BlackListCommands
 {
     // Example:
     // blacklist <black-list-name> -p <pot-name>

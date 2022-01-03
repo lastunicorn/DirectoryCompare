@@ -54,7 +54,7 @@ namespace DustInTheWind.ConsoleFramework.CustomMiddleware
             if (view != null)
             {
                 if (isLongCommandView)
-                    ExecuteFinishView(view);
+                    ExecuteFinishView(view, command);
                 else
                     ExecuteView(view, command);
             }
@@ -74,14 +74,14 @@ namespace DustInTheWind.ConsoleFramework.CustomMiddleware
 
         private static void ExecuteView(object view, ICommand command)
         {
-            MethodInfo displayMethodInfo = view.GetType().GetMethod(nameof(IView<ICommand>.Display));
-            displayMethodInfo?.Invoke(view, new object[] { command });
+            MethodInfo methodInfo = view.GetType().GetMethod(nameof(IView<ICommand>.Display));
+            methodInfo?.Invoke(view, new object[] { command });
         }
 
-        private static void ExecuteFinishView(object view)
+        private static void ExecuteFinishView(object view, ICommand command)
         {
-            MethodInfo displayMethodInfo = view.GetType().GetMethod(nameof(ILongCommandView<ICommand>.FinishDisplay));
-            displayMethodInfo?.Invoke(view, Array.Empty<object>());
+            MethodInfo methodInfo = view.GetType().GetMethod(nameof(ILongCommandView<ICommand>.FinishDisplay));
+            methodInfo?.Invoke(view, new object[] { command });
         }
     }
 }

@@ -17,13 +17,13 @@
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.ConsoleTools;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Presentation.BlackListCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands
 {
-    internal class CreateBlackListCommandView : IView<CreateBlackListCommand>
+    public class DeleteSnapshotCommandView : IView<DeleteSnapshotCommand>
     {
-        public void Display(CreateBlackListCommand command)
+        public void Display(DeleteSnapshotCommand command)
         {
-            CustomConsole.WriteLineSuccess($"Black list '{command.BlackListName}' created successfully.");
+            CustomConsole.WriteLineSuccess($"Snapshot '{command.SnapshotLocation}' deleted successfully.");
         }
     }
 }

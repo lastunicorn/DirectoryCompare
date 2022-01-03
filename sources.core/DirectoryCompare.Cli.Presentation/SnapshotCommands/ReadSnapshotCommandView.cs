@@ -18,13 +18,13 @@ using System;
 using System.ComponentModel;
 using DustInTheWind.ConsoleFramework;
 
-namespace DustInTheWind.DirectoryCompare.Cli.UI.MiscellaneousCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands
 {
-    internal class CreateSnapshotCommandView : ILongCommandView<CreateSnapshotCommand>
+    internal class ReadSnapshotCommandView : ILongCommandView<ReadSnapshotCommand>
     {
         private int lastValue;
 
-        public void Display(CreateSnapshotCommand command)
+        public void Display(ReadSnapshotCommand command)
         {
             lastValue = -1;
             command.Progress += HandleProgress;
@@ -41,7 +41,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.MiscellaneousCommands
             }
         }
 
-        public void FinishDisplay()
+        public void FinishDisplay(ReadSnapshotCommand command)
         {
             Console.WriteLine("Done");
         }

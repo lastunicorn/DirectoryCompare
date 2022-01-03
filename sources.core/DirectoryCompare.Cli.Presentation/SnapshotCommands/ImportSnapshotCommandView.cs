@@ -1,4 +1,4 @@
-﻿// DirectoryCompare
+// DirectoryCompare
 // Copyright (C) 2017-2020 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -14,21 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
+using DustInTheWind.ConsoleFramework;
+using DustInTheWind.ConsoleTools;
 
-namespace DustInTheWind.DirectoryCompare.Cli.UI.MiscellaneousCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands
 {
-    internal class CreateSnapshotView
+    public class ImportSnapshotCommandView : IView<ImportSnapshotCommand>
     {
-        private float lastValue = -1;
-
-        public void DisplayProgress(float value)
+        public void Display(ImportSnapshotCommand command)
         {
-            if (Math.Abs(lastValue - value) > 0.1)
-            {
-                Console.WriteLine($"Progress: {value}%");
-                lastValue = value;
-            }
+            CustomConsole.WriteLineSuccess($"Snapshot '{command.SnapshotFilePath}' successfully imported in pot '{command.PotName}'.");
         }
     }
 }

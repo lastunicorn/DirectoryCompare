@@ -18,7 +18,7 @@ using DustInTheWind.ConsoleFramework;
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 
-namespace DustInTheWind.DirectoryCompare.Cli.UI.PotCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands
 {
     internal class DisplayPotCommandView : IView<DisplayPotCommand>
     {

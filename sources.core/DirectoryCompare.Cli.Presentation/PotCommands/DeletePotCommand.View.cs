@@ -17,7 +17,7 @@
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.ConsoleTools;
 
-namespace DustInTheWind.DirectoryCompare.Cli.UI.PotCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands
 {
     internal class DeletePotCommandView : IView<DeletePotCommand>
     {

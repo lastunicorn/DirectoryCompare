@@ -17,13 +17,13 @@
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.ConsoleTools;
 
-namespace DustInTheWind.DirectoryCompare.Cli.UI.MiscellaneousCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands
 {
     internal class CompareAllSnapshotsCommandView : IView<CompareAllSnapshotsCommand>
     {
         public void Display(CompareAllSnapshotsCommand command)
         {
-            CustomConsole.WriteLine("Results exported successfully");
+            CustomConsole.WriteLine("Results exported successfully.");
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿// DirectoryCompare
+// DirectoryCompare
 // Copyright (C) 2017-2020 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -19,22 +19,29 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.DirectoryCompare.Application.SnapshotArea.CreateSnapshot;
+using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Infrastructure;
 
-namespace DustInTheWind.DirectoryCompare.Cli.UI.MiscellaneousCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands
 {
-    [Command("read")]
+    // Example:
+    // snapshot -c <pot-name>
+    // snapshot --create <pot-name>
+    
+    [Command("snapshot")]
     [CommandDescription("Creates a new snapshot in a specific pot.")]
     public class CreateSnapshotCommand : ILongCommand
     {
         private readonly RequestBus requestBus;
 
-        [CommandParameter(Index = 1)]
+        [CommandParameter(ShortName = "c", LongName = "create")]
         public string PotName { get; set; }
 
         public event EventHandler<ProgressChangedEventArgs> Progress;
 
+        public SnapshotLocation SnapshotLocation { get; set; }
+        
         public CreateSnapshotCommand(RequestBus requestBus)
         {
             this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
@@ -48,6 +55,8 @@ namespace DustInTheWind.DirectoryCompare.Cli.UI.MiscellaneousCommands
             diskAnalysisProgress.Progress += HandleAnalysisProgress;
 
             diskAnalysisProgress.WaitToEnd();
+
+            SnapshotLocation = "missing";
         }
 
         private void HandleAnalysisProgress(object sender, DiskAnalysisProgressEventArgs value)

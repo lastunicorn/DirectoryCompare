@@ -1,4 +1,4 @@
-﻿// DirectoryCompare
+// DirectoryCompare
 // Copyright (C) 2017-2020 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -15,31 +15,25 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using DustInTheWind.ConsoleFramework;
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 
-namespace DustInTheWind.DirectoryCompare.Cli.UI.MiscellaneousCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands
 {
-    internal class SnapshotView
+    public class DisplaySnapshotCommandView : IView<DisplaySnapshotCommand>
     {
-        private readonly Snapshot snapshot;
-
-        public SnapshotView(Snapshot snapshot)
+        public void Display(DisplaySnapshotCommand command)
         {
-            this.snapshot = snapshot;
-        }
-
-        public void Display()
-        {
-            if (snapshot == null)
+            if (command.Snapshot == null)
                 CustomConsole.WriteLine("There is no snapshot.");
             else
-                DisplayDirectory(snapshot, 0);
+                DisplayDirectory(command.Snapshot, 0);
         }
 
         private static void DisplayDirectory(HDirectory hDirectory, int index)
         {
-            string indent = new string(' ', index);
+            string indent = new(' ', index);
 
             foreach (HDirectory xSubdirectory in hDirectory.Directories)
             {

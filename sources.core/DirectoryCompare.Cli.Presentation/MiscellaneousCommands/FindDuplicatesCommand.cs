@@ -23,7 +23,7 @@ using DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.FindDuplicate
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Infrastructure;
 
-namespace DustInTheWind.DirectoryCompare.Cli.UI.MiscellaneousCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands
 {
     [Command("find-duplicates")]
     public class FindDuplicatesCommand : ICommand

@@ -8,12 +8,7 @@
         <Description />
         <AssemblyName>DirectoryCompare</AssemblyName>
         <RootNamespace>DustInTheWind.DirectoryCompare.Cli.Bootstrapper</RootNamespace>
-
     </PropertyGroup>
-
-    <ItemGroup>
-        <Compile Remove="MyRequestBus.cs" />
-    </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\DirectoryCompare.Application\DirectoryCompare.Application.csproj" PrivateAssets="All" />

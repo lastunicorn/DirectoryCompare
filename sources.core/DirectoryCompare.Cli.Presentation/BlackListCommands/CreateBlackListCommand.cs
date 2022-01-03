@@ -20,7 +20,7 @@ using DustInTheWind.ConsoleFramework;
 using DustInTheWind.DirectoryCompare.Application.BlackListArea.DeleteBlackList;
 using DustInTheWind.DirectoryCompare.Infrastructure;
 
-namespace DustInTheWind.DirectoryCompare.Cli.UI.BlackListCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.BlackListCommands
 {
     // Example:
     // blacklist -c <blacklist-name> -p <pot-name>

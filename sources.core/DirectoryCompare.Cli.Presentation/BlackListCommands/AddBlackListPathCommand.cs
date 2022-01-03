@@ -20,7 +20,7 @@ using DustInTheWind.ConsoleFramework;
 using DustInTheWind.DirectoryCompare.Application.BlackListArea.AddBlackPath;
 using DustInTheWind.DirectoryCompare.Infrastructure;
 
-namespace DustInTheWind.DirectoryCompare.Cli.UI.BlackListCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.BlackListCommands
 {
     // Example:
     // black-list -a <path> -p <pot-name> -b <black-list-name>

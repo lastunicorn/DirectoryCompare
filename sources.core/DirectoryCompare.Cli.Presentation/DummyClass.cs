@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.Cli.UI
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation
 {
     /// <summary>
     /// This class exists only to be instantiated from the bootstrapper and force, in this way,

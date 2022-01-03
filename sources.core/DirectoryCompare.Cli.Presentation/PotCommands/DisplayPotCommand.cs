@@ -21,7 +21,7 @@ using DustInTheWind.DirectoryCompare.Application.PotArea.PresentPot;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.DirectoryCompare.Infrastructure;
 
-namespace DustInTheWind.DirectoryCompare.Cli.UI.PotCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands
 {
     // Example:
     // pot <pot-name>

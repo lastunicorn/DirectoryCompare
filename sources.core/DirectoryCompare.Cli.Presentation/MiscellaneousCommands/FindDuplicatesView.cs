@@ -18,7 +18,7 @@ using System;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 
-namespace DustInTheWind.DirectoryCompare.Cli.UI.MiscellaneousCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands
 {
     internal class FindDuplicatesView
     {

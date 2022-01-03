@@ -20,7 +20,7 @@ using DustInTheWind.ConsoleFramework;
 using DustInTheWind.DirectoryCompare.Application.PotArea.DeletePot;
 using DustInTheWind.DirectoryCompare.Infrastructure;
 
-namespace DustInTheWind.DirectoryCompare.Cli.UI.PotCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands
 {
     // Examples:
     // pot -d <pot-name>

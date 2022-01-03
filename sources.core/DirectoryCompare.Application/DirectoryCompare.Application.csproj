@@ -7,27 +7,27 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Remove="Performance\**"/>
-        <Compile Remove="Validation\**"/>
-        <EmbeddedResource Remove="Performance\**"/>
-        <EmbeddedResource Remove="Validation\**"/>
-        <None Remove="Performance\**"/>
-        <None Remove="Validation\**"/>
+        <Compile Remove="Performance\**" />
+        <Compile Remove="Validation\**" />
+        <EmbeddedResource Remove="Performance\**" />
+        <EmbeddedResource Remove="Validation\**" />
+        <None Remove="Performance\**" />
+        <None Remove="Validation\**" />
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Remove="SnapshotArea\CreateSnapshot\PathAnalysisProgress.cs"/>
+        <Compile Remove="SnapshotArea\CreateSnapshot\PathAnalysisProgress.cs" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="FluentValidation" Version="9.0.1"/>
-        <PackageReference Include="MediatR" Version="8.0.2"/>
+        <PackageReference Include="FluentValidation" Version="9.0.1" />
+        <PackageReference Include="MediatR" Version="8.0.2" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All"/>
-        <ProjectReference Include="..\DirectoryCompare.Infrastructure\DirectoryCompare.Infrastructure.csproj"/>
-        <ProjectReference Include="..\DirectoryCompare.Validation\DirectoryCompare.Validation.csproj"/>
+        <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.Infrastructure\DirectoryCompare.Infrastructure.csproj" />
+        <ProjectReference Include="..\DirectoryCompare.Validation\DirectoryCompare.Validation.csproj" />
     </ItemGroup>
 
 </Project>

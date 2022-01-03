@@ -14,16 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.ConsoleFramework;
-using DustInTheWind.ConsoleTools;
+using FluentValidation;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Presentation.BlackListCommands
+namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.PresentSnapshot
 {
-    internal class CreateBlackListCommandView : IView<CreateBlackListCommand>
+    public class PresentSnapshotRequestValidator : AbstractValidator<PresentSnapshotRequest>
     {
-        public void Display(CreateBlackListCommand command)
+        public PresentSnapshotRequestValidator()
         {
-            CustomConsole.WriteLineSuccess($"Black list '{command.BlackListName}' created successfully.");
+            RuleFor(x => x.Location).NotEmpty();
         }
     }
 }

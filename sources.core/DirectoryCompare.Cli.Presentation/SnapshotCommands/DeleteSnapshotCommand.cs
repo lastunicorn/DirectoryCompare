@@ -1,4 +1,4 @@
-﻿// DirectoryCompare
+// DirectoryCompare
 // Copyright (C) 2017-2020 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -17,37 +17,34 @@
 using System;
 using System.Threading.Tasks;
 using DustInTheWind.ConsoleFramework;
-using DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.CompareAllSnapshots;
+using DustInTheWind.DirectoryCompare.Application.SnapshotArea.DeleteSnapshot;
 using DustInTheWind.DirectoryCompare.Infrastructure;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands
 {
-    [Command("compare-all")]
-    [CommandDescription("Compares all snapshots in a pot with the previous snapshot.")]
-    public class CompareAllSnapshotsCommand : ICommand
+    // Example:
+    // snapshot -d <snapshot-location>
+    // snapshot --delete <snapshot-location>
+    public class DeleteSnapshotCommand : ICommand
     {
         private readonly RequestBus requestBus;
 
-        [CommandParameter(Index = 1)]
-        public string PotName { get; set; }
+        [CommandParameter(ShortName = "d", LongName = "delete")]
+        public string SnapshotLocation { get; set; }
 
-        [CommandParameter(Index = 2)]
-        public string ExportName { get; set; }
-        
-        public CompareAllSnapshotsCommand(RequestBus requestBus)
+        public DeleteSnapshotCommand(RequestBus requestBus)
         {
             this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
         }
 
         public async Task Execute(Arguments arguments)
         {
-            CompareAllSnapshotsRequest request = new()
+            DeleteSnapshotRequest request = new()
             {
-                PotName = PotName,
-                ExportName = ExportName
+                Location = SnapshotLocation
             };
-            
-            await requestBus.PlaceRequest<CompareAllSnapshotsRequest, CompareAllSnapshotsResponse>(request);
+
+            await requestBus.PlaceRequest(request);
         }
     }
 }

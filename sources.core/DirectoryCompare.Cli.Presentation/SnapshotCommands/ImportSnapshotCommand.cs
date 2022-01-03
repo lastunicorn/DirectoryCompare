@@ -1,4 +1,4 @@
-﻿// DirectoryCompare
+// DirectoryCompare
 // Copyright (C) 2017-2020 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -17,37 +17,39 @@
 using System;
 using System.Threading.Tasks;
 using DustInTheWind.ConsoleFramework;
-using DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.CompareAllSnapshots;
+using DustInTheWind.DirectoryCompare.Application.SnapshotArea.ImportSnapshot;
 using DustInTheWind.DirectoryCompare.Infrastructure;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands
 {
-    [Command("compare-all")]
-    [CommandDescription("Compares all snapshots in a pot with the previous snapshot.")]
-    public class CompareAllSnapshotsCommand : ICommand
+    // Example:
+    // snapshot -i <file-path> -p <pot-name>
+    // snapshot --import <file-path> --pot <pot-name>
+
+    public class ImportSnapshotCommand : ICommand
     {
         private readonly RequestBus requestBus;
 
-        [CommandParameter(Index = 1)]
+        [CommandParameter(ShortName = "i", LongName = "import")]
+        public string SnapshotFilePath { get; set; }
+
+        [CommandParameter(ShortName = "p", LongName = "pot")]
         public string PotName { get; set; }
 
-        [CommandParameter(Index = 2)]
-        public string ExportName { get; set; }
-        
-        public CompareAllSnapshotsCommand(RequestBus requestBus)
+        public ImportSnapshotCommand(RequestBus requestBus)
         {
             this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
         }
 
         public async Task Execute(Arguments arguments)
         {
-            CompareAllSnapshotsRequest request = new()
+            ImportSnapshotRequest request = new()
             {
-                PotName = PotName,
-                ExportName = ExportName
+                FilePath = SnapshotFilePath,
+                PotName = PotName
             };
-            
-            await requestBus.PlaceRequest<CompareAllSnapshotsRequest, CompareAllSnapshotsResponse>(request);
+
+            await requestBus.PlaceRequest(request);
         }
     }
 }
