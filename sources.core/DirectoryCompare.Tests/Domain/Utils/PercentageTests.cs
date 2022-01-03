@@ -1,4 +1,4 @@
-﻿// DirectoryCompare
+// DirectoryCompare
 // Copyright (C) 2017-2020 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -14,14 +14,26 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
+using DustInTheWind.DirectoryCompare.Domain.Utils;
+using NUnit.Framework;
 
-namespace DustInTheWind.DirectoryCompare.DiskAnalysis
+namespace DustInTheWind.DirectoryCompare.Tests.Domain.Utils
 {
-    public interface IDiskAnalysisProgress
+    [TestFixture]
+    public class PercentageTests
     {
-        event EventHandler<DiskAnalysisProgressEventArgs> Progress;
+        [TestCase(50, 0)]
+        [TestCase(150, 100)]
+        [TestCase(100, 50)]
+        [TestCase(51, 1)]
+        public void Test(int underlyingValue, float percentageValue)
+        {
+            Percentage percentage = new(50, 150)
+            {
+                UnderlyingValue = underlyingValue
+            };
 
-        void WaitToEnd();
+            Assert.That(percentage.Value, Is.EqualTo(percentageValue));
+        }
     }
 }

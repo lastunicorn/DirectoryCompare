@@ -49,7 +49,10 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands
 
         public async Task Execute(Arguments arguments)
         {
-            CreateSnapshotRequest request = CreateRequest();
+            CreateSnapshotRequest request = new()
+            {
+                PotName = PotName
+            };
 
             IDiskAnalysisProgress diskAnalysisProgress = await requestBus.PlaceRequest<CreateSnapshotRequest, IDiskAnalysisProgress>(request);
             diskAnalysisProgress.Progress += HandleAnalysisProgress;
@@ -63,14 +66,6 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands
         {
             ProgressChangedEventArgs args = new((int)value.Percentage, null);
             OnProgress(args);
-        }
-
-        private CreateSnapshotRequest CreateRequest()
-        {
-            return new CreateSnapshotRequest
-            {
-                PotName = PotName
-            };
         }
 
         protected virtual void OnProgress(ProgressChangedEventArgs e)

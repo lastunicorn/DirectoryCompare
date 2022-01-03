@@ -15,10 +15,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Threading.Tasks;
 using DustInTheWind.DirectoryCompare.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
-using DustInTheWind.DirectoryCompare.Domain.ImportExport;
 using DustInTheWind.DirectoryCompare.Domain.Logging;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using MediatR;
@@ -44,7 +42,7 @@ namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.CreateSnapshot
         protected override IDiskAnalysisProgress Handle(CreateSnapshotRequest request)
         {
             Pot pot = RetrievePot(request);
-            return StartPathAnalysis2(pot);
+            return StartPathAnalysis(pot);
         }
 
         private Pot RetrievePot(CreateSnapshotRequest request)
@@ -57,7 +55,7 @@ namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.CreateSnapshot
             return pot;
         }
 
-        private DiskAnalysis.DiskAnalysis StartPathAnalysis2(Pot pot)
+        private DiskAnalysis.DiskAnalysis StartPathAnalysis(Pot pot)
         {
             log.WriteInfo("Scanning path: {0}", pot.Path);
 

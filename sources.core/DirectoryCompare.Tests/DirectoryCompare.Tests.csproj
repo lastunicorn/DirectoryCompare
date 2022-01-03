@@ -7,8 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="NUnit" Version="3.12.0"/>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1"/>
+        <PackageReference Include="NUnit" Version="3.12.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
         <PackageReference Include="NUnit3TestAdapter" Version="3.17.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
@@ -16,10 +16,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ConsoleFramework\ConsoleFramework.csproj"/>
-        <ProjectReference Include="..\DirectoryCompare.DataAccess\DirectoryCompare.DataAccess.csproj"/>
-        <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj"/>
-        <ProjectReference Include="..\DirectoryCompare.PotFiles\DirectoryCompare.PotFiles.csproj"/>
+        <ProjectReference Include="..\ConsoleFramework\ConsoleFramework.csproj" />
+        <ProjectReference Include="..\DirectoryCompare.DataAccess\DirectoryCompare.DataAccess.csproj" />
+        <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" />
+        <ProjectReference Include="..\DirectoryCompare.PotFiles\DirectoryCompare.PotFiles.csproj" />
     </ItemGroup>
 
 </Project>

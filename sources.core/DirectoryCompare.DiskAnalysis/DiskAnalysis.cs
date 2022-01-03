@@ -17,6 +17,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,9 +34,9 @@ namespace DustInTheWind.DirectoryCompare.DiskAnalysis
         private readonly Stopwatch stopwatch = new();
         private readonly ManualResetEventSlim manualResetEventSlim = new(false);
         private readonly MD5 md5;
+
         private string rootPath;
-        private long totalSize;
-        private long readSize;
+        private Percentage progressPercentage;
 
         public string RootPath
         {
@@ -74,6 +75,7 @@ namespace DustInTheWind.DirectoryCompare.DiskAnalysis
             State = DiskAnalysisState.InProgress;
             stopwatch.Start();
             manualResetEventSlim.Reset();
+            progressPercentage = null;
 
             try
             {
@@ -83,7 +85,9 @@ namespace DustInTheWind.DirectoryCompare.DiskAnalysis
 
                 SnapshotWriter?.Open(RootPath);
 
-                totalSize = CalculateSize(rootedBlackList);
+                DataSize totalSize = CalculateTotalSize(rootedBlackList);
+                progressPercentage = new Percentage(totalSize);
+
                 CalculateHashes(rootedBlackList);
 
                 SnapshotWriter?.Close();
@@ -93,48 +97,17 @@ namespace DustInTheWind.DirectoryCompare.DiskAnalysis
                 stopwatch.Stop();
                 State = DiskAnalysisState.Ready;
                 manualResetEventSlim.Set();
-                
+
                 OnFinished();
             }
         }
 
-        private long CalculateSize(DiskPathCollection rootedBlackList)
+        private DataSize CalculateTotalSize(DiskPathCollection rootedBlackList)
         {
-            DiskCrawler diskCrawler = new(RootPath, rootedBlackList);
-            long size = 0;
-
-            foreach (CrawlerStep crawlerStep in diskCrawler)
-            {
-                switch (crawlerStep.Action)
-                {
-                    case CrawlerAction.DirectoryOpened:
-                        break;
-
-                    case CrawlerAction.DirectoryClosed:
-                        break;
-
-                    case CrawlerAction.FileFound:
-                        {
-                            try
-                            {
-                                FileInfo fileInfo = new(crawlerStep.Path);
-                                size += fileInfo.Length;
-                            }
-                            catch
-                            {
-                            }
-                        }
-                        break;
-
-                    case CrawlerAction.Error:
-                        break;
-
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-
-            return size;
+            return new DiskCrawler(RootPath, rootedBlackList)
+                .Where(x => x.Action == CrawlerAction.FileFound)
+                .Select(x => new FileInfo(x.Path))
+                .Sum(x => x.Length);
         }
 
         private void CalculateHashes(DiskPathCollection rootedBlackList)
@@ -147,7 +120,7 @@ namespace DustInTheWind.DirectoryCompare.DiskAnalysis
                 {
                     case CrawlerAction.DirectoryOpened:
                         if (crawlerStep.Path != RootPath)
-                            AddDirectory(crawlerStep);
+                            AddDirectory(crawlerStep.Path);
                         break;
 
                     case CrawlerAction.DirectoryClosed:
@@ -156,7 +129,7 @@ namespace DustInTheWind.DirectoryCompare.DiskAnalysis
                         break;
 
                     case CrawlerAction.FileFound:
-                        AddFile(crawlerStep);
+                        AddFile(crawlerStep.Path);
                         break;
 
                     case CrawlerAction.Error:
@@ -169,9 +142,9 @@ namespace DustInTheWind.DirectoryCompare.DiskAnalysis
             }
         }
 
-        private void AddDirectory(CrawlerStep crawlerStep)
+        private void AddDirectory(string directoryPath)
         {
-            string directoryName = Path.GetFileName(crawlerStep.Path);
+            string directoryName = Path.GetFileName(directoryPath);
             HDirectory hDirectory = new(directoryName);
 
             SnapshotWriter?.AddAndOpen(hDirectory);
@@ -182,45 +155,55 @@ namespace DustInTheWind.DirectoryCompare.DiskAnalysis
             SnapshotWriter?.CloseDirectory();
         }
 
-        private void AddFile(CrawlerStep crawlerStep)
+        private void AddFile(string filePath)
+        {
+            HFile hFile = AnalyzeFile(filePath);
+            SnapshotWriter?.Add(hFile);
+
+            if (progressPercentage != null) 
+                UpdateProgress(hFile.Size);
+        }
+
+        private HFile AnalyzeFile(string filePath)
         {
             HFile hFile = new()
             {
-                Name = Path.GetFileName(crawlerStep.Path)
+                Name = Path.GetFileName(filePath)
             };
 
             try
             {
-                FileInfo fileInfo = new(crawlerStep.Path);
+                FileInfo fileInfo = new(filePath);
                 hFile.LastModifiedTime = fileInfo.LastWriteTimeUtc;
 
-                using (FileStream stream = File.OpenRead(crawlerStep.Path))
-                {
-                    hFile.Hash = md5.ComputeHash(stream);
-                    long size = stream.Length;
+                using FileStream stream = File.OpenRead(filePath);
 
-                    hFile.Size = size;
-                    readSize += size;
-                }
+                hFile.Hash = md5.ComputeHash(stream);
+                long size = stream.Length;
 
-                if (totalSize > 0)
-                {
-                    long percentage = readSize * 100 / totalSize;
-                    OnProgress(new DiskAnalysisProgressEventArgs(percentage));
-                }
+                hFile.Size = size;
             }
             catch (Exception ex)
             {
-                OnErrorEncountered(new ErrorEncounteredEventArgs(ex, crawlerStep.Path));
+                OnErrorEncountered(new ErrorEncounteredEventArgs(ex, filePath));
                 hFile.Error = ex.Message;
             }
 
-            SnapshotWriter?.Add(hFile);
+            return hFile;
+        }
+
+        private void UpdateProgress(DataSize dataSize)
+        {
+            progressPercentage.UnderlyingValue += dataSize;
+
+            DiskAnalysisProgressEventArgs args = new(progressPercentage);
+            OnProgress(args);
         }
 
         private void ProcessError(CrawlerStep crawlerStep)
         {
-            OnErrorEncountered(new ErrorEncounteredEventArgs(crawlerStep.Exception, crawlerStep.Path));
+            ErrorEncounteredEventArgs args = new(crawlerStep.Exception, crawlerStep.Path);
+            OnErrorEncountered(args);
 
             HDirectory hDirectory = new()
             {
