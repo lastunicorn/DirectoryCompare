@@ -51,7 +51,7 @@ namespace DustInTheWind.DirectoryCompare.DiskAnalysis.DiskCrawling
                 yield return CrawlerStep.DirectoryOpened(path, filePaths.Length, directoryPaths.Length);
 
                 foreach (string filePath in filePaths)
-                    yield return CrawlerStep.FileFound(filePath);
+                    yield return CrawlerStep.File(filePath);
 
                 IEnumerable<CrawlerStep> steps = directoryPaths
                     .Select(x => new DirectoryCrawler(x, blackList))

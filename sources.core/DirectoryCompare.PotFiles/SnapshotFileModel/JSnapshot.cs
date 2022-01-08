@@ -25,6 +25,9 @@ namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
         [JsonProperty("serializer")]
         public SerializerInfo SerializerInfo { get; set; }
 
+        [JsonProperty("id")]
+        public Guid Id { get; set; }
+
         [JsonProperty("original-path")]
         public string OriginalPath { get; set; }
 

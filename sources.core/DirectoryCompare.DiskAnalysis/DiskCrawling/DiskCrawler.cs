@@ -42,7 +42,7 @@ namespace DustInTheWind.DirectoryCompare.DiskAnalysis.DiskCrawling
             }
             else
             {
-                DirectoryCrawler directoryCrawler = new DirectoryCrawler(path, blackList);
+                DirectoryCrawler directoryCrawler = new(path, blackList);
 
                 foreach (CrawlerStep crawlerStep in directoryCrawler)
                     yield return crawlerStep;

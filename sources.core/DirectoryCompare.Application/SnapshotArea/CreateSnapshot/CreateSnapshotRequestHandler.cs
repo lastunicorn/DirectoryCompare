@@ -70,18 +70,9 @@ namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.CreateSnapshot
             diskAnalysis.ErrorEncountered += HandleDiskReaderErrorEncountered;
             diskAnalysis.Finished += HandleDiskAnalysisFinished;
 
-            diskAnalysis.StartRun();
+            _ = diskAnalysis.Run();
 
             return diskAnalysis;
-        }
-
-        private void HandleDiskAnalysisFinished(object sender, EventArgs e)
-        {
-            if (sender is DiskAnalysis.DiskAnalysis diskAnalysis)
-            {
-                log.WriteInfo("Finished scanning path in {0}", diskAnalysis.ElapsedTime);
-                diskAnalysis.SnapshotWriter.Dispose();
-            }
         }
 
         private void HandleDiskReaderStarting(object sender, DiskReaderStartingEventArgs e)
@@ -101,6 +92,15 @@ namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.CreateSnapshot
         private void HandleDiskReaderErrorEncountered(object sender, ErrorEncounteredEventArgs e)
         {
             log.WriteError("Error while reading path '{0}': {1}", e.Path, e.Exception);
+        }
+
+        private void HandleDiskAnalysisFinished(object sender, EventArgs e)
+        {
+            if (sender is DiskAnalysis.DiskAnalysis diskAnalysis)
+            {
+                log.WriteInfo("Finished scanning path in {0}", diskAnalysis.ElapsedTime);
+                diskAnalysis.SnapshotWriter.Dispose();
+            }
         }
     }
 }

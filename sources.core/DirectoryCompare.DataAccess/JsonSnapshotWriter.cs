@@ -60,10 +60,11 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
             CloseDirectory();
         }
 
-        public void Open(string originalPath)
+        public void Open(string originalPath, Guid analysisId)
         {
             jSnapshotWriter.WriteStart();
             jSnapshotWriter.WriteId(Id);
+            jSnapshotWriter.WriteAnalysisId(analysisId);
             jSnapshotWriter.WriteOriginalPath(originalPath);
             jSnapshotWriter.WriteCreationTime(DateTime.UtcNow);
 

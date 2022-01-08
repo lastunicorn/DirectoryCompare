@@ -28,8 +28,14 @@ namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
 
         public void WriteId(Guid id)
         {
-            Writer.WritePropertyName("serializer-id");
+            Writer.WritePropertyName("id");
             Writer.WriteValue(id);
+        }
+
+        public void WriteAnalysisId(Guid analysisId)
+        {
+            Writer.WritePropertyName("analysis-id");
+            Writer.WriteValue(analysisId);
         }
 
         public void WriteOriginalPath(string originalPath)

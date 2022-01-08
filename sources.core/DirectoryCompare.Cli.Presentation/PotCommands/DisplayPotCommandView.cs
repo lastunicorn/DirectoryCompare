@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
@@ -48,7 +49,12 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands
                 CustomConsole.WriteLine("Snapshots: ");
 
                 foreach (Snapshot snapshot in commandModel.Pot.Snapshots)
-                    CustomConsole.WriteLineEmphasies("  - " + snapshot.CreationTime);
+                {
+                    DateTime creationTime = snapshot.CreationTime;
+                    Guid id = snapshot.Id;
+                    
+                    CustomConsole.WriteLineEmphasies($"  - {creationTime} - {id:D}");
+                }
             }
             else
             {

@@ -50,7 +50,7 @@ namespace DustInTheWind.DirectoryCompare.DiskAnalysis.DiskCrawling
             };
         }
 
-        public static CrawlerStep FileFound(string filePath)
+        public static CrawlerStep File(string filePath)
         {
             return new CrawlerStep
             {

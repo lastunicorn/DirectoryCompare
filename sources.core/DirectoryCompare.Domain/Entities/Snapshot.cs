@@ -20,6 +20,8 @@ namespace DustInTheWind.DirectoryCompare.Domain.Entities
 {
     public class Snapshot : HDirectory
     {
+        public Guid Id { get; set; }
+        
         public string OriginalPath { get; set; }
 
         public DateTime CreationTime { get; set; }

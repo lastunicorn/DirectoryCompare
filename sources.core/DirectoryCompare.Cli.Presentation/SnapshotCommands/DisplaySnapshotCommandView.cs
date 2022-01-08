@@ -28,12 +28,18 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands
             if (commandModel.Snapshot == null)
                 CustomConsole.WriteLine("There is no snapshot.");
             else
+            {
+                Console.WriteLine($"Snapshot: {commandModel.Snapshot.Id:D}");
+                Console.WriteLine($"Path: {commandModel.Snapshot.OriginalPath}");
+                Console.WriteLine();
+                
                 DisplayDirectory(commandModel.Snapshot, 0);
+            }
         }
 
         private static void DisplayDirectory(HDirectory hDirectory, int index)
         {
-            string indent = new(' ', index);
+            string indent = new(' ', index * 2);
 
             foreach (HDirectory xSubdirectory in hDirectory.Directories)
             {

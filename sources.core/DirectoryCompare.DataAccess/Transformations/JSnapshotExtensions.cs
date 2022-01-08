@@ -28,8 +28,9 @@ namespace DustInTheWind.DirectoryCompare.DataAccess.Transformations
         {
             if (jSnapshot == null) throw new ArgumentNullException(nameof(jSnapshot));
 
-            Snapshot snapshot = new Snapshot
+            Snapshot snapshot = new()
             {
+                Id = jSnapshot.Id, 
                 OriginalPath = jSnapshot.OriginalPath,
                 CreationTime = jSnapshot.CreationTime
             };
