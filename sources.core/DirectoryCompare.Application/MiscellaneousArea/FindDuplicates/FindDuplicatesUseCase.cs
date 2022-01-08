@@ -50,7 +50,7 @@ namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.FindDupli
                 FilesRight = string.IsNullOrEmpty(request.SnapshotRight.PotName)
                     ? null
                     : GetFiles(request.SnapshotRight),
-                CheckFilesExistance = request.CheckFilesExistence
+                CheckFilesExistence = request.CheckFilesExistence
             };
         }
 

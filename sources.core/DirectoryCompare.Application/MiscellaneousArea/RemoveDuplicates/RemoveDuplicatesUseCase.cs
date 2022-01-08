@@ -55,18 +55,18 @@ namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.RemoveDup
             {
                 FilesLeft = snapshotRepository.EnumerateFiles(request.SnapshotLeft, blackListLeft).ToList(),
                 FilesRight = snapshotRepository.EnumerateFiles(request.SnapshotRight, blackListRight).ToList(),
-                CheckFilesExistance = true
+                CheckFilesExistence = true
             };
 
             RemoveDuplicates(fileDuplicates);
         }
 
-        private void RemoveDuplicates(IEnumerable<FileDuplicate> fileDuplicates)
+        private void RemoveDuplicates(IEnumerable<FilePair> fileDuplicates)
         {
             int fileRemovedCount = 0;
             DataSize totalSize = 0;
 
-            foreach (FileDuplicate duplicate in fileDuplicates)
+            foreach (FilePair duplicate in fileDuplicates)
             {
                 bool bothFilesExist = duplicate.FileLeftExists && duplicate.FileRightExists;
 

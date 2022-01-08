@@ -22,19 +22,19 @@ using DustInTheWind.DirectoryCompare.Domain.Utils;
 
 namespace DustInTheWind.DirectoryCompare.Domain.Comparison
 {
-    public class FileDuplicates : IEnumerable<FileDuplicate>
+    public class FileDuplicates : IEnumerable<FilePair>
     {
         public List<HFile> FilesLeft { get; set; }
 
         public List<HFile> FilesRight { get; set; }
 
-        public bool CheckFilesExistance { get; set; }
+        public bool CheckFilesExistence { get; set; }
 
         public int DuplicateCount { get; private set; }
 
         public DataSize TotalSize { get; private set; }
 
-        public IEnumerator<FileDuplicate> GetEnumerator()
+        public IEnumerator<FilePair> GetEnumerator()
         {
             DuplicateCount = 0;
             TotalSize = 0;
@@ -42,40 +42,50 @@ namespace DustInTheWind.DirectoryCompare.Domain.Comparison
             if (FilesLeft == null)
                 yield break;
 
-            IEnumerable<FileDuplicate> duplicates = FilesRight == null
-                ? GeneratePairs(FilesLeft)
-                : GeneratePairs(FilesLeft, FilesRight);
-
-            duplicates = duplicates
+            IEnumerable<FilePair> duplicates = GeneratePairs()
                 .Where(x => x.AreEqual);
 
-            foreach (FileDuplicate fileDuplicate in duplicates)
+            foreach (FilePair filePair in duplicates)
             {
                 DuplicateCount++;
-                TotalSize += fileDuplicate.Size;
-                yield return fileDuplicate;
+                TotalSize += filePair.Size;
+                yield return filePair;
             }
         }
 
-        private IEnumerable<FileDuplicate> GeneratePairs(IReadOnlyList<HFile> files)
+        private IEnumerable<FilePair> GeneratePairs()
+        {
+            return FilesRight == null || FilesRight == FilesLeft
+                ? GeneratePairs(FilesLeft)
+                : GeneratePairs(FilesLeft, FilesRight);
+        }
+
+        private IEnumerable<FilePair> GeneratePairs(IReadOnlyList<HFile> files)
         {
             for (int i = 0; i < files.Count; i++)
             {
                 HFile fileLeft = files[i];
-
+                
                 for (int j = i + 1; j < files.Count; j++)
                 {
                     HFile fileRight = files[j];
-
-                    yield return new FileDuplicate(fileLeft, fileRight, CheckFilesExistance);
+                    yield return new FilePair(fileLeft, fileRight, CheckFilesExistence);
                 }
             }
         }
 
-        private IEnumerable<FileDuplicate> GeneratePairs(IEnumerable<HFile> filesLeft, IEnumerable<HFile> filesRight)
+        private IEnumerable<FilePair> GeneratePairs(IReadOnlyList<HFile> filesLeft, IReadOnlyList<HFile> filesRight)
         {
-            return filesLeft
-                .SelectMany(fileLeft => filesRight.Select(fileRight => new FileDuplicate(fileLeft, fileRight, CheckFilesExistance)));
+            for (int i = 0; i < filesLeft.Count; i++)
+            {
+                HFile fileLeft = filesLeft[i];
+                
+                for (int j = 0; j < filesRight.Count; j++)
+                {
+                    HFile fileRight = filesRight[j];
+                    yield return new FilePair(fileLeft, fileRight, CheckFilesExistence);
+                }
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator()

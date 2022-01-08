@@ -21,7 +21,7 @@ using DustInTheWind.DirectoryCompare.Domain.Comparison;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands
 {
-    internal class FileDuplicatesViewModel : IEnumerable<FileDuplicate>
+    internal class FileDuplicatesViewModel : IEnumerable<FilePair>
     {
         private readonly FileDuplicates fileDuplicates;
 
@@ -30,7 +30,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands
             this.fileDuplicates = fileDuplicates ?? throw new ArgumentNullException(nameof(fileDuplicates));
         }
 
-        public IEnumerator<FileDuplicate> GetEnumerator()
+        public IEnumerator<FilePair> GetEnumerator()
         {
             return fileDuplicates.GetEnumerator();
         }

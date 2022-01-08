@@ -22,11 +22,11 @@ using DustInTheWind.DirectoryCompare.Domain.Utils;
 
 namespace DustInTheWind.DirectoryCompare.Domain.Comparison
 {
-    public class FileDuplicate
+    public class FilePair
     {
         private readonly HFile fileLeft;
         private readonly HFile fileRight;
-        private readonly bool checkFilesExist;
+        private readonly bool checkFilesExistence;
         private bool? areEqual;
 
         public bool AreEqual
@@ -62,18 +62,18 @@ namespace DustInTheWind.DirectoryCompare.Domain.Comparison
             }
         }
 
-        public FileDuplicate(HFile fileLeft, HFile fileRight, bool checkFilesExist)
+        public FilePair(HFile fileLeft, HFile fileRight, bool checkFilesExistence)
         {
             this.fileLeft = fileLeft ?? throw new ArgumentNullException(nameof(fileLeft));
             this.fileRight = fileRight ?? throw new ArgumentNullException(nameof(fileRight));
-            this.checkFilesExist = checkFilesExist;
+            this.checkFilesExistence = checkFilesExistence;
         }
 
         private bool CalculateEquality()
         {
             bool filesAreEqual = fileLeft.Hash == fileRight.Hash && fileLeft.Size == fileRight.Size;
 
-            return checkFilesExist
+            return checkFilesExistence
                 ? filesAreEqual && FileLeftExists && FileRightExists
                 : filesAreEqual;
         }

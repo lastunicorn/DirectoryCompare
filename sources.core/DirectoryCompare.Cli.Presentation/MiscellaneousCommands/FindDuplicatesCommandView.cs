@@ -25,18 +25,18 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands
     {
         public void Display(FindDuplicatesCommandModel commandModel)
         {
-            foreach (FileDuplicate fileDuplicate in commandModel.FileDuplicates) 
-                WriteDuplicate(fileDuplicate);
+            foreach (FilePair filePair in commandModel.FileDuplicates) 
+                WriteDuplicate(filePair);
             
             WriteSummary(commandModel.DuplicateCount, commandModel.TotalSize);
         }
         
-        private static void WriteDuplicate(FileDuplicate duplicate)
+        private static void WriteDuplicate(FilePair filePair)
         {
-            Console.WriteLine(duplicate.FullPathLeft);
-            Console.WriteLine(duplicate.FullPathRight);
+            Console.WriteLine(filePair.FullPathLeft);
+            Console.WriteLine(filePair.FullPathRight);
 
-            Console.WriteLine($"{duplicate.Size} ({duplicate.Size.ToString(DataSizeUnit.Byte)})");
+            Console.WriteLine($"{filePair.Size} ({filePair.Size.ToString(DataSizeUnit.Byte)})");
             Console.WriteLine();
         }
 
