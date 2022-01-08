@@ -22,11 +22,11 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.CompareSnapshots
 {
-    public class CompareSnapshotsRequestHandler : RequestHandler<CompareSnapshotsRequest, CompareSnapshotsResponse>
+    public class CompareSnapshotsUseCase : RequestHandler<CompareSnapshotsRequest, CompareSnapshotsResponse>
     {
         private readonly SnapshotFactory snapshotFactory;
 
-        public CompareSnapshotsRequestHandler(SnapshotFactory snapshotFactory)
+        public CompareSnapshotsUseCase(SnapshotFactory snapshotFactory)
         {
             this.snapshotFactory = snapshotFactory ?? throw new ArgumentNullException(nameof(snapshotFactory));
         }

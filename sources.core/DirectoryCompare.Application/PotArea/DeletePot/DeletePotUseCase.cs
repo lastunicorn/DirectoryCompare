@@ -1,4 +1,4 @@
-// DirectoryCompare
+﻿// DirectoryCompare
 // Copyright (C) 2017-2020 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -15,17 +15,23 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Threading;
-using System.Threading.Tasks;
+using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.DeleteBlackList
+namespace DustInTheWind.DirectoryCompare.Application.PotArea.DeletePot
 {
-    internal class DeleteBlackListRequestHandler : IRequestHandler<DeleteBlackListRequest>
+    public class DeletePotUseCase : RequestHandler<DeletePotRequest>
     {
-        public Task<Unit> Handle(DeleteBlackListRequest request, CancellationToken cancellationToken)
+        private readonly IPotRepository potRepository;
+
+        public DeletePotUseCase(IPotRepository potRepository)
         {
-            throw new NotImplementedException();
+            this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
+        }
+
+        protected override void Handle(DeletePotRequest request)
+        {
+            potRepository.Delete(request.PotName);
         }
     }
 }

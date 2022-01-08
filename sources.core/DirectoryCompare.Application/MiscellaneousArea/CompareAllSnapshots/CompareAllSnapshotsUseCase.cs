@@ -27,12 +27,12 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.CompareAllSnapshots
 {
-    public class CompareAllSnapshotsRequestHandle : IRequestHandler<CompareAllSnapshotsRequest, CompareAllSnapshotsResponse>
+    public class CompareAllSnapshotsUseCase : IRequestHandler<CompareAllSnapshotsRequest, CompareAllSnapshotsResponse>
     {
         private readonly ISnapshotRepository snapshotRepository;
-        private DateTime executionTime = DateTime.UtcNow;
+        private readonly DateTime executionTime = DateTime.UtcNow;
 
-        public CompareAllSnapshotsRequestHandle(ISnapshotRepository snapshotRepository)
+        public CompareAllSnapshotsUseCase(ISnapshotRepository snapshotRepository)
         {
             this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
         }

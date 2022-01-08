@@ -25,14 +25,14 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.RemoveDuplicates
 {
-    public class RemoveDuplicatesRequestHandler : RequestHandler<RemoveDuplicatesRequest>
+    public class RemoveDuplicatesUseCase : RequestHandler<RemoveDuplicatesRequest>
     {
         private readonly ISnapshotRepository snapshotRepository;
         private readonly IBlackListRepository blackListRepository;
 
         private RemoveDuplicatesRequest request;
 
-        public RemoveDuplicatesRequestHandler(ISnapshotRepository snapshotRepository, IBlackListRepository blackListRepository)
+        public RemoveDuplicatesUseCase(ISnapshotRepository snapshotRepository, IBlackListRepository blackListRepository)
         {
             this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
             this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));

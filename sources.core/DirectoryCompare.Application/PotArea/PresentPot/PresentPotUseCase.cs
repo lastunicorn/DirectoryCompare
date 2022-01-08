@@ -15,44 +15,30 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Linq;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.PotArea.CreatePot
+namespace DustInTheWind.DirectoryCompare.Application.PotArea.PresentPot
 {
-    public class CreatePotRequestHandler : RequestHandler<CreatePotRequest>
+    public class PresentPotUseCase : RequestHandler<PresentPotRequest, Pot>
     {
         private readonly IPotRepository potRepository;
+        private readonly ISnapshotRepository snapshotRepository;
 
-        public CreatePotRequestHandler(IPotRepository potRepository)
+        public PresentPotUseCase(IPotRepository potRepository, ISnapshotRepository snapshotRepository)
         {
             this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
+            this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
         }
 
-        protected override void Handle(CreatePotRequest request)
+        protected override Pot Handle(PresentPotRequest request)
         {
-            VerifyPotDoesNotExist(request.Name);
-            CreateNewPot(request);
-        }
+            Pot pot = potRepository.Get(request.PotName);
+            pot.Snapshots = snapshotRepository.GetByPot(request.PotName).ToList();
 
-        private void VerifyPotDoesNotExist(string potName)
-        {
-            bool potAlreadyExists = potRepository.Exists(potName);
-
-            if (potAlreadyExists)
-                throw new PotAlreadyExistsException();
-        }
-
-        private void CreateNewPot(CreatePotRequest request)
-        {
-            Pot newPot = new Pot
-            {
-                Name = request.Name,
-                Path = request.Path
-            };
-
-            potRepository.Add(newPot);
+            return pot;
         }
     }
 }

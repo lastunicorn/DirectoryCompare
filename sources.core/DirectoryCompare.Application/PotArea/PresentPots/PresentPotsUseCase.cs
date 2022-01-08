@@ -23,11 +23,11 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.PotArea.PresentPots
 {
-    public class PresentPotsRequestHandler : RequestHandler<PresentPotsRequest, List<Pot>>
+    public class PresentPotsUseCase : RequestHandler<PresentPotsRequest, List<Pot>>
     {
         private readonly IPotRepository potRepository;
 
-        public PresentPotsRequestHandler(IPotRepository potRepository)
+        public PresentPotsUseCase(IPotRepository potRepository)
         {
             this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
         }

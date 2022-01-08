@@ -75,6 +75,8 @@ namespace DustInTheWind.DirectoryCompare.JFiles
 
             StreamWriter streamWriter = new(filePath);
             JsonTextWriter jsonTextWriter = new(streamWriter);
+            jsonTextWriter.Formatting = Formatting.Indented;
+            
             return new JSnapshotWriter(jsonTextWriter);
         }
 

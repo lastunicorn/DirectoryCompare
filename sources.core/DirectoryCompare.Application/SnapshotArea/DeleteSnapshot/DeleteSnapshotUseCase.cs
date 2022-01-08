@@ -20,11 +20,11 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.DeleteSnapshot
 {
-    public class DeleteSnapshotRequestHandler : RequestHandler<DeleteSnapshotRequest>
+    public class DeleteSnapshotUseCase : RequestHandler<DeleteSnapshotRequest>
     {
         private readonly ISnapshotRepository snapshotRepository;
 
-        public DeleteSnapshotRequestHandler(ISnapshotRepository snapshotRepository)
+        public DeleteSnapshotUseCase(ISnapshotRepository snapshotRepository)
         {
             this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
         }

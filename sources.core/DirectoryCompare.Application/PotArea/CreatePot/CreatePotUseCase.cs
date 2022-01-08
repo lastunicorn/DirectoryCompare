@@ -16,22 +16,43 @@
 
 using System;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
+using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.PotArea.DeletePot
+namespace DustInTheWind.DirectoryCompare.Application.PotArea.CreatePot
 {
-    public class DeletePotRequestHandler : RequestHandler<DeletePotRequest>
+    public class CreatePotUseCase : RequestHandler<CreatePotRequest>
     {
         private readonly IPotRepository potRepository;
 
-        public DeletePotRequestHandler(IPotRepository potRepository)
+        public CreatePotUseCase(IPotRepository potRepository)
         {
             this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
         }
 
-        protected override void Handle(DeletePotRequest request)
+        protected override void Handle(CreatePotRequest request)
         {
-            potRepository.Delete(request.PotName);
+            VerifyPotDoesNotExist(request.Name);
+            CreateNewPot(request);
+        }
+
+        private void VerifyPotDoesNotExist(string potName)
+        {
+            bool potAlreadyExists = potRepository.Exists(potName);
+
+            if (potAlreadyExists)
+                throw new PotAlreadyExistsException();
+        }
+
+        private void CreateNewPot(CreatePotRequest request)
+        {
+            Pot newPot = new Pot
+            {
+                Name = request.Name,
+                Path = request.Path
+            };
+
+            potRepository.Add(newPot);
         }
     }
 }

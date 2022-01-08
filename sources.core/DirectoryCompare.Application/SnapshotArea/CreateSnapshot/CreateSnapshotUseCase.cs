@@ -23,14 +23,14 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.CreateSnapshot
 {
-    public class CreateSnapshotRequestHandler : RequestHandler<CreateSnapshotRequest, IDiskAnalysisProgress>
+    public class CreateSnapshotUseCase : RequestHandler<CreateSnapshotRequest, IDiskAnalysisProgress>
     {
         private readonly ILog log;
         private readonly IPotRepository potRepository;
         private readonly IBlackListRepository blackListRepository;
         private readonly ISnapshotRepository snapshotRepository;
 
-        public CreateSnapshotRequestHandler(ILog log, IPotRepository potRepository,
+        public CreateSnapshotUseCase(ILog log, IPotRepository potRepository,
             IBlackListRepository blackListRepository, ISnapshotRepository snapshotRepository)
         {
             this.log = log ?? throw new ArgumentNullException(nameof(log));

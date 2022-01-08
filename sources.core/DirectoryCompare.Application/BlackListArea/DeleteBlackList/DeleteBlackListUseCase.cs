@@ -1,4 +1,4 @@
-﻿// DirectoryCompare
+// DirectoryCompare
 // Copyright (C) 2017-2020 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -15,23 +15,17 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using DustInTheWind.DirectoryCompare.Domain.DataAccess;
+using System.Threading;
+using System.Threading.Tasks;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.RemoveBlackPath
+namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.DeleteBlackList
 {
-    public class RemoveBlackPathRequestHandler : RequestHandler<RemoveBlackPathRequest>
+    internal class DeleteBlackListUseCase : IRequestHandler<DeleteBlackListRequest>
     {
-        private readonly IBlackListRepository blackListRepository;
-
-        public RemoveBlackPathRequestHandler(IBlackListRepository blackListRepository)
+        public Task<Unit> Handle(DeleteBlackListRequest request, CancellationToken cancellationToken)
         {
-            this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
-        }
-
-        protected override void Handle(RemoveBlackPathRequest request)
-        {
-            blackListRepository.Delete(request.PotName, request.Path);
+            throw new NotImplementedException();
         }
     }
 }

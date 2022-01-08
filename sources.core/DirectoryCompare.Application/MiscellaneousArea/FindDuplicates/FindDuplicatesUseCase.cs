@@ -27,13 +27,13 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.FindDuplicates
 {
-    public class FindDuplicatesRequestHandler : RequestHandler<FindDuplicatesRequest, FileDuplicates>
+    public class FindDuplicatesUseCase : RequestHandler<FindDuplicatesRequest, FileDuplicates>
     {
         private readonly ISnapshotRepository snapshotRepository;
         private readonly IBlackListRepository blackListRepository;
         private readonly ILog log;
 
-        public FindDuplicatesRequestHandler(ISnapshotRepository snapshotRepository, IBlackListRepository blackListRepository, ILog log)
+        public FindDuplicatesUseCase(ISnapshotRepository snapshotRepository, IBlackListRepository blackListRepository, ILog log)
         {
             this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
             this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));

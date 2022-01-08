@@ -23,13 +23,13 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.ImportSnapshot
 {
-    public class ImportSnapshotRequestHandler : RequestHandler<ImportSnapshotRequest>
+    public class ImportSnapshotUseCase : RequestHandler<ImportSnapshotRequest>
     {
         private readonly IPotRepository potRepository;
         private readonly ISnapshotRepository snapshotRepository;
         private readonly IPotImportExport potImportExport;
 
-        public ImportSnapshotRequestHandler(IPotRepository potRepository, ISnapshotRepository snapshotRepository, IPotImportExport potImportExport)
+        public ImportSnapshotUseCase(IPotRepository potRepository, ISnapshotRepository snapshotRepository, IPotImportExport potImportExport)
         {
             this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
             this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
