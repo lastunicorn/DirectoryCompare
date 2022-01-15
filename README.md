@@ -5,4 +5,5 @@ If you like my work and want to support me, you can buy me a coffee:
 [![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Y8Y62EZ8H)
 
 # DirectoryCompare
-This tool can help you detect if the content of a directory has been changed over time.
+This is a console application whose purpose is to help you detect if the content of a directory and all its children recursivly has been changed over time.
+Each time you take a snapshot it records all the information necessarey about the files, including a hash and allows you, later, to compare the contents.
