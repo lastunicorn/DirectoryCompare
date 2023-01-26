@@ -146,7 +146,7 @@ namespace DustInTheWind.ConsoleFramework
             {
                 return x.GetTypes();
             }
-            catch (ReflectionTypeLoadException ex)
+            catch (ReflectionTypeLoadException)
             {
                 //log.WriteWarning("Warning: Could not load a Type while searching for command instances. Loader Exceptions follows:", ex);
 
@@ -155,7 +155,7 @@ namespace DustInTheWind.ConsoleFramework
 
                 return new Type[0];
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //log.WriteWarning("Warning: Could not load a Type while searching for command instances.", ex);
                 return null;

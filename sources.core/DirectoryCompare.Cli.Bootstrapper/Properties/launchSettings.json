@@ -1,8 +1,8 @@
 {
   "profiles": {
-    "DirectoryCompare.Cli": {
+    "Cli": {
       "commandName": "Project",
-      "commandLineArgs": "pot"
+      "commandLineArgs": ""
     }
   }
 }
