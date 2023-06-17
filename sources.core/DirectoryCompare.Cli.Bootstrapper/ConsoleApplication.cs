@@ -20,9 +20,11 @@ using DustInTheWind.ConsoleFramework.AppBuilder;
 using DustInTheWind.ConsoleFramework.Logging;
 using DustInTheWind.DirectoryCompare.Cli.Bootstrapper.Setup;
 using DustInTheWind.DirectoryCompare.Cli.Presentation;
+using DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands;
 using DustInTheWind.DirectoryCompare.DataAccess;
-using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.ImportExport;
+using DustInTheWind.DirectoryCompare.Domain.SomeInterfaces;
+using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Bootstrapper
 {
@@ -44,7 +46,8 @@ namespace DustInTheWind.DirectoryCompare.Cli.Bootstrapper
         protected override void ConfigureServices(IServiceCollection serviceCollection)
         {
             serviceCollection.AddSingleton<ILog, Log>();
-            serviceCollection.AddSingleton<Domain.Logging.ILog, Logging.Log>();
+            serviceCollection.AddSingleton<IRemoveDuplicatesLog, ConsoleRemoveDuplicatesLog>();
+            serviceCollection.AddSingleton<Ports.LogAccess.ILog, LogAccess.Log>();
             serviceCollection.AddTransient<IPotRepository, PotRepository>();
             serviceCollection.AddTransient<IBlackListRepository, BlackListRepository>();
             serviceCollection.AddTransient<ISnapshotRepository, SnapshotRepository>();

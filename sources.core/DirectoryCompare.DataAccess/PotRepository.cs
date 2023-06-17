@@ -18,10 +18,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.DirectoryCompare.JFiles;
 using DustInTheWind.DirectoryCompare.JFiles.PotInfoFileModel;
+using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 
 namespace DustInTheWind.DirectoryCompare.DataAccess
 {

@@ -16,9 +16,9 @@
 
 using System;
 using DustInTheWind.DirectoryCompare.DiskAnalysis;
-using DustInTheWind.DirectoryCompare.Domain.DataAccess;
-using DustInTheWind.DirectoryCompare.Domain.Logging;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
+using DustInTheWind.DirectoryCompare.Ports.DataAccess;
+using DustInTheWind.DirectoryCompare.Ports.LogAccess;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.CreateSnapshot

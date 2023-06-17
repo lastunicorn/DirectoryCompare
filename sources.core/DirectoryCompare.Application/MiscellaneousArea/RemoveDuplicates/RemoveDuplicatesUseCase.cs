@@ -14,94 +14,90 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
-using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
+using DustInTheWind.DirectoryCompare.Domain.SomeInterfaces;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
+using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.RemoveDuplicates
+namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.RemoveDuplicates;
+
+public class RemoveDuplicatesUseCase : IRequestHandler<RemoveDuplicatesRequest>
 {
-    public class RemoveDuplicatesUseCase : RequestHandler<RemoveDuplicatesRequest>
+    private readonly ISnapshotRepository snapshotRepository;
+    private readonly IBlackListRepository blackListRepository;
+    private readonly IRemoveDuplicatesLog removeDuplicatesLog;
+
+    public RemoveDuplicatesUseCase(ISnapshotRepository snapshotRepository, IBlackListRepository blackListRepository, IRemoveDuplicatesLog removeDuplicatesLog)
     {
-        private readonly ISnapshotRepository snapshotRepository;
-        private readonly IBlackListRepository blackListRepository;
+        this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
+        this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
+        this.removeDuplicatesLog = removeDuplicatesLog ?? throw new ArgumentNullException(nameof(removeDuplicatesLog));
+    }
 
-        private RemoveDuplicatesRequest request;
+    // The real work will run asynchronously, while the promise will raise events whenever something important
+    // happened that the presentation layer should handle.
+    public Task<Unit> Handle(RemoveDuplicatesRequest request, CancellationToken cancellationToken)
+    {
+        DiskPathCollection blackListPathsLeft = blackListRepository.Get(request.SnapshotLeft.PotName);
+        BlackList blackListLeft = new(blackListPathsLeft);
 
-        public RemoveDuplicatesUseCase(ISnapshotRepository snapshotRepository, IBlackListRepository blackListRepository)
+        DiskPathCollection blackListPathsRight = blackListRepository.Get(request.SnapshotRight.PotName);
+        BlackList blackListRight = new(blackListPathsRight);
+
+        FileDuplicates fileDuplicates = new()
         {
-            this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
-            this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
-        }
+            FilesLeft = snapshotRepository.EnumerateFiles(request.SnapshotLeft, blackListLeft).ToList(),
+            FilesRight = snapshotRepository.EnumerateFiles(request.SnapshotRight, blackListRight).ToList(),
+            CheckFilesExistence = true
+        };
 
-        // todo: Instead of receiving an IRemoveDuplicatesExporter, make this handler async and return a promise.
-        // The real work will run asynchronously, while the promise will raise events whenever something important
-        // happened that the presentation layer should handle.
-        protected override void Handle(RemoveDuplicatesRequest request)
+        RemoveDuplicates(request, fileDuplicates);
+
+        return Unit.Task;
+    }
+
+    private void RemoveDuplicates(RemoveDuplicatesRequest request, IEnumerable<FilePair> fileDuplicates)
+    {
+        int fileRemovedCount = 0;
+        DataSize totalSize = 0;
+
+        foreach (FilePair duplicate in fileDuplicates)
         {
-            this.request = request;
-            
-            DiskPathCollection blackListPathsLeft = blackListRepository.Get(request.SnapshotLeft.PotName);
-            BlackList blackListLeft = new(blackListPathsLeft);
+            bool bothFilesExist = duplicate.FileLeftExists && duplicate.FileRightExists;
 
-            DiskPathCollection blackListPathsRight = blackListRepository.Get(request.SnapshotRight.PotName);
-            BlackList blackListRight = new(blackListPathsRight);
-
-            FileDuplicates fileDuplicates = new()
+            if (!bothFilesExist)
             {
-                FilesLeft = snapshotRepository.EnumerateFiles(request.SnapshotLeft, blackListLeft).ToList(),
-                FilesRight = snapshotRepository.EnumerateFiles(request.SnapshotRight, blackListRight).ToList(),
-                CheckFilesExistence = true
-            };
-
-            RemoveDuplicates(fileDuplicates);
-        }
-
-        private void RemoveDuplicates(IEnumerable<FilePair> fileDuplicates)
-        {
-            int fileRemovedCount = 0;
-            DataSize totalSize = 0;
-
-            foreach (FilePair duplicate in fileDuplicates)
-            {
-                bool bothFilesExist = duplicate.FileLeftExists && duplicate.FileRightExists;
-
-                if (!bothFilesExist)
-                {
-                    // todo: announce that duplicate was not removed.
-                    continue;
-                }
-
-                switch (request.FileToRemove)
-                {
-                    case ComparisonSide.Left:
-                        if (request.DestinationDirectory == null)
-                            duplicate.DeleteLeft();
-                        else
-                            duplicate.MoveLeft(request.DestinationDirectory);
-
-                        fileRemovedCount++;
-                        totalSize += duplicate.Size;
-                        request.Exporter.WriteRemove(duplicate.FullPathLeft);
-                        break;
-
-                    case ComparisonSide.Right:
-                        if (request.DestinationDirectory == null)
-                            duplicate.DeleteRight();
-                        else
-                            duplicate.MoveRight(request.DestinationDirectory);
-                        fileRemovedCount++;
-                        totalSize += duplicate.Size;
-                        request.Exporter.WriteRemove(duplicate.FullPathRight);
-                        break;
-                }
+                // todo: announce that duplicate was not removed.
+                continue;
             }
 
-            request.Exporter.WriteSummary(fileRemovedCount, totalSize);
+            switch (request.FileToRemove)
+            {
+                case ComparisonSide.Left:
+                    if (request.DestinationDirectory == null)
+                        duplicate.DeleteLeft();
+                    else
+                        duplicate.MoveLeft(request.DestinationDirectory);
+
+                    fileRemovedCount++;
+                    totalSize += duplicate.Size;
+                    removeDuplicatesLog.WriteRemove(duplicate.FullPathLeft);
+                    break;
+
+                case ComparisonSide.Right:
+                    if (request.DestinationDirectory == null)
+                        duplicate.DeleteRight();
+                    else
+                        duplicate.MoveRight(request.DestinationDirectory);
+                    fileRemovedCount++;
+                    totalSize += duplicate.Size;
+                    removeDuplicatesLog.WriteRemove(duplicate.FullPathRight);
+                    break;
+            }
         }
+
+        removeDuplicatesLog.WriteSummary(fileRemovedCount, totalSize);
     }
 }

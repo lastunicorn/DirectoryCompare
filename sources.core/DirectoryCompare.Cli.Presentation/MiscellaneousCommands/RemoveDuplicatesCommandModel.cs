@@ -52,7 +52,6 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands
             {
                 SnapshotLeft = LeftSnapshotLocation,
                 SnapshotRight = RightSnapshotLocation,
-                Exporter = new ConsoleRemoveDuplicatesExporter(),
                 FileToRemove = FileToRemove,
                 DestinationDirectory = DestinationDirectory
             };

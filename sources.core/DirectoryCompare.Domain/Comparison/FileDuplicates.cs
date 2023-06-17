@@ -15,82 +15,79 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 
-namespace DustInTheWind.DirectoryCompare.Domain.Comparison
+namespace DustInTheWind.DirectoryCompare.Domain.Comparison;
+
+public class FileDuplicates : IEnumerable<FilePair>
 {
-    public class FileDuplicates : IEnumerable<FilePair>
+    public List<HFile> FilesLeft { get; set; }
+
+    public List<HFile> FilesRight { get; set; }
+
+    public bool CheckFilesExistence { get; set; }
+
+    public int DuplicateCount { get; private set; }
+
+    public DataSize TotalSize { get; private set; }
+
+    public IEnumerator<FilePair> GetEnumerator()
     {
-        public List<HFile> FilesLeft { get; set; }
+        DuplicateCount = 0;
+        TotalSize = 0;
 
-        public List<HFile> FilesRight { get; set; }
+        if (FilesLeft == null)
+            yield break;
 
-        public bool CheckFilesExistence { get; set; }
+        IEnumerable<FilePair> duplicates = GeneratePairs()
+            .Where(x => x.AreEqual);
 
-        public int DuplicateCount { get; private set; }
-
-        public DataSize TotalSize { get; private set; }
-
-        public IEnumerator<FilePair> GetEnumerator()
+        foreach (FilePair filePair in duplicates)
         {
-            DuplicateCount = 0;
-            TotalSize = 0;
-
-            if (FilesLeft == null)
-                yield break;
-
-            IEnumerable<FilePair> duplicates = GeneratePairs()
-                .Where(x => x.AreEqual);
-
-            foreach (FilePair filePair in duplicates)
-            {
-                DuplicateCount++;
-                TotalSize += filePair.Size;
-                yield return filePair;
-            }
+            DuplicateCount++;
+            TotalSize += filePair.Size;
+            yield return filePair;
         }
+    }
 
-        private IEnumerable<FilePair> GeneratePairs()
-        {
-            return FilesRight == null || FilesRight == FilesLeft
-                ? GeneratePairs(FilesLeft)
-                : GeneratePairs(FilesLeft, FilesRight);
-        }
+    private IEnumerable<FilePair> GeneratePairs()
+    {
+        return FilesRight == null || FilesRight == FilesLeft
+            ? GeneratePairs(FilesLeft)
+            : GeneratePairs(FilesLeft, FilesRight);
+    }
 
-        private IEnumerable<FilePair> GeneratePairs(IReadOnlyList<HFile> files)
+    private IEnumerable<FilePair> GeneratePairs(IReadOnlyList<HFile> files)
+    {
+        for (int i = 0; i < files.Count; i++)
         {
-            for (int i = 0; i < files.Count; i++)
-            {
-                HFile fileLeft = files[i];
+            HFile fileLeft = files[i];
                 
-                for (int j = i + 1; j < files.Count; j++)
-                {
-                    HFile fileRight = files[j];
-                    yield return new FilePair(fileLeft, fileRight, CheckFilesExistence);
-                }
-            }
-        }
-
-        private IEnumerable<FilePair> GeneratePairs(IReadOnlyList<HFile> filesLeft, IReadOnlyList<HFile> filesRight)
-        {
-            for (int i = 0; i < filesLeft.Count; i++)
+            for (int j = i + 1; j < files.Count; j++)
             {
-                HFile fileLeft = filesLeft[i];
-                
-                for (int j = 0; j < filesRight.Count; j++)
-                {
-                    HFile fileRight = filesRight[j];
-                    yield return new FilePair(fileLeft, fileRight, CheckFilesExistence);
-                }
+                HFile fileRight = files[j];
+                yield return new FilePair(fileLeft, fileRight, CheckFilesExistence);
             }
         }
+    }
 
-        IEnumerator IEnumerable.GetEnumerator()
+    private IEnumerable<FilePair> GeneratePairs(IReadOnlyList<HFile> filesLeft, IReadOnlyList<HFile> filesRight)
+    {
+        for (int i = 0; i < filesLeft.Count; i++)
         {
-            return GetEnumerator();
+            HFile fileLeft = filesLeft[i];
+                
+            for (int j = 0; j < filesRight.Count; j++)
+            {
+                HFile fileRight = filesRight[j];
+                yield return new FilePair(fileLeft, fileRight, CheckFilesExistence);
+            }
         }
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }

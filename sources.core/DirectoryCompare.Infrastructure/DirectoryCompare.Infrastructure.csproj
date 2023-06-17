@@ -1,18 +1,38 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<!--
+DirectoryCompare
+Copyright (C) 2017-2020 Dust in the Wind
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
         <AssemblyName>DustInTheWind.DirectoryCompare.Infrastructure</AssemblyName>
         <RootNamespace>DustInTheWind.DirectoryCompare.Infrastructure</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="FluentValidation" Version="9.0.1"/>
-        <PackageReference Include="MediatR" Version="8.0.2"/>
+        <PackageReference Include="FluentValidation" Version="9.0.1" />
+        <PackageReference Include="MediatR" Version="8.0.2" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All"/>
+        <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.Ports.LogAccess\DirectoryCompare.Ports.LogAccess.csproj" PrivateAssets="All" />
     </ItemGroup>
 
 </Project>

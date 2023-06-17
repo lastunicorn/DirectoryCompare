@@ -18,11 +18,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DustInTheWind.DirectoryCompare.DataAccess.Transformations;
-using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.ImportExport;
 using DustInTheWind.DirectoryCompare.JFiles;
 using DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel;
+using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 
 namespace DustInTheWind.DirectoryCompare.DataAccess
 {

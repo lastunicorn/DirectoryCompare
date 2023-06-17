@@ -21,8 +21,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.CompareSnapshots;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
-using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
+using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.CompareAllSnapshots

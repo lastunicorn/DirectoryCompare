@@ -16,14 +16,13 @@
 
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 
-namespace DustInTheWind.DirectoryCompare.Domain.DataAccess
+namespace DustInTheWind.DirectoryCompare.Ports.DataAccess;
+
+public interface IBlackListRepository
 {
-    public interface IBlackListRepository
-    {
-        DiskPathCollection Get(string potName);
-        
-        void Add(string potName, DiskPath path);
-        
-        void Delete(string potName, DiskPath path);
-    }
+    DiskPathCollection Get(string potName);
+
+    void Add(string potName, DiskPath path);
+
+    void Delete(string potName, DiskPath path);
 }

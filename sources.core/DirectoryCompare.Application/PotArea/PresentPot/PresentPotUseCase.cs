@@ -18,8 +18,8 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
+using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.PotArea.PresentPot;

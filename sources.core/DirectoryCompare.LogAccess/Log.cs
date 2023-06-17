@@ -14,12 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using log4net;
 
-namespace DustInTheWind.DirectoryCompare.Logging
+namespace DustInTheWind.DirectoryCompare.LogAccess
 {
-    public sealed class Log : Domain.Logging.ILog
+    public sealed class Log : Ports.LogAccess.ILog
     {
         private ILog log;
 

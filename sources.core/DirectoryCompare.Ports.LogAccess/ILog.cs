@@ -14,16 +14,32 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using FluentValidation;
-
-namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.RemoveDuplicates;
-
-public class RemoveDuplicatesRequestValidator : AbstractValidator<RemoveDuplicatesRequest>
+namespace DustInTheWind.DirectoryCompare.Ports.LogAccess
 {
-    public RemoveDuplicatesRequestValidator()
+    public interface ILog
     {
-        RuleFor(x => x.SnapshotLeft).NotEmpty();
-        RuleFor(x => x.SnapshotRight).NotEmpty();
-        RuleFor(x => x.FileToRemove).IsInEnum();
+        void WriteDebug(string message);
+
+        void WriteDebug(string format, params object[] args);
+
+        void WriteInfo(string message);
+
+        void WriteInfo(string format, params object[] args);
+
+        void WriteWarning(string message);
+
+        void WriteWarning(string format, params object[] args);
+
+        void WriteWarning(string message, Exception ex);
+
+        void WriteWarning(Exception ex);
+
+        void WriteError(string message);
+
+        void WriteError(string format, params object[] args);
+
+        void WriteError(string message, Exception ex);
+
+        void WriteError(Exception ex);
     }
 }

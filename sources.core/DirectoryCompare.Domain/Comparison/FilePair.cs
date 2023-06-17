@@ -15,121 +15,117 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.Domain.Entities;
-using System;
-using System.IO;
-using System.Linq;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 
-namespace DustInTheWind.DirectoryCompare.Domain.Comparison
+namespace DustInTheWind.DirectoryCompare.Domain.Comparison;
+
+public class FilePair
 {
-    public class FilePair
+    private readonly HFile fileLeft;
+    private readonly HFile fileRight;
+    private readonly bool checkFilesExistence;
+    private bool? areEqual;
+
+    public bool AreEqual
     {
-        private readonly HFile fileLeft;
-        private readonly HFile fileRight;
-        private readonly bool checkFilesExistence;
-        private bool? areEqual;
-
-        public bool AreEqual
+        get
         {
-            get
-            {
-                areEqual ??= CalculateEquality();
-                return areEqual.Value;
-            }
+            areEqual ??= CalculateEquality();
+            return areEqual.Value;
         }
+    }
 
-        public DataSize Size => fileLeft.Size;
+    public DataSize Size => fileLeft.Size;
 
-        public string FullPathLeft => fileLeft.GetOriginalPath();
+    public string FullPathLeft => fileLeft.GetOriginalPath();
 
-        public string FullPathRight => fileRight.GetOriginalPath();
+    public string FullPathRight => fileRight.GetOriginalPath();
 
-        public bool FileLeftExists
+    public bool FileLeftExists
+    {
+        get
         {
-            get
-            {
-                string fullPath1 = fileLeft.GetOriginalPath();
-                return File.Exists(fullPath1);
-            }
+            string fullPath1 = fileLeft.GetOriginalPath();
+            return File.Exists(fullPath1);
         }
+    }
 
-        public bool FileRightExists
+    public bool FileRightExists
+    {
+        get
         {
-            get
-            {
-                string fullPath2 = fileRight.GetOriginalPath();
-                return File.Exists(fullPath2);
-            }
+            string fullPath2 = fileRight.GetOriginalPath();
+            return File.Exists(fullPath2);
         }
+    }
 
-        public FilePair(HFile fileLeft, HFile fileRight, bool checkFilesExistence)
+    public FilePair(HFile fileLeft, HFile fileRight, bool checkFilesExistence)
+    {
+        this.fileLeft = fileLeft ?? throw new ArgumentNullException(nameof(fileLeft));
+        this.fileRight = fileRight ?? throw new ArgumentNullException(nameof(fileRight));
+        this.checkFilesExistence = checkFilesExistence;
+    }
+
+    private bool CalculateEquality()
+    {
+        bool filesAreEqual = fileLeft.Hash == fileRight.Hash && fileLeft.Size == fileRight.Size;
+
+        return checkFilesExistence
+            ? filesAreEqual && FileLeftExists && FileRightExists
+            : filesAreEqual;
+    }
+
+    public void DeleteLeft()
+    {
+        File.Delete(FullPathLeft);
+    }
+
+    public void DeleteRight()
+    {
+        File.Delete(FullPathRight);
+    }
+
+    public void MoveLeft(string destinationDirectory)
+    {
+        MoveFile(fileLeft, destinationDirectory);
+    }
+
+    public void MoveRight(string destinationDirectory)
+    {
+        MoveFile(fileRight, destinationDirectory);
+    }
+
+    private static void MoveFile(HItem hFile, string destinationDirectory)
+    {
+        string sourceFilePath = hFile.GetOriginalPath();
+
+        string relativePath = hFile.GetPath()
+            .TrimStart(Path.DirectorySeparatorChar)
+            .TrimStart(Path.AltDirectorySeparatorChar);
+        string destinationFilePath = Path.Combine(destinationDirectory, relativePath);
+
+        string destinationDirectoryPath = Path.GetDirectoryName(destinationFilePath);
+
+        if (!Directory.Exists(destinationDirectoryPath))
+            Directory.CreateDirectory(destinationDirectoryPath);
+
+        File.Move(sourceFilePath, destinationFilePath);
+
+        RemoveParentIfEmpty(sourceFilePath);
+    }
+
+    private static void RemoveParentIfEmpty(string path)
+    {
+        while (true)
         {
-            this.fileLeft = fileLeft ?? throw new ArgumentNullException(nameof(fileLeft));
-            this.fileRight = fileRight ?? throw new ArgumentNullException(nameof(fileRight));
-            this.checkFilesExistence = checkFilesExistence;
-        }
+            string parentDirectoryPath = Path.GetDirectoryName(path);
 
-        private bool CalculateEquality()
-        {
-            bool filesAreEqual = fileLeft.Hash == fileRight.Hash && fileLeft.Size == fileRight.Size;
+            bool isDirectoryEmpty = !Directory.EnumerateFileSystemEntries(parentDirectoryPath).Any();
 
-            return checkFilesExistence
-                ? filesAreEqual && FileLeftExists && FileRightExists
-                : filesAreEqual;
-        }
+            if (!isDirectoryEmpty) return;
 
-        public void DeleteLeft()
-        {
-            File.Delete(FullPathLeft);
-        }
-
-        public void DeleteRight()
-        {
-            File.Delete(FullPathRight);
-        }
-
-        public void MoveLeft(string destinationDirectory)
-        {
-            MoveFile(fileLeft, destinationDirectory);
-        }
-
-        public void MoveRight(string destinationDirectory)
-        {
-            MoveFile(fileRight, destinationDirectory);
-        }
-
-        private static void MoveFile(HItem hFile, string destinationDirectory)
-        {
-            string sourceFilePath = hFile.GetOriginalPath();
-
-            string relativePath = hFile.GetPath()
-                .TrimStart(Path.DirectorySeparatorChar)
-                .TrimStart(Path.AltDirectorySeparatorChar);
-            string destinationFilePath = Path.Combine(destinationDirectory, relativePath);
-
-            string destinationDirectoryPath = Path.GetDirectoryName(destinationFilePath);
-
-            if (!Directory.Exists(destinationDirectoryPath))
-                Directory.CreateDirectory(destinationDirectoryPath);
-
-            File.Move(sourceFilePath, destinationFilePath);
-
-            RemoveParentIfEmpty(sourceFilePath);
-        }
-
-        private static void RemoveParentIfEmpty(string path)
-        {
-            while (true)
-            {
-                string parentDirectoryPath = Path.GetDirectoryName(path);
-
-                bool isDirectoryEmpty = !Directory.EnumerateFileSystemEntries(parentDirectoryPath).Any();
-
-                if (!isDirectoryEmpty) return;
-
-                Directory.Delete(parentDirectoryPath);
-                path = parentDirectoryPath;
-            }
+            Directory.Delete(parentDirectoryPath);
+            path = parentDirectoryPath;
         }
     }
 }

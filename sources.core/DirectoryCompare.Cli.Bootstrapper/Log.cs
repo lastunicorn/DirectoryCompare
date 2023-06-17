@@ -21,9 +21,9 @@ namespace DustInTheWind.DirectoryCompare.Cli.Bootstrapper
 {
     internal class Log : ILog
     {
-        private readonly Domain.Logging.ILog log;
+        private readonly Ports.LogAccess.ILog log;
 
-        public Log(Domain.Logging.ILog log)
+        public Log(Ports.LogAccess.ILog log)
         {
             this.log = log;
         }

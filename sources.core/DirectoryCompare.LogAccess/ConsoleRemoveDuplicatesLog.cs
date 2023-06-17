@@ -14,21 +14,23 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
-using DustInTheWind.DirectoryCompare.Domain.PotModel;
+using DustInTheWind.DirectoryCompare.Domain.SomeInterfaces;
+using DustInTheWind.DirectoryCompare.Domain.Utils;
 
-namespace DustInTheWind.DirectoryCompare.Domain.DataAccess
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation
 {
-    public interface IPotRepository
+    public class ConsoleRemoveDuplicatesLog : IRemoveDuplicatesLog
     {
-        List<Pot> Get();
-        
-        Pot Get(string name);
-        
-        void Add(Pot pot);
-        
-        bool Exists(string name);
-        
-        void Delete(string name);
+        public void WriteRemove(string path)
+        {
+            Console.WriteLine("removed: {0}", path);
+        }
+
+        public void WriteSummary(int removedFiles, DataSize removedSize)
+        {
+            Console.WriteLine("Total removes: " + removedFiles);
+            Console.WriteLine("Total size: " + removedSize);
+            Console.WriteLine();
+        }
     }
 }

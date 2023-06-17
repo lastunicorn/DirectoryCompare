@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 DirectoryCompare
 Copyright (C) 2017-2020 Dust in the Wind
 
@@ -21,18 +21,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
-        <AssemblyName>DustInTheWind.DirectoryCompare.DataAccess</AssemblyName>
-        <RootNamespace>DustInTheWind.DirectoryCompare.DataAccess</RootNamespace>
+        <AssemblyName>DustInTheWind.DirectoryCompare.Ports.DataAccess</AssemblyName>
+        <RootNamespace>DustInTheWind.DirectoryCompare.Ports.DataAccess</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All" />
-        <ProjectReference Include="..\DirectoryCompare.Ports.DataAccess\DirectoryCompare.Ports.DataAccess.csproj" />
-        <ProjectReference Include="..\DirectoryCompare.PotFiles\DirectoryCompare.PotFiles.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All"/>
     </ItemGroup>
 
 </Project>

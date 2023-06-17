@@ -14,14 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Domain.Utils;
+using DustInTheWind.DirectoryCompare.Domain.PotModel;
 
-namespace DustInTheWind.DirectoryCompare.Domain.SomeInterfaces
+namespace DustInTheWind.DirectoryCompare.Ports.DataAccess;
+
+public interface IPotRepository
 {
-    public interface IRemoveDuplicatesExporter
-    {
-        void WriteRemove(string path);
+    List<Pot> Get();
 
-        void WriteSummary(int removedFiles, DataSize removedSize);
-    }
+    Pot Get(string name);
+
+    void Add(Pot pot);
+
+    bool Exists(string name);
+
+    void Delete(string name);
 }
