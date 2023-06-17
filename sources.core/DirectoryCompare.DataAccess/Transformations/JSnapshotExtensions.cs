@@ -30,7 +30,7 @@ namespace DustInTheWind.DirectoryCompare.DataAccess.Transformations
 
             Snapshot snapshot = new()
             {
-                Id = jSnapshot.Id, 
+                Id = jSnapshot.AnalysisId, 
                 OriginalPath = jSnapshot.OriginalPath,
                 CreationTime = jSnapshot.CreationTime
             };

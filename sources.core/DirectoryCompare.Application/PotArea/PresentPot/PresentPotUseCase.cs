@@ -16,29 +16,30 @@
 
 using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.PotArea.PresentPot
+namespace DustInTheWind.DirectoryCompare.Application.PotArea.PresentPot;
+
+public class PresentPotUseCase : IRequestHandler<PresentPotRequest, Pot>
 {
-    public class PresentPotUseCase : RequestHandler<PresentPotRequest, Pot>
+    private readonly IPotRepository potRepository;
+    private readonly ISnapshotRepository snapshotRepository;
+
+    public PresentPotUseCase(IPotRepository potRepository, ISnapshotRepository snapshotRepository)
     {
-        private readonly IPotRepository potRepository;
-        private readonly ISnapshotRepository snapshotRepository;
+        this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
+        this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
+    }
 
-        public PresentPotUseCase(IPotRepository potRepository, ISnapshotRepository snapshotRepository)
-        {
-            this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
-            this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
-        }
+    public Task<Pot> Handle(PresentPotRequest request, CancellationToken cancellationToken)
+    {
+        Pot pot = potRepository.Get(request.PotName);
+        pot.Snapshots = snapshotRepository.GetByPot(request.PotName).ToList();
 
-        protected override Pot Handle(PresentPotRequest request)
-        {
-            Pot pot = potRepository.Get(request.PotName);
-            pot.Snapshots = snapshotRepository.GetByPot(request.PotName).ToList();
-
-            return pot;
-        }
+        return Task.FromResult(pot);
     }
 }

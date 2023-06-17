@@ -15,23 +15,26 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.PotArea.DeletePot
+namespace DustInTheWind.DirectoryCompare.Application.PotArea.DeletePot;
+
+public class DeletePotUseCase : IRequestHandler<DeletePotRequest>
 {
-    public class DeletePotUseCase : RequestHandler<DeletePotRequest>
+    private readonly IPotRepository potRepository;
+
+    public DeletePotUseCase(IPotRepository potRepository)
     {
-        private readonly IPotRepository potRepository;
+        this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
+    }
 
-        public DeletePotUseCase(IPotRepository potRepository)
-        {
-            this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
-        }
-
-        protected override void Handle(DeletePotRequest request)
-        {
-            potRepository.Delete(request.PotName);
-        }
+    public Task<Unit> Handle(DeletePotRequest request, CancellationToken cancellationToken)
+    {
+        potRepository.Delete(request.PotName);
+            
+        return Unit.Task;
     }
 }

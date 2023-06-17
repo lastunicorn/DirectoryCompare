@@ -15,44 +15,47 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.PotArea.CreatePot
+namespace DustInTheWind.DirectoryCompare.Application.PotArea.CreatePot;
+
+public class CreatePotUseCase : IRequestHandler<CreatePotRequest>
 {
-    public class CreatePotUseCase : RequestHandler<CreatePotRequest>
+    private readonly IPotRepository potRepository;
+
+    public CreatePotUseCase(IPotRepository potRepository)
     {
-        private readonly IPotRepository potRepository;
+        this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
+    }
 
-        public CreatePotUseCase(IPotRepository potRepository)
+    public Task<Unit> Handle(CreatePotRequest request, CancellationToken cancellationToken)
+    {
+        VerifyPotDoesNotExist(request.Name);
+        CreateNewPot(request);
+
+        return Unit.Task;
+    }
+
+    private void VerifyPotDoesNotExist(string potName)
+    {
+        bool potAlreadyExists = potRepository.Exists(potName);
+
+        if (potAlreadyExists)
+            throw new PotAlreadyExistsException();
+    }
+
+    private void CreateNewPot(CreatePotRequest request)
+    {
+        Pot newPot = new()
         {
-            this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
-        }
+            Name = request.Name,
+            Path = request.Path
+        };
 
-        protected override void Handle(CreatePotRequest request)
-        {
-            VerifyPotDoesNotExist(request.Name);
-            CreateNewPot(request);
-        }
-
-        private void VerifyPotDoesNotExist(string potName)
-        {
-            bool potAlreadyExists = potRepository.Exists(potName);
-
-            if (potAlreadyExists)
-                throw new PotAlreadyExistsException();
-        }
-
-        private void CreateNewPot(CreatePotRequest request)
-        {
-            Pot newPot = new Pot
-            {
-                Name = request.Name,
-                Path = request.Path
-            };
-
-            potRepository.Add(newPot);
-        }
+        potRepository.Add(newPot);
     }
 }

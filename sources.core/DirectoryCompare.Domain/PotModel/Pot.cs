@@ -23,13 +23,13 @@ namespace DustInTheWind.DirectoryCompare.Domain.PotModel
 {
     public class Pot
     {
-        public Guid Guid { get; set; }
+        public Guid Guid { get; init; }
 
-        public string Name { get; set; }
+        public string Name { get; init; }
 
-        public DiskPath Path { get; set; }
+        public DiskPath Path { get; init; }
         
-        public string Description { get; set; }
+        public string Description { get; init; }
 
         public List<Snapshot> Snapshots { get; set; }
     }

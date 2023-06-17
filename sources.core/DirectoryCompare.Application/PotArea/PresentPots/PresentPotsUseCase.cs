@@ -17,26 +17,29 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using DustInTheWind.DirectoryCompare.Domain.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.PotArea.PresentPots
+namespace DustInTheWind.DirectoryCompare.Application.PotArea.PresentPots;
+
+public class PresentPotsUseCase : IRequestHandler<PresentPotsRequest, List<Pot>>
 {
-    public class PresentPotsUseCase : RequestHandler<PresentPotsRequest, List<Pot>>
+    private readonly IPotRepository potRepository;
+
+    public PresentPotsUseCase(IPotRepository potRepository)
     {
-        private readonly IPotRepository potRepository;
+        this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
+    }
 
-        public PresentPotsUseCase(IPotRepository potRepository)
-        {
-            this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
-        }
+    public Task<List<Pot>> Handle(PresentPotsRequest request, CancellationToken cancellationToken)
+    {
+        List<Pot> pots = potRepository.Get()
+            .OrderBy(x => x.Name)
+            .ToList();
 
-        protected override List<Pot> Handle(PresentPotsRequest request)
-        {
-            return potRepository.Get()
-                .OrderBy(x => x.Name)
-                .ToList();
-        }
+        return Task.FromResult(pots);
     }
 }

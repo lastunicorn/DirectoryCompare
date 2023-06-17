@@ -28,6 +28,9 @@ namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
         [JsonProperty("id")]
         public Guid Id { get; set; }
 
+        [JsonProperty("analysis-id")]
+        public Guid AnalysisId { get; set; }
+
         [JsonProperty("original-path")]
         public string OriginalPath { get; set; }
 
