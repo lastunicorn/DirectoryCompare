@@ -14,52 +14,49 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 
-namespace DustInTheWind.DirectoryCompare.Domain.Comparison
+namespace DustInTheWind.DirectoryCompare.Application;
+
+public static class SnapshotRepositoryExtensions
 {
-    public static class SnapshotRepositoryExtensions
+    public static IEnumerable<HFile> EnumerateFiles(this ISnapshotRepository snapshotRepository, SnapshotLocation snapshotLocation, BlackList blackList = null)
     {
-        public static IEnumerable<HFile> EnumerateFiles(this ISnapshotRepository snapshotRepository, SnapshotLocation snapshotLocation, BlackList blackList = null)
-        {
-            Snapshot snapshot = snapshotRepository.GetSnapshot(snapshotLocation);
+        Snapshot snapshot = snapshotRepository.GetSnapshot(snapshotLocation);
 
-            return snapshot == null
-                ? Enumerable.Empty<HFile>()
-                : snapshot.EnumerateFiles(snapshotLocation.InternalPath, blackList);
+        return snapshot == null
+            ? Enumerable.Empty<HFile>()
+            : snapshot.EnumerateFiles(snapshotLocation.InternalPath, blackList);
+    }
+
+    private static Snapshot GetSnapshot(this ISnapshotRepository snapshotRepository, SnapshotLocation snapshotLocation)
+    {
+        if (string.IsNullOrEmpty(snapshotLocation.PotName))
+            return null;
+
+        if (snapshotLocation.SnapshotIndex.HasValue)
+            return snapshotRepository.GetByIndex(snapshotLocation.PotName, snapshotLocation.SnapshotIndex.Value);
+
+        if (!snapshotLocation.SnapshotDate.HasValue)
+            return snapshotRepository.GetLast(snapshotLocation.PotName);
+
+        DateTime searchedDate = snapshotLocation.SnapshotDate.Value;
+
+        Snapshot snapshot = snapshotRepository.GetByExactDateTime(snapshotLocation.PotName, searchedDate);
+
+        if (snapshot == null && searchedDate.TimeOfDay == TimeSpan.Zero)
+        {
+            List<Snapshot> snapshots = snapshotRepository.GetByDate(snapshotLocation.PotName, searchedDate)
+                .ToList();
+
+            if (snapshots.Count == 1)
+                snapshot = snapshots[0];
+            else if (snapshots.Count > 1)
+                throw new Exception($"There are multiple snapshots that match the specified date. Pot = {snapshotLocation.PotName}; Date = {searchedDate}");
         }
 
-        private static Snapshot GetSnapshot(this ISnapshotRepository snapshotRepository, SnapshotLocation snapshotLocation)
-        {
-            if (string.IsNullOrEmpty(snapshotLocation.PotName))
-                return null;
-
-            if (snapshotLocation.SnapshotIndex.HasValue)
-                return snapshotRepository.GetByIndex(snapshotLocation.PotName, snapshotLocation.SnapshotIndex.Value);
-
-            if (!snapshotLocation.SnapshotDate.HasValue)
-                return snapshotRepository.GetLast(snapshotLocation.PotName);
-
-            DateTime searchedDate = snapshotLocation.SnapshotDate.Value;
-
-            Snapshot snapshot = snapshotRepository.GetByExactDateTime(snapshotLocation.PotName, searchedDate);
-
-            if (snapshot == null && searchedDate.TimeOfDay == TimeSpan.Zero)
-            {
-                List<Snapshot> snapshots = snapshotRepository.GetByDate(snapshotLocation.PotName, searchedDate)
-                    .ToList();
-
-                if (snapshots.Count == 1)
-                    snapshot = snapshots[0];
-                else if (snapshots.Count > 1)
-                    throw new Exception($"There are multiple snapshots that match the specified date. Pot = {snapshotLocation.PotName}; Date = {searchedDate}");
-            }
-
-            return snapshot;
-        }
+        return snapshot;
     }
 }

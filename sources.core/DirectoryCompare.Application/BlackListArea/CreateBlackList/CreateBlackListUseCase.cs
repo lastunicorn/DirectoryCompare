@@ -14,18 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.DeleteBlackList
+namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.CreateBlackList;
+
+internal class CreateBlackListUseCase : IRequestHandler<CreateBlackListRequest>
 {
-    internal class CreateBlackListUseCase : IRequestHandler<CreateBlackListRequest>
+    public Task<Unit> Handle(CreateBlackListRequest request, CancellationToken cancellationToken)
     {
-        public Task<Unit> Handle(CreateBlackListRequest request, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+        throw new NotImplementedException();
     }
 }

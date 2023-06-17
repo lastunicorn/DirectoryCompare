@@ -16,9 +16,9 @@
 
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
-using DustInTheWind.DirectoryCompare.Domain.SomeInterfaces;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
+using DustInTheWind.DirectoryCompare.Ports.LogAccess;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.RemoveDuplicates;

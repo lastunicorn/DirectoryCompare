@@ -14,23 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Domain.SomeInterfaces;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
+using DustInTheWind.DirectoryCompare.Ports.LogAccess;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Presentation
+namespace DustInTheWind.DirectoryCompare.LogAccess;
+
+public class ConsoleRemoveDuplicatesLog : IRemoveDuplicatesLog
 {
-    public class ConsoleRemoveDuplicatesLog : IRemoveDuplicatesLog
+    public void WriteRemove(string path)
     {
-        public void WriteRemove(string path)
-        {
-            Console.WriteLine("removed: {0}", path);
-        }
+        Console.WriteLine("removed: {0}", path);
+    }
 
-        public void WriteSummary(int removedFiles, DataSize removedSize)
-        {
-            Console.WriteLine("Total removes: " + removedFiles);
-            Console.WriteLine("Total size: " + removedSize);
-            Console.WriteLine();
-        }
+    public void WriteSummary(int removedFiles, DataSize removedSize)
+    {
+        Console.WriteLine("Total removes: " + removedFiles);
+        Console.WriteLine("Total size: " + removedSize);
+        Console.WriteLine();
     }
 }

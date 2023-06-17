@@ -17,10 +17,9 @@
 using DustInTheWind.DirectoryCompare.DiskAnalysis;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.CreateSnapshot
+namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.CreateSnapshot;
+
+public class CreateSnapshotRequest : IRequest<IDiskAnalysisProgress>, IRequest
 {
-    public class CreateSnapshotRequest : IRequest<IDiskAnalysisProgress>, IRequest
-    {
-        public string PotName { get; set; }
-    }
+    public string PotName { get; set; }
 }

@@ -16,12 +16,11 @@
 
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.DeleteBlackList
+namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.CreateBlackList;
+
+public class CreateBlackListRequest : IRequest
 {
-    public class CreateBlackListRequest : IRequest
-    {
-        public string PotName { get; set; }
-        
-        public string BlackListName { get; set; }
-    }
+    public string PotName { get; set; }
+
+    public string BlackListName { get; set; }
 }

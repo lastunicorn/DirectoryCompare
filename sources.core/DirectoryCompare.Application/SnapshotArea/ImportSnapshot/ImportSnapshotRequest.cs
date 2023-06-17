@@ -16,12 +16,11 @@
 
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.ImportSnapshot
-{
-    public class ImportSnapshotRequest : IRequest
-    {
-        public string FilePath { get; set; }
+namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.ImportSnapshot;
 
-        public string PotName { get; set; }
-    }
+public class ImportSnapshotRequest : IRequest
+{
+    public string FilePath { get; set; }
+
+    public string PotName { get; set; }
 }

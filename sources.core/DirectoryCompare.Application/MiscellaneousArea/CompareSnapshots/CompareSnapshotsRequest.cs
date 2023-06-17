@@ -17,16 +17,15 @@
 using DustInTheWind.DirectoryCompare.Domain;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.CompareSnapshots
+namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.CompareSnapshots;
+
+public class CompareSnapshotsRequest : IRequest<CompareSnapshotsResponse>
 {
-    public class CompareSnapshotsRequest : IRequest<CompareSnapshotsResponse>
-    {
-        public SnapshotLocation Snapshot1 { get; set; }
+    public SnapshotLocation Snapshot1 { get; set; }
 
-        public SnapshotLocation Snapshot2 { get; set; }
-        
-        public string ExportFileName { get; set; }
+    public SnapshotLocation Snapshot2 { get; set; }
 
-        public bool IsExportRequested => !string.IsNullOrEmpty(ExportFileName);
-    }
+    public string ExportFileName { get; set; }
+
+    public bool IsExportRequested => !string.IsNullOrEmpty(ExportFileName);
 }

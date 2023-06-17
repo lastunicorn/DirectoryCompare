@@ -16,13 +16,12 @@
 
 using FluentValidation;
 
-namespace DustInTheWind.DirectoryCompare.Application.PotArea.DeletePot
+namespace DustInTheWind.DirectoryCompare.Application.PotArea.DeletePot;
+
+public class DeletePotRequestValidator : AbstractValidator<DeletePotRequest>
 {
-    public class DeletePotRequestValidator : AbstractValidator<DeletePotRequest>
+    public DeletePotRequestValidator()
     {
-        public DeletePotRequestValidator()
-        {
-            RuleFor(x => x.PotName).NotEmpty();
-        }
+        RuleFor(x => x.PotName).NotEmpty();
     }
 }

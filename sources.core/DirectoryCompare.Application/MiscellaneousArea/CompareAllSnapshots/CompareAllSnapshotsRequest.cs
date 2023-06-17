@@ -16,12 +16,11 @@
 
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.CompareAllSnapshots
+namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.CompareAllSnapshots;
+
+public class CompareAllSnapshotsRequest : IRequest<CompareAllSnapshotsResponse>
 {
-    public class CompareAllSnapshotsRequest : IRequest<CompareAllSnapshotsResponse>
-    {
-        public string PotName { get; set; }
-        
-        public string ExportName { get; set; }
-    }
+    public string PotName { get; set; }
+
+    public string ExportName { get; set; }
 }

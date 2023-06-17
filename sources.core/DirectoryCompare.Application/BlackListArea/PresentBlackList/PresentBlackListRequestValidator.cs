@@ -16,13 +16,12 @@
 
 using FluentValidation;
 
-namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.PresentBlackList
+namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.PresentBlackList;
+
+public class PresentBlackListRequestValidator : AbstractValidator<PresentBlackListRequest>
 {
-    public class PresentBlackListRequestValidator : AbstractValidator<PresentBlackListRequest>
+    public PresentBlackListRequestValidator()
     {
-        public PresentBlackListRequestValidator()
-        {
-            RuleFor(x => x.PotName).NotEmpty();
-        }
+        RuleFor(x => x.PotName).NotEmpty();
     }
 }

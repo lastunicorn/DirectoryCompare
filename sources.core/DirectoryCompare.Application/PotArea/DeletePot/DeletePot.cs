@@ -16,10 +16,9 @@
 
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.PotArea.DeletePot
+namespace DustInTheWind.DirectoryCompare.Application.PotArea.DeletePot;
+
+public class DeletePotRequest : IRequest
 {
-    public class DeletePotRequest : IRequest
-    {
-        public string PotName { get; set; }
-    }
+    public string PotName { get; set; }
 }

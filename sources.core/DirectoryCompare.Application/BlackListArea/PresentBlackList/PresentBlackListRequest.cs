@@ -17,12 +17,11 @@
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.PresentBlackList
-{
-    public class PresentBlackListRequest : IRequest<DiskPathCollection>
-    {
-        public string PotName { get; set; }
+namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.PresentBlackList;
 
-        public string BlackListName { get; set; }
-    }
+public class PresentBlackListRequest : IRequest<DiskPathCollection>
+{
+    public string PotName { get; set; }
+
+    public string BlackListName { get; set; }
 }

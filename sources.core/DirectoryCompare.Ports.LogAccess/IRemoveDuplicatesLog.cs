@@ -16,12 +16,11 @@
 
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 
-namespace DustInTheWind.DirectoryCompare.Domain.SomeInterfaces
-{
-    public interface IRemoveDuplicatesLog
-    {
-        void WriteRemove(string path);
+namespace DustInTheWind.DirectoryCompare.Ports.LogAccess;
 
-        void WriteSummary(int removedFiles, DataSize removedSize);
-    }
+public interface IRemoveDuplicatesLog
+{
+    void WriteRemove(string path);
+
+    void WriteSummary(int removedFiles, DataSize removedSize);
 }

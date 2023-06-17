@@ -18,10 +18,9 @@ using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.PresentSnapshot
+namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.PresentSnapshot;
+
+public class PresentSnapshotRequest : IRequest<Snapshot>
 {
-    public class PresentSnapshotRequest : IRequest<Snapshot>
-    {
-        public SnapshotLocation Location { get; set; }
-    }
+    public SnapshotLocation Location { get; set; }
 }

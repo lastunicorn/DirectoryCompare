@@ -14,24 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.RemoveBlackPath
+namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.RemoveBlackPath;
+
+public class RemoveBlackPathUseCase : RequestHandler<RemoveBlackPathRequest>
 {
-    public class RemoveBlackPathUseCase : RequestHandler<RemoveBlackPathRequest>
+    private readonly IBlackListRepository blackListRepository;
+
+    public RemoveBlackPathUseCase(IBlackListRepository blackListRepository)
     {
-        private readonly IBlackListRepository blackListRepository;
+        this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
+    }
 
-        public RemoveBlackPathUseCase(IBlackListRepository blackListRepository)
-        {
-            this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
-        }
-
-        protected override void Handle(RemoveBlackPathRequest request)
-        {
-            blackListRepository.Delete(request.PotName, request.Path);
-        }
+    protected override void Handle(RemoveBlackPathRequest request)
+    {
+        blackListRepository.Delete(request.PotName, request.Path);
     }
 }

@@ -14,25 +14,23 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.PresentSnapshot
+namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.PresentSnapshot;
+
+public class PresentSnapshotUseCase : RequestHandler<PresentSnapshotRequest, Snapshot>
 {
-    public class PresentSnapshotUseCase : RequestHandler<PresentSnapshotRequest, Snapshot>
+    private readonly SnapshotFactory snapshotFactory;
+
+    public PresentSnapshotUseCase(SnapshotFactory snapshotFactory)
     {
-        private readonly SnapshotFactory snapshotFactory;
+        this.snapshotFactory = snapshotFactory ?? throw new ArgumentNullException(nameof(snapshotFactory));
+    }
 
-        public PresentSnapshotUseCase(SnapshotFactory snapshotFactory)
-        {
-            this.snapshotFactory = snapshotFactory ?? throw new ArgumentNullException(nameof(snapshotFactory));
-        }
-
-        protected override Snapshot Handle(PresentSnapshotRequest request)
-        {
-            return snapshotFactory.RetrieveSnapshot(request.Location);
-        }
+    protected override Snapshot Handle(PresentSnapshotRequest request)
+    {
+        return snapshotFactory.RetrieveSnapshot(request.Location);
     }
 }

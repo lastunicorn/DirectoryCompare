@@ -17,10 +17,9 @@
 using DustInTheWind.DirectoryCompare.Domain;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.DeleteSnapshot
+namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.DeleteSnapshot;
+
+public class DeleteSnapshotRequest : IRequest
 {
-    public class DeleteSnapshotRequest : IRequest
-    {
-        public SnapshotLocation Location { get; set; }
-    }
+    public SnapshotLocation Location { get; set; }
 }

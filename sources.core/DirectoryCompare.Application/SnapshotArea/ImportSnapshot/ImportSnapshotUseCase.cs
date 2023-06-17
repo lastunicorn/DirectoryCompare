@@ -14,98 +14,88 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.ImportExport;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.ImportSnapshot
+namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.ImportSnapshot;
+
+public class ImportSnapshotUseCase : RequestHandler<ImportSnapshotRequest>
 {
-    public class ImportSnapshotUseCase : RequestHandler<ImportSnapshotRequest>
+    private readonly IPotRepository potRepository;
+    private readonly ISnapshotRepository snapshotRepository;
+    private readonly IPotImportExport potImportExport;
+
+    public ImportSnapshotUseCase(IPotRepository potRepository, ISnapshotRepository snapshotRepository, IPotImportExport potImportExport)
     {
-        private readonly IPotRepository potRepository;
-        private readonly ISnapshotRepository snapshotRepository;
-        private readonly IPotImportExport potImportExport;
+        this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
+        this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
+        this.potImportExport = potImportExport ?? throw new ArgumentNullException(nameof(potImportExport));
+    }
 
-        public ImportSnapshotUseCase(IPotRepository potRepository, ISnapshotRepository snapshotRepository, IPotImportExport potImportExport)
+    protected override void Handle(ImportSnapshotRequest request)
+    {
+        //ISnapshotReader reader = null;
+        //ISnapshotWriter writer = null;
+
+        //while (reader.MoveNext())
+        //{
+        //    switch (reader.CurrentItemType)
+        //    {
+        //        case SnapshotItemType.None:
+        //            break;
+
+        //        case SnapshotItemType.SerializerId:
+        //            writer.WriteSerializerId(reader.ReadSerializerId());
+        //            break;
+
+        //        case SnapshotItemType.OriginalPath:
+        //            writer.WriteOriginalPath(reader.ReadOriginalPath());
+        //            break;
+
+        //        case SnapshotItemType.CreationTime:
+        //            writer.WriteCreationTime(reader.ReadCreationTime());
+        //            break;
+
+        //        case SnapshotItemType.FileCollection:
+        //            IEnumerable<HFile> files = reader.ReadFiles();
+
+        //            foreach (HFile file in files) 
+        //                writer.Add(file);
+        //            break;
+
+        //        case SnapshotItemType.DirectoryCollection:
+        //            IEnumerable<HDirectoryReader> directories = reader.ReadDirectories();
+
+        //            foreach (HDirectory directory in directories)
+        //                writer.Add(directory);
+        //            break;
+        //    }
+        //}
+
+
+        Snapshot snapshot = potImportExport.ReadSnapshot(request.FilePath);
+
+        Pot pot = potRepository.Get(request.PotName);
+
+        if (pot == null)
         {
-            this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
-            this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
-            this.potImportExport = potImportExport ?? throw new ArgumentNullException(nameof(potImportExport));
+            pot = new Pot
+            {
+                Name = request.PotName,
+                Path = snapshot.OriginalPath
+            };
+
+            potRepository.Add(pot);
+        }
+        else
+        {
+            if (pot.Path != snapshot.OriginalPath)
+                throw new Exception("The url of the imported snapshot is different than the one of the pot.");
         }
 
-        protected override void Handle(ImportSnapshotRequest request)
-        {
-            //ISnapshotReader reader = null;
-            //ISnapshotWriter writer = null;
-
-            //while (reader.MoveNext())
-            //{
-            //    switch (reader.CurrentItemType)
-            //    {
-            //        case SnapshotItemType.None:
-            //            break;
-                        
-            //        case SnapshotItemType.SerializerId:
-            //            writer.WriteSerializerId(reader.ReadSerializerId());
-            //            break;
-                            
-            //        case SnapshotItemType.OriginalPath:
-            //            writer.WriteOriginalPath(reader.ReadOriginalPath());
-            //            break;
-
-            //        case SnapshotItemType.CreationTime:
-            //            writer.WriteCreationTime(reader.ReadCreationTime());
-            //            break;
-
-            //        case SnapshotItemType.FileCollection:
-            //            IEnumerable<HFile> files = reader.ReadFiles();
-
-            //            foreach (HFile file in files) 
-            //                writer.Add(file);
-            //            break;
-
-            //        case SnapshotItemType.DirectoryCollection:
-            //            IEnumerable<HDirectoryReader> directories = reader.ReadDirectories();
-
-            //            foreach (HDirectory directory in directories)
-            //                writer.Add(directory);
-            //            break;
-            //    }
-            //}
-
-
-
-
-
-
-
-
-
-
-            Snapshot snapshot = potImportExport.ReadSnapshot(request.FilePath);
-
-            Pot pot = potRepository.Get(request.PotName);
-
-            if (pot == null)
-            {
-                pot = new Pot
-                {
-                    Name = request.PotName,
-                    Path = snapshot.OriginalPath
-                };
-
-                potRepository.Add(pot);
-            }
-            else
-            {
-                if (pot.Path != snapshot.OriginalPath)
-                    throw new Exception("The url of the imported snapshot is different than the one of the pot.");
-            }
-
-            snapshotRepository.Add(request.PotName, snapshot);
-        }
+        snapshotRepository.Add(request.PotName, snapshot);
     }
 }

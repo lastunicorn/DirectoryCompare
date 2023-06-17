@@ -17,12 +17,11 @@
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.PotArea.CreatePot
-{
-    public class CreatePotRequest : IRequest
-    {
-        public string Name { get; set; }
+namespace DustInTheWind.DirectoryCompare.Application.PotArea.CreatePot;
 
-        public DiskPath Path { get; set; }
-    }
+public class CreatePotRequest : IRequest
+{
+    public string Name { get; set; }
+
+    public DiskPath Path { get; set; }
 }

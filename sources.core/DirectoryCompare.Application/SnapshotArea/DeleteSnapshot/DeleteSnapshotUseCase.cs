@@ -14,46 +14,44 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.DeleteSnapshot
+namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.DeleteSnapshot;
+
+public class DeleteSnapshotUseCase : RequestHandler<DeleteSnapshotRequest>
 {
-    public class DeleteSnapshotUseCase : RequestHandler<DeleteSnapshotRequest>
+    private readonly ISnapshotRepository snapshotRepository;
+
+    public DeleteSnapshotUseCase(ISnapshotRepository snapshotRepository)
     {
-        private readonly ISnapshotRepository snapshotRepository;
+        this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
+    }
 
-        public DeleteSnapshotUseCase(ISnapshotRepository snapshotRepository)
+    protected override void Handle(DeleteSnapshotRequest request)
+    {
+        if (string.IsNullOrEmpty(request.Location.PotName))
+            throw new Exception("Pot name was not provided.");
+
+        if (request.Location.SnapshotIndex.HasValue)
         {
-            this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
+            snapshotRepository.DeleteByIndex(request.Location.PotName, request.Location.SnapshotIndex.Value);
         }
-
-        protected override void Handle(DeleteSnapshotRequest request)
+        else if (request.Location.SnapshotDate.HasValue)
         {
-            if (string.IsNullOrEmpty(request.Location.PotName))
-                throw new Exception("Pot name was not provided.");
+            DateTime searchedDate = request.Location.SnapshotDate.Value;
 
-            if (request.Location.SnapshotIndex.HasValue)
-            {
-                snapshotRepository.DeleteByIndex(request.Location.PotName, request.Location.SnapshotIndex.Value);
-            }
-            else if (request.Location.SnapshotDate.HasValue)
-            {
-                DateTime searchedDate = request.Location.SnapshotDate.Value;
+            bool foundEndDeleted = snapshotRepository.DeleteByExactDateTime(request.Location.PotName, searchedDate);
 
-                bool foundEndDeleted = snapshotRepository.DeleteByExactDateTime(request.Location.PotName, searchedDate);
+            if (foundEndDeleted)
+                return;
 
-                if (foundEndDeleted)
-                    return;
-
-                if (searchedDate.TimeOfDay == TimeSpan.Zero)
-                    snapshotRepository.DeleteSingleByDate(request.Location.PotName, searchedDate);
-            }
-            else
-            {
-                snapshotRepository.DeleteLast(request.Location.PotName);
-            }
+            if (searchedDate.TimeOfDay == TimeSpan.Zero)
+                snapshotRepository.DeleteSingleByDate(request.Location.PotName, searchedDate);
+        }
+        else
+        {
+            snapshotRepository.DeleteLast(request.Location.PotName);
         }
     }
 }

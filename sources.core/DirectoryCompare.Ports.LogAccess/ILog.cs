@@ -14,32 +14,31 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.Ports.LogAccess
+namespace DustInTheWind.DirectoryCompare.Ports.LogAccess;
+
+public interface ILog
 {
-    public interface ILog
-    {
-        void WriteDebug(string message);
+    void WriteDebug(string message);
 
-        void WriteDebug(string format, params object[] args);
+    void WriteDebug(string format, params object[] args);
 
-        void WriteInfo(string message);
+    void WriteInfo(string message);
 
-        void WriteInfo(string format, params object[] args);
+    void WriteInfo(string format, params object[] args);
 
-        void WriteWarning(string message);
+    void WriteWarning(string message);
 
-        void WriteWarning(string format, params object[] args);
+    void WriteWarning(string format, params object[] args);
 
-        void WriteWarning(string message, Exception ex);
+    void WriteWarning(string message, Exception ex);
 
-        void WriteWarning(Exception ex);
+    void WriteWarning(Exception ex);
 
-        void WriteError(string message);
+    void WriteError(string message);
 
-        void WriteError(string format, params object[] args);
+    void WriteError(string format, params object[] args);
 
-        void WriteError(string message, Exception ex);
+    void WriteError(string message, Exception ex);
 
-        void WriteError(Exception ex);
-    }
+    void WriteError(Exception ex);
 }

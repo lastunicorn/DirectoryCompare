@@ -17,6 +17,7 @@
 using System;
 using System.Threading.Tasks;
 using DustInTheWind.ConsoleFramework;
+using DustInTheWind.DirectoryCompare.Application.BlackListArea.CreateBlackList;
 using DustInTheWind.DirectoryCompare.Application.BlackListArea.DeleteBlackList;
 using DustInTheWind.DirectoryCompare.Infrastructure;
 

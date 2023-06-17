@@ -14,12 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.FindDuplicates
+namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.FindDuplicates;
+
+public enum AnalysisState
 {
-    public enum AnalysisState
-    {
-        NotStarted = 0,
-        Running,
-        Finished
-    }
+    NotStarted = 0,
+    Running,
+    Finished
 }

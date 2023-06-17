@@ -17,16 +17,15 @@
 using DustInTheWind.DirectoryCompare.Validation;
 using FluentValidation;
 
-namespace DustInTheWind.DirectoryCompare.Application.PotArea.CreatePot
+namespace DustInTheWind.DirectoryCompare.Application.PotArea.CreatePot;
+
+public class CreatePotRequestValidator : AbstractValidator<CreatePotRequest>
 {
-    public class CreatePotRequestValidator : AbstractValidator<CreatePotRequest>
+    public CreatePotRequestValidator()
     {
-        public CreatePotRequestValidator()
-        {
-            RuleFor(x => x.Name).NotEmpty();
-            
-            RuleFor(x => x.Path).NotEmpty();
-            RuleFor(x => x.Path).IsValidPath();
-        }
+        RuleFor(x => x.Name).NotEmpty();
+
+        RuleFor(x => x.Path).NotEmpty();
+        RuleFor(x => x.Path).IsValidPath();
     }
 }

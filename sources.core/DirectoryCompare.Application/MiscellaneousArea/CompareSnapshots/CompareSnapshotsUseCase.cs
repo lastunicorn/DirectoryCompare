@@ -14,65 +14,63 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.CompareSnapshots
+namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.CompareSnapshots;
+
+public class CompareSnapshotsUseCase : RequestHandler<CompareSnapshotsRequest, CompareSnapshotsResponse>
 {
-    public class CompareSnapshotsUseCase : RequestHandler<CompareSnapshotsRequest, CompareSnapshotsResponse>
+    private readonly SnapshotFactory snapshotFactory;
+
+    public CompareSnapshotsUseCase(SnapshotFactory snapshotFactory)
     {
-        private readonly SnapshotFactory snapshotFactory;
+        this.snapshotFactory = snapshotFactory ?? throw new ArgumentNullException(nameof(snapshotFactory));
+    }
 
-        public CompareSnapshotsUseCase(SnapshotFactory snapshotFactory)
+    protected override CompareSnapshotsResponse Handle(CompareSnapshotsRequest request)
+    {
+        Snapshot snapshot1 = snapshotFactory.RetrieveSnapshot(request.Snapshot1);
+        Snapshot snapshot2 = snapshotFactory.RetrieveSnapshot(request.Snapshot2);
+        SnapshotComparer comparer = CompareSnapshots(snapshot1, snapshot2);
+        string exportDirectoryPath = ExportToDiskIfRequested(comparer, request);
+
+        return new CompareSnapshotsResponse
         {
-            this.snapshotFactory = snapshotFactory ?? throw new ArgumentNullException(nameof(snapshotFactory));
-        }
+            OnlyInSnapshot1 = comparer.OnlyInSnapshot1,
+            OnlyInSnapshot2 = comparer.OnlyInSnapshot2,
+            DifferentNames = comparer.DifferentNames,
+            DifferentContent = comparer.DifferentContent,
+            ExportDirectoryPath = exportDirectoryPath
+        };
+    }
 
-        protected override CompareSnapshotsResponse Handle(CompareSnapshotsRequest request)
+    private static SnapshotComparer CompareSnapshots(Snapshot snapshot1, Snapshot snapshot2)
+    {
+        SnapshotComparer comparer = new(snapshot1, snapshot2);
+        comparer.Compare();
+        return comparer;
+    }
+
+    private static string ExportToDiskIfRequested(SnapshotComparer comparer, CompareSnapshotsRequest request)
+    {
+        return request.IsExportRequested
+            ? ExportToDisk(comparer, request.ExportFileName)
+            : null;
+    }
+
+    private static string ExportToDisk(SnapshotComparer comparer, string exportFileName)
+    {
+        FileComparisonExporter exporter = new()
         {
-            Snapshot snapshot1 = snapshotFactory.RetrieveSnapshot(request.Snapshot1);
-            Snapshot snapshot2 = snapshotFactory.RetrieveSnapshot(request.Snapshot2);
-            SnapshotComparer comparer = CompareSnapshots(snapshot1, snapshot2);
-            string exportDirectoryPath = ExportToDiskIfRequested(comparer, request);
+            ExportName = exportFileName,
+            AddTimeStamp = true
+        };
 
-            return new CompareSnapshotsResponse
-            {
-                OnlyInSnapshot1 = comparer.OnlyInSnapshot1,
-                OnlyInSnapshot2 = comparer.OnlyInSnapshot2,
-                DifferentNames = comparer.DifferentNames,
-                DifferentContent = comparer.DifferentContent,
-                ExportDirectoryPath = exportDirectoryPath
-            };
-        }
+        exporter.Export(comparer);
 
-        private static SnapshotComparer CompareSnapshots(Snapshot snapshot1, Snapshot snapshot2)
-        {
-            SnapshotComparer comparer = new(snapshot1, snapshot2);
-            comparer.Compare();
-            return comparer;
-        }
-
-        private static string ExportToDiskIfRequested(SnapshotComparer comparer, CompareSnapshotsRequest request)
-        {
-            return request.IsExportRequested
-                ? ExportToDisk(comparer, request.ExportFileName)
-                : null;
-        }
-
-        private static string ExportToDisk(SnapshotComparer comparer, string exportFileName)
-        {
-            FileComparisonExporter exporter = new()
-            {
-                ExportName = exportFileName,
-                AddTimeStamp = true
-            };
-
-            exporter.Export(comparer);
-
-            return exporter.ExportDirectoryPath;
-        }
+        return exporter.ExportDirectoryPath;
     }
 }

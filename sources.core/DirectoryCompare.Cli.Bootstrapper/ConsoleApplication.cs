@@ -17,14 +17,15 @@
 using System;
 using DustInTheWind.ConsoleFramework;
 using DustInTheWind.ConsoleFramework.AppBuilder;
-using DustInTheWind.ConsoleFramework.Logging;
 using DustInTheWind.DirectoryCompare.Cli.Bootstrapper.Setup;
 using DustInTheWind.DirectoryCompare.Cli.Presentation;
 using DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands;
 using DustInTheWind.DirectoryCompare.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.ImportExport;
-using DustInTheWind.DirectoryCompare.Domain.SomeInterfaces;
+using DustInTheWind.DirectoryCompare.LogAccess;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
+using DustInTheWind.DirectoryCompare.Ports.LogAccess;
+using ILog = DustInTheWind.ConsoleFramework.Logging.ILog;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Bootstrapper
 {

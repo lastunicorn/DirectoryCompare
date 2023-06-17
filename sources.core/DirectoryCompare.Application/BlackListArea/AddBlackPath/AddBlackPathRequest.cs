@@ -17,14 +17,13 @@
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.AddBlackPath
+namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.AddBlackPath;
+
+public class AddBlackPathRequest : IRequest
 {
-    public class AddBlackPathRequest : IRequest
-    {
-        public string PotName { get; set; }
+    public string PotName { get; init; }
 
-        public string BlackList { get; set; }
+    public string BlackList { get; init; }
 
-        public DiskPath Path { get; set; }
-    }
+    public DiskPath Path { get; init; }
 }

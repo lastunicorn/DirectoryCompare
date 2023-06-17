@@ -14,25 +14,23 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.PresentBlackList
+namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.PresentBlackList;
+
+public class PresentBlackListUseCase : RequestHandler<PresentBlackListRequest, DiskPathCollection>
 {
-    public class PresentBlackListUseCase : RequestHandler<PresentBlackListRequest, DiskPathCollection>
+    private readonly IBlackListRepository blackListRepository;
+
+    public PresentBlackListUseCase(IBlackListRepository blackListRepository)
     {
-        private readonly IBlackListRepository blackListRepository;
+        this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
+    }
 
-        public PresentBlackListUseCase(IBlackListRepository blackListRepository)
-        {
-            this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
-        }
-
-        protected override DiskPathCollection Handle(PresentBlackListRequest request)
-        {
-            return blackListRepository.Get(request.PotName);
-        }
+    protected override DiskPathCollection Handle(PresentBlackListRequest request)
+    {
+        return blackListRepository.Get(request.PotName);
     }
 }

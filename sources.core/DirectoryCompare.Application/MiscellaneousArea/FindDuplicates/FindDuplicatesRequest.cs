@@ -18,14 +18,13 @@ using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.FindDuplicates
+namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.FindDuplicates;
+
+public class FindDuplicatesRequest : IRequest<FileDuplicates>
 {
-    public class FindDuplicatesRequest : IRequest<FileDuplicates>
-    {
-        public SnapshotLocation SnapshotLeft { get; set; }
+    public SnapshotLocation SnapshotLeft { get; set; }
 
-        public SnapshotLocation SnapshotRight { get; set; }
+    public SnapshotLocation SnapshotRight { get; set; }
 
-        public bool CheckFilesExistence { get; set; }
-    }
+    public bool CheckFilesExistence { get; set; }
 }

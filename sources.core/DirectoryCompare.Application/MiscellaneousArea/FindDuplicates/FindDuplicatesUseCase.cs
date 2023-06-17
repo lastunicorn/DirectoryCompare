@@ -14,9 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
@@ -25,50 +22,49 @@ using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 using DustInTheWind.DirectoryCompare.Ports.LogAccess;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.FindDuplicates
+namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.FindDuplicates;
+
+public class FindDuplicatesUseCase : RequestHandler<FindDuplicatesRequest, FileDuplicates>
 {
-    public class FindDuplicatesUseCase : RequestHandler<FindDuplicatesRequest, FileDuplicates>
+    private readonly ISnapshotRepository snapshotRepository;
+    private readonly IBlackListRepository blackListRepository;
+    private readonly ILog log;
+
+    public FindDuplicatesUseCase(ISnapshotRepository snapshotRepository, IBlackListRepository blackListRepository, ILog log)
     {
-        private readonly ISnapshotRepository snapshotRepository;
-        private readonly IBlackListRepository blackListRepository;
-        private readonly ILog log;
+        this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
+        this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
+        this.log = log ?? throw new ArgumentNullException(nameof(log));
+    }
 
-        public FindDuplicatesUseCase(ISnapshotRepository snapshotRepository, IBlackListRepository blackListRepository, ILog log)
+    protected override FileDuplicates Handle(FindDuplicatesRequest request)
+    {
+        log.WriteInfo("Searching for duplicates between pot '{0}' and '{1}'.", request.SnapshotLeft.PotName, request.SnapshotRight.PotName);
+
+        return new FileDuplicates
         {
-            this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
-            this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
-            this.log = log ?? throw new ArgumentNullException(nameof(log));
-        }
+            FilesLeft = GetFiles(request.SnapshotLeft),
+            FilesRight = string.IsNullOrEmpty(request.SnapshotRight.PotName)
+                ? null
+                : GetFiles(request.SnapshotRight),
+            CheckFilesExistence = request.CheckFilesExistence
+        };
+    }
 
-        protected override FileDuplicates Handle(FindDuplicatesRequest request)
-        {
-            log.WriteInfo("Searching for duplicates between pot '{0}' and '{1}'.", request.SnapshotLeft.PotName, request.SnapshotRight.PotName);
+    private List<HFile> GetFiles(SnapshotLocation snapshotLocation)
+    {
+        BlackList blackList = GetBlackList(snapshotLocation);
 
-            return new FileDuplicates
-            {
-                FilesLeft = GetFiles(request.SnapshotLeft),
-                FilesRight = string.IsNullOrEmpty(request.SnapshotRight.PotName)
-                    ? null
-                    : GetFiles(request.SnapshotRight),
-                CheckFilesExistence = request.CheckFilesExistence
-            };
-        }
+        IEnumerable<HFile> files = snapshotRepository.EnumerateFiles(snapshotLocation, blackList);
+        return files.ToList();
+    }
 
-        private List<HFile> GetFiles(SnapshotLocation snapshotLocation)
-        {
-            BlackList blackList = GetBlackList(snapshotLocation);
+    private BlackList GetBlackList(SnapshotLocation snapshotLocation)
+    {
+        if (snapshotLocation.PotName == null)
+            return null;
 
-            IEnumerable<HFile> files = snapshotRepository.EnumerateFiles(snapshotLocation, blackList);
-            return files.ToList();
-        }
-
-        private BlackList GetBlackList(SnapshotLocation snapshotLocation)
-        {
-            if (snapshotLocation.PotName == null)
-                return null;
-
-            DiskPathCollection blackListPaths = blackListRepository.Get(snapshotLocation.PotName);
-            return new BlackList(blackListPaths);
-        }
+        DiskPathCollection blackListPaths = blackListRepository.Get(snapshotLocation.PotName);
+        return new BlackList(blackListPaths);
     }
 }

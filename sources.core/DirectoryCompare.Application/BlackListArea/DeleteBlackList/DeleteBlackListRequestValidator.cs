@@ -16,14 +16,13 @@
 
 using FluentValidation;
 
-namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.DeleteBlackList
+namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.DeleteBlackList;
+
+internal class DeleteBlackListRequestValidator : AbstractValidator<DeleteBlackListRequest>
 {
-    internal class DeleteBlackListRequestValidator : AbstractValidator<DeleteBlackListRequest>
+    public DeleteBlackListRequestValidator()
     {
-        public DeleteBlackListRequestValidator()
-        {
-            RuleFor(x => x.BlackListName).NotEmpty();
-            RuleFor(x => x.PotName).NotEmpty();
-        }
+        RuleFor(x => x.BlackListName).NotEmpty();
+        RuleFor(x => x.PotName).NotEmpty();
     }
 }

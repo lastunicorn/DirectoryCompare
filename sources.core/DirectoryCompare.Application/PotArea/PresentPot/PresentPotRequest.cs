@@ -17,10 +17,9 @@
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Application.PotArea.PresentPot
+namespace DustInTheWind.DirectoryCompare.Application.PotArea.PresentPot;
+
+public class PresentPotRequest : IRequest<Pot>
 {
-    public class PresentPotRequest : IRequest<Pot>
-    {
-        public string PotName { get; set; }
-    }
+    public string PotName { get; set; }
 }
