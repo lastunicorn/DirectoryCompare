@@ -42,7 +42,7 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
             WriteSnapshot(snapshot, streamWriter);
         }
 
-        internal void WriteSnapshot(Snapshot snapshot, StreamWriter streamWriter)
+        internal static void WriteSnapshot(Snapshot snapshot, StreamWriter streamWriter)
         {
             JsonTextWriter jsonTextWriter = new(streamWriter);
             jsonTextWriter.Formatting = Formatting.Indented;

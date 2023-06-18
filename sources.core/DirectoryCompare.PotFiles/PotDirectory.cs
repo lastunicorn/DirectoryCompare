@@ -90,7 +90,7 @@ public class PotDirectory
             {
                 JPotInfoFile jPotInfoFile = x.GetInfoFile();
                 bool success = jPotInfoFile.TryOpen();
-                return success && jPotInfoFile.JPotInfo.Name == potName;
+                return success && jPotInfoFile.Content.Name == potName;
             })
             .FirstOrDefault();
 

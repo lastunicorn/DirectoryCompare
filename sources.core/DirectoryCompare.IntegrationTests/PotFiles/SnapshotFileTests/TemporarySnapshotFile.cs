@@ -38,7 +38,7 @@ namespace DustInTheWind.DirectoryCompare.IntegrationTests.PotFiles.SnapshotFileT
 
             SnapshotFile snapshotFile = new(snapshotFilePath)
             {
-                Snapshot = snapshot.ToJSnapshot()
+                Content = snapshot.ToJSnapshot()
             };
             snapshotFile.Save();
             

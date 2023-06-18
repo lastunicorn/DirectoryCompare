@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\DirectoryCompare.Application\DirectoryCompare.Application.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.Cli.Application\DirectoryCompare.Cli.Application.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.Cli.Presentation\DirectoryCompare.Cli.Presentation.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.DataAccess\DirectoryCompare.DataAccess.csproj" PrivateAssets="All" />

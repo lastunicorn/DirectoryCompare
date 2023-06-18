@@ -14,72 +14,67 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+namespace DustInTheWind.DirectoryCompare.JFiles.BlacklistFileModel;
 
-namespace DustInTheWind.DirectoryCompare.JFiles.BlacklistFileModel
+public class BlackListFile
 {
-    public class BlackListFile
+    private readonly string filePath;
+
+    public PathCollection Items { get; private set; }
+
+    public BlackListFile(string filePath)
     {
-        private readonly string filePath;
+        this.filePath = filePath;
+    }
 
-        public PathCollection Items { get; private set; }
+    public void Open()
+    {
+        Items = File.Exists(filePath)
+            ? ReadBlackList()
+            : new PathCollection();
+    }
 
-        public BlackListFile(string filePath)
-        {
-            this.filePath = filePath;
-        }
+    public void Remove(string item)
+    {
+        Items.Remove(item);
+    }
 
-        public void Open()
-        {
-            Items = File.Exists(filePath)
-                ? ReadBlackList()
-                : new PathCollection();
-        }
+    private PathCollection ReadBlackList()
+    {
+        List<string> list = File.Exists(filePath)
+            ? File.ReadAllLines(filePath)
+                .Where(x => !string.IsNullOrEmpty(x))
+                .Where(x => !x.StartsWith("#"))
+                .ToList()
+            : new List<string>();
 
-        public void Remove(string item)
-        {
-            Items.Remove(item);
-        }
+        return new PathCollection(list);
+    }
 
-        private PathCollection ReadBlackList()
-        {
-            List<string> list = File.Exists(filePath)
-                ? File.ReadAllLines(filePath)
-                    .Where(x => !string.IsNullOrEmpty(x))
-                    .Where(x => !x.StartsWith("#"))
-                    .ToList()
-                : new List<string>();
+    public void Save()
+    {
+        string backupFilePath = filePath + ".bak";
 
-            return new PathCollection(list);
-        }
+        if (File.Exists(backupFilePath))
+            File.Delete(backupFilePath);
 
-        public void Save()
-        {
-            string backupFilePath = filePath + ".bak";
+        if (File.Exists(filePath))
+            File.Move(filePath, backupFilePath);
 
-            if (File.Exists(backupFilePath))
-                File.Delete(backupFilePath);
+        string[] lines = Items
+            .ToArray();
 
-            if (File.Exists(filePath))
-                File.Move(filePath, backupFilePath);
+        File.WriteAllLines(filePath, lines);
 
-            string[] lines = Items
-                .ToArray();
+        if (File.Exists(backupFilePath))
+            File.Delete(backupFilePath);
+    }
 
-            File.WriteAllLines(filePath, lines);
+    public void Add(string path)
+    {
+        if (Items.Contains(path))
+            return;
 
-            if (File.Exists(backupFilePath))
-                File.Delete(backupFilePath);
-        }
-
-        public void Add(string path)
-        {
-            if (Items.Contains(path))
-                return;
-
-            Items.Add(path);
-        }
+        Items.Add(path);
     }
 }

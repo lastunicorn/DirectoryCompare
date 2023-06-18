@@ -15,91 +15,89 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.Domain.Entities;
-using NUnit.Framework;
+using FluentAssertions;
+using Xunit;
 
-namespace DustInTheWind.DirectoryCompare.Tests.Domain.Entities.BlackPathTests
+namespace DustInTheWind.DirectoryCompare.Tests.Domain.Entities.BlackPathTests;
+
+public class PatternIsFileWithPathTests
 {
-    [TestFixture]
-    public class PatternIsFileWithPathTests
+    private readonly BlackPath blackPath;
+
+    public PatternIsFileWithPathTests()
     {
-        private BlackPath blackPath;
+        blackPath = new BlackPath("dir-2/file-or-dir-1");
+    }
 
-        [SetUp]
-        public void SetUp()
+    [Fact]
+    public void HavingFileWithMatchingName_WhenChecked_ThenDoesNotMatch()
+    {
+        // pattern: dir-2/file-or-dir-1
+        // path:    /file-or-dir-1 (file)
+
+        HFile hFile = new HFile
         {
-            blackPath = new BlackPath("dir-2/file-or-dir-1");
-        }
+            Name = "file-or-dir-1"
+        };
 
-        [Test]
-        public void HavingFileWithMatchingName_WhenChecked_ThenDoesNotMatch()
+        bool actual = blackPath.Matches(hFile);
+
+        actual.Should().BeFalse();
+    }
+
+    [Fact]
+    public void HavingDirectoryWithMatchingName_WhenChecked_ThenDoesNotMatch()
+    {
+        // pattern: dir-2/file-or-dir-1
+        // path:    /file-or-dir-1 (dir)
+
+        HDirectory hDirectory = new HDirectory
         {
-            // pattern: dir-2/file-or-dir-1
-            // path:    /file-or-dir-1 (file)
+            Name = "file-or-dir-1"
+        };
 
-            HFile hFile = new HFile
+        bool actual = blackPath.Matches(hDirectory);
+
+        actual.Should().BeFalse();
+    }
+
+    [Fact]
+    public void HavingFileWithMatchingNamePlacedInCorrectPath_WhenChecked_ThenMatches()
+    {
+        // pattern: dir-2/file-or-dir-1
+        // path:    /dir-2/file-or-dir-1 (file)
+
+        HFile hFile = new HFile
+        {
+            Name = "file-or-dir-1",
+            Parent = new HDirectory
             {
-                Name = "file-or-dir-1"
-            };
+                Name = "dir-2"
+            }
+        };
 
-            bool actual = blackPath.Matches(hFile);
+        bool actual = blackPath.Matches(hFile);
 
-            Assert.That(actual, Is.False);
-        }
+        actual.Should().BeTrue();
+    }
 
-        [Test]
-        public void HavingDirectoryWithMatchingName_WhenChecked_ThenDoesNotMatch()
+    [Fact]
+    public void HavingDirectoryWithMatchingNamePlacedInCorrectPath_WhenChecked_ThenMatches()
+    {
+        // pattern: dir-2/file-or-dir-1
+        // path:    /dir-2/file-or-dir-1 (dir)
+
+        HDirectory hDirectory = new HDirectory
         {
-            // pattern: dir-2/file-or-dir-1
-            // path:    /file-or-dir-1 (dir)
-
-            HDirectory hDirectory = new HDirectory
+            Name = "file-or-dir-1",
+            Parent = new HDirectory
             {
-                Name = "file-or-dir-1"
-            };
+                Name = "dir-2"
+            }
+        };
 
-            bool actual = blackPath.Matches(hDirectory);
+        bool actual = blackPath.Matches(hDirectory);
 
-            Assert.That(actual, Is.False);
-        }
-
-        [Test]
-        public void HavingFileWithMatchingNamePlacedInCorrectPath_WhenChecked_ThenMatches()
-        {
-            // pattern: dir-2/file-or-dir-1
-            // path:    /dir-2/file-or-dir-1 (file)
-
-            HFile hFile = new HFile
-            {
-                Name = "file-or-dir-1",
-                Parent = new HDirectory
-                {
-                    Name = "dir-2"
-                }
-            };
-
-            bool actual = blackPath.Matches(hFile);
-
-            Assert.That(actual, Is.True);
-        }
-
-        [Test]
-        public void HavingDirectoryWithMatchingNamePlacedInCorrectPath_WhenChecked_ThenMatches()
-        {
-            // pattern: dir-2/file-or-dir-1
-            // path:    /dir-2/file-or-dir-1 (dir)
-
-            HDirectory hDirectory = new HDirectory
-            {
-                Name = "file-or-dir-1",
-                Parent = new HDirectory
-                {
-                    Name = "dir-2"
-                }
-            };
-
-            bool actual = blackPath.Matches(hDirectory);
-
-            Assert.That(actual, Is.True);
-        }
+        actual.Should().BeTrue();
     }
 }

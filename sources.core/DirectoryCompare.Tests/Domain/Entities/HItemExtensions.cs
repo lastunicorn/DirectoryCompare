@@ -16,36 +16,35 @@
 
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 
-namespace DustInTheWind.DirectoryCompare.Tests.Domain.Entities
+namespace DustInTheWind.DirectoryCompare.Tests.Domain.Entities;
+
+internal static class HItemExtensions
 {
-    internal static class HItemExtensions
+    public static HItem CreateFile(string name)
     {
-        public static HItem CreateFile(string name)
+        return new HFile
         {
-            return new HFile
-            {
-                Name = name
-            };
-        }
+            Name = name
+        };
+    }
 
-        public static HItem CreateDirectory(string name)
+    public static HItem CreateDirectory(string name)
+    {
+        return new HDirectory
         {
-            return new HDirectory
-            {
-                Name = name
-            };
-        }
+            Name = name
+        };
+    }
 
-        public static HItem PlaceInto(this HItem hItem, string parentName)
+    public static HItem PlaceInto(this HItem hItem, string parentName)
+    {
+        HDirectory parentDirectory = new HDirectory
         {
-            HDirectory parentDirectory = new HDirectory
-            {
-                Name = parentName
-            };
+            Name = parentName
+        };
 
-            hItem.Parent = parentDirectory;
+        hItem.Parent = parentDirectory;
 
-            return parentDirectory;
-        }
+        return parentDirectory;
     }
 }

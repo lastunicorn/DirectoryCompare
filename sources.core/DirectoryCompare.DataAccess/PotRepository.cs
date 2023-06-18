@@ -52,9 +52,9 @@ public class PotRepository : IPotRepository
         return new Pot
         {
             Guid = potDirectory.PotGuid,
-            Name = jPotInfoFile.JPotInfo.Name,
-            Path = jPotInfoFile.JPotInfo.Path,
-            Description = jPotInfoFile.JPotInfo.Description
+            Name = jPotInfoFile.Content.Name,
+            Path = jPotInfoFile.Content.Path,
+            Description = jPotInfoFile.Content.Description
         };
     }
 
@@ -70,7 +70,7 @@ public class PotRepository : IPotRepository
         potDirectory.Create();
 
         JPotInfoFile jPotInfoFile = potDirectory.GetInfoFile();
-        jPotInfoFile.JPotInfo = new JPotInfo
+        jPotInfoFile.Content = new JPotInfo
         {
             Name = pot.Name,
             Path = pot.Path,

@@ -16,7 +16,7 @@
 
 using System.ComponentModel;
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.DirectoryCompare.Application.SnapshotArea.CreateSnapshot;
+using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot;
 using DustInTheWind.DirectoryCompare.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Infrastructure;

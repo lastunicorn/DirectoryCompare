@@ -14,14 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.JFiles.PotInfoFileModel
-{
-    public class JPotInfo
-    {
-        public string Name { get; set; }
+namespace DustInTheWind.DirectoryCompare.JFiles.PotInfoFileModel;
 
-        public string Path { get; set; }
+public class JPotInfo
+{
+    public string Name { get; set; }
+
+    public string Path { get; set; }
         
-        public string Description { get; set; }
-    }
+    public string Description { get; set; }
 }

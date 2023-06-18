@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.DirectoryCompare.Application.SnapshotArea.CreateSnapshot;
+using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot;
 using DustInTheWind.DirectoryCompare.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Infrastructure;
 

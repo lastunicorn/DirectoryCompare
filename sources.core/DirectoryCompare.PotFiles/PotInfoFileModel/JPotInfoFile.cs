@@ -14,58 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.IO;
-using Newtonsoft.Json;
+namespace DustInTheWind.DirectoryCompare.JFiles.PotInfoFileModel;
 
-namespace DustInTheWind.DirectoryCompare.JFiles.PotInfoFileModel
+public class JPotInfoFile : JsonFileBase<JPotInfo>
 {
-    public class JPotInfoFile
+    public JPotInfoFile(string filePath)
+        : base(filePath)
     {
-        private readonly string filePath;
-
-        public JPotInfo JPotInfo { get; set; }
-
-        public bool Exists => File.Exists(filePath);
-
-        public bool IsValid => JPotInfo != null;
-
-        public JPotInfoFile(string filePath)
-        {
-            this.filePath = filePath ?? throw new ArgumentNullException(nameof(filePath));
-        }
-
-        public bool TryOpen()
-        {
-            try
-            {
-                return Open();
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        public bool Open()
-        {
-            if (File.Exists(filePath))
-            {
-                string json = File.ReadAllText(filePath);
-                JPotInfo = JsonConvert.DeserializeObject<JPotInfo>(json);
-                return true;
-            }
-            else
-            {
-                JPotInfo = null;
-                return false;
-            }
-        }
-
-        public void Save()
-        {
-            string json = JsonConvert.SerializeObject(JPotInfo, Formatting.Indented);
-            File.WriteAllText(filePath, json);
-        }
     }
 }

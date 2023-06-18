@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.DirectoryCompare.Application.PotArea.PresentPot;
+using DustInTheWind.DirectoryCompare.Cli.Application.PotArea.PresentPot;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.DirectoryCompare.Infrastructure;
 

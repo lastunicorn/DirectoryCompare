@@ -15,25 +15,25 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.Domain.Utils;
-using NUnit.Framework;
+using FluentAssertions;
+using Xunit;
 
-namespace DustInTheWind.DirectoryCompare.Tests.Domain.Utils
+namespace DustInTheWind.DirectoryCompare.Tests.Domain.Utils;
+
+public class PercentageTests
 {
-    [TestFixture]
-    public class PercentageTests
+    [Theory]
+    [InlineData(50, 0)]
+    [InlineData(150, 100)]
+    [InlineData(100, 50)]
+    [InlineData(51, 1)]
+    public void Test(int underlyingValue, float expectedPercentageValue)
     {
-        [TestCase(50, 0)]
-        [TestCase(150, 100)]
-        [TestCase(100, 50)]
-        [TestCase(51, 1)]
-        public void Test(int underlyingValue, float percentageValue)
+        Percentage percentage = new(50, 150)
         {
-            Percentage percentage = new(50, 150)
-            {
-                UnderlyingValue = underlyingValue
-            };
+            UnderlyingValue = underlyingValue
+        };
 
-            Assert.That(percentage.Value, Is.EqualTo(percentageValue));
-        }
+        percentage.Value.Should().Be(expectedPercentageValue);
     }
 }

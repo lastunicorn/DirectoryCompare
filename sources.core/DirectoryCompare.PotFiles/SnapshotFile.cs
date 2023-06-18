@@ -14,75 +14,32 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.IO;
 using DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel;
 using Newtonsoft.Json;
 
-namespace DustInTheWind.DirectoryCompare.JFiles
+namespace DustInTheWind.DirectoryCompare.JFiles;
+
+public class SnapshotFile : JsonFileBase<JSnapshot>
 {
-    public class SnapshotFile
+    private readonly SnapshotFilePath snapshotFilePath;
+
+    public DateTime? CreationTime => snapshotFilePath.CreationTime;
+
+    public SnapshotFile(SnapshotFilePath snapshotFilePath)
+        : base(snapshotFilePath)
     {
-        private readonly SnapshotFilePath filePath;
+        this.snapshotFilePath = snapshotFilePath ?? throw new ArgumentNullException(nameof(snapshotFilePath));
+    }
 
-        public bool Exists => filePath != null && File.Exists(filePath);
+    public JSnapshotReader OpenSnapshotReader()
+    {
+        JsonTextReader jsonTextReader = OpenReader();
+        return new JSnapshotReader(jsonTextReader);
+    }
 
-        public DateTime? CreationTime => filePath.CreationTime;
-
-        public JSnapshot Snapshot { get; set; }
-
-        public SnapshotFile(SnapshotFilePath filePath)
-        {
-            this.filePath = filePath ?? throw new ArgumentNullException(nameof(filePath));
-        }
-
-        public void Open()
-        {
-            if (!File.Exists(filePath))
-                return;
-
-            using StreamReader streamReader = File.OpenText(filePath);
-            using JsonTextReader jsonTextReader = new(streamReader);
-            
-            JsonSerializer serializer = new();
-            Snapshot = (JSnapshot)serializer.Deserialize(jsonTextReader, typeof(JSnapshot));
-        }
-
-        public void Save()
-        {
-            using FileStream stream = File.OpenWrite(filePath);
-            using StreamWriter streamWriter = new(stream);
-            using JsonTextWriter jsonTextWriter = new(streamWriter);
-            
-            JsonSerializer serializer = new();
-            serializer.Serialize(jsonTextWriter, Snapshot);
-        }
-
-        public JSnapshotReader OpenReader()
-        {
-            if (!File.Exists(filePath))
-                throw new Exception($"File {filePath} does not exist.");
-
-            StreamReader streamReader = new(filePath);
-            JsonTextReader jsonTextReader = new(streamReader);
-            return new JSnapshotReader(jsonTextReader);
-        }
-
-        public JSnapshotWriter OpenWriter()
-        {
-            string directoryPath = Path.GetDirectoryName(filePath);
-            Directory.CreateDirectory(directoryPath);
-
-            StreamWriter streamWriter = new(filePath);
-            JsonTextWriter jsonTextWriter = new(streamWriter);
-            jsonTextWriter.Formatting = Formatting.Indented;
-            
-            return new JSnapshotWriter(jsonTextWriter);
-        }
-
-        public void Delete()
-        {
-            File.Delete(filePath);
-        }
+    public JSnapshotWriter OpenSnapshotWriter()
+    {
+        JsonTextWriter jsonTextWriter = OpenWriter();
+        return new JSnapshotWriter(jsonTextWriter);
     }
 }

@@ -14,90 +14,87 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Linq;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 
-namespace DustInTheWind.DirectoryCompare.IntegrationTests.PotFiles.SnapshotFileTests
+namespace DustInTheWind.DirectoryCompare.IntegrationTests.PotFiles.SnapshotFileTests;
+
+internal class DummySnapshotBuilder
 {
-    internal class DummySnapshotBuilder
+    private readonly Random random = new();
+
+    private int randomFileCount;
+    private int randomDirectoryCount;
+
+    public DummySnapshotBuilder AddFiles(int count)
     {
-        private readonly Random random = new();
+        if (count < 0) throw new ArgumentOutOfRangeException(nameof(count));
+        randomFileCount += count;
 
-        private int randomFileCount;
-        private int randomDirectoryCount;
+        return this;
+    }
 
-        public DummySnapshotBuilder AddFiles(int count)
+    public DummySnapshotBuilder AddDirectories(int count)
+    {
+        if (count < 0) throw new ArgumentOutOfRangeException(nameof(count));
+        randomDirectoryCount += count;
+
+        return this;
+    }
+
+    public Snapshot Build()
+    {
+        Snapshot snapshot = new()
         {
-            if (count < 0) throw new ArgumentOutOfRangeException(nameof(count));
-            randomFileCount += count;
+            OriginalPath = "/media/alez/SomePath",
+            CreationTime = new DateTime(random.Next())
+        };
 
-            return this;
+        for (int i = 0; i < randomFileCount; i++)
+        {
+            HFile file = CreateRandomFile();
+            snapshot.Files.Add(file);
         }
 
-        public DummySnapshotBuilder AddDirectories(int count)
+        for (int i = 0; i < randomDirectoryCount; i++)
         {
-            if (count < 0) throw new ArgumentOutOfRangeException(nameof(count));
-            randomDirectoryCount += count;
-
-            return this;
+            HDirectory directory = CreateRandomDirectory();
+            snapshot.Directories.Add(directory);
         }
 
-        public Snapshot Build()
+        return snapshot;
+    }
+
+    private HFile CreateRandomFile()
+    {
+        return new HFile
         {
-            Snapshot snapshot = new()
-            {
-                OriginalPath = "/media/alez/SomePath",
-                CreationTime = new DateTime(random.Next())
-            };
+            Name = "file-" + random.Next(),
+            Size = random.Next(),
+            LastModifiedTime = new DateTime(random.Next()),
+            Hash = CreateRandomHash()
+        };
+    }
 
-            for (int i = 0; i < randomFileCount; i++)
-            {
-                HFile file = CreateRandomFile();
-                snapshot.Files.Add(file);
-            }
+    private byte[] CreateRandomHash()
+    {
+        return Enumerable.Range(0, 31)
+            .Select(x => (byte)random.Next(256))
+            .ToArray();
+    }
 
-            for (int i = 0; i < randomDirectoryCount; i++)
-            {
-                HDirectory directory = CreateRandomDirectory();
-                snapshot.Directories.Add(directory);
-            }
+    private HDirectory CreateRandomDirectory()
+    {
+        HDirectory directory = new()
+        {
+            Name = "directory-" + random.Next()
+        };
 
-            return snapshot;
+        for (int i = 0; i < 10; i++)
+        {
+            HFile file = CreateRandomFile();
+            directory.Files.Add(file);
         }
 
-        private HFile CreateRandomFile()
-        {
-            return new HFile
-            {
-                Name = "file-" + random.Next(),
-                Size = random.Next(),
-                LastModifiedTime = new DateTime(random.Next()),
-                Hash = CreateRandomHash()
-            };
-        }
-
-        private byte[] CreateRandomHash()
-        {
-            return Enumerable.Range(0, 31)
-                .Select(x => (byte)random.Next(256))
-                .ToArray();
-        }
-
-        private HDirectory CreateRandomDirectory()
-        {
-            HDirectory directory = new()
-            {
-                Name = "directory-" + random.Next()
-            };
-
-            for (int i = 0; i < 10; i++)
-            {
-                HFile file = CreateRandomFile();
-                directory.Files.Add(file);
-            }
-            
-            return directory;
-        }
+        return directory;
     }
 }

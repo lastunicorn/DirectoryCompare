@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.DirectoryCompare.Application.SnapshotArea.ImportSnapshot;
+using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.ImportSnapshot;
 using DustInTheWind.DirectoryCompare.Infrastructure;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands;

@@ -14,41 +14,37 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
 
-namespace DustInTheWind.DirectoryCompare.JFiles.BlacklistFileModel
+namespace DustInTheWind.DirectoryCompare.JFiles.BlacklistFileModel;
+
+public class PathCollection : Collection<string>
 {
-    public class PathCollection : Collection<string>
+    public PathCollection()
     {
-        public PathCollection()
-        {
-        }
+    }
 
-        public PathCollection(IList<string> items)
-            : base(items)
-        {
-        }
+    public PathCollection(IList<string> items)
+        : base(items)
+    {
+    }
 
-        /// <summary>
-        /// Prepends the specified path to all items that are not already rooted
-        /// and returns a new <see cref="PathCollection"/> with the resulted items.
-        /// </summary>
-        public PathCollection PrependPath(string path)
-        {
-            string[] newItems = Items
-                .Select(x => Path.IsPathRooted(x) ? x : Path.Combine(path, x))
-                .ToArray();
+    /// <summary>
+    /// Prepends the specified path to all items that are not already rooted
+    /// and returns a new <see cref="PathCollection"/> with the resulted items.
+    /// </summary>
+    public PathCollection PrependPath(string path)
+    {
+        string[] newItems = Items
+            .Select(x => Path.IsPathRooted(x) ? x : Path.Combine(path, x))
+            .ToArray();
 
-            return new PathCollection(newItems);
-        }
+        return new PathCollection(newItems);
+    }
 
-        public void AddRange(IEnumerable<string> items)
-        {
-            foreach (string item in items)
-                Items.Add(item);
-        }
+    public void AddRange(IEnumerable<string> items)
+    {
+        foreach (string item in items)
+            Items.Add(item);
     }
 }
