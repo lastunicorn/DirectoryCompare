@@ -15,40 +15,37 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.DirectoryCompare.Application.BlackListArea.AddBlackPath;
+using DustInTheWind.DirectoryCompare.Application.PotArea.CreatePot;
 using DustInTheWind.DirectoryCompare.Infrastructure;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Presentation.BlackListCommands;
-// Example:
-// black-list -a <path> -p <pot-name> -b <black-list-name>
-// black-list --add <path> --pot <pot-name> --black-list <black-list-name>
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands;
 
-[NamedCommand("black-list")]
-public class AddBlackListPathCommandModel : ICommand
+// Examples:
+// pot -c <pot-name> -p <target-path>
+// pot --create <pot-name> --path <target-path>
+
+[NamedCommand("create-pot", Order = 1, Description = "Creates a new pot for the specified disk path.")]
+public class CreatePotCommand : ICommand
 {
     private readonly RequestBus requestBus;
 
-    [NamedParameter("pot", ShortName = 'p')]
+    [AnonymousParameter(Order = 1)]
     public string PotName { get; set; }
 
-    [NamedParameter("black-list", ShortName = 'b', IsOptional = true)]
-    public string BlackListName { get; set; }
+    [NamedParameter("path", ShortName = 'h')]
+    public string TargetPath { get; set; }
 
-    [NamedParameter("add", ShortName = 'a')]
-    public string Path { get; set; }
-
-    public AddBlackListPathCommandModel(RequestBus requestBus)
+    public CreatePotCommand(RequestBus requestBus)
     {
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
     }
 
     public async Task Execute()
     {
-        AddBlackPathRequest request = new()
+        CreatePotRequest request = new()
         {
-            PotName = PotName,
-            BlackList = BlackListName,
-            Path = Path
+            Name = PotName,
+            Path = TargetPath
         };
 
         await requestBus.PlaceRequest(request);

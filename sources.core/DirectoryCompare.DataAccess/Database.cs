@@ -1,4 +1,4 @@
-﻿// DirectoryCompare
+// DirectoryCompare
 // Copyright (C) 2017-2020 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using MediatR;
+namespace DustInTheWind.DirectoryCompare.DataAccess;
 
-namespace DustInTheWind.DirectoryCompare.Application.PotArea.PresentPots;
-
-public class PresentPotsRequest : IRequest<PresentPotsResponse>
+internal static class Database
 {
+    //public static string Location => "/nfs/YubabaData/Alez/diverse/DirectoryCompare";
+    public static string Location => "/home/alez/Desktop/dircmp-database";
 }

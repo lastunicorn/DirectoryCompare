@@ -15,42 +15,38 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.DirectoryCompare.Application.BlackListArea.AddBlackPath;
+using DustInTheWind.DirectoryCompare.Application.PotArea.PresentPot;
+using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.DirectoryCompare.Infrastructure;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Presentation.BlackListCommands;
-// Example:
-// black-list -a <path> -p <pot-name> -b <black-list-name>
-// black-list --add <path> --pot <pot-name> --black-list <black-list-name>
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands;
 
-[NamedCommand("black-list")]
-public class AddBlackListPathCommandModel : ICommand
+// Example:
+// pot <pot-name>
+
+[NamedCommand("pot", Order = 3, Description = "Displays the details of the specified pot.")]
+public class DisplayPotCommand : ICommand
 {
     private readonly RequestBus requestBus;
 
-    [NamedParameter("pot", ShortName = 'p')]
+    [AnonymousParameter(DisplayName = "pot name", Order = 1, IsOptional = true)]
     public string PotName { get; set; }
 
-    [NamedParameter("black-list", ShortName = 'b', IsOptional = true)]
-    public string BlackListName { get; set; }
+    public Pot Pot { get; private set; }
 
-    [NamedParameter("add", ShortName = 'a')]
-    public string Path { get; set; }
-
-    public AddBlackListPathCommandModel(RequestBus requestBus)
+    public DisplayPotCommand(RequestBus requestBus)
     {
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
     }
 
     public async Task Execute()
     {
-        AddBlackPathRequest request = new()
+        PresentPotRequest request = new()
         {
-            PotName = PotName,
-            BlackList = BlackListName,
-            Path = Path
+            PotName = PotName
         };
 
-        await requestBus.PlaceRequest(request);
+        PresentPotResponse response = await requestBus.PlaceRequest<PresentPotRequest, PresentPotResponse>(request);
+        Pot = response.Pot;
     }
 }

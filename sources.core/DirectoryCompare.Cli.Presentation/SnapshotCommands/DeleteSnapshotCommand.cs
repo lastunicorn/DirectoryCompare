@@ -14,33 +14,36 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.ComponentModel;
-using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.DirectoryCompare.Domain;
+using DustInTheWind.DirectoryCompare.Application.SnapshotArea.DeleteSnapshot;
+using DustInTheWind.DirectoryCompare.Infrastructure;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands;
 
-public class CreateSnapshotCommandView : ViewBase<CreateSnapshotCommand>
+// Example:
+// snapshot -d <snapshot-location>
+// snapshot --delete <snapshot-location>
+
+[NamedCommand("delete-snapshot", Order = 6)]
+public class DeleteSnapshotCommand : ICommand
 {
-    private int lastValue;
+    private readonly RequestBus requestBus;
 
-    public override void Display(CreateSnapshotCommand command)
+    [NamedParameter("location", ShortName = 'l')]
+    public string SnapshotLocation { get; set; }
+
+    public DeleteSnapshotCommand(RequestBus requestBus)
     {
-        lastValue = -1;
+        this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
     }
 
-    public void HandleProgress(int percentage)
+    public async Task Execute()
     {
-        if (Math.Abs(lastValue - percentage) > 0.1)
+        DeleteSnapshotRequest request = new()
         {
-            Console.WriteLine($"Progress: {percentage}%");
-            lastValue = percentage;
-        }
-    }
+            Location = SnapshotLocation
+        };
 
-    public void FinishDisplay()
-    {
-        WriteSuccess("Done");
+        await requestBus.PlaceRequest(request);
     }
 }

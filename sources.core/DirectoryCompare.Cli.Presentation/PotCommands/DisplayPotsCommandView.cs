@@ -14,31 +14,37 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.ConsoleFramework;
 using DustInTheWind.ConsoleTools;
+using DustInTheWind.ConsoleTools.Commando;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands;
+
+internal class DisplayPotsCommandView : ViewBase<DisplayPotsCommand>
 {
-    internal class DisplayPotsCommandView : ICommandView<DisplayPotsCommandModel>
+    public override void Display(DisplayPotsCommand command)
     {
-        public void Display(DisplayPotsCommandModel commandModel)
+        bool hasPots = command.Pots is { Count: > 0 };
+
+        if (hasPots)
+            DisplayPots(command.Pots);
+        else
+            WriteInfo("There are no Pots.");
+    }
+
+    private static void DisplayPots(List<Pot> pots)
+    {
+        foreach (Pot pot in pots)
         {
-            if (commandModel.Pots == null)
-                return;
+            string guid = pot.Guid.ToString()[..8];
+            CustomConsole.Write(guid);
+            CustomConsole.Write(" ");
 
-            foreach (Pot pot in commandModel.Pots)
-            {
-                string guid = pot.Guid.ToString().Substring(0, 8);
-                CustomConsole.Write(guid);
-                CustomConsole.Write(" ");
+            CustomConsole.WriteEmphasized(pot.Name);
+            CustomConsole.Write(" - ");
 
-                CustomConsole.WriteEmphasies(pot.Name);
-                CustomConsole.Write(" - ");
-
-                CustomConsole.WriteEmphasies(pot.Path);
-                CustomConsole.WriteLine();
-            }
+            CustomConsole.WriteEmphasized(pot.Path);
+            CustomConsole.WriteLine();
         }
     }
 }

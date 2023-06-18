@@ -20,7 +20,7 @@ namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.CreateBlackLi
 
 internal class CreateBlackListUseCase : IRequestHandler<CreateBlackListRequest>
 {
-    public Task<Unit> Handle(CreateBlackListRequest request, CancellationToken cancellationToken)
+    public Task Handle(CreateBlackListRequest request, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }

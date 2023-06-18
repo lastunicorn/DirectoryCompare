@@ -63,7 +63,7 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
         public void Open(string originalPath, Guid analysisId)
         {
             jSnapshotWriter.WriteStart();
-            jSnapshotWriter.WriteId(Id);
+            jSnapshotWriter.WriteSerializerId(Id);
             jSnapshotWriter.WriteAnalysisId(analysisId);
             jSnapshotWriter.WriteOriginalPath(originalPath);
             jSnapshotWriter.WriteCreationTime(DateTime.UtcNow);
@@ -74,7 +74,7 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
         public void Open(string originalPath, DateTime creationTime)
         {
             jSnapshotWriter.WriteStart();
-            jSnapshotWriter.WriteId(Id);
+            jSnapshotWriter.WriteSerializerId(Id);
             jSnapshotWriter.WriteOriginalPath(originalPath);
             jSnapshotWriter.WriteCreationTime(creationTime);
 

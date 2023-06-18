@@ -14,30 +14,28 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Threading.Tasks;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Infrastructure
+namespace DustInTheWind.DirectoryCompare.Infrastructure;
+
+public class RequestBus
 {
-    public class RequestBus
+    private readonly IMediator mediator;
+
+    public RequestBus(IMediator mediator)
     {
-        private readonly IMediator mediator;
+        this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+    }
 
-        public RequestBus(IMediator mediator)
-        {
-            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-        }
+    public async  Task<TResponse> PlaceRequest<TRequest, TResponse>(TRequest request)
+        where TRequest : IRequest<TResponse>
+    {
+        TResponse response = await mediator.Send(request, CancellationToken.None);
+        return response;
+    }
 
-        public async Task<TResponse> PlaceRequest<TRequest, TResponse>(TRequest request)
-        {
-            object response = await mediator.Send(request);
-            return (TResponse)response;
-        }
-
-        public async Task PlaceRequest<TRequest>(TRequest request)
-        {
-            await mediator.Send(request);
-        }
+    public async Task PlaceRequest<TRequest>(TRequest request)
+    {
+        await mediator.Send(request);
     }
 }

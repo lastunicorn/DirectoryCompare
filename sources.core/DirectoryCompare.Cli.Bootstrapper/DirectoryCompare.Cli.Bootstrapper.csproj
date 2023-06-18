@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <ImplicitUsings>enable</ImplicitUsings>
         
         <AssemblyTitle>DirectoryCompare.Cli</AssemblyTitle>
-        <Description />
         <AssemblyName>DirectoryCompare</AssemblyName>
         <RootNamespace>DustInTheWind.DirectoryCompare.Cli.Bootstrapper</RootNamespace>
     </PropertyGroup>
@@ -34,18 +33,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <ProjectReference Include="..\DirectoryCompare.Cli.Presentation\DirectoryCompare.Cli.Presentation.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.DataAccess\DirectoryCompare.DataAccess.csproj" PrivateAssets="All" />
-        <ProjectReference Include="..\ConsoleFramework\ConsoleFramework.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.Infrastructure\DirectoryCompare.Infrastructure.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.LogAccess\DirectoryCompare.LogAccess.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.Ports.LogAccess\DirectoryCompare.Ports.LogAccess.csproj" PrivateAssets="All" />
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="ConsoleTools.Commando.Setup.Autofac" Version="2.0.0-beta.3" />
         <PackageReference Include="FluentValidation" Version="9.0.1" PrivateAssets="All" />
-        <PackageReference Include="MediatR" Version="8.0.2" PrivateAssets="All" />
-        <PackageReference Include="Ninject" Version="3.3.4" PrivateAssets="All" />
-        <PackageReference Include="Ninject.Extensions.Conventions" Version="3.3.0" PrivateAssets="All" />
-        <PackageReference Include="Ninject.Extensions.Factory" Version="3.3.2" PrivateAssets="All" />
+        <PackageReference Include="MediatR" Version="12.0.1" />
+        <PackageReference Include="MediatR.Extensions.Autofac.DependencyInjection" Version="11.0.0" />
     </ItemGroup>
 
     <ItemGroup>

@@ -20,7 +20,7 @@ namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.DeleteBlackLi
 
 internal class DeleteBlackListUseCase : IRequestHandler<DeleteBlackListRequest>
 {
-    public Task<Unit> Handle(DeleteBlackListRequest request, CancellationToken cancellationToken)
+    public Task Handle(DeleteBlackListRequest request, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }

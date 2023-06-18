@@ -30,7 +30,7 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
     {
         public ISnapshotWriter CreateWriter(string potName)
         {
-            PotDirectory potDirectory = PotDirectory.FromPotName(potName);
+            PotDirectory potDirectory = PotDirectory.FromPotName(potName, Database.Location);
 
             if (!potDirectory.IsValid)
                 throw new Exception($"There is no pot with name '{potName}'.");
@@ -42,7 +42,7 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
 
         public IEnumerable<Snapshot> GetByPot(string potName)
         {
-            PotDirectory potDirectory = PotDirectory.FromPotName(potName);
+            PotDirectory potDirectory = PotDirectory.FromPotName(potName, Database.Location);
 
             if (!potDirectory.IsValid)
                 throw new Exception($"There is no pot with name '{potName}'.");
@@ -58,7 +58,7 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
 
         public Snapshot GetByIndex(string potName, int index = 0)
         {
-            PotDirectory potDirectory = PotDirectory.FromPotName(potName);
+            PotDirectory potDirectory = PotDirectory.FromPotName(potName, Database.Location);
 
             if (!potDirectory.IsValid)
                 throw new Exception($"There is no pot with name '{potName}'.");
@@ -81,7 +81,7 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
 
         public IEnumerable<Snapshot> GetByDate(string potName, DateTime dateTime)
         {
-            PotDirectory potDirectory = PotDirectory.FromPotName(potName);
+            PotDirectory potDirectory = PotDirectory.FromPotName(potName, Database.Location);
 
             if (!potDirectory.IsValid)
                 throw new Exception($"There is no pot with name '{potName}'.");
@@ -98,7 +98,7 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
 
         public Snapshot GetByExactDateTime(string potName, DateTime dateTime)
         {
-            PotDirectory potDirectory = PotDirectory.FromPotName(potName);
+            PotDirectory potDirectory = PotDirectory.FromPotName(potName, Database.Location);
 
             if (!potDirectory.IsValid)
                 throw new Exception($"There is no pot with name '{potName}'.");
@@ -115,7 +115,7 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
 
         public void Add(string potName, Snapshot snapshot)
         {
-            PotDirectory potDirectory = PotDirectory.FromPotName(potName);
+            PotDirectory potDirectory = PotDirectory.FromPotName(potName, Database.Location);
 
             if (!potDirectory.IsValid)
                 throw new Exception($"There is no pot with name '{potName}'.");
@@ -128,7 +128,7 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
 
         public void DeleteByIndex(string potName, int index = 0)
         {
-            PotDirectory potDirectory = PotDirectory.FromPotName(potName);
+            PotDirectory potDirectory = PotDirectory.FromPotName(potName, Database.Location);
 
             if (!potDirectory.IsValid)
                 throw new Exception($"There is no pot with name '{potName}'.");
@@ -147,7 +147,7 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
 
         public bool DeleteSingleByDate(string potName, DateTime dateTime)
         {
-            PotDirectory potDirectory = PotDirectory.FromPotName(potName);
+            PotDirectory potDirectory = PotDirectory.FromPotName(potName, Database.Location);
 
             if (!potDirectory.IsValid)
                 throw new Exception($"There is no pot with name '{potName}'.");
@@ -168,7 +168,7 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
 
         public bool DeleteByExactDateTime(string potName, DateTime dateTime)
         {
-            PotDirectory potDirectory = PotDirectory.FromPotName(potName);
+            PotDirectory potDirectory = PotDirectory.FromPotName(potName, Database.Location);
 
             if (!potDirectory.IsValid)
                 throw new Exception($"There is no pot with name '{potName}'.");

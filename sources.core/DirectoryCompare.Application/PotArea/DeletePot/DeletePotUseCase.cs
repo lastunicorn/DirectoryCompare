@@ -28,10 +28,10 @@ public class DeletePotUseCase : IRequestHandler<DeletePotRequest>
         this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
     }
 
-    public Task<Unit> Handle(DeletePotRequest request, CancellationToken cancellationToken)
+    public Task Handle(DeletePotRequest request, CancellationToken cancellationToken)
     {
         potRepository.Delete(request.PotName);
 
-        return Unit.Task;
+        return Task.CompletedTask;
     }
 }

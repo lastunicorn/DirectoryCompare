@@ -22,7 +22,7 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.CreateSnapshot;
 
-public class CreateSnapshotUseCase : RequestHandler<CreateSnapshotRequest, IDiskAnalysisProgress>
+public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest, IDiskAnalysisProgress>
 {
     private readonly ILog log;
     private readonly IPotRepository potRepository;
@@ -38,10 +38,12 @@ public class CreateSnapshotUseCase : RequestHandler<CreateSnapshotRequest, IDisk
         this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
     }
 
-    protected override IDiskAnalysisProgress Handle(CreateSnapshotRequest request)
+    public Task<IDiskAnalysisProgress> Handle(CreateSnapshotRequest request, CancellationToken cancellationToken)
     {
         Pot pot = RetrievePot(request);
-        return StartPathAnalysis(pot);
+        IDiskAnalysisProgress progress = StartPathAnalysis(pot);
+
+        return Task.FromResult(progress);
     }
 
     private Pot RetrievePot(CreateSnapshotRequest request)

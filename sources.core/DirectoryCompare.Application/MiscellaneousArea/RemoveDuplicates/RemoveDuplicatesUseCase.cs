@@ -38,7 +38,7 @@ public class RemoveDuplicatesUseCase : IRequestHandler<RemoveDuplicatesRequest>
 
     // The real work will run asynchronously, while the promise will raise events whenever something important
     // happened that the presentation layer should handle.
-    public Task<Unit> Handle(RemoveDuplicatesRequest request, CancellationToken cancellationToken)
+    public Task Handle(RemoveDuplicatesRequest request, CancellationToken cancellationToken)
     {
         DiskPathCollection blackListPathsLeft = blackListRepository.Get(request.SnapshotLeft.PotName);
         BlackList blackListLeft = new(blackListPathsLeft);
@@ -55,7 +55,7 @@ public class RemoveDuplicatesUseCase : IRequestHandler<RemoveDuplicatesRequest>
 
         RemoveDuplicates(request, fileDuplicates);
 
-        return Unit.Task;
+        return Task.CompletedTask;
     }
 
     private void RemoveDuplicates(RemoveDuplicatesRequest request, IEnumerable<FilePair> fileDuplicates)

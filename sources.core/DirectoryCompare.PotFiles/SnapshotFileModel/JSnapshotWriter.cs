@@ -26,9 +26,9 @@ namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
         {
         }
 
-        public void WriteId(Guid id)
+        public void WriteSerializerId(Guid id)
         {
-            Writer.WritePropertyName("id");
+            Writer.WritePropertyName("serializer-id");
             Writer.WriteValue(id);
         }
 

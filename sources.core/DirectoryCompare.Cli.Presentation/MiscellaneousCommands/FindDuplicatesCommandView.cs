@@ -14,37 +14,35 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using DustInTheWind.ConsoleFramework;
+using DustInTheWind.ConsoleTools.Commando;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands;
+
+internal class FindDuplicatesCommandView : IView<FindDuplicatesCommand>
 {
-    internal class FindDuplicatesCommandView : ICommandView<FindDuplicatesCommandModel>
+    public void Display(FindDuplicatesCommand command)
     {
-        public void Display(FindDuplicatesCommandModel commandModel)
-        {
-            foreach (FilePair filePair in commandModel.FileDuplicates) 
-                WriteDuplicate(filePair);
-            
-            WriteSummary(commandModel.DuplicateCount, commandModel.TotalSize);
-        }
-        
-        private static void WriteDuplicate(FilePair filePair)
-        {
-            Console.WriteLine(filePair.FullPathLeft);
-            Console.WriteLine(filePair.FullPathRight);
+        foreach (FilePair filePair in command.FileDuplicates)
+            WriteDuplicate(filePair);
 
-            Console.WriteLine($"{filePair.Size} ({filePair.Size.ToString(DataSizeUnit.Byte)})");
-            Console.WriteLine();
-        }
+        WriteSummary(command.DuplicateCount, command.TotalSize);
+    }
 
-        private static void WriteSummary(int duplicateCount, DataSize totalSize)
-        {
-            Console.WriteLine($"Total duplicates: {duplicateCount:n0} files");
-            Console.WriteLine($"Total size: {totalSize} ({totalSize.ToString(DataSizeUnit.Byte)})");
-            Console.WriteLine();
-        }
+    private static void WriteDuplicate(FilePair filePair)
+    {
+        Console.WriteLine(filePair.FullPathLeft);
+        Console.WriteLine(filePair.FullPathRight);
+
+        Console.WriteLine($"{filePair.Size} ({filePair.Size.ToString(DataSizeUnit.Byte)})");
+        Console.WriteLine();
+    }
+
+    private static void WriteSummary(int duplicateCount, DataSize totalSize)
+    {
+        Console.WriteLine($"Total duplicates: {duplicateCount:n0} files");
+        Console.WriteLine($"Total size: {totalSize} ({totalSize.ToString(DataSizeUnit.Byte)})");
+        Console.WriteLine();
     }
 }

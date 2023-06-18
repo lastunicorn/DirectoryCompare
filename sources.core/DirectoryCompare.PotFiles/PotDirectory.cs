@@ -14,149 +14,157 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using DustInTheWind.DirectoryCompare.JFiles.BlacklistFileModel;
 using DustInTheWind.DirectoryCompare.JFiles.PotInfoFileModel;
 
-namespace DustInTheWind.DirectoryCompare.JFiles
+namespace DustInTheWind.DirectoryCompare.JFiles;
+
+public class PotDirectory
 {
-    public class PotDirectory
+    private const string SnapshotsDirectoryName = "snapshots";
+
+    //public static PotDirectory Empty { get; } = new(null);
+
+    public string RootPath { get; private set; }
+
+    public string FullPath { get; private set; }
+
+    public Guid PotGuid
     {
-        private const string SnapshotsDirectoryName = "snapshots";
-
-        public static PotDirectory Empty { get; } = new(null);
-
-        public string FullPath { get; private set; }
-
-        public Guid PotGuid
+        get
         {
-            get
+            if (string.IsNullOrEmpty(FullPath))
+                throw new Exception("Invalid pot directory path.");
+
+            string directoryName = Path.GetFileName(FullPath);
+
+            if (directoryName == string.Empty)
             {
-                if (string.IsNullOrEmpty(FullPath))
-                    throw new Exception("Invalid pot directory path.");
-
-                string directoryName = Path.GetFileName(FullPath);
-
-                if (directoryName == string.Empty)
-                {
-                    string parentDirectoryPath = Path.GetDirectoryName(FullPath);
-                    directoryName = Path.GetFileName(parentDirectoryPath);
-                }
-
-                try
-                {
-                    return new Guid(directoryName);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("Invalid pot directory path.", ex);
-                }
-            }
-        }
-
-        public bool IsValid
-        {
-            get
-            {
-                if (FullPath == null || !Directory.Exists(FullPath))
-                    return false;
-
-                JPotInfoFile jPotInfoFile = GetInfoFile();
-                jPotInfoFile.TryOpen();
-                return jPotInfoFile.IsValid;
-            }
-        }
-
-        private PotDirectory()
-        {
-        }
-
-        public PotDirectory(string fullPath)
-        {
-            FullPath = fullPath;
-        }
-
-        public static PotDirectory FromPotName(string potName)
-        {
-            if (potName == null) throw new ArgumentNullException(nameof(potName));
-
-            PotDirectory potDirectory = Directory.GetDirectories(".")
-                .Select(x => new PotDirectory(x))
-                .Where(x =>
-                {
-                    JPotInfoFile jPotInfoFile = x.GetInfoFile();
-                    bool success = jPotInfoFile.TryOpen();
-                    return success && jPotInfoFile.JPotInfo.Name == potName;
-                })
-                .FirstOrDefault();
-
-            return potDirectory ?? new PotDirectory();
-        }
-
-        public void Create()
-        {
-            if (IsValid)
-                throw new Exception("The pot directory already exists.");
-
-            for (int i = 0; i < 10000; i++)
-            {
-                Guid guid = Guid.NewGuid();
-                string path = guid.ToString("D");
-
-                if (Directory.Exists(path))
-                    continue;
-
-                Directory.CreateDirectory(path);
-                FullPath = path;
-                return;
+                string parentDirectoryPath = Path.GetDirectoryName(FullPath);
+                directoryName = Path.GetFileName(parentDirectoryPath);
             }
 
-            throw new Exception("Could not find a valid name for the pot's directory. All the tried name already exist.");
+            try
+            {
+                return new Guid(directoryName);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Invalid pot directory path.", ex);
+            }
         }
+    }
 
-        public void Delete()
+    public bool IsValid
+    {
+        get
         {
-            Directory.Delete(FullPath, true);
-        }
+            if (FullPath == null || !Directory.Exists(FullPath))
+                return false;
 
-        public BlackListFile OpenBlackListFile(string blackListName)
+            JPotInfoFile jPotInfoFile = GetInfoFile();
+            jPotInfoFile.TryOpen();
+            return jPotInfoFile.IsValid;
+        }
+    }
+
+    private PotDirectory()
+    {
+    }
+
+    public PotDirectory(string fullPath)
+    {
+        FullPath = fullPath;
+
+        if (fullPath != null)
+            RootPath = Path.GetDirectoryName(FullPath);
+    }
+
+    public static PotDirectory FromPotName(string potName, string storagePath)
+    {
+        if (potName == null) throw new ArgumentNullException(nameof(potName));
+
+        PotDirectory potDirectory = Directory.GetDirectories(storagePath)
+            .Select(x => new PotDirectory(x))
+            .Where(x =>
+            {
+                JPotInfoFile jPotInfoFile = x.GetInfoFile();
+                bool success = jPotInfoFile.TryOpen();
+                return success && jPotInfoFile.JPotInfo.Name == potName;
+            })
+            .FirstOrDefault();
+
+        return potDirectory ?? PotDirectory.New(storagePath);
+    }
+
+    private static PotDirectory New(string storagePath)
+    {
+        return new PotDirectory
         {
-            string blackListPath = Path.Combine(FullPath, blackListName);
-            BlackListFile blackListFile = new BlackListFile(blackListPath);
-            blackListFile.Open();
-            return blackListFile;
-        }
+            RootPath = storagePath
+        };
+    }
 
-        public IEnumerable<SnapshotFile> GetSnapshotFiles()
+    public void Create()
+    {
+        if (IsValid)
+            throw new Exception("The pot directory already exists.");
+
+        for (int i = 0; i < 10000; i++)
         {
-            string snapshotsDirectoryPath = Path.Combine(FullPath, SnapshotsDirectoryName);
+            Guid guid = Guid.NewGuid();
+            string path = Path.Combine(RootPath, guid.ToString("D"));
 
-            if (!Directory.Exists(snapshotsDirectoryPath))
-                return Enumerable.Empty<SnapshotFile>();
+            if (Directory.Exists(path))
+                continue;
 
-            return Directory.GetFiles(snapshotsDirectoryPath)
-                .Select(x => new SnapshotFile(x))
-                .OrderByDescending(x => x.CreationTime);
+            Directory.CreateDirectory(path);
+            FullPath = path;
+            return;
         }
 
-        public SnapshotFile CreateSnapshotFile(in DateTime creationTime)
-        {
-            string snapshotsDirectoryPath = Path.Combine(FullPath, SnapshotsDirectoryName);
-            SnapshotFilePath snapshotFilePath = new SnapshotFilePath(creationTime, snapshotsDirectoryPath);
+        throw new Exception("Could not find a valid name for the pot's directory. All the tried name already exist.");
+    }
 
-            return new SnapshotFile(snapshotFilePath);
-        }
+    public void Delete()
+    {
+        Directory.Delete(FullPath, true);
+    }
 
-        public JPotInfoFile GetInfoFile()
-        {
-            if (FullPath == null)
-                return null;
+    public BlackListFile OpenBlackListFile(string blackListName)
+    {
+        string blackListPath = Path.Combine(FullPath, blackListName);
+        BlackListFile blackListFile = new BlackListFile(blackListPath);
+        blackListFile.Open();
+        return blackListFile;
+    }
 
-            string infoFilePath = Path.Combine(FullPath, "info.json");
-            return new JPotInfoFile(infoFilePath);
-        }
+    public IEnumerable<SnapshotFile> GetSnapshotFiles()
+    {
+        string snapshotsDirectoryPath = Path.Combine(FullPath, SnapshotsDirectoryName);
+
+        if (!Directory.Exists(snapshotsDirectoryPath))
+            return Enumerable.Empty<SnapshotFile>();
+
+        return Directory.GetFiles(snapshotsDirectoryPath)
+            .Select(x => new SnapshotFile(x))
+            .OrderByDescending(x => x.CreationTime);
+    }
+
+    public SnapshotFile CreateSnapshotFile(in DateTime creationTime)
+    {
+        string snapshotsDirectoryPath = Path.Combine(FullPath, SnapshotsDirectoryName);
+        SnapshotFilePath snapshotFilePath = new SnapshotFilePath(creationTime, snapshotsDirectoryPath);
+
+        return new SnapshotFile(snapshotFilePath);
+    }
+
+    public JPotInfoFile GetInfoFile()
+    {
+        if (FullPath == null)
+            return null;
+
+        string infoFilePath = Path.Combine(FullPath, "info.json");
+        return new JPotInfoFile(infoFilePath);
     }
 }

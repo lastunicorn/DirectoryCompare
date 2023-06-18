@@ -19,7 +19,7 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.DeleteSnapshot;
 
-public class DeleteSnapshotUseCase : RequestHandler<DeleteSnapshotRequest>
+public class DeleteSnapshotUseCase : IRequestHandler<DeleteSnapshotRequest>
 {
     private readonly ISnapshotRepository snapshotRepository;
 
@@ -28,7 +28,7 @@ public class DeleteSnapshotUseCase : RequestHandler<DeleteSnapshotRequest>
         this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
     }
 
-    protected override void Handle(DeleteSnapshotRequest request)
+    public Task Handle(DeleteSnapshotRequest request, CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(request.Location.PotName))
             throw new Exception("Pot name was not provided.");
@@ -44,7 +44,7 @@ public class DeleteSnapshotUseCase : RequestHandler<DeleteSnapshotRequest>
             bool foundEndDeleted = snapshotRepository.DeleteByExactDateTime(request.Location.PotName, searchedDate);
 
             if (foundEndDeleted)
-                return;
+                return Task.CompletedTask;
 
             if (searchedDate.TimeOfDay == TimeSpan.Zero)
                 snapshotRepository.DeleteSingleByDate(request.Location.PotName, searchedDate);
@@ -53,5 +53,7 @@ public class DeleteSnapshotUseCase : RequestHandler<DeleteSnapshotRequest>
         {
             snapshotRepository.DeleteLast(request.Location.PotName);
         }
+
+        return Task.CompletedTask;
     }
 }

@@ -29,12 +29,12 @@ public class CreatePotUseCase : IRequestHandler<CreatePotRequest>
         this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
     }
 
-    public Task<Unit> Handle(CreatePotRequest request, CancellationToken cancellationToken)
+    public Task Handle(CreatePotRequest request, CancellationToken cancellationToken)
     {
         VerifyPotDoesNotExist(request.Name);
         CreateNewPot(request);
 
-        return Unit.Task;
+        return Task.CompletedTask;
     }
 
     private void VerifyPotDoesNotExist(string potName)

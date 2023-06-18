@@ -15,42 +15,32 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.DirectoryCompare.Application.BlackListArea.AddBlackPath;
+using DustInTheWind.DirectoryCompare.Application.PotArea.PresentPots;
+using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.DirectoryCompare.Infrastructure;
+using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Presentation.BlackListCommands;
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands;
+
 // Example:
-// black-list -a <path> -p <pot-name> -b <black-list-name>
-// black-list --add <path> --pot <pot-name> --black-list <black-list-name>
+// pot
 
-[NamedCommand("black-list")]
-public class AddBlackListPathCommandModel : ICommand
+[NamedCommand("pots", Order = 4, Description = "Displays a list with all the existing pots.")]
+public class DisplayPotsCommand : ICommand
 {
     private readonly RequestBus requestBus;
 
-    [NamedParameter("pot", ShortName = 'p')]
-    public string PotName { get; set; }
+    public List<Pot> Pots { get; private set; }
 
-    [NamedParameter("black-list", ShortName = 'b', IsOptional = true)]
-    public string BlackListName { get; set; }
-
-    [NamedParameter("add", ShortName = 'a')]
-    public string Path { get; set; }
-
-    public AddBlackListPathCommandModel(RequestBus requestBus)
+    public DisplayPotsCommand(RequestBus requestBus, IMediator mediator)
     {
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
     }
 
     public async Task Execute()
     {
-        AddBlackPathRequest request = new()
-        {
-            PotName = PotName,
-            BlackList = BlackListName,
-            Path = Path
-        };
-
-        await requestBus.PlaceRequest(request);
+        PresentPotsRequest request = new();
+        PresentPotsResponse response = await requestBus.PlaceRequest<PresentPotsRequest, PresentPotsResponse>(request);
+        Pots = response.Pots;
     }
 }

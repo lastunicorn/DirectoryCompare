@@ -20,7 +20,7 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.PotArea.PresentPot;
 
-public class PresentPotUseCase : IRequestHandler<PresentPotRequest, Pot>
+public class PresentPotUseCase : IRequestHandler<PresentPotRequest, PresentPotResponse>
 {
     private readonly IPotRepository potRepository;
     private readonly ISnapshotRepository snapshotRepository;
@@ -31,11 +31,16 @@ public class PresentPotUseCase : IRequestHandler<PresentPotRequest, Pot>
         this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
     }
 
-    public Task<Pot> Handle(PresentPotRequest request, CancellationToken cancellationToken)
+    public Task<PresentPotResponse> Handle(PresentPotRequest request, CancellationToken cancellationToken)
     {
         Pot pot = potRepository.Get(request.PotName);
         pot.Snapshots = snapshotRepository.GetByPot(request.PotName).ToList();
 
-        return Task.FromResult(pot);
+        PresentPotResponse response = new()
+        {
+            Pot = pot
+        };
+
+        return Task.FromResult(response);
     }
 }

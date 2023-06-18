@@ -15,40 +15,36 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.DirectoryCompare.Application.BlackListArea.AddBlackPath;
+using DustInTheWind.DirectoryCompare.Application.SnapshotArea.ImportSnapshot;
 using DustInTheWind.DirectoryCompare.Infrastructure;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Presentation.BlackListCommands;
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands;
 // Example:
-// black-list -a <path> -p <pot-name> -b <black-list-name>
-// black-list --add <path> --pot <pot-name> --black-list <black-list-name>
+// snapshot -i <file-path> -p <pot-name>
+// snapshot --import <file-path> --pot <pot-name>
 
-[NamedCommand("black-list")]
-public class AddBlackListPathCommandModel : ICommand
+[NamedCommand("import-snapshot", Order = 8)]
+public class ImportSnapshotCommand : ICommand
 {
     private readonly RequestBus requestBus;
+
+    [NamedParameter("path", ShortName = 'h')]
+    public string SnapshotFilePath { get; set; }
 
     [NamedParameter("pot", ShortName = 'p')]
     public string PotName { get; set; }
 
-    [NamedParameter("black-list", ShortName = 'b', IsOptional = true)]
-    public string BlackListName { get; set; }
-
-    [NamedParameter("add", ShortName = 'a')]
-    public string Path { get; set; }
-
-    public AddBlackListPathCommandModel(RequestBus requestBus)
+    public ImportSnapshotCommand(RequestBus requestBus)
     {
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
     }
 
     public async Task Execute()
     {
-        AddBlackPathRequest request = new()
+        ImportSnapshotRequest request = new()
         {
-            PotName = PotName,
-            BlackList = BlackListName,
-            Path = Path
+            FilePath = SnapshotFilePath,
+            PotName = PotName
         };
 
         await requestBus.PlaceRequest(request);

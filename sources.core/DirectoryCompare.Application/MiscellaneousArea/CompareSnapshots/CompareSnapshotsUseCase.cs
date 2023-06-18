@@ -21,7 +21,7 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.CompareSnapshots;
 
-public class CompareSnapshotsUseCase : RequestHandler<CompareSnapshotsRequest, CompareSnapshotsResponse>
+public class CompareSnapshotsUseCase : IRequestHandler<CompareSnapshotsRequest, CompareSnapshotsResponse>
 {
     private readonly SnapshotFactory snapshotFactory;
 
@@ -30,14 +30,14 @@ public class CompareSnapshotsUseCase : RequestHandler<CompareSnapshotsRequest, C
         this.snapshotFactory = snapshotFactory ?? throw new ArgumentNullException(nameof(snapshotFactory));
     }
 
-    protected override CompareSnapshotsResponse Handle(CompareSnapshotsRequest request)
+    public Task<CompareSnapshotsResponse> Handle(CompareSnapshotsRequest request, CancellationToken cancellationToken)
     {
         Snapshot snapshot1 = snapshotFactory.RetrieveSnapshot(request.Snapshot1);
         Snapshot snapshot2 = snapshotFactory.RetrieveSnapshot(request.Snapshot2);
         SnapshotComparer comparer = CompareSnapshots(snapshot1, snapshot2);
         string exportDirectoryPath = ExportToDiskIfRequested(comparer, request);
 
-        return new CompareSnapshotsResponse
+        CompareSnapshotsResponse response = new ()
         {
             OnlyInSnapshot1 = comparer.OnlyInSnapshot1,
             OnlyInSnapshot2 = comparer.OnlyInSnapshot2,
@@ -45,6 +45,8 @@ public class CompareSnapshotsUseCase : RequestHandler<CompareSnapshotsRequest, C
             DifferentContent = comparer.DifferentContent,
             ExportDirectoryPath = exportDirectoryPath
         };
+
+        return Task.FromResult(response);
     }
 
     private static SnapshotComparer CompareSnapshots(Snapshot snapshot1, Snapshot snapshot2)

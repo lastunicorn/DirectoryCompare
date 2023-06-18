@@ -14,16 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.ConsoleFramework;
 using DustInTheWind.ConsoleTools;
+using DustInTheWind.ConsoleTools.Commando;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands;
+
+public class ImportSnapshotCommandView : IView<ImportSnapshotCommand>
 {
-    public class ImportSnapshotCommandView : ICommandView<ImportSnapshotCommandModel>
+    public void Display(ImportSnapshotCommand command)
     {
-        public void Display(ImportSnapshotCommandModel commandModel)
-        {
-            CustomConsole.WriteLineSuccess($"Snapshot '{commandModel.SnapshotFilePath}' successfully imported in pot '{commandModel.PotName}'.");
-        }
+        CustomConsole.WriteLineSuccess($"Snapshot '{command.SnapshotFilePath}' successfully imported in pot '{command.PotName}'.");
     }
 }

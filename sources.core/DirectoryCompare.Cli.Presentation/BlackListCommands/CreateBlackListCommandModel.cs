@@ -16,7 +16,7 @@
 
 using System;
 using System.Threading.Tasks;
-using DustInTheWind.ConsoleFramework;
+using DustInTheWind.ConsoleTools.Commando;
 using DustInTheWind.DirectoryCompare.Application.BlackListArea.CreateBlackList;
 using DustInTheWind.DirectoryCompare.Application.BlackListArea.DeleteBlackList;
 using DustInTheWind.DirectoryCompare.Infrastructure;
@@ -27,16 +27,15 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.BlackListCommands
     // blacklist -c <blacklist-name> -p <pot-name>
     // blacklist --create <blacklist-name> --pot <pot-name>
     
-    [Command("black-list")]
-    [CommandDescription("Creates a new black list in the specified pot.")]
-    internal class CreateBlackListCommandModel : ICommandModel
+    [NamedCommand("black-list", Description = "Creates a new black list in the specified pot.")]
+    internal class CreateBlackListCommandModel : ICommand
     {
         private readonly RequestBus requestBus;
 
-        [CommandParameter(ShortName = "c", LongName = "create")]
+        [NamedParameter("create", ShortName = 'c')]
         public string BlackListName { get; set; }
 
-        [CommandParameter(ShortName = "p", LongName = "pot")]
+        [NamedParameter("pot", ShortName = 'p')]
         public string PotName { get; set; }
 
         public CreateBlackListCommandModel(RequestBus requestBus)
@@ -44,7 +43,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.BlackListCommands
             this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
         }
 
-        public async Task Execute(Arguments arguments)
+        public async Task Execute()
         {
             CreateBlackListRequest request = new()
             {

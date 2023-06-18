@@ -14,33 +14,37 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.ComponentModel;
-using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.DirectoryCompare.Domain;
+using DustInTheWind.DirectoryCompare.Application.SnapshotArea.PresentSnapshot;
+using DustInTheWind.DirectoryCompare.Domain.Entities;
+using DustInTheWind.DirectoryCompare.Infrastructure;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands;
 
-public class CreateSnapshotCommandView : ViewBase<CreateSnapshotCommand>
+// Example:
+// snapshot <snapshot-location>
+
+[NamedCommand("snapshot", Order = 7)]
+public class DisplaySnapshotCommand : ICommand
 {
-    private int lastValue;
+    private readonly RequestBus requestBus;
 
-    public override void Display(CreateSnapshotCommand command)
+    [AnonymousParameter(Order = 1)] public string SnapshotLocation { get; set; }
+
+    public Snapshot Snapshot { get; private set; }
+
+    public DisplaySnapshotCommand(RequestBus requestBus)
     {
-        lastValue = -1;
+        this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
     }
 
-    public void HandleProgress(int percentage)
+    public async Task Execute()
     {
-        if (Math.Abs(lastValue - percentage) > 0.1)
+        PresentSnapshotRequest request = new()
         {
-            Console.WriteLine($"Progress: {percentage}%");
-            lastValue = percentage;
-        }
-    }
+            Location = SnapshotLocation
+        };
 
-    public void FinishDisplay()
-    {
-        WriteSuccess("Done");
+        Snapshot = await requestBus.PlaceRequest<PresentSnapshotRequest, Snapshot>(request);
     }
 }

@@ -14,51 +14,49 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.IO;
 using DustInTheWind.DirectoryCompare.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 using NUnit.Framework;
 
-namespace DustInTheWind.DirectoryCompare.Tests.DataAccess
-{
-    [TestFixture]
-    public class PotImportExportTests
-    {
-        [Test]
-        public void SerializeEmptySnapshot()
-        {
-            Snapshot snapshot = new Snapshot
-            {
-                CreationTime = new DateTime(2019, 5, 8, 19, 17, 0, DateTimeKind.Utc),
-                Name = "Snapshot 1",
-                OriginalPath = @"c:\aaa"
-            };
+namespace DustInTheWind.DirectoryCompare.Tests.DataAccess;
 
-            const string expected = @"{
+[TestFixture]
+public class PotImportExportTests
+{
+    [Test]
+    public void SerializeEmptySnapshot()
+    {
+        Snapshot snapshot = new()
+        {
+            CreationTime = new DateTime(2019, 05, 08, 19, 17, 00, DateTimeKind.Utc),
+            Name = "Snapshot 1",
+            OriginalPath = @"c:\aaa"
+        };
+
+        const string expected = @"{
   ""serializer-id"": ""9e93055d-7bde-4f55-b340-dd5a4880d96e"",
   ""original-path"": ""c:\\aaa"",
   ""creation-time"": ""2019-05-08T19:17:00Z""
 }";
-            PerformTest(snapshot, expected);
-        }
+        PerformTest(snapshot, expected);
+    }
 
-        [Test]
-        public void SerializeSnapshotWithOneDirectory()
+    [Test]
+    public void SerializeSnapshotWithOneDirectory()
+    {
+        Snapshot snapshot = new()
         {
-            Snapshot snapshot = new Snapshot
-            {
-                CreationTime = new DateTime(2019, 5, 8, 19, 17, 0, DateTimeKind.Utc),
-                Name = "Snapshot 1",
-                OriginalPath = @"c:\aaa"
-            };
-            snapshot.Directories.Add(new HDirectory
-            {
-                Name = "directory-name"
-            });
+            CreationTime = new DateTime(2019, 05, 08, 19, 17, 00, DateTimeKind.Utc),
+            Name = "Snapshot 1",
+            OriginalPath = @"c:\aaa"
+        };
+        snapshot.Directories.Add(new HDirectory
+        {
+            Name = "directory-name"
+        });
 
-            const string expected = @"{
+        const string expected = @"{
   ""serializer-id"": ""9e93055d-7bde-4f55-b340-dd5a4880d96e"",
   ""original-path"": ""c:\\aaa"",
   ""creation-time"": ""2019-05-08T19:17:00Z"",
@@ -68,27 +66,27 @@ namespace DustInTheWind.DirectoryCompare.Tests.DataAccess
     }
   ]
 }";
-            PerformTest(snapshot, expected);
-        }
+        PerformTest(snapshot, expected);
+    }
 
-        [Test]
-        public void SerializeSnapshotWithOneFile()
+    [Test]
+    public void SerializeSnapshotWithOneFile()
+    {
+        Snapshot snapshot = new()
         {
-            Snapshot snapshot = new Snapshot
-            {
-                CreationTime = new DateTime(2019, 5, 8, 19, 17, 0, DateTimeKind.Utc),
-                Name = "Snapshot 1",
-                OriginalPath = @"c:\aaa"
-            };
-            snapshot.Files.Add(new HFile
-            {
-                Name = "file.extension",
-                Size = DataSize.FromKilobytes(42),
-                LastModifiedTime = new DateTime(2011, 05, 13, 12, 56, 20),
-                Hash = new byte[] { 0, 1, 2 }
-            });
+            CreationTime = new DateTime(2019, 05, 08, 19, 17, 00, DateTimeKind.Utc),
+            Name = "Snapshot 1",
+            OriginalPath = @"c:\aaa"
+        };
+        snapshot.Files.Add(new HFile
+        {
+            Name = "file.extension",
+            Size = DataSize.FromKilobytes(42),
+            LastModifiedTime = new DateTime(2011, 05, 13, 12, 56, 20),
+            Hash = new byte[] { 0, 1, 2 }
+        });
 
-            const string expected = @"{
+        const string expected = @"{
   ""serializer-id"": ""9e93055d-7bde-4f55-b340-dd5a4880d96e"",
   ""original-path"": ""c:\\aaa"",
   ""creation-time"": ""2019-05-08T19:17:00Z"",
@@ -101,26 +99,25 @@ namespace DustInTheWind.DirectoryCompare.Tests.DataAccess
     }
   ]
 }";
-            PerformTest(snapshot, expected);
-        }
+        PerformTest(snapshot, expected);
+    }
 
-        private static void PerformTest(Snapshot snapshot, string expected)
-        {
-            using MemoryStream memoryStream = new();
-            using StreamWriter streamWriter = new(memoryStream);
+    private static void PerformTest(Snapshot snapshot, string expected)
+    {
+        using MemoryStream memoryStream = new();
+        using StreamWriter streamWriter = new(memoryStream);
 
-            PotImportExport potImportExport = new();
-            potImportExport.WriteSnapshot(snapshot, streamWriter);
-            
-            streamWriter.Flush();
-            memoryStream.Flush();
+        PotImportExport potImportExport = new();
+        potImportExport.WriteSnapshot(snapshot, streamWriter);
 
-            memoryStream.Position = 0;
+        streamWriter.Flush();
+        memoryStream.Flush();
 
-            using StreamReader streamReader = new(memoryStream);
-            string json = streamReader.ReadToEnd();
+        memoryStream.Position = 0;
 
-            Assert.That(json, Is.EqualTo(expected));
-        }
+        using StreamReader streamReader = new(memoryStream);
+        string json = streamReader.ReadToEnd();
+
+        Assert.That(json, Is.EqualTo(expected));
     }
 }

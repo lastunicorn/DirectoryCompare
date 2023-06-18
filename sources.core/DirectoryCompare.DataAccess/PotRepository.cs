@@ -14,84 +14,79 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.DirectoryCompare.JFiles;
 using DustInTheWind.DirectoryCompare.JFiles.PotInfoFileModel;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 
-namespace DustInTheWind.DirectoryCompare.DataAccess
+namespace DustInTheWind.DirectoryCompare.DataAccess;
+
+public class PotRepository : IPotRepository
 {
-    public class PotRepository : IPotRepository
+    public List<Pot> Get()
     {
-        public List<Pot> Get()
+        return Directory.GetDirectories(Database.Location)
+            .Select(x => new PotDirectory(x))
+            .Select(ToPot)
+            .Where(x => x != null)
+            .ToList();
+    }
+
+    public Pot Get(string name)
+    {
+        PotDirectory potDirectory = PotDirectory.FromPotName(name, Database.Location);
+        return ToPot(potDirectory);
+    }
+
+    private static Pot ToPot(PotDirectory potDirectory)
+    {
+        if (!potDirectory.IsValid)
+            return null;
+
+        JPotInfoFile jPotInfoFile = potDirectory.GetInfoFile();
+        bool success = jPotInfoFile.TryOpen();
+
+        if (!success)
+            return null;
+
+        return new Pot
         {
-            return Directory.GetDirectories(".")
-                .Select(x => new PotDirectory(x))
-                .Select(ToPot)
-                .Where(x => x != null)
-                .ToList();
-        }
+            Guid = potDirectory.PotGuid,
+            Name = jPotInfoFile.JPotInfo.Name,
+            Path = jPotInfoFile.JPotInfo.Path,
+            Description = jPotInfoFile.JPotInfo.Description
+        };
+    }
 
-        public Pot Get(string name)
+    public bool Exists(string name)
+    {
+        PotDirectory potDirectory = PotDirectory.FromPotName(name, Database.Location);
+        return potDirectory.IsValid;
+    }
+
+    public void Add(Pot pot)
+    {
+        PotDirectory potDirectory = PotDirectory.FromPotName(pot.Name, Database.Location);
+        potDirectory.Create();
+
+        JPotInfoFile jPotInfoFile = potDirectory.GetInfoFile();
+        jPotInfoFile.JPotInfo = new JPotInfo
         {
-            PotDirectory potDirectory = PotDirectory.FromPotName(name);
-            return ToPot(potDirectory);
-        }
+            Name = pot.Name,
+            Path = pot.Path,
+            Description = pot.Description
+        };
 
-        private static Pot ToPot(PotDirectory potDirectory)
-        {
-            if (!potDirectory.IsValid)
-                return null;
+        jPotInfoFile.Save();
+    }
 
-            JPotInfoFile jPotInfoFile = potDirectory.GetInfoFile();
-            bool success = jPotInfoFile.TryOpen();
+    public void Delete(string name)
+    {
+        PotDirectory potDirectory = PotDirectory.FromPotName(name, Database.Location);
 
-            if (!success)
-                return null;
-
-            return new Pot
-            {
-                Guid = potDirectory.PotGuid,
-                Name = jPotInfoFile.JPotInfo.Name,
-                Path = jPotInfoFile.JPotInfo.Path,
-                Description = jPotInfoFile.JPotInfo.Description
-            };
-        }
-
-        public bool Exists(string name)
-        {
-            PotDirectory potDirectory = PotDirectory.FromPotName(name);
-            return potDirectory.IsValid;
-        }
-
-        public void Add(Pot pot)
-        {
-            PotDirectory potDirectory = PotDirectory.FromPotName(pot.Name);
-            potDirectory.Create();
-
-            JPotInfoFile jPotInfoFile = potDirectory.GetInfoFile();
-            jPotInfoFile.JPotInfo = new JPotInfo
-            {
-                Name = pot.Name,
-                Path = pot.Path,
-                Description = pot.Description
-            };
-
-            jPotInfoFile.Save();
-        }
-
-        public void Delete(string name)
-        {
-            PotDirectory potDirectory = PotDirectory.FromPotName(name);
-
-            if (potDirectory.IsValid)
-                potDirectory.Delete();
-            else
-                throw new Exception($"Pot '{name}' does not exist.");
-        }
+        if (potDirectory.IsValid)
+            potDirectory.Delete();
+        else
+            throw new Exception($"Pot '{name}' does not exist.");
     }
 }

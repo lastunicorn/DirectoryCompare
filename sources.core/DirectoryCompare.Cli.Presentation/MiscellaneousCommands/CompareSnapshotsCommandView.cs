@@ -14,51 +14,49 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using DustInTheWind.ConsoleFramework;
 using DustInTheWind.ConsoleTools;
+using DustInTheWind.ConsoleTools.Commando;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands;
+
+internal class CompareSnapshotsCommandView : IView<CompareSnapshotsCommand>
 {
-    internal class CompareSnapshotsCommandView : ICommandView<CompareSnapshotsCommandModel>
+    public void Display(CompareSnapshotsCommand command)
     {
-        public void Display(CompareSnapshotsCommandModel commandModel)
+        Console.WriteLine();
+
+        Console.WriteLine("Files only in snapshot 1:");
+        foreach (string path in command.OnlyInSnapshot1)
+            Console.WriteLine(path);
+
+        Console.WriteLine();
+
+        Console.WriteLine("Files only in snapshot 2:");
+        foreach (string path in command.OnlyInSnapshot2)
+            Console.WriteLine(path);
+
+        Console.WriteLine();
+
+        Console.WriteLine("Different names:");
+        foreach (ItemComparison itemComparison in command.DifferentNames)
         {
-            Console.WriteLine();
-
-            Console.WriteLine("Files only in snapshot 1:");
-            foreach (string path in commandModel.OnlyInSnapshot1)
-                Console.WriteLine(path);
-
-            Console.WriteLine();
-
-            Console.WriteLine("Files only in snapshot 2:");
-            foreach (string path in commandModel.OnlyInSnapshot2)
-                Console.WriteLine(path);
-
-            Console.WriteLine();
-
-            Console.WriteLine("Different names:");
-            foreach (ItemComparison itemComparison in commandModel.DifferentNames)
-            {
-                Console.WriteLine("1 - " + itemComparison.FullName1);
-                Console.WriteLine("2 - " + itemComparison.FullName2);
-            }
-
-            Console.WriteLine();
-
-            Console.WriteLine("Different content:");
-            foreach (ItemComparison itemComparison in commandModel.DifferentContent)
-            {
-                Console.WriteLine("1 - " + itemComparison.FullName1);
-                Console.WriteLine("2 - " + itemComparison.FullName2);
-            }
-            
-            Console.WriteLine();
-
-            if (commandModel.ExportDirectoryPath != null) 
-                CustomConsole.WriteLine("Results exported also into directory: {0}", commandModel.ExportDirectoryPath);
+            Console.WriteLine("1 - " + itemComparison.FullName1);
+            Console.WriteLine("2 - " + itemComparison.FullName2);
         }
+
+        Console.WriteLine();
+
+        Console.WriteLine("Different content:");
+        foreach (ItemComparison itemComparison in command.DifferentContent)
+        {
+            Console.WriteLine("1 - " + itemComparison.FullName1);
+            Console.WriteLine("2 - " + itemComparison.FullName2);
+        }
+
+        Console.WriteLine();
+
+        if (command.ExportDirectoryPath != null)
+            CustomConsole.WriteLine("Results exported also into directory: {0}", command.ExportDirectoryPath);
     }
 }

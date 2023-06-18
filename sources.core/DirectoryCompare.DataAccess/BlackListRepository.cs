@@ -26,7 +26,7 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
     {
         public DiskPathCollection Get(string potName)
         {
-            PotDirectory potDirectory = PotDirectory.FromPotName(potName);
+            PotDirectory potDirectory = PotDirectory.FromPotName(potName, Database.Location);
 
             if (!potDirectory.IsValid)
                 throw new Exception($"There is no pot with name '{potName}'.");
@@ -37,7 +37,7 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
 
         public void Add(string potName, DiskPath path)
         {
-            PotDirectory potDirectory = PotDirectory.FromPotName(potName);
+            PotDirectory potDirectory = PotDirectory.FromPotName(potName, Database.Location);
 
             if (!potDirectory.IsValid)
                 throw new Exception($"There is no pot with name '{potName}'.");
@@ -49,7 +49,7 @@ namespace DustInTheWind.DirectoryCompare.DataAccess
 
         public void Delete(string potName, DiskPath path)
         {
-            PotDirectory potDirectory = PotDirectory.FromPotName(potName);
+            PotDirectory potDirectory = PotDirectory.FromPotName(potName, Database.Location);
 
             if (!potDirectory.IsValid)
                 throw new Exception($"There is no pot with name '{potName}'.");

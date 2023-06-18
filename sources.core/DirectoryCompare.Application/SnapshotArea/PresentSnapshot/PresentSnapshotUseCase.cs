@@ -20,7 +20,7 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.PresentSnapshot;
 
-public class PresentSnapshotUseCase : RequestHandler<PresentSnapshotRequest, Snapshot>
+public class PresentSnapshotUseCase : IRequestHandler<PresentSnapshotRequest, Snapshot>
 {
     private readonly SnapshotFactory snapshotFactory;
 
@@ -29,8 +29,10 @@ public class PresentSnapshotUseCase : RequestHandler<PresentSnapshotRequest, Sna
         this.snapshotFactory = snapshotFactory ?? throw new ArgumentNullException(nameof(snapshotFactory));
     }
 
-    protected override Snapshot Handle(PresentSnapshotRequest request)
+    public Task<Snapshot> Handle(PresentSnapshotRequest request, CancellationToken cancellationToken)
     {
-        return snapshotFactory.RetrieveSnapshot(request.Location);
+        Snapshot snapshot = snapshotFactory.RetrieveSnapshot(request.Location);
+
+        return Task.FromResult(snapshot);
     }
 }

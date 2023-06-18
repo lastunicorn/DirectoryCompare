@@ -24,7 +24,7 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.MiscellaneousArea.FindDuplicates;
 
-public class FindDuplicatesUseCase : RequestHandler<FindDuplicatesRequest, FileDuplicates>
+public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest, FileDuplicates>
 {
     private readonly ISnapshotRepository snapshotRepository;
     private readonly IBlackListRepository blackListRepository;
@@ -37,11 +37,11 @@ public class FindDuplicatesUseCase : RequestHandler<FindDuplicatesRequest, FileD
         this.log = log ?? throw new ArgumentNullException(nameof(log));
     }
 
-    protected override FileDuplicates Handle(FindDuplicatesRequest request)
+    public Task<FileDuplicates> Handle(FindDuplicatesRequest request, CancellationToken cancellationToken)
     {
         log.WriteInfo("Searching for duplicates between pot '{0}' and '{1}'.", request.SnapshotLeft.PotName, request.SnapshotRight.PotName);
 
-        return new FileDuplicates
+        FileDuplicates response = new()
         {
             FilesLeft = GetFiles(request.SnapshotLeft),
             FilesRight = string.IsNullOrEmpty(request.SnapshotRight.PotName)
@@ -49,6 +49,8 @@ public class FindDuplicatesUseCase : RequestHandler<FindDuplicatesRequest, FileD
                 : GetFiles(request.SnapshotRight),
             CheckFilesExistence = request.CheckFilesExistence
         };
+
+        return Task.FromResult(response);
     }
 
     private List<HFile> GetFiles(SnapshotLocation snapshotLocation)

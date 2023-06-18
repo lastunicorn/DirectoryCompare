@@ -20,7 +20,7 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.PresentBlackList;
 
-public class PresentBlackListUseCase : RequestHandler<PresentBlackListRequest, DiskPathCollection>
+public class PresentBlackListUseCase : IRequestHandler<PresentBlackListRequest, DiskPathCollection>
 {
     private readonly IBlackListRepository blackListRepository;
 
@@ -29,8 +29,10 @@ public class PresentBlackListUseCase : RequestHandler<PresentBlackListRequest, D
         this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
     }
 
-    protected override DiskPathCollection Handle(PresentBlackListRequest request)
+    public Task<DiskPathCollection> Handle(PresentBlackListRequest request, CancellationToken cancellationToken)
     {
-        return blackListRepository.Get(request.PotName);
+        DiskPathCollection diskPathCollection = blackListRepository.Get(request.PotName);
+
+        return Task.FromResult(diskPathCollection);
     }
 }

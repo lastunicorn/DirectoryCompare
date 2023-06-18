@@ -14,44 +14,42 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using DustInTheWind.ConsoleFramework;
 using DustInTheWind.ConsoleTools;
+using DustInTheWind.ConsoleTools.Commando;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands;
+
+public class DisplaySnapshotCommandView : IView<DisplaySnapshotCommand>
 {
-    public class DisplaySnapshotCommandView : ICommandView<DisplaySnapshotCommandModel>
+    public void Display(DisplaySnapshotCommand command)
     {
-        public void Display(DisplaySnapshotCommandModel commandModel)
+        if (command.Snapshot == null)
+            CustomConsole.WriteLine("There is no snapshot.");
+        else
         {
-            if (commandModel.Snapshot == null)
-                CustomConsole.WriteLine("There is no snapshot.");
-            else
-            {
-                Console.WriteLine($"Snapshot: {commandModel.Snapshot.Id:D}");
-                Console.WriteLine($"Path: {commandModel.Snapshot.OriginalPath}");
-                Console.WriteLine();
-                
-                DisplayDirectory(commandModel.Snapshot, 0);
-            }
+            Console.WriteLine($"Snapshot: {command.Snapshot.Id:D}");
+            Console.WriteLine($"Path: {command.Snapshot.OriginalPath}");
+            Console.WriteLine();
+
+            DisplayDirectory(command.Snapshot, 0);
+        }
+    }
+
+    private static void DisplayDirectory(HDirectory hDirectory, int index)
+    {
+        string indent = new(' ', index * 2);
+
+        foreach (HDirectory xSubdirectory in hDirectory.Directories)
+        {
+            Console.WriteLine(indent + xSubdirectory.Name);
+            DisplayDirectory(xSubdirectory, index + 1);
         }
 
-        private static void DisplayDirectory(HDirectory hDirectory, int index)
+        foreach (HFile xFile in hDirectory.Files)
         {
-            string indent = new(' ', index * 2);
-
-            foreach (HDirectory xSubdirectory in hDirectory.Directories)
-            {
-                Console.WriteLine(indent + xSubdirectory.Name);
-                DisplayDirectory(xSubdirectory, index + 1);
-            }
-
-            foreach (HFile xFile in hDirectory.Files)
-            {
-                Console.Write(indent + xFile.Name);
-                CustomConsole.WriteLine(ConsoleColor.DarkGray, " [" + xFile.Hash + "]");
-            }
+            Console.Write(indent + xFile.Name);
+            CustomConsole.WriteLine(ConsoleColor.DarkGray, " [" + xFile.Hash + "]");
         }
     }
 }

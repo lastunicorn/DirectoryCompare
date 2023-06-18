@@ -14,15 +14,36 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Commando;
+using DustInTheWind.DirectoryCompare.Application.PotArea.DeletePot;
+using DustInTheWind.DirectoryCompare.Infrastructure;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands;
 
-internal class DeletePotCommandView : IView<DeletePotCommand>
+// Examples:
+// pot -d <pot-name>
+// pot --delete <pot-name>
+
+[NamedCommand("delete-pot", Order = 2, Description = "Deletes the pot with the specified name.")]
+public class DeletePotCommand : ICommand
 {
-    public void Display(DeletePotCommand command)
+    private readonly RequestBus requestBus;
+
+    [AnonymousParameter(Order = 1)]
+    public string PotName { get; set; }
+
+    public DeletePotCommand(RequestBus requestBus)
     {
-        CustomConsole.WriteLineSuccess("Pot deleted successfully.");
+        this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
+    }
+
+    public async Task Execute()
+    {
+        DeletePotRequest request = new()
+        {
+            PotName = PotName
+        };
+
+        await requestBus.PlaceRequest(request);
     }
 }

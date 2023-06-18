@@ -19,7 +19,7 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.BlackListArea.RemoveBlackPath;
 
-public class RemoveBlackPathUseCase : RequestHandler<RemoveBlackPathRequest>
+public class RemoveBlackPathUseCase : IRequestHandler<RemoveBlackPathRequest>
 {
     private readonly IBlackListRepository blackListRepository;
 
@@ -28,8 +28,10 @@ public class RemoveBlackPathUseCase : RequestHandler<RemoveBlackPathRequest>
         this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
     }
 
-    protected override void Handle(RemoveBlackPathRequest request)
+    public Task Handle(RemoveBlackPathRequest request, CancellationToken cancellationToken)
     {
         blackListRepository.Delete(request.PotName, request.Path);
+
+        return Task.CompletedTask;
     }
 }

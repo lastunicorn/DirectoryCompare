@@ -14,36 +14,30 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.ComponentModel;
-using DustInTheWind.ConsoleFramework;
+using DustInTheWind.ConsoleTools.Commando;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands;
+
+public class ReadSnapshotCommandView : ViewBase<ReadSnapshotCommand>
 {
-    internal class ReadSnapshotCommandView : ILongCommandView<ReadSnapshotCommandModel>
+    private int lastValue;
+
+    public override void Display(ReadSnapshotCommand command)
     {
-        private int lastValue;
+        lastValue = -1;
+    }
 
-        public void Display(ReadSnapshotCommandModel commandModel)
+    public void HandleProgress(int percentage)
+    {
+        if (Math.Abs(lastValue - percentage) > 0.1)
         {
-            lastValue = -1;
-            commandModel.Progress += HandleProgress;
+            Console.WriteLine($"Progress: {percentage}%");
+            lastValue = percentage;
         }
+    }
 
-        private void HandleProgress(object sender, ProgressChangedEventArgs e)
-        {
-            int percentage = e.ProgressPercentage;
-
-            if (Math.Abs(lastValue - percentage) > 0.1)
-            {
-                Console.WriteLine($"Progress: {percentage}%");
-                lastValue = percentage;
-            }
-        }
-
-        public void FinishDisplay(ReadSnapshotCommandModel commandModel)
-        {
-            Console.WriteLine("Done");
-        }
+    public void FinishDisplay()
+    {
+        WriteSuccess("Done");
     }
 }

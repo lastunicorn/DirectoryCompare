@@ -14,53 +14,57 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using DustInTheWind.ConsoleFramework;
+using System.Globalization;
 using DustInTheWind.ConsoleTools;
+using DustInTheWind.ConsoleTools.Commando;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
+using DustInTheWind.DirectoryCompare.Domain.PotModel;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands;
+
+internal class DisplayPotCommandView : ViewBase<DisplayPotCommand>
 {
-    internal class DisplayPotCommandView : ICommandView<DisplayPotCommandModel>
+    public override void Display(DisplayPotCommand command)
     {
-        public void Display(DisplayPotCommandModel commandModel)
+        if (command.Pot == null)
+            CustomConsole.WriteWarning("The pot does not exist.");
+        else
+            DisplayPotInfo(command.Pot);
+    }
+
+    private void DisplayPotInfo(Pot pot)
+    {
+        WriteValue("Name", pot.Name);
+
+        string guid = pot.Guid.ToString();
+        WriteValue("GUID", pot.Name);
+
+        WriteValue("Path", pot.Path);
+
+        if (pot.Description != null)
+            WriteValue("Description", pot.Description);
+
+        if (pot.Snapshots is { Count: > 0 })
         {
-            if (commandModel.Pot == null)
-                return;
-
-            CustomConsole.Write("Name: ");
-            CustomConsole.WriteLineEmphasies(commandModel.Pot.Name);
-
-            string guid = commandModel.Pot.Guid.ToString();
-            CustomConsole.Write("GUID: ");
-            CustomConsole.WriteLineEmphasies(guid);
-
-            CustomConsole.Write("Path: ");
-            CustomConsole.WriteLineEmphasies(commandModel.Pot.Path);
-
-            if (commandModel.Pot.Description != null)
+            WithIndentation("Snapshots:", () =>
             {
-                CustomConsole.Write("Description: ");
-                CustomConsole.WriteLineEmphasies(commandModel.Pot.Description);
-            }
+                DisplaySnapshots(pot.Snapshots);
+            });
+        }
+        else
+        {
+            WriteValue("Snapshots", "<none>");
+        }
+    }
 
-            if (commandModel.Pot.Snapshots != null && commandModel.Pot.Snapshots.Count > 0)
-            {
-                CustomConsole.WriteLine("Snapshots: ");
+    private void DisplaySnapshots(List<Snapshot> snapshots)
+    {
+        foreach (Snapshot snapshot in snapshots)
+        {
+            DateTime creationTime = snapshot.CreationTime;
+            Guid id = snapshot.Id;
 
-                foreach (Snapshot snapshot in commandModel.Pot.Snapshots)
-                {
-                    DateTime creationTime = snapshot.CreationTime;
-                    Guid id = snapshot.Id;
-                    
-                    CustomConsole.WriteLineEmphasies($"  - {creationTime} - {id:D}");
-                }
-            }
-            else
-            {
-                CustomConsole.Write("Snapshots: ");
-                CustomConsole.WriteLineEmphasies("<none>");
-            }
+            WriteValue(creationTime.ToString(CultureInfo.CurrentUICulture), id.ToString("D"));
         }
     }
 }

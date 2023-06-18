@@ -22,7 +22,7 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Application.SnapshotArea.ImportSnapshot;
 
-public class ImportSnapshotUseCase : RequestHandler<ImportSnapshotRequest>
+public class ImportSnapshotUseCase : IRequestHandler<ImportSnapshotRequest>
 {
     private readonly IPotRepository potRepository;
     private readonly ISnapshotRepository snapshotRepository;
@@ -35,7 +35,7 @@ public class ImportSnapshotUseCase : RequestHandler<ImportSnapshotRequest>
         this.potImportExport = potImportExport ?? throw new ArgumentNullException(nameof(potImportExport));
     }
 
-    protected override void Handle(ImportSnapshotRequest request)
+    public Task Handle(ImportSnapshotRequest request, CancellationToken cancellationToken)
     {
         //ISnapshotReader reader = null;
         //ISnapshotWriter writer = null;
@@ -97,5 +97,7 @@ public class ImportSnapshotUseCase : RequestHandler<ImportSnapshotRequest>
         }
 
         snapshotRepository.Add(request.PotName, snapshot);
+
+        return Task.CompletedTask;
     }
 }
