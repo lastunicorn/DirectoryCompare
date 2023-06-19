@@ -24,8 +24,9 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands;
 // pot -c <pot-name> -p <target-path>
 // pot --create <pot-name> --path <target-path>
 
-[NamedCommand("create-pot", Order = 1, Description = "Creates a new pot for the specified disk path.")]
-public class CreatePotCommand : ICommand
+[NamedCommand("create-pot", Description = "Creates a new pot for the specified disk path.")]
+[CommandOrder(1)]
+public class CreatePotCommand : IConsoleCommand
 {
     private readonly RequestBus requestBus;
 

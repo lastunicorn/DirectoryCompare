@@ -25,8 +25,9 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands;
 // Example:
 // pot
 
-[NamedCommand("pots", Order = 4, Description = "Displays a list with all the existing pots.")]
-public class DisplayPotsCommand : ICommand
+[NamedCommand("pots", Description = "Displays a list with all the existing pots.")]
+[CommandOrder(4)]
+public class DisplayPotsCommand : IConsoleCommand
 {
     private readonly RequestBus requestBus;
 

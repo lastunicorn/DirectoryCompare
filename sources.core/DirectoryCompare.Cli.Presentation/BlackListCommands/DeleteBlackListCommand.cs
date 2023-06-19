@@ -15,34 +15,36 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.DeleteSnapshot;
+using DustInTheWind.DirectoryCompare.Cli.Application.BlackListArea.DeleteBlackList;
 using DustInTheWind.DirectoryCompare.Infrastructure;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands;
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.BlackListCommands;
+// Examples:
+// black-list -d <black-list-name> -p <pot-name>
+// black-list --delete <black-list-name> --pot <pot-name>
 
-// Example:
-// snapshot -d <snapshot-location>
-// snapshot --delete <snapshot-location>
-
-[NamedCommand("delete-snapshot")]
-[CommandOrder(6)]
-public class DeleteSnapshotCommand : IConsoleCommand
+[NamedCommand("black-list", Description = "Deletes the black list with the specified name.")]
+public class DeleteBlackListCommand : IConsoleCommand
 {
     private readonly RequestBus requestBus;
 
-    [NamedParameter("location", ShortName = 'l')]
-    public string SnapshotLocation { get; set; }
+    [NamedParameter("delete", ShortName = 'd')]
+    public string BlackListName { get; set; }
 
-    public DeleteSnapshotCommand(RequestBus requestBus)
+    [NamedParameter("pot", ShortName = 'p')]
+    public string PotName { get; set; }
+
+    public DeleteBlackListCommand(RequestBus requestBus)
     {
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
     }
 
     public async Task Execute()
     {
-        DeleteSnapshotRequest request = new()
+        DeleteBlackListRequest request = new()
         {
-            Location = SnapshotLocation
+            PotName = PotName,
+            BlackListName = BlackListName
         };
 
         await requestBus.PlaceRequest(request);

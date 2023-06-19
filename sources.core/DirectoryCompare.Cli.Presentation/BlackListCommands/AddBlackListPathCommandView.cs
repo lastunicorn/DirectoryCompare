@@ -17,13 +17,12 @@
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Commando;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Presentation.BlackListCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.BlackListCommands;
+
+public class AddBlackListPathCommandView : IView<AddBlackListPathCommand>
 {
-    public class AddBlackListPathCommandView : IView<AddBlackListPathCommandModel>
+    public void Display(AddBlackListPathCommand command)
     {
-        public void Display(AddBlackListPathCommandModel commandModel)
-        {
-            CustomConsole.WriteLineSuccess($"Black list path successfully added to '{commandModel.PotName}>{commandModel.BlackListName}'.");
-        }
+        CustomConsole.WriteLineSuccess($"Black list path successfully added to '{command.PotName}>{command.BlackListName}'.");
     }
 }

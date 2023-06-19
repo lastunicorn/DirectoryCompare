@@ -14,16 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.ConsoleFramework;
 using DustInTheWind.ConsoleTools;
+using DustInTheWind.ConsoleTools.Commando;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Presentation.BlackListCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.BlackListCommands;
+
+public class RemoveBlackListPathCommandView : IView<RemoveBlackListPathCommand>
 {
-    public class RemoveBlackListPathCommandView : ICommandView<RemoveBlackListPathCommandModel>
+    public void Display(RemoveBlackListPathCommand command)
     {
-        public void Display(RemoveBlackListPathCommandModel commandModel)
-        {
-            CustomConsole.WriteLineSuccess($"Black list path successfully removed from '{commandModel.PotName}>{commandModel.BlackListName}'.");
-        }
+        CustomConsole.WriteLineSuccess($"Black list path successfully removed from '{command.PotName}>{command.BlackListName}'.");
     }
 }

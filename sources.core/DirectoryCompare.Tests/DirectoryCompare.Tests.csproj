@@ -48,4 +48,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       <Folder Include="Domain\Comparison\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <EmbeddedResource Include="Adapters\DataAccess\PotImportExportTests\Data-EmptySnapshot.json" />
+      <EmbeddedResource Include="Adapters\DataAccess\PotImportExportTests\Data-SnapshotWithOneDirectory.json" />
+      <EmbeddedResource Include="Adapters\DataAccess\PotImportExportTests\Data-SnapshotWithOneFile.json" />
+      <EmbeddedResource Include="Adapters\PotFiles\SnapshotFileModel\Data-DummyFile.json" />
+      <None Remove="Adapters\DataAccess\EmptySnapshot.json" />
+    </ItemGroup>
+
 </Project>

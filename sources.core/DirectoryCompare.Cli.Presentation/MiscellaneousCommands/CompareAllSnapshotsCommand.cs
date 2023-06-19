@@ -1,4 +1,4 @@
-// DirectoryCompare
+﻿// DirectoryCompare
 // Copyright (C) 2017-2020 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -15,36 +15,35 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.DeleteSnapshot;
+using DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.CompareAllSnapshots;
 using DustInTheWind.DirectoryCompare.Infrastructure;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands;
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands;
 
-// Example:
-// snapshot -d <snapshot-location>
-// snapshot --delete <snapshot-location>
-
-[NamedCommand("delete-snapshot")]
-[CommandOrder(6)]
-public class DeleteSnapshotCommand : IConsoleCommand
+[NamedCommand("compare-all", Description = "Compares all snapshots in a pot with the previous snapshot.")]
+public class CompareAllSnapshotsCommand : IConsoleCommand
 {
     private readonly RequestBus requestBus;
 
-    [NamedParameter("location", ShortName = 'l')]
-    public string SnapshotLocation { get; set; }
+    [AnonymousParameter(Order = 1)]
+    public string PotName { get; set; }
 
-    public DeleteSnapshotCommand(RequestBus requestBus)
+    [AnonymousParameter(Order = 2)]
+    public string ExportName { get; set; }
+
+    public CompareAllSnapshotsCommand(RequestBus requestBus)
     {
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
     }
 
     public async Task Execute()
     {
-        DeleteSnapshotRequest request = new()
+        CompareAllSnapshotsRequest request = new()
         {
-            Location = SnapshotLocation
+            PotName = PotName,
+            ExportName = ExportName
         };
 
-        await requestBus.PlaceRequest(request);
+        await requestBus.PlaceRequest<CompareAllSnapshotsRequest, CompareAllSnapshotsResponse>(request);
     }
 }

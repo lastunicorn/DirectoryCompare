@@ -21,7 +21,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands;
 
 public class CreatePotCommandView : IView<CreatePotCommand>
 {
-    public void Display(CreatePotCommand commandModel)
+    public void Display(CreatePotCommand command)
     {
         CustomConsole.WriteLineSuccess("Pot created successfully.");
     }

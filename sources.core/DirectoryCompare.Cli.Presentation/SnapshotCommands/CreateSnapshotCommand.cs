@@ -14,11 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.ComponentModel;
 using DustInTheWind.ConsoleTools.Commando;
 using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot;
 using DustInTheWind.DirectoryCompare.DiskAnalysis;
-using DustInTheWind.DirectoryCompare.Domain;
 using DustInTheWind.DirectoryCompare.Infrastructure;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands;
@@ -27,21 +25,24 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands;
 // snapshot -c <pot-name>
 // snapshot --create <pot-name>
 
-[NamedCommand("create-snapshot", Order = 5, Description = "Creates a new snapshot in a specific pot.")]
-public class CreateSnapshotCommand : CommandBase<CreateSnapshotCommandView>
+[NamedCommand("create-snapshot", Description = "Creates a new snapshot in a specific pot.")]
+[CommandOrder(5)]
+public class CreateSnapshotCommand : IConsoleCommand
 {
     private readonly RequestBus requestBus;
+    private readonly CreateSnapshotCommandView view;
 
     [NamedParameter("pot", ShortName = 'p')]
     public string PotName { get; set; }
 
     public CreateSnapshotCommand(RequestBus requestBus)
-        : base(new CreateSnapshotCommandView())
     {
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
+
+        view = new CreateSnapshotCommandView();
     }
 
-    public override async Task Execute()
+    public async Task Execute()
     {
         CreateSnapshotRequest request = new()
         {
@@ -52,12 +53,12 @@ public class CreateSnapshotCommand : CommandBase<CreateSnapshotCommandView>
         diskAnalysisProgress.Progress += HandleAnalysisProgress;
 
         diskAnalysisProgress.WaitToEnd();
-        Console.FinishDisplay();
+        view.FinishDisplay();
     }
 
     private void HandleAnalysisProgress(object sender, DiskAnalysisProgressEventArgs value)
     {
         int percentage = (int)value.Percentage;
-        Console.HandleProgress(percentage);
+        view.HandleProgress(percentage);
     }
 }

@@ -24,21 +24,24 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands;
 // Example:
 // read <pot-name>
 
-[NamedCommand("read", Order = 9, Description = "Creates a new snapshot in a specific pot.")]
-public class ReadSnapshotCommand : CommandBase<ReadSnapshotCommandView>
+[NamedCommand("read", Description = "Creates a new snapshot in a specific pot.")]
+[CommandOrder(9)]
+public class ReadSnapshotCommand : IConsoleCommand
 {
     private readonly RequestBus requestBus;
+    private readonly CreateSnapshotCommandView view;
 
     [AnonymousParameter(Order = 1)]
     public string PotName { get; set; }
 
     public ReadSnapshotCommand(RequestBus requestBus)
-        : base(new ReadSnapshotCommandView())
     {
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
+        
+        view = new CreateSnapshotCommandView();
     }
 
-    public override async Task Execute()
+    public async Task Execute()
     {
         CreateSnapshotRequest request = new()
         {
@@ -49,12 +52,12 @@ public class ReadSnapshotCommand : CommandBase<ReadSnapshotCommandView>
         diskAnalysisProgress.Progress += HandleAnalysisProgress;
 
         diskAnalysisProgress.WaitToEnd();
-        Console.FinishDisplay();
+        view.FinishDisplay();
     }
 
     private void HandleAnalysisProgress(object sender, DiskAnalysisProgressEventArgs value)
     {
         int percentage = (int)value.Percentage;
-        Console.HandleProgress(percentage);
+        view.HandleProgress(percentage);
     }
 }

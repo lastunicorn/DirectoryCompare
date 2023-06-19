@@ -14,16 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.ConsoleFramework;
 using DustInTheWind.ConsoleTools;
+using DustInTheWind.ConsoleTools.Commando;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands;
+
+internal class CompareAllSnapshotsCommandView : ViewBase<CompareAllSnapshotsCommand>
 {
-    internal class CompareAllSnapshotsCommandView : ICommandView<CompareAllSnapshotsCommandModelModel>
+    public override void Display(CompareAllSnapshotsCommand command)
     {
-        public void Display(CompareAllSnapshotsCommandModelModel commandModelModel)
-        {
-            CustomConsole.WriteLine("Results exported successfully.");
-        }
+        CustomConsole.WriteLine("Results exported successfully.");
     }
 }

@@ -14,20 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using DustInTheWind.ConsoleFramework;
+using DustInTheWind.ConsoleTools.Commando;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Presentation.BlackListCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.BlackListCommands;
+
+public class DisplayBlackListCommandView : IView<DisplayBlackListCommand>
 {
-    public class DisplayBlackListCommandView : ICommandView<DisplayBlackListCommandModel>
+    public void Display(DisplayBlackListCommand command)
     {
-        public void Display(DisplayBlackListCommandModel commandModel)
-        {
-            if (commandModel.BlackList == null)
-                return;
+        if (command.BlackList == null)
+            return;
 
-            foreach (string path in commandModel.BlackList)
-                Console.WriteLine(path);
-        }
+        foreach (string path in command.BlackList)
+            Console.WriteLine(path);
     }
 }

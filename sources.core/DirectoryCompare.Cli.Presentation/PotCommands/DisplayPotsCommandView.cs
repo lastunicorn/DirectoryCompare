@@ -32,7 +32,7 @@ internal class DisplayPotsCommandView : ViewBase<DisplayPotsCommand>
             WriteInfo("There are no Pots.");
     }
 
-    private static void DisplayPots(List<Pot> pots)
+    private void DisplayPots(List<Pot> pots)
     {
         foreach (Pot pot in pots)
         {

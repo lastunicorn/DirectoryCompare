@@ -24,8 +24,9 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands;
 // Example:
 // snapshot <snapshot-location>
 
-[NamedCommand("snapshot", Order = 7)]
-public class DisplaySnapshotCommand : ICommand
+[NamedCommand("snapshot")]
+[CommandOrder(7)]
+public class DisplaySnapshotCommand : IConsoleCommand
 {
     private readonly RequestBus requestBus;
 

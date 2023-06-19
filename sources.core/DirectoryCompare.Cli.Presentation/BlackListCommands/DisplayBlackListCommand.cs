@@ -15,42 +15,41 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.DirectoryCompare.Application.BlackListArea.AddBlackPath;
+using DustInTheWind.DirectoryCompare.Cli.Application.BlackListArea.PresentBlackList;
+using DustInTheWind.DirectoryCompare.Domain.Utils;
 using DustInTheWind.DirectoryCompare.Infrastructure;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.BlackListCommands;
 // Example:
-// black-list -a <path> -p <pot-name> -b <black-list-name>
-// black-list --add <path> --pot <pot-name> --black-list <black-list-name>
+// blacklist <black-list-name> -p <pot-name>
+// blacklist <black-list-name> --pot <pot-name>
 
-[NamedCommand("black-list")]
-public class AddBlackListPathCommandModel : ICommand
+[NamedCommand("black-list", Description = "Displays the list of paths from a black list.")]
+public class DisplayBlackListCommand : IConsoleCommand
 {
     private readonly RequestBus requestBus;
+
+    [AnonymousParameter(Order = 1)]
+    public string BlackListName { get; set; }
 
     [NamedParameter("pot", ShortName = 'p')]
     public string PotName { get; set; }
 
-    [NamedParameter("black-list", ShortName = 'b', IsOptional = true)]
-    public string BlackListName { get; set; }
+    public DiskPathCollection BlackList { get; private set; }
 
-    [NamedParameter("add", ShortName = 'a')]
-    public string Path { get; set; }
-
-    public AddBlackListPathCommandModel(RequestBus requestBus)
+    public DisplayBlackListCommand(RequestBus requestBus)
     {
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
     }
 
     public async Task Execute()
     {
-        AddBlackPathRequest request = new()
+        PresentBlackListRequest request = new()
         {
             PotName = PotName,
-            BlackList = BlackListName,
-            Path = Path
+            BlackListName = BlackListName
         };
 
-        await requestBus.PlaceRequest(request);
+        BlackList = await requestBus.PlaceRequest<PresentBlackListRequest, DiskPathCollection>(request);
     }
 }

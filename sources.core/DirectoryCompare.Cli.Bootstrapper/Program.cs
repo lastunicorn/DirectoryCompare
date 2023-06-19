@@ -25,13 +25,13 @@ using DustInTheWind.DirectoryCompare.Cli.Bootstrapper.Setup;
 using DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands;
 using DustInTheWind.DirectoryCompare.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.ImportExport;
-using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.DirectoryCompare.Infrastructure;
 using DustInTheWind.DirectoryCompare.LogAccess;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 using DustInTheWind.DirectoryCompare.Ports.LogAccess;
 using MediatR.Extensions.Autofac.DependencyInjection;
 using MediatR.Extensions.Autofac.DependencyInjection.Builder;
+using DustInTheWind.ConsoleTools.Controls;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Bootstrapper
 {
@@ -41,31 +41,13 @@ namespace DustInTheWind.DirectoryCompare.Cli.Bootstrapper
         {
             try
             {
+                ApplicationHeader applicationHeader = new();
+                applicationHeader.Display();
+                
                 Log4NetSetup.Setup();
                 
                 ConsoleTools.Commando.Application application = ApplicationBuilder.Create()
-                    .ConfigureServices(containerBuilder =>
-                    {
-                        containerBuilder.RegisterType<ConsoleRemoveDuplicatesLog>().As<IRemoveDuplicatesLog>().SingleInstance();
-                        containerBuilder.RegisterType<Log>().As<ILog>().SingleInstance();
-                        
-                        containerBuilder.RegisterType<PotRepository>().As<IPotRepository>();
-                        containerBuilder.RegisterType<BlackListRepository>().As<IBlackListRepository>();
-                        containerBuilder.RegisterType<SnapshotRepository>().As<ISnapshotRepository>();
-                        containerBuilder.RegisterType<PotImportExport>().As<IPotImportExport>();
-                        
-                        Assembly applicationAssembly = typeof(PresentPotsUseCase).Assembly;
-                        
-                        MediatRConfiguration mediatRConfiguration = MediatRConfigurationBuilder
-                            .Create(applicationAssembly)
-                            .WithAllOpenGenericHandlerTypesRegistered()
-                            .Build();
-                        
-                        containerBuilder.RegisterMediatR(mediatRConfiguration);
-                        
-                        containerBuilder.RegisterType<RequestBus>().AsSelf();
-                        containerBuilder.RegisterType<SnapshotFactory>().AsSelf();
-                    })
+                    .ConfigureServices(ConfigureServices)
                     .RegisterCommandsFrom(typeof(DisplayPotsCommand).Assembly)
                     .HandleExceptions(EventHandler)
                     .Build();
@@ -77,6 +59,29 @@ namespace DustInTheWind.DirectoryCompare.Cli.Bootstrapper
             {
                 CustomConsole.WriteLineError(ex);
             }
+        }
+
+        private static void ConfigureServices(ContainerBuilder containerBuilder)
+        {
+            containerBuilder.RegisterType<ConsoleRemoveDuplicatesLog>().As<IRemoveDuplicatesLog>().SingleInstance();
+            containerBuilder.RegisterType<Log>().As<ILog>().SingleInstance();
+
+            containerBuilder.RegisterType<PotRepository>().As<IPotRepository>();
+            containerBuilder.RegisterType<BlackListRepository>().As<IBlackListRepository>();
+            containerBuilder.RegisterType<SnapshotRepository>().As<ISnapshotRepository>();
+            containerBuilder.RegisterType<PotImportExport>().As<IPotImportExport>();
+
+            Assembly applicationAssembly = typeof(PresentPotsUseCase).Assembly;
+
+            MediatRConfiguration mediatRConfiguration = MediatRConfigurationBuilder
+                .Create(applicationAssembly)
+                .WithAllOpenGenericHandlerTypesRegistered()
+                .Build();
+
+            containerBuilder.RegisterMediatR(mediatRConfiguration);
+
+            containerBuilder.RegisterType<RequestBus>().AsSelf();
+            containerBuilder.RegisterType<SnapshotFactory>().AsSelf();
         }
 
         private static void EventHandler(object sender, UnhandledApplicationExceptionEventArgs ex)

@@ -21,14 +21,17 @@ using DustInTheWind.DirectoryCompare.Infrastructure;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands;
 
-[NamedCommand("compare", Order = 10, Description = "Compares two snapshots.")]
-public class CompareSnapshotsCommand : ICommand
+[NamedCommand("compare", Description = "Compares two snapshots.")]
+[CommandOrder(10)]
+public class CompareSnapshotsCommand : IConsoleCommand
 {
     private readonly RequestBus requestBus;
 
-    [AnonymousParameter(Order = 1)] public string Snapshot1Location { get; set; }
+    [AnonymousParameter(Order = 1)]
+    public string Snapshot1Location { get; set; }
 
-    [AnonymousParameter(Order = 2)] public string Snapshot2Location { get; set; }
+    [AnonymousParameter(Order = 2)]
+    public string Snapshot2Location { get; set; }
 
     [AnonymousParameter(Order = 3, IsOptional = true)]
     public string ExportName { get; set; }

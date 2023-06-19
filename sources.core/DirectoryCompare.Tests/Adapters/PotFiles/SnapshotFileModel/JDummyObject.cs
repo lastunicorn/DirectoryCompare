@@ -19,7 +19,7 @@ using DustInTheWind.DirectoryCompare.Domain.Utils;
 
 namespace DustInTheWind.DirectoryCompare.Tests.Adapters.PotFiles.SnapshotFileModel;
 
-internal class JFileFields
+internal class JDummyObject
 {
     public string FileName { get; set; }
 

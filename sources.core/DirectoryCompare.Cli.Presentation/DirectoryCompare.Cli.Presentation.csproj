@@ -27,15 +27,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <ItemGroup>
         <Compile Remove="ResultExporters\ConsoleComparisonReducedExporter.cs" />
-        <Compile Remove="BlackListCommands\**" />
-        <Compile Remove="MiscellaneousCommands\RemoveDuplicatesCommandModel.cs" />
-        <Compile Remove="MiscellaneousCommands\RemoveDuplicatesCommandView.cs" />
-        <Compile Remove="MiscellaneousCommands\CompareAllSnapshotsCommandModelModel.cs" />
-        <Compile Remove="MiscellaneousCommands\CompareAllSnapshotsCommandView.cs" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="ConsoleTools.Commando" Version="2.0.0-beta.3" />
+        <PackageReference Include="ConsoleTools.Commando" Version="2.0.0-beta.5" />
     </ItemGroup>
 
     <ItemGroup>
@@ -43,14 +38,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <ProjectReference Include="..\DirectoryCompare.DiskAnalysis\DirectoryCompare.DiskAnalysis.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.Infrastructure\DirectoryCompare.Infrastructure.csproj" PrivateAssets="All" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <EmbeddedResource Remove="BlackListCommands\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="BlackListCommands\**" />
     </ItemGroup>
 
 </Project>

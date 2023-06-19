@@ -25,57 +25,27 @@ namespace DustInTheWind.DirectoryCompare.Tests.Adapters.PotFiles.SnapshotFileMod
 
 public class JFileReaderTests
 {
-    private const string Json = @"{
-  ""n"": ""filename.extension"",
-  ""s"": ""15"",
-  ""m"": ""2011-12-21T11:14:16Z"",
-  ""h"": ""DQZQ""
-}";
+    private readonly JDummyObject jDummyObject;
 
-    [Fact]
-    public void HavingJsonNodeRepresentingFullFile_WhenJFileIsParsed_FileNameIsReadCorrectly()
+    public JFileReaderTests()
     {
-        JFileFields fields = ReadAllFieldsFrom(Json);
-
-        fields.FileName.Should().Be("filename.extension");
+        string json = EmbeddedResources.GetContent("Data-DummyFile.json");
+        JFileReader jFileReader = CreateReader(json);
+        jDummyObject = ReadAllFieldsFrom(jFileReader);
     }
 
-    [Fact]
-    public void HavingJsonNodeRepresentingFullFile_WhenJFileIsParsed_FileSizeIsReadCorrectly()
+    private static JFileReader CreateReader(string json)
     {
-        JFileFields fields = ReadAllFieldsFrom(Json);
-
-        DataSize expected = DataSize.FromBytes(15);
-        fields.FileSize.Should().Be(expected);
-    }
-
-    [Fact]
-    public void HavingJsonNodeRepresentingFullFile_WhenJFileIsParsed_LastModifiedTimeIsReadCorrectly()
-    {
-        JFileFields fields = ReadAllFieldsFrom(Json);
-
-        DateTime expected = new DateTime(2011, 12, 21, 11, 14, 16);
-        fields.LastModifiedTime.Should().Be(expected);
-    }
-
-    [Fact]
-    public void HavingJsonNodeRepresentingFullFile_WhenJFileIsParsed_FileHashIsReadCorrectly()
-    {
-        JFileFields fields = ReadAllFieldsFrom(Json);
-
-        FileHash expected = new FileHash(new byte[] { 13, 6, 80 });
-        fields.FileHash.Should().Be(expected);
-    }
-
-    private static JFileFields ReadAllFieldsFrom(string json)
-    {
-        using StringReader stringReader = new(json);
-        using JsonTextReader jsonTextReader = new(stringReader);
+        StringReader stringReader = new(json);
+        JsonTextReader jsonTextReader = new(stringReader);
         jsonTextReader.Read();
 
-        JFileFields fields = new();
+        return new JFileReader(jsonTextReader);
+    }
 
-        JFileReader jFileReader = new(jsonTextReader);
+    private static JDummyObject ReadAllFieldsFrom(JFileReader jFileReader)
+    {
+        JDummyObject fields = new();
 
         while (true)
         {
@@ -111,5 +81,32 @@ public class JFileReaderTests
         }
 
         return fields;
+    }
+
+    [Fact]
+    public void HavingJsonNodeRepresentingFullFile_WhenJFileIsParsed_FileNameIsReadCorrectly()
+    {
+        jDummyObject.FileName.Should().Be("filename.extension");
+    }
+
+    [Fact]
+    public void HavingJsonNodeRepresentingFullFile_WhenJFileIsParsed_FileSizeIsReadCorrectly()
+    {
+        DataSize expected = DataSize.FromBytes(15);
+        jDummyObject.FileSize.Should().Be(expected);
+    }
+
+    [Fact]
+    public void HavingJsonNodeRepresentingFullFile_WhenJFileIsParsed_LastModifiedTimeIsReadCorrectly()
+    {
+        DateTime expected = new(2011, 12, 21, 11, 14, 16);
+        jDummyObject.LastModifiedTime.Should().Be(expected);
+    }
+
+    [Fact]
+    public void HavingJsonNodeRepresentingFullFile_WhenJFileIsParsed_FileHashIsReadCorrectly()
+    {
+        FileHash expected = new(new byte[] { 13, 6, 80 });
+        jDummyObject.FileHash.Should().Be(expected);
     }
 }

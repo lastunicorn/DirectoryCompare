@@ -27,8 +27,9 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands;
 // find-duplicates snap1 -x
 // find-duplicates snap1 --check-files-existence
 
-[NamedCommand("find-duplicates", Order = 11)]
-internal class FindDuplicatesCommand : ICommand
+[NamedCommand("find-duplicates")]
+[CommandOrder(11)]
+internal class FindDuplicatesCommand : IConsoleCommand
 {
     private readonly RequestBus requestBus;
     private FileDuplicates fileDuplicates;

@@ -20,9 +20,9 @@ using DustInTheWind.DirectoryCompare.Domain.Utils;
 using FluentAssertions;
 using Xunit;
 
-namespace DustInTheWind.DirectoryCompare.Tests.Adapters.DataAccess;
+namespace DustInTheWind.DirectoryCompare.Tests.Adapters.DataAccess.PotImportExportTests;
 
-public class PotImportExportTests
+public class WriteSnapshotTests
 {
     [Fact]
     public void SerializeEmptySnapshot()
@@ -34,11 +34,7 @@ public class PotImportExportTests
             OriginalPath = @"c:\aaa"
         };
 
-        const string expected = @"{
-  ""serializer-id"": ""9e93055d-7bde-4f55-b340-dd5a4880d96e"",
-  ""original-path"": ""c:\\aaa"",
-  ""creation-time"": ""2019-05-08T19:17:00Z""
-}";
+        string expected = EmbeddedResources.GetContent("Data-EmptySnapshot.json");
         PerformTest(snapshot, expected);
     }
 
@@ -56,16 +52,7 @@ public class PotImportExportTests
             Name = "directory-name"
         });
 
-        const string expected = @"{
-  ""serializer-id"": ""9e93055d-7bde-4f55-b340-dd5a4880d96e"",
-  ""original-path"": ""c:\\aaa"",
-  ""creation-time"": ""2019-05-08T19:17:00Z"",
-  ""d"": [
-    {
-      ""n"": ""directory-name""
-    }
-  ]
-}";
+        string expected = EmbeddedResources.GetContent("Data-SnapshotWithOneDirectory.json");
         PerformTest(snapshot, expected);
     }
 
@@ -86,19 +73,7 @@ public class PotImportExportTests
             Hash = new byte[] { 0, 1, 2 }
         });
 
-        const string expected = @"{
-  ""serializer-id"": ""9e93055d-7bde-4f55-b340-dd5a4880d96e"",
-  ""original-path"": ""c:\\aaa"",
-  ""creation-time"": ""2019-05-08T19:17:00Z"",
-  ""f"": [
-    {
-      ""n"": ""file.extension"",
-      ""s"": 43008,
-      ""m"": ""2011-05-13T12:56:20"",
-      ""h"": ""AAEC""
-    }
-  ]
-}";
+        string expected = EmbeddedResources.GetContent("Data-SnapshotWithOneFile.json");
         PerformTest(snapshot, expected);
     }
 

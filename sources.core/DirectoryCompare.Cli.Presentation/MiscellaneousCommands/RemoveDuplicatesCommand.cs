@@ -1,4 +1,4 @@
-// DirectoryCompare
+﻿// DirectoryCompare
 // Copyright (C) 2017-2020 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -15,34 +15,43 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.DirectoryCompare.Cli.Application.PotArea.DeletePot;
+using DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.RemoveDuplicates;
+using DustInTheWind.DirectoryCompare.Domain;
+using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Infrastructure;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands;
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands;
 
-// Examples:
-// pot -d <pot-name>
-// pot --delete <pot-name>
-
-[NamedCommand("delete-pot", Description = "Deletes the pot with the specified name.")]
-[CommandOrder(2)]
-public class DeletePotCommand : IConsoleCommand
+[NamedCommand("remove-duplicates")]
+public class RemoveDuplicatesCommand : IConsoleCommand
 {
     private readonly RequestBus requestBus;
 
     [AnonymousParameter(Order = 1)]
-    public string PotName { get; set; }
+    public SnapshotLocation LeftSnapshotLocation { get; set; }
 
-    public DeletePotCommand(RequestBus requestBus)
+    [AnonymousParameter(Order = 2)]
+    public SnapshotLocation RightSnapshotLocation { get; set; }
+
+    [AnonymousParameter(Order = 3)]
+    public ComparisonSide FileToRemove { get; set; }
+
+    [AnonymousParameter(Order = 4, IsOptional = true)]
+    public string DestinationDirectory { get; set; }
+
+    public RemoveDuplicatesCommand(RequestBus requestBus)
     {
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
     }
 
     public async Task Execute()
     {
-        DeletePotRequest request = new()
+        RemoveDuplicatesRequest request = new()
         {
-            PotName = PotName
+            SnapshotLeft = LeftSnapshotLocation,
+            SnapshotRight = RightSnapshotLocation,
+            FileToRemove = FileToRemove,
+            DestinationDirectory = DestinationDirectory
         };
 
         await requestBus.PlaceRequest(request);

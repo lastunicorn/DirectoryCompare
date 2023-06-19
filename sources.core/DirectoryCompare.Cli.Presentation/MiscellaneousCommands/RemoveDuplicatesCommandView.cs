@@ -14,16 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.ConsoleFramework;
 using DustInTheWind.ConsoleTools;
+using DustInTheWind.ConsoleTools.Commando;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands;
+
+internal class RemoveDuplicatesCommandView : ViewBase<RemoveDuplicatesCommand>
 {
-    internal class RemoveDuplicatesCommandView : ICommandView<RemoveDuplicatesCommandModel>
+    public override void Display(RemoveDuplicatesCommand command)
     {
-        public void Display(RemoveDuplicatesCommandModel command)
-        {
-            CustomConsole.WriteLineSuccess("Finished removing duplicates.");
-        }
+        CustomConsole.WriteLineSuccess("Finished removing duplicates.");
     }
 }
