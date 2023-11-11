@@ -23,68 +23,56 @@ namespace DustInTheWind.DirectoryCompare.DataAccess;
 
 public class PotRepository : IPotRepository
 {
+    private readonly Database database;
+
+    public PotRepository(Database database)
+    {
+        this.database = database ?? throw new ArgumentNullException(nameof(database));
+    }
+
     public List<Pot> Get()
     {
-        return Directory.GetDirectories(Database.Location)
-            .Select(x => new PotDirectory(x))
-            .Select(ToPot)
-            .Where(x => x != null)
+        return database.PotDirectories
+            .Select(x => x.ToPot())
             .ToList();
     }
 
     public Pot Get(string name)
     {
-        PotDirectory potDirectory = PotDirectory.FromPotName(name, Database.Location);
-        return ToPot(potDirectory);
-    }
+        PotDirectory potDirectory = database.PotDirectories
+            .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == name);
 
-    private static Pot ToPot(PotDirectory potDirectory)
-    {
-        if (!potDirectory.IsValid)
-            return null;
-
-        JPotInfoFile jPotInfoFile = potDirectory.GetInfoFile();
-        bool success = jPotInfoFile.TryOpen();
-
-        if (!success)
-            return null;
-
-        return new Pot
-        {
-            Guid = potDirectory.PotGuid,
-            Name = jPotInfoFile.Content.Name,
-            Path = jPotInfoFile.Content.Path,
-            Description = jPotInfoFile.Content.Description
-        };
+        return potDirectory?.ToPot();
     }
 
     public bool Exists(string name)
     {
-        PotDirectory potDirectory = PotDirectory.FromPotName(name, Database.Location);
-        return potDirectory.IsValid;
+        PotDirectory potDirectory = database.PotDirectories
+            .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == name);
+
+        return potDirectory != null;
     }
 
     public void Add(Pot pot)
     {
-        PotDirectory potDirectory = PotDirectory.FromPotName(pot.Name, Database.Location);
-        potDirectory.Create();
+        PotDirectory potDirectory = database.NewPotDirectory();
 
-        JPotInfoFile jPotInfoFile = potDirectory.GetInfoFile();
-        jPotInfoFile.Content = new JPotInfo
+        potDirectory.InfoFile.Content = new JPotInfo
         {
             Name = pot.Name,
             Path = pot.Path,
             Description = pot.Description
         };
 
-        jPotInfoFile.Save();
+        potDirectory.InfoFile.Save();
     }
 
     public void Delete(string name)
     {
-        PotDirectory potDirectory = PotDirectory.FromPotName(name, Database.Location);
+        PotDirectory potDirectory = database.PotDirectories
+            .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == name);
 
-        if (potDirectory.IsValid)
+        if (potDirectory != null)
             potDirectory.Delete();
         else
             throw new Exception($"Pot '{name}' does not exist.");

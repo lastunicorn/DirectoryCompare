@@ -22,19 +22,32 @@ namespace DustInTheWind.DirectoryCompare.JFiles;
 public class PotDirectory
 {
     private const string SnapshotsDirectoryName = "snapshots";
-
-    //public static PotDirectory Empty { get; } = new(null);
+    private JPotInfoFile jPotInfoFile;
 
     public string RootPath { get; private set; }
 
     public string FullPath { get; private set; }
+
+    public JPotInfoFile InfoFile
+    {
+        get
+        {
+            if (jPotInfoFile == null)
+            {
+                jPotInfoFile = GetInfoFile();
+                jPotInfoFile.TryOpen();
+            }
+
+            return jPotInfoFile;
+        }
+    }
 
     public Guid PotGuid
     {
         get
         {
             if (string.IsNullOrEmpty(FullPath))
-                throw new Exception("Invalid pot directory path.");
+                throw new Exception("Pot directory path is invalid.");
 
             string directoryName = Path.GetFileName(FullPath);
 
@@ -50,7 +63,7 @@ public class PotDirectory
             }
             catch (Exception ex)
             {
-                throw new Exception("Invalid pot directory path.", ex);
+                throw new Exception("Pot directory name is invalid.", ex);
             }
         }
     }
@@ -59,12 +72,16 @@ public class PotDirectory
     {
         get
         {
-            if (FullPath == null || !Directory.Exists(FullPath))
+            bool directoryExists = Directory.Exists(FullPath);
+            if (!directoryExists)
+                return false;
+            
+            Guid potGuid = PotGuid;
+
+            if (!InfoFile.IsValid)
                 return false;
 
-            JPotInfoFile jPotInfoFile = GetInfoFile();
-            jPotInfoFile.TryOpen();
-            return jPotInfoFile.IsValid;
+            return true;
         }
     }
 
@@ -97,7 +114,7 @@ public class PotDirectory
         return potDirectory ?? PotDirectory.New(storagePath);
     }
 
-    private static PotDirectory New(string storagePath)
+    public static PotDirectory New(string storagePath)
     {
         return new PotDirectory
         {

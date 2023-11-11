@@ -14,28 +14,26 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.IO;
 using System.Reflection;
 using log4net;
 using log4net.Config;
 using log4net.Repository;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Bootstrapper.Setup
+namespace DustInTheWind.DirectoryCompare.Cli.Bootstrapper;
+
+internal static class Log4NetSetup
 {
-    internal class Log4NetSetup
+    public static void Setup()
     {
-        public static void Setup()
-        {
-            Assembly assembly = Assembly.GetEntryAssembly();
+        Assembly assembly = Assembly.GetEntryAssembly();
 
-            ILoggerRepository loggerRepository = LogManager.GetRepository(assembly);
-            
-            string assemblyFilePath = assembly.Location;
-            string applicationDirectoryPath = Path.GetDirectoryName(assemblyFilePath);
-            string configFilePath = Path.Combine(applicationDirectoryPath, "Log4Net.config");
-            FileInfo configFileInfo = new(configFilePath);
+        ILoggerRepository loggerRepository = LogManager.GetRepository(assembly);
 
-            XmlConfigurator.Configure(loggerRepository, configFileInfo);
-        }
+        string assemblyFilePath = assembly.Location;
+        string applicationDirectoryPath = Path.GetDirectoryName(assemblyFilePath);
+        string configFilePath = Path.Combine(applicationDirectoryPath, "Log4Net.config");
+        FileInfo configFileInfo = new(configFilePath);
+
+        XmlConfigurator.Configure(loggerRepository, configFileInfo);
     }
 }

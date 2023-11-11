@@ -14,49 +14,57 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 using DustInTheWind.DirectoryCompare.JFiles;
 using DustInTheWind.DirectoryCompare.JFiles.BlacklistFileModel;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 
-namespace DustInTheWind.DirectoryCompare.DataAccess
+namespace DustInTheWind.DirectoryCompare.DataAccess;
+
+public class BlackListRepository : IBlackListRepository
 {
-    public class BlackListRepository : IBlackListRepository
+    private readonly Database database;
+
+    public BlackListRepository(Database database)
     {
-        public DiskPathCollection Get(string potName)
-        {
-            PotDirectory potDirectory = PotDirectory.FromPotName(potName, Database.Location);
+        this.database = database ?? throw new ArgumentNullException(nameof(database));
+    }
 
-            if (!potDirectory.IsValid)
-                throw new Exception($"There is no pot with name '{potName}'.");
+    public DiskPathCollection Get(string potName)
+    {
+        PotDirectory potDirectory = database.PotDirectories
+            .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == potName);
 
-            BlackListFile blackListFile = potDirectory.OpenBlackListFile("bl");
-            return new DiskPathCollection(blackListFile.Items);
-        }
+        if (potDirectory == null)
+            throw new Exception($"There is no pot with name '{potName}'.");
 
-        public void Add(string potName, DiskPath path)
-        {
-            PotDirectory potDirectory = PotDirectory.FromPotName(potName, Database.Location);
+        BlackListFile blackListFile = potDirectory.OpenBlackListFile("bl");
+        return new DiskPathCollection(blackListFile.Items);
+    }
 
-            if (!potDirectory.IsValid)
-                throw new Exception($"There is no pot with name '{potName}'.");
+    public void Add(string potName, DiskPath path)
+    {
+        PotDirectory potDirectory = database.PotDirectories
+            .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == potName);
 
-            BlackListFile blackListFile = potDirectory.OpenBlackListFile("bl");
-            blackListFile.Add(path);
-            blackListFile.Save();
-        }
+        if (potDirectory == null)
+            throw new Exception($"There is no pot with name '{potName}'.");
 
-        public void Delete(string potName, DiskPath path)
-        {
-            PotDirectory potDirectory = PotDirectory.FromPotName(potName, Database.Location);
+        BlackListFile blackListFile = potDirectory.OpenBlackListFile("bl");
+        blackListFile.Add(path);
+        blackListFile.Save();
+    }
 
-            if (!potDirectory.IsValid)
-                throw new Exception($"There is no pot with name '{potName}'.");
+    public void Delete(string potName, DiskPath path)
+    {
+        PotDirectory potDirectory = database.PotDirectories
+            .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == potName);
 
-            BlackListFile blackListFile = potDirectory.OpenBlackListFile("bl");
-            blackListFile.Remove(path);
-            blackListFile.Save();
-        }
+        if (potDirectory == null)
+            throw new Exception($"There is no pot with name '{potName}'.");
+
+        BlackListFile blackListFile = potDirectory.OpenBlackListFile("bl");
+        blackListFile.Remove(path);
+        blackListFile.Save();
     }
 }

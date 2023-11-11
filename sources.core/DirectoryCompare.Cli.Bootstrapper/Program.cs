@@ -19,9 +19,10 @@ using Autofac;
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Commando;
 using DustInTheWind.ConsoleTools.Commando.Setup.Autofac;
+using DustInTheWind.ConsoleTools.Controls;
 using DustInTheWind.DirectoryCompare.Cli.Application;
 using DustInTheWind.DirectoryCompare.Cli.Application.PotArea.PresentPots;
-using DustInTheWind.DirectoryCompare.Cli.Bootstrapper.Setup;
+using DustInTheWind.DirectoryCompare.Cli.Bootstrapper.ConfigAccess;
 using DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands;
 using DustInTheWind.DirectoryCompare.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.ImportExport;
@@ -31,63 +32,73 @@ using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 using DustInTheWind.DirectoryCompare.Ports.LogAccess;
 using MediatR.Extensions.Autofac.DependencyInjection;
 using MediatR.Extensions.Autofac.DependencyInjection.Builder;
-using DustInTheWind.ConsoleTools.Controls;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Bootstrapper
+namespace DustInTheWind.DirectoryCompare.Cli.Bootstrapper;
+
+internal static class Program
 {
-    internal static class Program
+    private static async Task Main(string[] args)
     {
-        private static async Task Main(string[] args)
+        try
         {
-            try
-            {
-                ApplicationHeader applicationHeader = new();
-                applicationHeader.Display();
-                
-                Log4NetSetup.Setup();
-                
-                ConsoleTools.Commando.Application application = ApplicationBuilder.Create()
-                    .ConfigureServices(ConfigureServices)
-                    .RegisterCommandsFrom(typeof(DisplayPotsCommand).Assembly)
-                    .HandleExceptions(EventHandler)
-                    .Build();
+            ApplicationHeader applicationHeader = new();
+            applicationHeader.Display();
 
-                await application.RunAsync(args);
+            Log4NetSetup.Setup();
 
-            }
-            catch (Exception ex)
-            {
-                CustomConsole.WriteLineError(ex);
-            }
-        }
-
-        private static void ConfigureServices(ContainerBuilder containerBuilder)
-        {
-            containerBuilder.RegisterType<ConsoleRemoveDuplicatesLog>().As<IRemoveDuplicatesLog>().SingleInstance();
-            containerBuilder.RegisterType<Log>().As<ILog>().SingleInstance();
-
-            containerBuilder.RegisterType<PotRepository>().As<IPotRepository>();
-            containerBuilder.RegisterType<BlackListRepository>().As<IBlackListRepository>();
-            containerBuilder.RegisterType<SnapshotRepository>().As<ISnapshotRepository>();
-            containerBuilder.RegisterType<PotImportExport>().As<IPotImportExport>();
-
-            Assembly applicationAssembly = typeof(PresentPotsUseCase).Assembly;
-
-            MediatRConfiguration mediatRConfiguration = MediatRConfigurationBuilder
-                .Create(applicationAssembly)
-                .WithAllOpenGenericHandlerTypesRegistered()
+            ConsoleTools.Commando.Application application = ApplicationBuilder.Create()
+                .ConfigureServices(ConfigureServices)
+                .RegisterCommandsFrom(typeof(DisplayPotsCommand).Assembly)
+                .HandleExceptions(EventHandler)
                 .Build();
 
-            containerBuilder.RegisterMediatR(mediatRConfiguration);
-
-            containerBuilder.RegisterType<RequestBus>().AsSelf();
-            containerBuilder.RegisterType<SnapshotFactory>().AsSelf();
+            await application.RunAsync(args);
         }
-
-        private static void EventHandler(object sender, UnhandledApplicationExceptionEventArgs ex)
+        catch (Exception ex)
         {
-            // ILog log = ServiceProvider.GetService<ILog>();
-            // log.WriteError(ex.ToString());
+            CustomConsole.WriteLineError(ex);
         }
+    }
+
+    private static void ConfigureServices(ContainerBuilder containerBuilder)
+    {
+        containerBuilder.RegisterType<ConsoleRemoveDuplicatesLog>().As<IRemoveDuplicatesLog>().SingleInstance();
+        containerBuilder.RegisterType<Log>().As<ILog>().SingleInstance();
+        containerBuilder.RegisterType<Config>().As<IConfig>().SingleInstance();
+
+        containerBuilder
+            .Register(x =>
+            {
+                IConfig config = x.Resolve<IConfig>();
+                
+                Database database = new();
+                database.Open(config.ConnectionString);
+                
+                return database;
+            })
+            .AsSelf()
+            .SingleInstance();
+        containerBuilder.RegisterType<PotRepository>().As<IPotRepository>();
+        containerBuilder.RegisterType<BlackListRepository>().As<IBlackListRepository>();
+        containerBuilder.RegisterType<SnapshotRepository>().As<ISnapshotRepository>();
+        containerBuilder.RegisterType<PotImportExport>().As<IPotImportExport>();
+
+        Assembly applicationAssembly = typeof(PresentPotsUseCase).Assembly;
+
+        MediatRConfiguration mediatRConfiguration = MediatRConfigurationBuilder
+            .Create(applicationAssembly)
+            .WithAllOpenGenericHandlerTypesRegistered()
+            .Build();
+
+        containerBuilder.RegisterMediatR(mediatRConfiguration);
+
+        containerBuilder.RegisterType<RequestBus>().AsSelf();
+        containerBuilder.RegisterType<SnapshotFactory>().AsSelf();
+    }
+
+    private static void EventHandler(object sender, UnhandledApplicationExceptionEventArgs ex)
+    {
+        // ILog log = ServiceProvider.GetService<ILog>();
+        // log.WriteError(ex.ToString());
     }
 }

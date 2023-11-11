@@ -32,19 +32,22 @@ internal class DisplayPotsCommandView : ViewBase<DisplayPotsCommand>
             WriteInfo("There are no Pots.");
     }
 
-    private void DisplayPots(List<Pot> pots)
+    private static void DisplayPots(List<Pot> pots)
     {
-        foreach (Pot pot in pots)
-        {
-            string guid = pot.Guid.ToString()[..8];
-            CustomConsole.Write(guid);
-            CustomConsole.Write(" ");
+        foreach (Pot pot in pots) 
+            DisplayPot(pot);
+    }
 
-            CustomConsole.WriteEmphasized(pot.Name);
-            CustomConsole.Write(" - ");
+    private static void DisplayPot(Pot pot)
+    {
+        string guid = pot.Guid.ToString()[..8];
+        CustomConsole.Write(guid);
+        CustomConsole.Write(" ");
 
-            CustomConsole.WriteEmphasized(pot.Path);
-            CustomConsole.WriteLine();
-        }
+        CustomConsole.WriteEmphasized(pot.Name);
+        CustomConsole.Write(" - ");
+
+        CustomConsole.WriteEmphasized(pot.Path);
+        CustomConsole.WriteLine();
     }
 }

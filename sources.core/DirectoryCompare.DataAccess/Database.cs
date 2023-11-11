@@ -14,10 +14,42 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.JFiles;
+
 namespace DustInTheWind.DirectoryCompare.DataAccess;
 
-internal static class Database
+public class Database
 {
-    //public static string Location => "/nfs/YubabaData/Alez/diverse/DirectoryCompare";
-    public static string Location => "/home/alez/Desktop/dircmp-database";
+    private string location;
+
+    public IEnumerable<PotDirectory> PotDirectories
+    {
+        get
+        {
+            if (location == null)
+                throw new Exception("The database is not opened.");
+
+            return Directory.GetDirectories(location)
+                .Select(x => new PotDirectory(x))
+                .Where(x => x.IsValid);
+        }
+    }
+
+    public void Open(string connectionString)
+    {
+        if (!Directory.Exists(connectionString))
+            throw new Exception($"Database '{connectionString}' does not exist.");
+
+        location = connectionString;
+    }
+
+    public PotDirectory NewPotDirectory()
+    {
+        if (location == null)
+            throw new Exception("The database is not opened.");
+
+        PotDirectory potDirectory = PotDirectory.New(location);
+        potDirectory.Create();
+        return potDirectory;
+    }
 }
