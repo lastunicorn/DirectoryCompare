@@ -14,12 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
-using MediatR;
+namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot;
-
-public class CreateSnapshotRequest : IRequest<IDiskAnalysisProgress>, IRequest
+public class ErrorEncounteredEventArgs : EventArgs
 {
-    public string PotName { get; set; }
+    public Exception Exception { get; }
+
+    public string Path { get; }
+
+    public ErrorEncounteredEventArgs(Exception exception, string path)
+    {
+        Exception = exception ?? throw new ArgumentNullException(nameof(exception));
+        Path = path ?? throw new ArgumentNullException(nameof(path));
+    }
 }

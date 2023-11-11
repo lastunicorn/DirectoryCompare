@@ -14,18 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using DustInTheWind.DirectoryCompare.Domain.Utils;
+namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
 
-namespace DustInTheWind.DirectoryCompare.DiskAnalysis
+public class DiskAnalysisProgressEventArgs : EventArgs
 {
-    public class DiskReaderStartingEventArgs : EventArgs
-    {
-        public DiskPathCollection BlackList { get; }
+    public float Percentage { get; }
 
-        public DiskReaderStartingEventArgs(DiskPathCollection blackList)
-        {
-            BlackList = blackList;
-        }
+    public DiskAnalysisProgressEventArgs(float percentage)
+    {
+        Percentage = percentage;
     }
 }

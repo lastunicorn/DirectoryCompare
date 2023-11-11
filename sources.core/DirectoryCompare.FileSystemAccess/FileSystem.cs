@@ -1,5 +1,5 @@
-﻿// DirectoryCompare
-// Copyright (C) 2017-2020 Dust in the Wind
+// DirectoryCompare
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,12 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
-using MediatR;
+using DustInTheWind.DirectoryCompare.Domain.Utils;
+using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot;
+namespace DustInTheWind.DirectoryCompare.FileSystemAccess;
 
-public class CreateSnapshotRequest : IRequest<IDiskAnalysisProgress>, IRequest
+public class FileSystem : IFileSystem
 {
-    public string PotName { get; set; }
+    public IDiskCrawler CreateCrawler(string path, DiskPathCollection blackList)
+    {
+        return new DiskCrawler(path, blackList);
+    }
 }

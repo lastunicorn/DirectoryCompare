@@ -14,9 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.DiskAnalysis;
+using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
+using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 using DustInTheWind.DirectoryCompare.Ports.LogAccess;
 using MediatR;
 
@@ -28,14 +29,17 @@ public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest, IDis
     private readonly IPotRepository potRepository;
     private readonly IBlackListRepository blackListRepository;
     private readonly ISnapshotRepository snapshotRepository;
+    private readonly IFileSystem fileSystem;
 
     public CreateSnapshotUseCase(ILog log, IPotRepository potRepository,
-        IBlackListRepository blackListRepository, ISnapshotRepository snapshotRepository)
+        IBlackListRepository blackListRepository, ISnapshotRepository snapshotRepository,
+        IFileSystem fileSystem)
     {
         this.log = log ?? throw new ArgumentNullException(nameof(log));
         this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
         this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
         this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
+        this.fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
     }
 
     public Task<IDiskAnalysisProgress> Handle(CreateSnapshotRequest request, CancellationToken cancellationToken)
@@ -60,7 +64,7 @@ public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest, IDis
     {
         log.WriteInfo("Scanning path: {0}", pot.Path);
 
-        DiskAnalysis.DiskAnalysis diskAnalysis = new()
+        DiskAnalysis.DiskAnalysis diskAnalysis = new(fileSystem)
         {
             RootPath = pot.Path,
             SnapshotWriter = snapshotRepository.CreateWriter(pot.Name),

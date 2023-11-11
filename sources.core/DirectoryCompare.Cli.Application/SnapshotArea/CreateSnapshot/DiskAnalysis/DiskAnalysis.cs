@@ -16,15 +16,16 @@
 
 using System.Diagnostics;
 using System.Security.Cryptography;
-using DustInTheWind.DirectoryCompare.DiskAnalysis.DiskCrawling;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.ImportExport;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
+using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 
-namespace DustInTheWind.DirectoryCompare.DiskAnalysis;
+namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
 
 public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
 {
+    private readonly IFileSystem fileSystem;
     private readonly Stopwatch stopwatch = new();
     private readonly ManualResetEventSlim manualResetEventSlim = new(false);
     private readonly MD5 md5;
@@ -53,8 +54,9 @@ public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
 
     public TimeSpan ElapsedTime => stopwatch.Elapsed;
 
-    public DiskAnalysis()
+    public DiskAnalysis(IFileSystem fileSystem)
     {
+        this.fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
         md5 = MD5.Create();
     }
 
@@ -65,7 +67,9 @@ public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
         try
         {
             rootedBlackList = BlackList?.PrependPath(RootPath) ?? new DiskPathCollection();
-            OnStarting(new DiskReaderStartingEventArgs(rootedBlackList));
+            
+            DiskReaderStartingEventArgs eventArgs = new(rootedBlackList);
+            OnStarting(eventArgs);
 
             SnapshotWriter?.Open(RootPath, analysisId);
 
@@ -108,7 +112,7 @@ public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
     {
         return Task.Run(() =>
         {
-            long dataSize = new DiskCrawler(RootPath, rootedBlackList)
+            long dataSize = fileSystem.CreateCrawler(RootPath, rootedBlackList)
                 .AsParallel()
                 .Where(x => x.Action == CrawlerAction.FileFound)
                 .Select(x => new FileInfo(x.Path))
@@ -122,7 +126,7 @@ public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
     {
         return Task.Run(() =>
         {
-            DiskCrawler diskCrawler = new(RootPath, rootedBlackList);
+            IDiskCrawler diskCrawler = fileSystem.CreateCrawler(RootPath, rootedBlackList);
 
             foreach (CrawlerStep crawlerStep in diskCrawler)
             {

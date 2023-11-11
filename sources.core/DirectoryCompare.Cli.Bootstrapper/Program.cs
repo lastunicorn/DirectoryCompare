@@ -27,10 +27,12 @@ using DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands;
 using DustInTheWind.DirectoryCompare.ConfigAccess;
 using DustInTheWind.DirectoryCompare.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.ImportExport;
+using DustInTheWind.DirectoryCompare.FileSystemAccess;
 using DustInTheWind.DirectoryCompare.Infrastructure;
 using DustInTheWind.DirectoryCompare.LogAccess;
 using DustInTheWind.DirectoryCompare.Ports.ConfigAccess;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
+using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 using DustInTheWind.DirectoryCompare.Ports.LogAccess;
 using MediatR.Extensions.Autofac.DependencyInjection;
 using MediatR.Extensions.Autofac.DependencyInjection.Builder;
@@ -86,6 +88,7 @@ internal static class Program
         containerBuilder.RegisterType<BlackListRepository>().As<IBlackListRepository>();
         containerBuilder.RegisterType<SnapshotRepository>().As<ISnapshotRepository>();
         containerBuilder.RegisterType<PotImportExport>().As<IPotImportExport>();
+        containerBuilder.RegisterType<FileSystem>().As<IFileSystem>();
 
         Assembly applicationAssembly = typeof(PresentPotsUseCase).Assembly;
 

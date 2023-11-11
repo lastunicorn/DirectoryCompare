@@ -14,12 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
-using MediatR;
+using DustInTheWind.DirectoryCompare.Domain.Utils;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot;
+namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
 
-public class CreateSnapshotRequest : IRequest<IDiskAnalysisProgress>, IRequest
+public class DiskReaderStartingEventArgs : EventArgs
 {
-    public string PotName { get; set; }
+    public DiskPathCollection BlackList { get; }
+
+    public DiskReaderStartingEventArgs(DiskPathCollection blackList)
+    {
+        BlackList = blackList;
+    }
 }
