@@ -16,60 +16,65 @@
 
 namespace DustInTheWind.DirectoryCompare.Domain.Utils;
 
-public class Percentage
+public class Progress
 {
-    private readonly DataSize minValue;
-    private readonly DataSize size;
-    private DataSize underlyingValue;
-        
-    public float Value { get; private set; }
+    private DataSize value;
 
-    public DataSize UnderlyingValue
+    public DataSize MinValue { get; }
+
+    public DataSize MaxValue { get; }
+
+    public DataSize Size { get; }
+
+    public float Percentage { get; private set; }
+
+    public DataSize Value
     {
-        get => underlyingValue;
+        get => value;
         set
         {
-            underlyingValue = value;
+            this.value = value;
             RecalculatePercentageValue();
         }
     }
 
-    public Percentage()
+    public Progress()
         : this(0, 100)
     {
     }
 
-    public Percentage(DataSize maxValue)
+    public Progress(DataSize maxValue)
         : this(0, maxValue)
     {
     }
 
-    public Percentage(DataSize minValue, DataSize maxValue)
+    public Progress(DataSize minValue, DataSize maxValue)
     {
         if (maxValue <= minValue)
             throw new ArgumentOutOfRangeException(nameof(maxValue));
 
-        this.minValue = minValue;
-        size = maxValue - minValue;
+        MinValue = minValue;
+        MaxValue = maxValue;
+        Size = maxValue - minValue;
     }
 
     private void RecalculatePercentageValue()
     {
-        Value = (float)(UnderlyingValue - minValue) * 100 / size;
+        Percentage = (float)(Value - MinValue) * 100 / Size;
     }
 
     public override string ToString()
     {
-        return $"{Value:N2}%";
+        return $"{Percentage:N2}%";
     }
 
-    public static implicit operator float(Percentage percentage)
+    public static implicit operator float(Progress progress)
     {
-        return percentage.Value;
+        return progress.Percentage;
     }
 
-    public static implicit operator double(Percentage percentage)
+    public static implicit operator double(Progress progress)
     {
-        return percentage.Value;
+        return progress.Percentage;
     }
 }

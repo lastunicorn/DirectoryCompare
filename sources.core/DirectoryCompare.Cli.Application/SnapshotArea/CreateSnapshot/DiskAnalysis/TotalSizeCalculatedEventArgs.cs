@@ -1,5 +1,5 @@
-﻿// DirectoryCompare
-// Copyright (C) 2017-2020 Dust in the Wind
+// DirectoryCompare
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,13 +18,12 @@ using DustInTheWind.DirectoryCompare.Domain.Utils;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
 
-public class DiskAnalysisProgressEventArgs : EventArgs
+public class TotalSizeCalculatedEventArgs : EventArgs
 {
-    public float Percentage { get; init; }
-    
-    public DataSize ProcessedSize { get; init; }
-    
-    public DataSize TotalSize { get; init; }
+    public DataSize Size { get; }
 
-    public TimeSpan ElapsedTime { get; init; }
+    public TotalSizeCalculatedEventArgs(DataSize size)
+    {
+        Size = size;
+    }
 }

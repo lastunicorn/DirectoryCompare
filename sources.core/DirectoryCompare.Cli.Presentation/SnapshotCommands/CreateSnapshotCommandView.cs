@@ -14,29 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.ComponentModel;
-using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.DirectoryCompare.Domain;
+using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands;
 
 public class CreateSnapshotCommandView : ViewBase<CreateSnapshotCommand>
 {
-    private int lastValue;
-
     public override void Display(CreateSnapshotCommand command)
     {
-        lastValue = -1;
     }
 
-    public void HandleProgress(int percentage)
+    public void HandleProgress(DiskAnalysisProgressEventArgs eventArgs)
     {
-        if (Math.Abs(lastValue - percentage) > 0.1)
-        {
-            Console.WriteLine($"Progress: {percentage}%");
-            lastValue = percentage;
-        }
+        Console.WriteLine($"Progress: {eventArgs.Percentage:0.00} % ({eventArgs.ProcessedSize} / {eventArgs.TotalSize})");
     }
 
     public void FinishDisplay()

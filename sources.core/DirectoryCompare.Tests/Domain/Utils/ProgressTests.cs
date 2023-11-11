@@ -20,7 +20,7 @@ using Xunit;
 
 namespace DustInTheWind.DirectoryCompare.Tests.Domain.Utils;
 
-public class PercentageTests
+public class ProgressTests
 {
     [Theory]
     [InlineData(50, 0)]
@@ -29,11 +29,11 @@ public class PercentageTests
     [InlineData(51, 1)]
     public void Test(int underlyingValue, float expectedPercentageValue)
     {
-        Percentage percentage = new(50, 150)
+        Progress progress = new(50, 150)
         {
-            UnderlyingValue = underlyingValue
+            Value = underlyingValue
         };
 
-        percentage.Value.Should().Be(expectedPercentageValue);
+        progress.Percentage.Should().Be(expectedPercentageValue);
     }
 }

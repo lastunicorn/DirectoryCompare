@@ -31,9 +31,10 @@ public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
     private readonly MD5 md5;
 
     private string rootPath;
-    private Percentage progressPercentage;
+    private Progress progress;
     private Guid analysisId;
     private DiskPathCollection rootedBlackList;
+    private float lastPercentageAnnounced;
 
     public string RootPath
     {
@@ -48,8 +49,11 @@ public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
     public DiskAnalysisState State { get; private set; }
 
     public event EventHandler<ErrorEncounteredEventArgs> ErrorEncountered;
+
     public event EventHandler<DiskReaderStartingEventArgs> Starting;
+
     public event EventHandler<DiskAnalysisProgressEventArgs> Progress;
+
     public event EventHandler Finished;
 
     public TimeSpan ElapsedTime => stopwatch.Elapsed;
@@ -67,16 +71,19 @@ public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
         try
         {
             rootedBlackList = BlackList?.PrependPath(RootPath) ?? new DiskPathCollection();
-            
+
             DiskReaderStartingEventArgs eventArgs = new(rootedBlackList);
             OnStarting(eventArgs);
 
             SnapshotWriter?.Open(RootPath, analysisId);
 
             DataSize totalSize = await CalculateTotalSize();
-            progressPercentage = new Percentage(totalSize);
+            progress = new Progress(totalSize);
 
+            AnnounceProgress();
             await CalculateHashes();
+            if (Math.Abs(lastPercentageAnnounced - 100) > float.Epsilon)
+                AnnounceProgress();
 
             SnapshotWriter?.Close();
         }
@@ -95,8 +102,9 @@ public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
 
         stopwatch.Start();
         manualResetEventSlim.Reset();
-        progressPercentage = null;
+        progress = null;
         analysisId = Guid.NewGuid();
+        lastPercentageAnnounced = 0;
     }
 
     private void ConcludeAnalysis()
@@ -173,7 +181,7 @@ public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
         HFile hFile = AnalyzeFile(crawlerItem);
         SnapshotWriter?.Add(hFile);
 
-        if (progressPercentage != null)
+        if (progress != null)
             UpdateProgress(hFile.Size);
     }
 
@@ -206,10 +214,25 @@ public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
 
     private void UpdateProgress(DataSize dataSize)
     {
-        progressPercentage.UnderlyingValue += dataSize;
+        progress.Value += dataSize;
+        float currentPercentageValue = progress.Percentage;
 
-        DiskAnalysisProgressEventArgs args = new(progressPercentage);
+        if (Math.Abs(lastPercentageAnnounced - currentPercentageValue) >= 0.1)
+            AnnounceProgress();
+    }
+
+    private void AnnounceProgress()
+    {
+        DiskAnalysisProgressEventArgs args = new()
+        {
+            Percentage = progress,
+            TotalSize = progress.Size,
+            ProcessedSize = progress.Value - progress.MinValue,
+            ElapsedTime = stopwatch.Elapsed
+        };
         OnProgress(args);
+
+        lastPercentageAnnounced = progress.Percentage;
     }
 
     private void ProcessError(ICrawlerItem crawlerItem)

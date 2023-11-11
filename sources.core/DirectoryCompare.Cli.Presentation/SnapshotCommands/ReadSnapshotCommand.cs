@@ -37,7 +37,7 @@ public class ReadSnapshotCommand : IConsoleCommand
     public ReadSnapshotCommand(RequestBus requestBus)
     {
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
-        
+
         view = new CreateSnapshotCommandView();
     }
 
@@ -55,9 +55,8 @@ public class ReadSnapshotCommand : IConsoleCommand
         view.FinishDisplay();
     }
 
-    private void HandleAnalysisProgress(object sender, DiskAnalysisProgressEventArgs value)
+    private void HandleAnalysisProgress(object sender, DiskAnalysisProgressEventArgs e)
     {
-        int percentage = (int)value.Percentage;
-        view.HandleProgress(percentage);
+        view.HandleProgress(e);
     }
 }

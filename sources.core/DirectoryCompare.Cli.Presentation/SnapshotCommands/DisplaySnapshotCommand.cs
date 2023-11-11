@@ -30,7 +30,8 @@ public class DisplaySnapshotCommand : IConsoleCommand
 {
     private readonly RequestBus requestBus;
 
-    [AnonymousParameter(Order = 1)] public string SnapshotLocation { get; set; }
+    [AnonymousParameter(Order = 1)]
+    public string SnapshotLocation { get; set; }
 
     public Snapshot Snapshot { get; private set; }
 
