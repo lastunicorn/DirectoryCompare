@@ -59,8 +59,8 @@ public class JsonFileBase<TContent>
 
         JsonSerializer serializer = new();
         Content = (TContent)serializer.Deserialize(jsonTextReader, typeof(TContent));
-        
-        return true;
+
+        return Content != null;
     }
 
     public void Save()

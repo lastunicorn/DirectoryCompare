@@ -37,7 +37,7 @@ internal class DisplayPotCommandView : ViewBase<DisplayPotCommand>
         WriteValue("Name", pot.Name);
 
         string guid = pot.Guid.ToString();
-        WriteValue("GUID", pot.Name);
+        WriteValue("GUID", pot.Guid);
 
         WriteValue("Path", pot.Path);
 

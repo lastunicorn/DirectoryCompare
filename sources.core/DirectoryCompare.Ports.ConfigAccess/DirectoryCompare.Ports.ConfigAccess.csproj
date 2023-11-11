@@ -16,14 +16,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<Project>
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <Version>1.8.0.0</Version>
-        <Product>Directory Compare</Product>
-        <Company>Dust in the Wind</Company>
-        <Copyright>Copyright © Dust in the Wind 2017-2020</Copyright>
-        <Authors/>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <AssemblyName>DustInTheWind.DirectoryCompare.Ports.ConfigAccess</AssemblyName>
+        <RootNamespace>DustInTheWind.DirectoryCompare.Ports.ConfigAccess</RootNamespace>
     </PropertyGroup>
 
 </Project>

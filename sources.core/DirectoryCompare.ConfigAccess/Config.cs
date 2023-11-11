@@ -14,9 +14,21 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.Cli.Bootstrapper.ConfigAccess;
+using DustInTheWind.DirectoryCompare.Ports.ConfigAccess;
+using Microsoft.Extensions.Configuration;
 
-public interface IConfig
+namespace DustInTheWind.DirectoryCompare.ConfigAccess;
+
+public class Config : IConfig
 {
-    string ConnectionString { get; }
+    private IConfiguration configuration;
+
+    public string ConnectionString => configuration["ConnectionString"];
+    
+    public Config()
+    {
+        configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .Build();
+    }
 }

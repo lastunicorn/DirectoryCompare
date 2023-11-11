@@ -31,6 +31,6 @@ namespace DustInTheWind.DirectoryCompare.Domain.PotModel
         
         public string Description { get; init; }
 
-        public List<Snapshot> Snapshots { get; set; }
+        public List<Snapshot> Snapshots { get; } = new();
     }
 }

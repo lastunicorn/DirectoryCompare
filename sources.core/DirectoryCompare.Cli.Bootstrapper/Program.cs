@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System.Globalization;
 using System.Reflection;
 using Autofac;
 using DustInTheWind.ConsoleTools;
@@ -22,12 +23,13 @@ using DustInTheWind.ConsoleTools.Commando.Setup.Autofac;
 using DustInTheWind.ConsoleTools.Controls;
 using DustInTheWind.DirectoryCompare.Cli.Application;
 using DustInTheWind.DirectoryCompare.Cli.Application.PotArea.PresentPots;
-using DustInTheWind.DirectoryCompare.Cli.Bootstrapper.ConfigAccess;
 using DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands;
+using DustInTheWind.DirectoryCompare.ConfigAccess;
 using DustInTheWind.DirectoryCompare.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.ImportExport;
 using DustInTheWind.DirectoryCompare.Infrastructure;
 using DustInTheWind.DirectoryCompare.LogAccess;
+using DustInTheWind.DirectoryCompare.Ports.ConfigAccess;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 using DustInTheWind.DirectoryCompare.Ports.LogAccess;
 using MediatR.Extensions.Autofac.DependencyInjection;
@@ -52,6 +54,8 @@ internal static class Program
                 .HandleExceptions(EventHandler)
                 .Build();
 
+            application.Starting += HandleStarting;
+            
             await application.RunAsync(args);
         }
         catch (Exception ex)
@@ -100,5 +104,13 @@ internal static class Program
     {
         // ILog log = ServiceProvider.GetService<ILog>();
         // log.WriteError(ex.ToString());
+    }
+
+    private static void HandleStarting(object sender, EventArgs e)
+    {
+        CultureInfo cultureInfo = new("ro-RO");
+        
+        CultureInfo.CurrentCulture = cultureInfo;
+        CultureInfo.CurrentUICulture = cultureInfo;
     }
 }

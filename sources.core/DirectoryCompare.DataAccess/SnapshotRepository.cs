@@ -57,8 +57,10 @@ public class SnapshotRepository : ISnapshotRepository
 
         foreach (SnapshotFile snapshotFile in allSnapshotFiles)
         {
-            snapshotFile.Open();
-            yield return snapshotFile.Content.ToSnapshot();
+            bool success = snapshotFile.Open();
+            
+            if (success)
+                yield return snapshotFile.Content.ToSnapshot();
         }
     }
 

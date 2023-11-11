@@ -22,7 +22,7 @@ public interface IPotRepository
 {
     List<Pot> Get();
 
-    Pot Get(string name);
+    Pot Get(string name,  bool includeSnapshots = false);
 
     void Add(Pot pot);
 

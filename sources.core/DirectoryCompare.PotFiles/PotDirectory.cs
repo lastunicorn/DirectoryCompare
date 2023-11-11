@@ -76,8 +76,6 @@ public class PotDirectory
             if (!directoryExists)
                 return false;
             
-            Guid potGuid = PotGuid;
-
             if (!InfoFile.IsValid)
                 return false;
 

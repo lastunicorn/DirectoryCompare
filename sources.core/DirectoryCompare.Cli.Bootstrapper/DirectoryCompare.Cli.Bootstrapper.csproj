@@ -31,21 +31,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <ItemGroup>
         <ProjectReference Include="..\DirectoryCompare.Cli.Application\DirectoryCompare.Cli.Application.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.Cli.Presentation\DirectoryCompare.Cli.Presentation.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.ConfigAccess\DirectoryCompare.ConfigAccess.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.DataAccess\DirectoryCompare.DataAccess.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.Infrastructure\DirectoryCompare.Infrastructure.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.LogAccess\DirectoryCompare.LogAccess.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.Ports.ConfigAccess\DirectoryCompare.Ports.ConfigAccess.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.Ports.LogAccess\DirectoryCompare.Ports.LogAccess.csproj" PrivateAssets="All" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="ConsoleTools.Commando.Setup.Autofac" Version="2.0.0-beta.5" />
+        <PackageReference Include="ConsoleTools.Commando.Setup.Autofac" Version="2.0.0" />
         <PackageReference Include="ConsoleTools.Controls" Version="1.1.0" />
-        <PackageReference Include="FluentValidation" Version="9.0.1" PrivateAssets="All" />
-        <PackageReference Include="MediatR" Version="12.0.1" />
-        <PackageReference Include="MediatR.Extensions.Autofac.DependencyInjection" Version="11.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
+        <PackageReference Include="FluentValidation" Version="11.8.0" PrivateAssets="All" />
+        <PackageReference Include="MediatR" Version="12.1.1" />
+        <PackageReference Include="MediatR.Extensions.Autofac.DependencyInjection" Version="11.2.0" />
     </ItemGroup>
 
     <ItemGroup>

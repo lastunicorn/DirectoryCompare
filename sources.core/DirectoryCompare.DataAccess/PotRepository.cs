@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.DataAccess.Transformations;
+using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.DirectoryCompare.JFiles;
 using DustInTheWind.DirectoryCompare.JFiles.PotInfoFileModel;
@@ -37,12 +39,23 @@ public class PotRepository : IPotRepository
             .ToList();
     }
 
-    public Pot Get(string name)
+    public Pot Get(string name, bool includeSnapshots)
     {
         PotDirectory potDirectory = database.PotDirectories
             .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == name);
 
-        return potDirectory?.ToPot();
+        Pot pot = potDirectory?.ToPot();
+
+        if (pot != null && includeSnapshots)
+        {
+            IEnumerable<Snapshot> snapshots = potDirectory.GetSnapshotFiles()
+                .Where(x => x.Open())
+                .Select(x=> x.Content.ToSnapshot());
+            
+            pot.Snapshots.AddRange(snapshots);
+        }
+
+        return pot;
     }
 
     public bool Exists(string name)
