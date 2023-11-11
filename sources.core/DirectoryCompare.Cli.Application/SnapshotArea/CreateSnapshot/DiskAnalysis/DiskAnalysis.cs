@@ -115,8 +115,8 @@ public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
             long dataSize = fileSystem.CreateCrawler(RootPath, rootedBlackList)
                 .AsParallel()
                 .Where(x => x.Action == CrawlerAction.FileFound)
-                .Select(x => new FileInfo(x.Path))
-                .Sum(x => x.Length);
+                .Select(x => (long)(ulong)x.Size)
+                .Sum();
 
             return (DataSize)dataSize;
         });
@@ -128,26 +128,26 @@ public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
         {
             IDiskCrawler diskCrawler = fileSystem.CreateCrawler(RootPath, rootedBlackList);
 
-            foreach (CrawlerStep crawlerStep in diskCrawler)
+            foreach (ICrawlerItem crawlerItem in diskCrawler)
             {
-                switch (crawlerStep.Action)
+                switch (crawlerItem.Action)
                 {
                     case CrawlerAction.DirectoryOpened:
-                        if (crawlerStep.Path != RootPath)
-                            AddDirectory(crawlerStep.Path);
+                        if (crawlerItem.Path != RootPath)
+                            AddDirectory(crawlerItem);
                         break;
 
                     case CrawlerAction.DirectoryClosed:
-                        if (crawlerStep.Path != RootPath)
+                        if (crawlerItem.Path != RootPath)
                             CloseDirectory();
                         break;
 
                     case CrawlerAction.FileFound:
-                        AddFile(crawlerStep.Path);
+                        AddFile(crawlerItem);
                         break;
 
                     case CrawlerAction.Error:
-                        ProcessError(crawlerStep);
+                        ProcessError(crawlerItem);
                         break;
 
                     default:
@@ -157,11 +157,9 @@ public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
         });
     }
 
-    private void AddDirectory(string directoryPath)
+    private void AddDirectory(ICrawlerItem crawlerItem)
     {
-        string directoryName = Path.GetFileName(directoryPath);
-        HDirectory hDirectory = new(directoryName);
-
+        HDirectory hDirectory = new(crawlerItem.Name);
         SnapshotWriter?.AddAndOpen(hDirectory);
     }
 
@@ -170,28 +168,27 @@ public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
         SnapshotWriter?.CloseDirectory();
     }
 
-    private void AddFile(string filePath)
+    private void AddFile(ICrawlerItem crawlerItem)
     {
-        HFile hFile = AnalyzeFile(filePath);
+        HFile hFile = AnalyzeFile(crawlerItem);
         SnapshotWriter?.Add(hFile);
 
         if (progressPercentage != null)
             UpdateProgress(hFile.Size);
     }
 
-    private HFile AnalyzeFile(string filePath)
+    private HFile AnalyzeFile(ICrawlerItem crawlerItem)
     {
         HFile hFile = new()
         {
-            Name = Path.GetFileName(filePath)
+            Name = crawlerItem.Name
         };
 
         try
         {
-            FileInfo fileInfo = new(filePath);
-            hFile.LastModifiedTime = fileInfo.LastWriteTimeUtc;
+            hFile.LastModifiedTime = crawlerItem.LastModifiedTime;
 
-            using FileStream stream = File.OpenRead(filePath);
+            using Stream stream = crawlerItem.ReadContent();
 
             hFile.Hash = md5.ComputeHash(stream);
             long size = stream.Length;
@@ -200,7 +197,7 @@ public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
         }
         catch (Exception ex)
         {
-            OnErrorEncountered(new ErrorEncounteredEventArgs(ex, filePath));
+            OnErrorEncountered(new ErrorEncounteredEventArgs(ex, crawlerItem.Path));
             hFile.Error = ex.Message;
         }
 
@@ -215,15 +212,15 @@ public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
         OnProgress(args);
     }
 
-    private void ProcessError(CrawlerStep crawlerStep)
+    private void ProcessError(ICrawlerItem crawlerItem)
     {
-        ErrorEncounteredEventArgs args = new(crawlerStep.Exception, crawlerStep.Path);
+        ErrorEncounteredEventArgs args = new(crawlerItem.Exception, crawlerItem.Path);
         OnErrorEncountered(args);
 
         HDirectory hDirectory = new()
         {
-            Name = Path.GetFileName(crawlerStep.Path),
-            Error = crawlerStep.Exception.Message
+            Name = crawlerItem.Name,
+            Error = crawlerItem.Exception.Message
         };
 
         SnapshotWriter?.Add(hDirectory);

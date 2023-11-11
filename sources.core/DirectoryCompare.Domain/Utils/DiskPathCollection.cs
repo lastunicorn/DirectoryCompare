@@ -14,50 +14,47 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 
-namespace DustInTheWind.DirectoryCompare.Domain.Utils
+namespace DustInTheWind.DirectoryCompare.Domain.Utils;
+
+public class DiskPathCollection : Collection<DiskPath>
 {
-    public class DiskPathCollection : Collection<DiskPath>
+    public DiskPathCollection()
     {
-        public DiskPathCollection()
-        {
-        }
+    }
 
-        public DiskPathCollection(IList<DiskPath> items)
-            : base(items)
-        {
-        }
+    public DiskPathCollection(IList<DiskPath> items)
+        : base(items)
+    {
+    }
 
-        public DiskPathCollection(IEnumerable<DiskPath> items)
-            : base(items.ToArray())
-        {
-        }
+    public DiskPathCollection(IEnumerable<DiskPath> items)
+        : base(items.ToArray())
+    {
+    }
 
-        public DiskPathCollection(IEnumerable<string> items)
-            : base(items.Select(x => new DiskPath(x)).ToArray())
-        {
-        }
+    public DiskPathCollection(IEnumerable<string> items)
+        : base(items.Select(x => new DiskPath(x)).ToArray())
+    {
+    }
 
-        /// <summary>
-        /// Prepends the specified path to all items that are not already rooted
-        /// and returns a new <see cref="DiskPathCollection"/> with the resulted items.
-        /// </summary>
-        public DiskPathCollection PrependPath(string path)
-        {
-            DiskPath[] newItems = Items
-                .Select(x => x.Prepend(path))
-                .ToArray();
+    /// <summary>
+    /// Prepends the specified path to all items that are not already rooted
+    /// and returns a new <see cref="DiskPathCollection"/> with the resulted items.
+    /// </summary>
+    public DiskPathCollection PrependPath(string path)
+    {
+        DiskPath[] newItems = Items
+            .Select(x => x.Prepend(path))
+            .ToArray();
 
-            return new DiskPathCollection(newItems);
-        }
+        return new DiskPathCollection(newItems);
+    }
 
-        public void AddRange(IEnumerable<DiskPath> items)
-        {
-            foreach (DiskPath item in items)
-                Items.Add(item);
-        }
+    public void AddRange(IEnumerable<DiskPath> items)
+    {
+        foreach (DiskPath item in items)
+            Items.Add(item);
     }
 }

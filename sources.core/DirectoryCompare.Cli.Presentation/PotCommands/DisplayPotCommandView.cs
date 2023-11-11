@@ -61,7 +61,7 @@ internal class DisplayPotCommandView : ViewBase<DisplayPotCommand>
     {
         foreach (Snapshot snapshot in snapshots)
         {
-            DateTime creationTime = snapshot.CreationTime;
+            DateTime creationTime = snapshot.CreationTime.ToLocalTime();
             Guid id = snapshot.Id;
 
             WriteValue(creationTime.ToString(CultureInfo.CurrentUICulture), id.ToString("D"));

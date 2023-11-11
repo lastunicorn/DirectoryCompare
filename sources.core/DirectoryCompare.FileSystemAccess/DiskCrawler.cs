@@ -31,19 +31,19 @@ internal class DiskCrawler : IDiskCrawler
         this.blackList = blackList ?? throw new ArgumentNullException(nameof(blackList));
     }
 
-    public IEnumerator<CrawlerStep> GetEnumerator()
+    public IEnumerator<ICrawlerItem> GetEnumerator()
     {
         if (!Directory.Exists(path))
         {
             Exception exception = new($"The path '{path}' does not exist.");
-            yield return CrawlerStep.Error(exception, path);
+            yield return new ErrorCrawlerItem(exception, path);
         }
         else
         {
             DirectoryCrawler directoryCrawler = new(path, blackList);
 
-            foreach (CrawlerStep crawlerStep in directoryCrawler)
-                yield return crawlerStep;
+            foreach (ICrawlerItem crawlerItem in directoryCrawler)
+                yield return crawlerItem;
         }
     }
 

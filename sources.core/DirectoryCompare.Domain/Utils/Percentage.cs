@@ -14,65 +14,62 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
+namespace DustInTheWind.DirectoryCompare.Domain.Utils;
 
-namespace DustInTheWind.DirectoryCompare.Domain.Utils
+public class Percentage
 {
-    public class Percentage
-    {
-        private readonly DataSize minValue;
-        private readonly DataSize size;
-        private DataSize underlyingValue;
+    private readonly DataSize minValue;
+    private readonly DataSize size;
+    private DataSize underlyingValue;
         
-        public float Value { get; private set; }
+    public float Value { get; private set; }
 
-        public DataSize UnderlyingValue
+    public DataSize UnderlyingValue
+    {
+        get => underlyingValue;
+        set
         {
-            get => underlyingValue;
-            set
-            {
-                underlyingValue = value;
-                RecalculatePercentageValue();
-            }
+            underlyingValue = value;
+            RecalculatePercentageValue();
         }
+    }
 
-        public Percentage()
-            : this(0, 100)
-        {
-        }
+    public Percentage()
+        : this(0, 100)
+    {
+    }
 
-        public Percentage(DataSize maxValue)
-            : this(0, maxValue)
-        {
-        }
+    public Percentage(DataSize maxValue)
+        : this(0, maxValue)
+    {
+    }
 
-        public Percentage(DataSize minValue, DataSize maxValue)
-        {
-            if (maxValue <= minValue)
-                throw new ArgumentOutOfRangeException(nameof(maxValue));
+    public Percentage(DataSize minValue, DataSize maxValue)
+    {
+        if (maxValue <= minValue)
+            throw new ArgumentOutOfRangeException(nameof(maxValue));
 
-            this.minValue = minValue;
-            size = maxValue - minValue;
-        }
+        this.minValue = minValue;
+        size = maxValue - minValue;
+    }
 
-        private void RecalculatePercentageValue()
-        {
-            Value = (float)(UnderlyingValue - minValue) * 100 / size;
-        }
+    private void RecalculatePercentageValue()
+    {
+        Value = (float)(UnderlyingValue - minValue) * 100 / size;
+    }
 
-        public override string ToString()
-        {
-            return $"{Value:N2}%";
-        }
+    public override string ToString()
+    {
+        return $"{Value:N2}%";
+    }
 
-        public static implicit operator float(Percentage percentage)
-        {
-            return percentage.Value;
-        }
+    public static implicit operator float(Percentage percentage)
+    {
+        return percentage.Value;
+    }
 
-        public static implicit operator double(Percentage percentage)
-        {
-            return percentage.Value;
-        }
+    public static implicit operator double(Percentage percentage)
+    {
+        return percentage.Value;
     }
 }

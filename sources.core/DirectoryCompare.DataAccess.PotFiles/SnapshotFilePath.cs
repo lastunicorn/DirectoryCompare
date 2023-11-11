@@ -67,7 +67,7 @@ namespace DustInTheWind.DirectoryCompare.JFiles
             int minute = int.Parse(match.Groups[5].Value);
             int second = int.Parse(match.Groups[6].Value);
 
-            return new DateTime(year, month, day, hour, minute, second);
+            return new DateTime(year, month, day, hour, minute, second, DateTimeKind.Utc);
         }
 
         public override string ToString()

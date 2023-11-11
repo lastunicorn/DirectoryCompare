@@ -1,5 +1,5 @@
-﻿// DirectoryCompare
-// Copyright (C) 2017-2020 Dust in the Wind
+// DirectoryCompare
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,17 +14,27 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.Domain.Utils;
+using DustInTheWind.DirectoryCompare.Domain.Utils;
 
-/// <summary>
-/// The measurement unit for data.
-/// </summary>
-public enum DataSizeUnit
+namespace DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
+
+public interface ICrawlerItem
 {
-    Unknown,
-    Byte,
-    Kilobyte,
-    Megabyte,
-    Gigabyte,
-    Terabyte
+    CrawlerAction Action { get; }
+
+    string Name { get; }
+    
+    string Path { get; }
+
+    long FileCount { get; }
+
+    long DirectoryCount { get; }
+
+    Exception Exception { get; }
+
+    DateTime LastModifiedTime { get; }
+
+    DataSize Size { get; }
+
+    Stream ReadContent();
 }
