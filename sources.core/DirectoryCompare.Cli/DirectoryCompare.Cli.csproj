@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
         <AssemblyTitle>DirectoryCompare.Cli</AssemblyTitle>
         <AssemblyName>DirectoryCompare</AssemblyName>
-        <RootNamespace>DustInTheWind.DirectoryCompare.Cli.Bootstrapper</RootNamespace>
+        <RootNamespace>DustInTheWind.DirectoryCompare.Cli</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

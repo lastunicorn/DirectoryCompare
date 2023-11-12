@@ -37,7 +37,7 @@ using DustInTheWind.DirectoryCompare.Ports.LogAccess;
 using MediatR.Extensions.Autofac.DependencyInjection;
 using MediatR.Extensions.Autofac.DependencyInjection.Builder;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Bootstrapper;
+namespace DustInTheWind.DirectoryCompare.Cli;
 
 internal static class Program
 {

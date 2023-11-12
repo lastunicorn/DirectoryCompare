@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CliApplication", "CliApplic
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Adapters", "Adapters", "{88D27769-CFD0-417C-96BB-64A05415B47C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.Cli.Bootstrapper", "DirectoryCompare.Cli.Bootstrapper\DirectoryCompare.Cli.Bootstrapper.csproj", "{F4445650-0D0C-43F2-A113-FA5A38093F62}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.Cli", "DirectoryCompare.Cli\DirectoryCompare.Cli.csproj", "{F4445650-0D0C-43F2-A113-FA5A38093F62}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.Cli.Presentation", "DirectoryCompare.Cli.Presentation\DirectoryCompare.Cli.Presentation.csproj", "{0609FA89-0257-4103-A74D-EAAA90340CAE}"
 EndProject

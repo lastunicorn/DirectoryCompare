@@ -19,7 +19,7 @@ using log4net;
 using log4net.Config;
 using log4net.Repository;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Bootstrapper;
+namespace DustInTheWind.DirectoryCompare.Cli;
 
 internal static class Log4NetSetup
 {
