@@ -73,47 +73,56 @@ public class SnapshotComparison
     {
         HItemCollection<HFile> files1 = directory1.Files;
         HItemCollection<HFile> files2 = directory2.Files;
-        List<HFile> onlyInDirectory2 = files2.ToList();
+
+        List<HFile> remainingInDirectory2 = files2.ToList();
 
         foreach (HFile file1 in files1)
         {
-            List<HFile> file2Matches = files2
-                .Where(x => x.Name == file1.Name || x.Hash == file1.Hash)
+            List<FileComparison> matches = remainingInDirectory2
+                .Select(x => new FileComparison(file1, x))
+                .Where(x => x.IsSomeMatch)
                 .ToList();
 
-            if (file2Matches.Count == 0)
+            if (matches.Count == 0)
             {
                 onlyInSnapshot1.Add(rootPath + file1.Name);
             }
             else
             {
-                foreach (HFile file2 in file2Matches)
+                List<FileComparison> perfectMatches = matches
+                    .Where(x => x.IsPerfectMatch)
+                    .ToList();
+
+                if (perfectMatches.Count == 0)
                 {
-                    ItemComparison itemComparison = new()
+                    foreach (FileComparison match in matches)
                     {
-                        RootPath = rootPath,
-                        Item1 = file1,
-                        Item2 = file2
-                    };
+                        ItemComparison itemComparison = new()
+                        {
+                            RootPath = rootPath,
+                            Item1 = match.File1,
+                            Item2 = match.File2
+                        };
 
-                    bool sameName = file1.Name == file2.Name;
-                    bool sameContent = file1.Hash == file2.Hash;
+                        if (!match.SameName)
+                            differentNames.Add(itemComparison);
 
-                    if (!sameName && sameContent)
-                        differentNames.Add(itemComparison);
+                        if (!match.SameContent)
+                            differentContent.Add(itemComparison);
 
-                    if (sameName && !sameContent)
-                        differentContent.Add(itemComparison);
-
-                    onlyInDirectory2.Remove(file2);
+                        remainingInDirectory2.Remove(match.File2);
+                    }
+                }
+                else
+                {
+                    foreach (FileComparison perfectMatch in perfectMatches)
+                        remainingInDirectory2.Remove(perfectMatch.File2);
                 }
             }
         }
 
-        foreach (HFile file2 in onlyInDirectory2)
-        {
+        foreach (HFile file2 in remainingInDirectory2)
             onlyInSnapshot2.Add(rootPath + file2.Name);
-        }
     }
 
     private void CompareChildDirectories(HDirectory directory1, HDirectory directory2, string rootPath)

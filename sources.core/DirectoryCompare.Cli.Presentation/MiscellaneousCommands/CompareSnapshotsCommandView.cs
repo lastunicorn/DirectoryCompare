@@ -16,6 +16,7 @@
 
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Commando;
+using DustInTheWind.ConsoleTools.Controls;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands;
@@ -24,39 +25,85 @@ internal class CompareSnapshotsCommandView : IView<CompareSnapshotsCommand>
 {
     public void Display(CompareSnapshotsCommand command)
     {
-        Console.WriteLine();
+        DisplayOnlyInSnapshot1(command);
+        
+        DisplayOnlyInSnapshot2(command);
 
-        Console.WriteLine("Files only in snapshot 1:");
-        foreach (string path in command.OnlyInSnapshot1)
-            Console.WriteLine(path);
+        DisplayDifferentNames(command);
 
-        Console.WriteLine();
-
-        Console.WriteLine("Files only in snapshot 2:");
-        foreach (string path in command.OnlyInSnapshot2)
-            Console.WriteLine(path);
+        DisplayDifferentContent(command);
 
         Console.WriteLine();
-
-        Console.WriteLine("Different names:");
-        foreach (ItemComparison itemComparison in command.DifferentNames)
-        {
-            Console.WriteLine("1 - " + itemComparison.FullName1);
-            Console.WriteLine("2 - " + itemComparison.FullName2);
-        }
-
-        Console.WriteLine();
-
-        Console.WriteLine("Different content:");
-        foreach (ItemComparison itemComparison in command.DifferentContent)
-        {
-            Console.WriteLine("1 - " + itemComparison.FullName1);
-            Console.WriteLine("2 - " + itemComparison.FullName2);
-        }
-
-        Console.WriteLine();
-
         if (command.ExportDirectoryPath != null)
             CustomConsole.WriteLine("Results exported also into directory: {0}", command.ExportDirectoryPath);
+    }
+
+    private static void DisplayOnlyInSnapshot1(CompareSnapshotsCommand command)
+    {
+        DisplaySubtitle("Files only in snapshot 1:");
+        
+        foreach (string path in command.OnlyInSnapshot1)
+            Console.WriteLine(path);
+    }
+
+    private static void DisplayOnlyInSnapshot2(CompareSnapshotsCommand command)
+    {
+        DisplaySubtitle("Files only in snapshot 2:");
+        
+        foreach (string path in command.OnlyInSnapshot2)
+            Console.WriteLine(path);
+    }
+
+    private static void DisplayDifferentNames(CompareSnapshotsCommand command)
+    {
+        DisplaySubtitle("Different names:");
+        
+        bool isFirst = true;
+        
+        foreach (ItemComparison itemComparison in command.DifferentNames)
+        {
+            if (isFirst)
+                isFirst = false;
+            else
+                Console.WriteLine();
+
+            Console.WriteLine("1 - " + itemComparison.FullName1);
+            Console.WriteLine("2 - " + itemComparison.FullName2);
+        }
+    }
+
+    private static void DisplayDifferentContent(CompareSnapshotsCommand command)
+    {
+        DisplaySubtitle("Different content:");
+        
+        bool isFirst = true;
+        
+        foreach (ItemComparison itemComparison in command.DifferentContent)
+        {
+            if (isFirst)
+                isFirst = false;
+            else
+                Console.WriteLine();
+
+            Console.WriteLine("1 - " + itemComparison.FullName1);
+            Console.WriteLine("2 - " + itemComparison.FullName2);
+        }
+    }
+
+    private static void DisplaySubtitle(string text)
+    {
+        HorizontalLine horizontalLine1 = new()
+        {
+            Margin = "0 1 0 0"
+        };
+        horizontalLine1.Display();
+        
+        Console.WriteLine(text);
+        
+        HorizontalLine horizontalLine2 = new()
+        {
+            Margin = "0 0 0 1"
+        };
+        horizontalLine2.Display();
     }
 }
