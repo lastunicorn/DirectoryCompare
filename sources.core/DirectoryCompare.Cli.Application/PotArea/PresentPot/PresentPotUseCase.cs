@@ -32,7 +32,7 @@ public class PresentPotUseCase : IRequestHandler<PresentPotRequest, PresentPotRe
     public Task<PresentPotResponse> Handle(PresentPotRequest request, CancellationToken cancellationToken)
     {
         Pot pot = potRepository.Get(request.PotName, includeSnapshots: true);
-        
+
         PresentPotResponse response = new()
         {
             Pot = new PotDto(pot)

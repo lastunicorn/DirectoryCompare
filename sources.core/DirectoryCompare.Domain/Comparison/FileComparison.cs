@@ -25,9 +25,9 @@ internal struct FileComparison
     public HFile File2 { get; }
 
     public bool SameName { get; }
-    
+
     public bool SameContent { get; }
-    
+
     public bool IsSomeMatch { get; }
 
     public bool IsPerfectMatch { get; }
@@ -36,10 +36,10 @@ internal struct FileComparison
     {
         File1 = file1;
         File2 = file2;
-        
+
         SameName = file1.Name == file2.Name;
         SameContent = file1.Hash == file2.Hash;
-        
+
         IsSomeMatch = SameName || SameContent;
         IsPerfectMatch = SameName && SameContent;
     }

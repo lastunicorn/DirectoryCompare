@@ -15,7 +15,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.DataStructures;
-using DustInTheWind.DirectoryCompare.Domain.Utils;
 
 namespace DustInTheWind.DirectoryCompare.Ports.DataAccess;
 

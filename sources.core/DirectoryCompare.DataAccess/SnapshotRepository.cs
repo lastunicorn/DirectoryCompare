@@ -209,7 +209,7 @@ public class SnapshotRepository : ISnapshotRepository
 
         if (!location.SnapshotDate.HasValue)
             return GetLast(location.PotName);
-        
+
         DateTime searchedDate = location.SnapshotDate.Value;
 
         Snapshot snapshot = GetByExactDateTime(location.PotName, searchedDate);

@@ -57,7 +57,7 @@ public class RemoveDuplicatesUseCase : IRequestHandler<RemoveDuplicatesRequest>
 
         return Task.CompletedTask;
     }
-    
+
     private IEnumerable<HFile> EnumerateFiles(SnapshotLocation snapshotLocation, BlackList blackList = null)
     {
         Snapshot snapshot = snapshotRepository.Get(snapshotLocation);

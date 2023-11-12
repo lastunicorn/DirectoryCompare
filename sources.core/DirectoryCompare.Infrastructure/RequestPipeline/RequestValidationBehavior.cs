@@ -1,5 +1,5 @@
 ﻿// DirectoryCompare
-// Copyright (C) 2017-2020 Dust in the Wind
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,32 +18,31 @@ using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Infrastructure.RequestPipeline
+namespace DustInTheWind.DirectoryCompare.Infrastructure.RequestPipeline;
+
+public class RequestValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : IRequest<TResponse>
 {
-    public class RequestValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : IRequest<TResponse>
+    private readonly IEnumerable<IValidator<TRequest>> validators;
+
+    public RequestValidationBehavior(IEnumerable<IValidator<TRequest>> validators)
     {
-        private readonly IEnumerable<IValidator<TRequest>> validators;
+        this.validators = validators ?? throw new ArgumentNullException(nameof(validators));
+    }
 
-        public RequestValidationBehavior(IEnumerable<IValidator<TRequest>> validators)
-        {
-            this.validators = validators ?? throw new ArgumentNullException(nameof(validators));
-        }
+    public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    {
+        ValidationContext<TRequest> context = new(request);
 
-        public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
-        {
-            ValidationContext<TRequest> context = new(request);
+        List<ValidationFailure> failures = validators
+            .Select(x => x.Validate(context))
+            .SelectMany(x => x.Errors)
+            .Where(x => x != null)
+            .ToList();
 
-            List<ValidationFailure> failures = validators
-                .Select(x => x.Validate(context))
-                .SelectMany(x => x.Errors)
-                .Where(x => x != null)
-                .ToList();
+        if (failures.Count != 0)
+            throw new ValidationException(failures);
 
-            if (failures.Count != 0)
-                throw new ValidationException(failures);
-
-            return next();
-        }
+        return next();
     }
 }

@@ -28,7 +28,7 @@ public class SnapshotDto
     {
         if (snapshot == null)
             return;
-        
+
         CreationTime = snapshot.CreationTime;
         Id = snapshot.Id;
     }

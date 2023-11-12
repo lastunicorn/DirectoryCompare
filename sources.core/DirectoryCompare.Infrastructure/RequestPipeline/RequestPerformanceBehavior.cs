@@ -1,5 +1,5 @@
 ﻿// DirectoryCompare
-// Copyright (C) 2017-2020 Dust in the Wind
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,35 +18,34 @@ using System.Diagnostics;
 using DustInTheWind.DirectoryCompare.Ports.LogAccess;
 using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Infrastructure.RequestPipeline
+namespace DustInTheWind.DirectoryCompare.Infrastructure.RequestPipeline;
+
+public class RequestPerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
 {
-    public class RequestPerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    private readonly Stopwatch timer;
+    private readonly ILog log;
+
+    public RequestPerformanceBehavior(ILog log)
     {
-        private readonly Stopwatch timer;
-        private readonly ILog log;
+        this.log = log ?? throw new ArgumentNullException(nameof(log));
+        timer = new Stopwatch();
+    }
 
-        public RequestPerformanceBehavior(ILog log)
+    public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    {
+        timer.Start();
+
+        string name = typeof(TRequest).Name;
+        log.WriteDebug("Request {0} started.", name);
+
+        try
         {
-            this.log = log ?? throw new ArgumentNullException(nameof(log));
-            timer = new Stopwatch();
+            return next();
         }
-
-        public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+        finally
         {
-            timer.Start();
-
-            string name = typeof(TRequest).Name;
-            log.WriteDebug("Request {0} started.", name);
-
-            try
-            {
-                return next();
-            }
-            finally
-            {
-                timer.Stop();
-                log.WriteDebug("Request {0} finished in {1:n0} milliseconds", name, timer.ElapsedMilliseconds);
-            }
+            timer.Stop();
+            log.WriteDebug("Request {0} finished in {1:n0} milliseconds", name, timer.ElapsedMilliseconds);
         }
     }
 }

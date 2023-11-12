@@ -23,7 +23,7 @@ public class FilePairDto
     public string FullName1 { get; }
 
     public string FullName2 { get; }
-    
+
     public FilePairDto(ItemComparison itemComparison)
     {
         FullName1 = itemComparison.FullName1;

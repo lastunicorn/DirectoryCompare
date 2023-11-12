@@ -23,7 +23,7 @@ public class FileDto
     public string Name { get; }
 
     public string Hash { get; }
-    
+
     public FileDto(HFile hFile)
     {
         Name = hFile.Name;

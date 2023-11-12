@@ -25,7 +25,7 @@ public class DirectoryDto
     public List<DirectoryDto> Directories { get; }
 
     public List<FileDto> Files { get; }
-    
+
     public DirectoryDto(HDirectory hDirectory)
     {
         if (hDirectory == null)

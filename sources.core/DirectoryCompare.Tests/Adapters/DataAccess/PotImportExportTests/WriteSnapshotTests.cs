@@ -17,7 +17,6 @@
 using DustInTheWind.DirectoryCompare.DataAccess;
 using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
-using DustInTheWind.DirectoryCompare.Domain.Utils;
 using FluentAssertions;
 using Xunit;
 

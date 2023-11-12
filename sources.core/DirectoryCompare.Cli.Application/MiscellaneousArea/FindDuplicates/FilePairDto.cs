@@ -24,9 +24,9 @@ public class FilePairDto
     public string FullPathLeft { get; }
 
     public string FullPathRight { get; }
-    
+
     public DataSize Size { get; }
-    
+
     public FilePairDto(FilePair filePair)
     {
         FullPathLeft = filePair.FullPathLeft;

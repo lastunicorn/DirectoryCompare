@@ -65,7 +65,7 @@ public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest, Find
         IEnumerable<HFile> files = snapshot == null
             ? Enumerable.Empty<HFile>()
             : snapshot.EnumerateFiles(snapshotLocation.InternalPath, blackList);
-        
+
         return files.ToList();
     }
 

@@ -26,7 +26,7 @@ internal class CompareSnapshotsCommandView : IView<CompareSnapshotsCommand>
     public void Display(CompareSnapshotsCommand command)
     {
         DisplayOnlyInSnapshot1(command);
-        
+
         DisplayOnlyInSnapshot2(command);
 
         DisplayDifferentNames(command);
@@ -41,7 +41,7 @@ internal class CompareSnapshotsCommandView : IView<CompareSnapshotsCommand>
     private static void DisplayOnlyInSnapshot1(CompareSnapshotsCommand command)
     {
         DisplaySubtitle("Files only in snapshot 1:");
-        
+
         foreach (string path in command.OnlyInSnapshot1)
             Console.WriteLine(path);
     }
@@ -49,7 +49,7 @@ internal class CompareSnapshotsCommandView : IView<CompareSnapshotsCommand>
     private static void DisplayOnlyInSnapshot2(CompareSnapshotsCommand command)
     {
         DisplaySubtitle("Files only in snapshot 2:");
-        
+
         foreach (string path in command.OnlyInSnapshot2)
             Console.WriteLine(path);
     }
@@ -57,9 +57,9 @@ internal class CompareSnapshotsCommandView : IView<CompareSnapshotsCommand>
     private static void DisplayDifferentNames(CompareSnapshotsCommand command)
     {
         DisplaySubtitle("Different names:");
-        
+
         bool isFirst = true;
-        
+
         foreach (FilePairDto itemComparison in command.DifferentNames)
         {
             if (isFirst)
@@ -75,9 +75,9 @@ internal class CompareSnapshotsCommandView : IView<CompareSnapshotsCommand>
     private static void DisplayDifferentContent(CompareSnapshotsCommand command)
     {
         DisplaySubtitle("Different content:");
-        
+
         bool isFirst = true;
-        
+
         foreach (FilePairDto itemComparison in command.DifferentContent)
         {
             if (isFirst)
@@ -97,9 +97,9 @@ internal class CompareSnapshotsCommandView : IView<CompareSnapshotsCommand>
             Margin = "0 1 0 0"
         };
         horizontalLine1.Display();
-        
+
         Console.WriteLine(text);
-        
+
         HorizontalLine horizontalLine2 = new()
         {
             Margin = "0 0 0 1"

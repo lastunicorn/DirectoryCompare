@@ -17,7 +17,6 @@
 using DustInTheWind.DirectoryCompare.DataAccess.PotFiles.SnapshotFileModel;
 using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
-using DustInTheWind.DirectoryCompare.Domain.Utils;
 using FluentAssertions;
 using Newtonsoft.Json;
 using Xunit;
