@@ -60,8 +60,12 @@ public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest, Find
     private List<HFile> GetFiles(SnapshotLocation snapshotLocation)
     {
         BlackList blackList = GetBlackList(snapshotLocation);
+        Snapshot snapshot = snapshotRepository.Get(snapshotLocation);
 
-        IEnumerable<HFile> files = snapshotRepository.EnumerateFiles(snapshotLocation, blackList);
+        IEnumerable<HFile> files = snapshot == null
+            ? Enumerable.Empty<HFile>()
+            : snapshot.EnumerateFiles(snapshotLocation.InternalPath, blackList);
+        
         return files.ToList();
     }
 

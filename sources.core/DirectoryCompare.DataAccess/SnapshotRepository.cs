@@ -199,34 +199,32 @@ public class SnapshotRepository : ISnapshotRepository
         return true;
     }
 
-    public Snapshot RetrieveSnapshot(SnapshotLocation location)
+    public Snapshot Get(SnapshotLocation location)
     {
         if (string.IsNullOrEmpty(location.PotName))
-            throw new Exception("Pot name was not provided.");
+            return null;
 
         if (location.SnapshotIndex.HasValue)
             return GetByIndex(location.PotName, location.SnapshotIndex.Value);
 
-        if (location.SnapshotDate.HasValue)
+        if (!location.SnapshotDate.HasValue)
+            return GetLast(location.PotName);
+        
+        DateTime searchedDate = location.SnapshotDate.Value;
+
+        Snapshot snapshot = GetByExactDateTime(location.PotName, searchedDate);
+
+        if (snapshot == null && searchedDate.TimeOfDay == TimeSpan.Zero)
         {
-            DateTime searchedDate = location.SnapshotDate.Value;
+            List<Snapshot> snapshots = GetByDate(location.PotName, searchedDate)
+                .ToList();
 
-            Snapshot snapshot = GetByExactDateTime(location.PotName, searchedDate);
-
-            if (snapshot == null && searchedDate.TimeOfDay == TimeSpan.Zero)
-            {
-                List<Snapshot> snapshots = GetByDate(location.PotName, searchedDate)
-                    .ToList();
-
-                if (snapshots.Count == 1)
-                    snapshot = snapshots[0];
-                else if (snapshots.Count > 1)
-                    throw new Exception($"There are multiple snapshots that match the specified date. Pot = {location.PotName}; Date = {searchedDate}");
-            }
-
-            return snapshot;
+            if (snapshots.Count == 1)
+                snapshot = snapshots[0];
+            else if (snapshots.Count > 1)
+                throw new Exception($"There are multiple snapshots that match the specified date. Pot = {location.PotName}; Date = {searchedDate}");
         }
 
-        return GetLast(location.PotName);
+        return snapshot;
     }
 }

@@ -31,7 +31,10 @@ public class PresentSnapshotUseCase : IRequestHandler<PresentSnapshotRequest, Pr
 
     public Task<PresentSnapshotResponse> Handle(PresentSnapshotRequest request, CancellationToken cancellationToken)
     {
-        Snapshot snapshot = snapshotRepository.RetrieveSnapshot(request.Location);
+        Snapshot snapshot = snapshotRepository.Get(request.Location);
+
+        if (snapshot == null)
+            throw new Exception("Pot name was not provided.");
 
         PresentSnapshotResponse response = new()
         {
@@ -39,7 +42,7 @@ public class PresentSnapshotUseCase : IRequestHandler<PresentSnapshotRequest, Pr
             OriginalPath = snapshot.OriginalPath,
             RootDirectory = new DirectoryDto(snapshot)
         };
-        
+
         return Task.FromResult(response);
     }
 }

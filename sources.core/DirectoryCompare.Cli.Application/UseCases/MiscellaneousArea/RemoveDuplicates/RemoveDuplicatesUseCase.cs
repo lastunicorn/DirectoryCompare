@@ -48,14 +48,23 @@ public class RemoveDuplicatesUseCase : IRequestHandler<RemoveDuplicatesRequest>
 
         FileDuplicates fileDuplicates = new()
         {
-            FilesLeft = snapshotRepository.EnumerateFiles(request.SnapshotLeft, blackListLeft).ToList(),
-            FilesRight = snapshotRepository.EnumerateFiles(request.SnapshotRight, blackListRight).ToList(),
+            FilesLeft = EnumerateFiles(request.SnapshotLeft, blackListLeft).ToList(),
+            FilesRight = EnumerateFiles(request.SnapshotRight, blackListRight).ToList(),
             CheckFilesExistence = true
         };
 
         RemoveDuplicates(request, fileDuplicates);
 
         return Task.CompletedTask;
+    }
+    
+    private IEnumerable<HFile> EnumerateFiles(SnapshotLocation snapshotLocation, BlackList blackList = null)
+    {
+        Snapshot snapshot = snapshotRepository.Get(snapshotLocation);
+
+        return snapshot == null
+            ? Enumerable.Empty<HFile>()
+            : snapshot.EnumerateFiles(snapshotLocation.InternalPath, blackList);
     }
 
     private void RemoveDuplicates(RemoveDuplicatesRequest request, IEnumerable<FilePair> fileDuplicates)

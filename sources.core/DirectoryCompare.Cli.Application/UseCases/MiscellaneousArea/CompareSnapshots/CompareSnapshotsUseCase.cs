@@ -32,8 +32,16 @@ public class CompareSnapshotsUseCase : IRequestHandler<CompareSnapshotsRequest, 
 
     public Task<CompareSnapshotsResponse> Handle(CompareSnapshotsRequest request, CancellationToken cancellationToken)
     {
-        Snapshot snapshot1 = snapshotRepository.RetrieveSnapshot(request.Snapshot1);
-        Snapshot snapshot2 = snapshotRepository.RetrieveSnapshot(request.Snapshot2);
+        Snapshot snapshot1 = snapshotRepository.Get(request.Snapshot1);
+
+        if (snapshot1 == null)
+            throw new Exception("Pot name was not provided.");
+
+        Snapshot snapshot2 = snapshotRepository.Get(request.Snapshot2);
+
+        if (snapshot2 == null)
+            throw new Exception("Pot name was not provided.");
+
         SnapshotComparison comparison = CompareSnapshots(snapshot1, snapshot2);
         string exportDirectoryPath = ExportToDiskIfRequested(comparison, request);
 

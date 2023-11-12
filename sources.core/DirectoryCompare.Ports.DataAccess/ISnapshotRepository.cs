@@ -44,5 +44,5 @@ public interface ISnapshotRepository
 
     bool DeleteByExactDateTime(string potName, DateTime dateTime);
 
-    Snapshot RetrieveSnapshot(SnapshotLocation location);
+    Snapshot Get(SnapshotLocation location);
 }
