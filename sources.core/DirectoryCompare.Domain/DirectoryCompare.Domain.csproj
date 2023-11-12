@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Remove="SnapshotBuilder.cs"/>
+        <Compile Remove="SnapshotBuilder.cs" />
     </ItemGroup>
 
 </Project>

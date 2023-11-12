@@ -26,25 +26,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="FluentValidation" Version="9.0.1"/>
-        <PackageReference Include="MediatR" Version="12.0.1"/>
+        <PackageReference Include="FluentValidation" Version="9.0.1" />
+        <PackageReference Include="MediatR" Version="12.0.1" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All"/>
-        <ProjectReference Include="..\DirectoryCompare.Ports.LogAccess\DirectoryCompare.Ports.LogAccess.csproj" PrivateAssets="All"/>
+        <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.Ports.LogAccess\DirectoryCompare.Ports.LogAccess.csproj" PrivateAssets="All" />
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Remove="RequestHandlingPipeline\**"/>
+        <Compile Remove="RequestHandlingPipeline\**" />
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Remove="RequestHandlingPipeline\**"/>
+        <EmbeddedResource Remove="RequestHandlingPipeline\**" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="RequestHandlingPipeline\**"/>
+        <None Remove="RequestHandlingPipeline\**" />
     </ItemGroup>
 
 </Project>

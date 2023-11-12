@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <Product>Directory Compare</Product>
         <Company>Dust in the Wind</Company>
         <Copyright>Copyright © Dust in the Wind 2017-2020</Copyright>
-        <Authors/>
+        <Authors />
     </PropertyGroup>
 
 </Project>

@@ -26,33 +26,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="FluentAssertions" Version="6.11.0"/>
-        <PackageReference Include="Moq" Version="4.16.1"/>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1"/>
+        <PackageReference Include="FluentAssertions" Version="6.11.0" />
+        <PackageReference Include="Moq" Version="4.16.1" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
         <PackageReference Include="NUnit3TestAdapter" Version="3.17.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="xunit" Version="2.5.0-pre.26"/>
+        <PackageReference Include="xunit" Version="2.5.0-pre.26" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\DirectoryCompare.DataAccess\DirectoryCompare.DataAccess.csproj"/>
-        <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj"/>
-        <ProjectReference Include="..\DirectoryCompare.DataAccess.PotFiles\DirectoryCompare.DataAccess.PotFiles.csproj"/>
+        <ProjectReference Include="..\DirectoryCompare.DataAccess\DirectoryCompare.DataAccess.csproj" />
+        <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" />
+        <ProjectReference Include="..\DirectoryCompare.DataAccess.PotFiles\DirectoryCompare.DataAccess.PotFiles.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Adapters\"/>
-        <Folder Include="Domain\Comparison\"/>
+        <Folder Include="Adapters\" />
+        <Folder Include="Domain\Comparison\" />
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="Adapters\DataAccess\PotImportExportTests\Data-EmptySnapshot.json"/>
-        <EmbeddedResource Include="Adapters\DataAccess\PotImportExportTests\Data-SnapshotWithOneDirectory.json"/>
-        <EmbeddedResource Include="Adapters\DataAccess\PotImportExportTests\Data-SnapshotWithOneFile.json"/>
-        <EmbeddedResource Include="Adapters\PotFiles\SnapshotFileModel\Data-DummyFile.json"/>
-        <None Remove="Adapters\DataAccess\EmptySnapshot.json"/>
+        <EmbeddedResource Include="Adapters\DataAccess\PotImportExportTests\Data-EmptySnapshot.json" />
+        <EmbeddedResource Include="Adapters\DataAccess\PotImportExportTests\Data-SnapshotWithOneDirectory.json" />
+        <EmbeddedResource Include="Adapters\DataAccess\PotImportExportTests\Data-SnapshotWithOneFile.json" />
+        <EmbeddedResource Include="Adapters\PotFiles\SnapshotFileModel\Data-DummyFile.json" />
+        <None Remove="Adapters\DataAccess\EmptySnapshot.json" />
     </ItemGroup>
 
 </Project>
