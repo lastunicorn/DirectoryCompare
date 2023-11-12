@@ -1,5 +1,5 @@
 ﻿// DirectoryCompare
-// Copyright (C) 2017-2020 Dust in the Wind
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ public interface IPotRepository
 {
     List<Pot> Get();
 
-    Pot Get(string name,  bool includeSnapshots = false);
+    Pot Get(string name, bool includeSnapshots = false);
 
     void Add(Pot pot);
 

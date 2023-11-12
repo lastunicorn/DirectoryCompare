@@ -1,5 +1,5 @@
 // DirectoryCompare
-// Copyright (C) 2017-2020 Dust in the Wind
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,22 +18,21 @@ using DustInTheWind.DirectoryCompare.JFiles;
 using FluentAssertions;
 using Xunit;
 
-namespace DustInTheWind.DirectoryCompare.Tests.Adapters.PotFiles.SnapshotFilePathTests
+namespace DustInTheWind.DirectoryCompare.Tests.Adapters.PotFiles.SnapshotFilePathTests;
+
+public class ImplicitCastToStringTests
 {
-    public class ImplicitCastToStringTests
+    [Fact]
+    public void HavingSnapshotFilePathInstance_WhenImplicitlyCastToString_ThenStringContainsFullPath()
     {
-        [Fact]
-        public void HavingSnapshotFilePathInstance_WhenImplicitlyCastToString_ThenStringContainsFullPath()
-        {
-            // arrange
-            const string pathAsString = "/this/is/some/path/2021 12 31 143918.json";
-            SnapshotFilePath snapshotFilePath = new SnapshotFilePath(pathAsString);
-            
-            // act
-            string actual = snapshotFilePath;
-            
-            // assert
-            actual.Should().Be(pathAsString);
-        }
+        // arrange
+        const string pathAsString = "/this/is/some/path/2021 12 31 143918.json";
+        SnapshotFilePath snapshotFilePath = new(pathAsString);
+
+        // act
+        string actual = snapshotFilePath;
+
+        // assert
+        actual.Should().Be(pathAsString);
     }
 }

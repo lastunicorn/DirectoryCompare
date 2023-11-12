@@ -24,13 +24,13 @@ internal static class EmbeddedResources
     public static string GetContent(string fileName)
     {
         Stream stream = GetStreamFromAbsolutePath(fileName);
-        
+
         if (stream == null)
         {
             StackTrace stackTrace = new();
             stream = GetStreamFromRelativePath(fileName, stackTrace);
         }
-        
+
         using StreamReader sr = new(stream);
         return sr.ReadToEnd();
     }

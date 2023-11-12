@@ -22,32 +22,32 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <OutputType>Exe</OutputType>
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
-        
+
         <AssemblyTitle>DirectoryCompare.Cli</AssemblyTitle>
         <AssemblyName>DirectoryCompare</AssemblyName>
         <RootNamespace>DustInTheWind.DirectoryCompare.Cli.Bootstrapper</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\DirectoryCompare.Cli.Application\DirectoryCompare.Cli.Application.csproj" PrivateAssets="All" />
-        <ProjectReference Include="..\DirectoryCompare.Cli.Presentation\DirectoryCompare.Cli.Presentation.csproj" PrivateAssets="All" />
-        <ProjectReference Include="..\DirectoryCompare.ConfigAccess\DirectoryCompare.ConfigAccess.csproj" PrivateAssets="All" />
-        <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All" />
-        <ProjectReference Include="..\DirectoryCompare.DataAccess\DirectoryCompare.DataAccess.csproj" PrivateAssets="All" />
-        <ProjectReference Include="..\DirectoryCompare.FileSystemAccess\DirectoryCompare.FileSystemAccess.csproj" PrivateAssets="All" />
-        <ProjectReference Include="..\DirectoryCompare.Infrastructure\DirectoryCompare.Infrastructure.csproj" PrivateAssets="All" />
-        <ProjectReference Include="..\DirectoryCompare.LogAccess\DirectoryCompare.LogAccess.csproj" PrivateAssets="All" />
-        <ProjectReference Include="..\DirectoryCompare.Ports.ConfigAccess\DirectoryCompare.Ports.ConfigAccess.csproj" PrivateAssets="All" />
-        <ProjectReference Include="..\DirectoryCompare.Ports.FileSystemAccess\DirectoryCompare.Ports.FileSystemAccess.csproj" PrivateAssets="All" />
-        <ProjectReference Include="..\DirectoryCompare.Ports.LogAccess\DirectoryCompare.Ports.LogAccess.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.Cli.Application\DirectoryCompare.Cli.Application.csproj" PrivateAssets="All"/>
+        <ProjectReference Include="..\DirectoryCompare.Cli.Presentation\DirectoryCompare.Cli.Presentation.csproj" PrivateAssets="All"/>
+        <ProjectReference Include="..\DirectoryCompare.ConfigAccess\DirectoryCompare.ConfigAccess.csproj" PrivateAssets="All"/>
+        <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All"/>
+        <ProjectReference Include="..\DirectoryCompare.DataAccess\DirectoryCompare.DataAccess.csproj" PrivateAssets="All"/>
+        <ProjectReference Include="..\DirectoryCompare.FileSystemAccess\DirectoryCompare.FileSystemAccess.csproj" PrivateAssets="All"/>
+        <ProjectReference Include="..\DirectoryCompare.Infrastructure\DirectoryCompare.Infrastructure.csproj" PrivateAssets="All"/>
+        <ProjectReference Include="..\DirectoryCompare.LogAccess\DirectoryCompare.LogAccess.csproj" PrivateAssets="All"/>
+        <ProjectReference Include="..\DirectoryCompare.Ports.ConfigAccess\DirectoryCompare.Ports.ConfigAccess.csproj" PrivateAssets="All"/>
+        <ProjectReference Include="..\DirectoryCompare.Ports.FileSystemAccess\DirectoryCompare.Ports.FileSystemAccess.csproj" PrivateAssets="All"/>
+        <ProjectReference Include="..\DirectoryCompare.Ports.LogAccess\DirectoryCompare.Ports.LogAccess.csproj" PrivateAssets="All"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="ConsoleTools.Commando.Setup.Autofac" Version="2.0.0" />
-        <PackageReference Include="ConsoleTools.Controls" Version="1.1.0" />
-        <PackageReference Include="FluentValidation" Version="11.8.0" PrivateAssets="All" />
-        <PackageReference Include="MediatR" Version="12.1.1" />
-        <PackageReference Include="MediatR.Extensions.Autofac.DependencyInjection" Version="11.2.0" />
+        <PackageReference Include="ConsoleTools.Commando.Setup.Autofac" Version="2.0.0"/>
+        <PackageReference Include="ConsoleTools.Controls" Version="1.1.0"/>
+        <PackageReference Include="FluentValidation" Version="11.8.0" PrivateAssets="All"/>
+        <PackageReference Include="MediatR" Version="12.1.1"/>
+        <PackageReference Include="MediatR.Extensions.Autofac.DependencyInjection" Version="11.2.0"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -55,10 +55,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
         <None Update="dircmp">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
         <None Update="appsettings.json">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
 

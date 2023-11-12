@@ -1,5 +1,5 @@
 ﻿// DirectoryCompare
-// Copyright (C) 2017-2020 Dust in the Wind
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ public class PatternIsFileTests
         // pattern: file-or-dir-1
         // path:    /file-or-dir-1 (file)
 
-        HFile hFile = new HFile
+        HFile hFile = new()
         {
             Name = "file-or-dir-1"
         };
@@ -51,7 +51,7 @@ public class PatternIsFileTests
         // pattern: file-or-dir-1
         // path:    /file-or-dir-1 (dir)
 
-        HDirectory hDirectory = new HDirectory
+        HDirectory hDirectory = new()
         {
             Name = "file-or-dir-1"
         };
@@ -67,7 +67,7 @@ public class PatternIsFileTests
         // pattern: file-or-dir-1
         // path:    /dir-2/file-or-dir-1 (file)
 
-        HFile hFile = new HFile
+        HFile hFile = new()
         {
             Name = "file-or-dir-1",
             Parent = new HDirectory
@@ -87,7 +87,7 @@ public class PatternIsFileTests
         // pattern: file-or-dir-1
         // path:    /dir-2/file-or-dir-1 (dir)
 
-        HDirectory hDirectory = new HDirectory
+        HDirectory hDirectory = new()
         {
             Name = "file-or-dir-1",
             Parent = new HDirectory

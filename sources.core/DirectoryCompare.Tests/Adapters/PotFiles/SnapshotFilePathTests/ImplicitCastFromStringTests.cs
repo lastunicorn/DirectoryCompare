@@ -1,5 +1,5 @@
 // DirectoryCompare
-// Copyright (C) 2017-2020 Dust in the Wind
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ public class ImplicitCastFromStringTests
         SnapshotFilePath actual = pathAsString;
 
         // assert
-        DateTime expected = new DateTime(2021, 12, 31, 14, 39, 18);
+        DateTime expected = new(2021, 12, 31, 14, 39, 18);
         actual.CreationTime.Should().Be(expected);
     }
 }

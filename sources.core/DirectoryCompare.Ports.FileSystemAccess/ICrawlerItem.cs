@@ -23,7 +23,7 @@ public interface ICrawlerItem
     CrawlerAction Action { get; }
 
     string Name { get; }
-    
+
     string Path { get; }
 
     long FileCount { get; }

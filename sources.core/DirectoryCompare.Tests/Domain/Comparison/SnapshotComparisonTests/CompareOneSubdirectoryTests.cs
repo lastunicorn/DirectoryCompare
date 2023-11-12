@@ -1,5 +1,5 @@
 ﻿// DirectoryCompare
-// Copyright (C) 2017-2020 Dust in the Wind
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,126 +19,125 @@ using DustInTheWind.DirectoryCompare.Domain.Entities;
 using FluentAssertions;
 using Xunit;
 
-namespace DustInTheWind.DirectoryCompare.Tests.Domain.Comparison.SnapshotComparisonTests
+namespace DustInTheWind.DirectoryCompare.Tests.Domain.Comparison.SnapshotComparisonTests;
+
+public class CompareOneSubdirectoryTests
 {
-    public class CompareOneSubdirectoryTests
+    #region OnlyInSnapshot1
+
+    [Fact]
+    public void OnlyInSnapshot1_is_empty_if_both_snapshots_contain_one_identical_subdir()
     {
-        #region OnlyInSnapshot1
-
-        [Fact]
-        public void OnlyInSnapshot1_is_empty_if_both_snapshots_contain_one_identical_subdir()
+        Snapshot snapshot1 = new();
+        snapshot1.Directories.AddRange(new[]
         {
-            Snapshot snapshot1 = new Snapshot();
-            snapshot1.Directories.AddRange(new[]
-            {
-                new HDirectory("Dir1")
-            });
+            new HDirectory("Dir1")
+        });
 
-            Snapshot snapshot2 = new Snapshot();
-            snapshot2.Directories.AddRange(new[]
-            {
-                new HDirectory("Dir1")
-            });
-
-            SnapshotComparison comparison = new SnapshotComparison(snapshot1, snapshot2);
-            comparison.Compare();
-
-            comparison.OnlyInSnapshot1.Should().BeEmpty();
-        }
-
-        [Fact]
-        public void OnlyInSnapshot1_contains_the_name_of_the_subdir_if_only_snapshot1_has_one_subdir()
+        Snapshot snapshot2 = new();
+        snapshot2.Directories.AddRange(new[]
         {
-            Snapshot snapshot1 = new Snapshot();
-            snapshot1.Directories.AddRange(new[]
-            {
-                new HDirectory("Dir1")
-            });
+            new HDirectory("Dir1")
+        });
 
-            Snapshot snapshot2 = new Snapshot();
+        SnapshotComparison comparison = new(snapshot1, snapshot2);
+        comparison.Compare();
 
-            SnapshotComparison comparison = new SnapshotComparison(snapshot1, snapshot2);
-            comparison.Compare();
-
-            comparison.OnlyInSnapshot1.Should().Equal(new[] { "/Dir1/" });
-        }
-
-        [Fact]
-        public void OnlyInSnapshot1_is_empty_if_only_snapshot2_has_one_subdir()
-        {
-            Snapshot snapshot1 = new Snapshot();
-
-            Snapshot snapshot2 = new Snapshot();
-            snapshot2.Directories.AddRange(new[]
-            {
-                new HDirectory("Dir1")
-            });
-
-            SnapshotComparison comparison = new SnapshotComparison(snapshot1, snapshot2);
-            comparison.Compare();
-
-            comparison.OnlyInSnapshot1.Should().BeEmpty();
-        }
-
-        #endregion
-
-        #region OnlyInSnapshot2
-
-        [Fact]
-        public void OnlyInSnapshot2_is_empty_if_both_snapshots_contain_one_identical_subdir()
-        {
-            Snapshot snapshot1 = new Snapshot();
-            snapshot1.Directories.AddRange(new[]
-            {
-                new HDirectory("Dir1")
-            });
-
-            Snapshot snapshot2 = new Snapshot();
-            snapshot2.Directories.AddRange(new[]
-            {
-                new HDirectory("Dir1")
-            });
-
-            SnapshotComparison comparison = new SnapshotComparison(snapshot1, snapshot2);
-            comparison.Compare();
-
-            comparison.OnlyInSnapshot2.Should().BeEmpty();
-        }
-
-        [Fact]
-        public void OnlyInSnapshot2_contains_the_name_of_the_subdir_if_only_snapshot2_has_one_subdir()
-        {
-            Snapshot snapshot1 = new Snapshot();
-
-            Snapshot snapshot2 = new Snapshot();
-            snapshot2.Directories.AddRange(new[]
-            {
-                new HDirectory("Dir1")
-            });
-
-            SnapshotComparison comparison = new SnapshotComparison(snapshot1, snapshot2);
-            comparison.Compare();
-
-            comparison.OnlyInSnapshot2.Should().Equal(new[] { "/Dir1/" });
-        }
-
-        [Fact]
-        public void OnlyInSnapshot2_is_empty_if_only_snapshot1_has_one_subdir()
-        {
-            Snapshot snapshot1 = new Snapshot();
-            snapshot1.Directories.AddRange(new[]
-            {
-                new HDirectory("Dir1")
-            });
-
-            Snapshot snapshot2 = new Snapshot();
-
-            SnapshotComparison comparison = new SnapshotComparison(snapshot1, snapshot2);
-            comparison.Compare();
-
-            comparison.OnlyInSnapshot2.Should().BeEmpty();
-        }
-
-        #endregion
+        comparison.OnlyInSnapshot1.Should().BeEmpty();
     }
+
+    [Fact]
+    public void OnlyInSnapshot1_contains_the_name_of_the_subdir_if_only_snapshot1_has_one_subdir()
+    {
+        Snapshot snapshot1 = new();
+        snapshot1.Directories.AddRange(new[]
+        {
+            new HDirectory("Dir1")
+        });
+
+        Snapshot snapshot2 = new();
+
+        SnapshotComparison comparison = new(snapshot1, snapshot2);
+        comparison.Compare();
+
+        comparison.OnlyInSnapshot1.Should().Equal(new[] { "/Dir1/" });
+    }
+
+    [Fact]
+    public void OnlyInSnapshot1_is_empty_if_only_snapshot2_has_one_subdir()
+    {
+        Snapshot snapshot1 = new();
+
+        Snapshot snapshot2 = new();
+        snapshot2.Directories.AddRange(new[]
+        {
+            new HDirectory("Dir1")
+        });
+
+        SnapshotComparison comparison = new(snapshot1, snapshot2);
+        comparison.Compare();
+
+        comparison.OnlyInSnapshot1.Should().BeEmpty();
+    }
+
+    #endregion
+
+    #region OnlyInSnapshot2
+
+    [Fact]
+    public void OnlyInSnapshot2_is_empty_if_both_snapshots_contain_one_identical_subdir()
+    {
+        Snapshot snapshot1 = new();
+        snapshot1.Directories.AddRange(new[]
+        {
+            new HDirectory("Dir1")
+        });
+
+        Snapshot snapshot2 = new();
+        snapshot2.Directories.AddRange(new[]
+        {
+            new HDirectory("Dir1")
+        });
+
+        SnapshotComparison comparison = new(snapshot1, snapshot2);
+        comparison.Compare();
+
+        comparison.OnlyInSnapshot2.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void OnlyInSnapshot2_contains_the_name_of_the_subdir_if_only_snapshot2_has_one_subdir()
+    {
+        Snapshot snapshot1 = new();
+
+        Snapshot snapshot2 = new();
+        snapshot2.Directories.AddRange(new[]
+        {
+            new HDirectory("Dir1")
+        });
+
+        SnapshotComparison comparison = new(snapshot1, snapshot2);
+        comparison.Compare();
+
+        comparison.OnlyInSnapshot2.Should().Equal(new[] { "/Dir1/" });
+    }
+
+    [Fact]
+    public void OnlyInSnapshot2_is_empty_if_only_snapshot1_has_one_subdir()
+    {
+        Snapshot snapshot1 = new();
+        snapshot1.Directories.AddRange(new[]
+        {
+            new HDirectory("Dir1")
+        });
+
+        Snapshot snapshot2 = new();
+
+        SnapshotComparison comparison = new(snapshot1, snapshot2);
+        comparison.Compare();
+
+        comparison.OnlyInSnapshot2.Should().BeEmpty();
+    }
+
+    #endregion
 }

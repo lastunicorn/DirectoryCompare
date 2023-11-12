@@ -1,5 +1,5 @@
 // DirectoryCompare
-// Copyright (C) 2017-2020 Dust in the Wind
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,40 +14,37 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.IO;
 using DustInTheWind.DirectoryCompare.DataAccess.Transformations;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.JFiles;
 
-namespace DustInTheWind.DirectoryCompare.IntegrationTests.PotFiles.SnapshotFileTests
+namespace DustInTheWind.DirectoryCompare.IntegrationTests.PotFiles.SnapshotFileTests;
+
+internal class TemporarySnapshotFile : IDisposable
 {
-    internal class TemporarySnapshotFile : IDisposable
+    public string FilePath { get; }
+
+    public TemporarySnapshotFile(Snapshot snapshot)
     {
-        public string FilePath { get; }
+        FilePath = CreateSnapshotFile(snapshot);
+    }
 
-        public TemporarySnapshotFile(Snapshot snapshot)
+    private static SnapshotFilePath CreateSnapshotFile(Snapshot snapshot)
+    {
+        string temporaryPath = Path.GetTempPath();
+        SnapshotFilePath snapshotFilePath = new(DateTime.UtcNow, temporaryPath);
+
+        SnapshotFile snapshotFile = new(snapshotFilePath)
         {
-            FilePath = CreateSnapshotFile(snapshot);
-        }
+            Content = snapshot.ToJSnapshot()
+        };
+        snapshotFile.Save();
 
-        private static SnapshotFilePath CreateSnapshotFile(Snapshot snapshot)
-        {
-            string temporaryPath = Path.GetTempPath();
-            SnapshotFilePath snapshotFilePath = new(DateTime.UtcNow, temporaryPath);
+        return snapshotFilePath;
+    }
 
-            SnapshotFile snapshotFile = new(snapshotFilePath)
-            {
-                Content = snapshot.ToJSnapshot()
-            };
-            snapshotFile.Save();
-            
-            return snapshotFilePath;
-        }
-
-        public void Dispose()
-        {
-            File.Delete(FilePath);
-        }
+    public void Dispose()
+    {
+        File.Delete(FilePath);
     }
 }

@@ -1,5 +1,5 @@
 ﻿// DirectoryCompare
-// Copyright (C) 2017-2020 Dust in the Wind
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -57,7 +57,7 @@ internal static class Program
                 .Build();
 
             application.Starting += HandleStarting;
-            
+
             await application.RunAsync(args);
         }
         catch (Exception ex)
@@ -76,10 +76,10 @@ internal static class Program
             .Register(x =>
             {
                 IConfig config = x.Resolve<IConfig>();
-                
+
                 Database database = new();
                 database.Open(config.ConnectionString);
-                
+
                 return database;
             })
             .AsSelf()
@@ -112,7 +112,7 @@ internal static class Program
     private static void HandleStarting(object sender, EventArgs e)
     {
         CultureInfo cultureInfo = new("ro-RO");
-        
+
         CultureInfo.CurrentCulture = cultureInfo;
         CultureInfo.CurrentUICulture = cultureInfo;
     }
