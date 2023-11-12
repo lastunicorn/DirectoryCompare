@@ -17,8 +17,7 @@
 using System.Globalization;
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.DirectoryCompare.Domain.Entities;
-using DustInTheWind.DirectoryCompare.Domain.PotModel;
+using DustInTheWind.DirectoryCompare.Cli.Application.UseCases.PotArea.PresentPot;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands;
 
@@ -32,7 +31,7 @@ internal class DisplayPotCommandView : ViewBase<DisplayPotCommand>
             DisplayPotInfo(command.Pot);
     }
 
-    private void DisplayPotInfo(Pot pot)
+    private void DisplayPotInfo(PotDto pot)
     {
         WriteValue("Name", pot.Name);
 
@@ -57,9 +56,9 @@ internal class DisplayPotCommandView : ViewBase<DisplayPotCommand>
         }
     }
 
-    private void DisplaySnapshots(List<Snapshot> snapshots)
+    private void DisplaySnapshots(List<SnapshotDto> snapshots)
     {
-        foreach (Snapshot snapshot in snapshots)
+        foreach (SnapshotDto snapshot in snapshots)
         {
             DateTime creationTime = snapshot.CreationTime.ToLocalTime();
             Guid id = snapshot.Id;

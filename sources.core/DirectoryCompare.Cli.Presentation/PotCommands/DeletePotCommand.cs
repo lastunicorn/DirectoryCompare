@@ -15,8 +15,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.DirectoryCompare.Cli.Application.PotArea.DeletePot;
-using DustInTheWind.DirectoryCompare.Infrastructure;
+using DustInTheWind.DirectoryCompare.Cli.Application;
+using DustInTheWind.DirectoryCompare.Cli.Application.UseCases.PotArea.DeletePot;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands;
 

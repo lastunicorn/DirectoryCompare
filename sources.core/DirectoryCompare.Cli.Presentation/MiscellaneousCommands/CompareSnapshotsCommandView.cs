@@ -17,7 +17,7 @@
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Commando;
 using DustInTheWind.ConsoleTools.Controls;
-using DustInTheWind.DirectoryCompare.Domain.Comparison;
+using DustInTheWind.DirectoryCompare.Cli.Application.UseCases.MiscellaneousArea.CompareSnapshots;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands;
 
@@ -60,7 +60,7 @@ internal class CompareSnapshotsCommandView : IView<CompareSnapshotsCommand>
         
         bool isFirst = true;
         
-        foreach (ItemComparison itemComparison in command.DifferentNames)
+        foreach (FilePairDto itemComparison in command.DifferentNames)
         {
             if (isFirst)
                 isFirst = false;
@@ -78,7 +78,7 @@ internal class CompareSnapshotsCommandView : IView<CompareSnapshotsCommand>
         
         bool isFirst = true;
         
-        foreach (ItemComparison itemComparison in command.DifferentContent)
+        foreach (FilePairDto itemComparison in command.DifferentContent)
         {
             if (isFirst)
                 isFirst = false;

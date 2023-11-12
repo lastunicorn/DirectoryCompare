@@ -15,10 +15,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.FindDuplicates;
-using DustInTheWind.DirectoryCompare.Domain.Comparison;
-using DustInTheWind.DirectoryCompare.Domain.Utils;
-using DustInTheWind.DirectoryCompare.Infrastructure;
+using DustInTheWind.DirectoryCompare.Cli.Application;
+using DustInTheWind.DirectoryCompare.Cli.Application.UseCases.MiscellaneousArea.FindDuplicates;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands;
 // Example:
@@ -32,7 +30,6 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands;
 internal class FindDuplicatesCommand : IConsoleCommand
 {
     private readonly RequestBus requestBus;
-    private FileDuplicates fileDuplicates;
 
     [AnonymousParameter(Order = 1)]
     public string Snapshot1Location { get; set; }
@@ -44,10 +41,6 @@ internal class FindDuplicatesCommand : IConsoleCommand
     public bool CheckFilesExistence { get; set; }
 
     public FileDuplicatesViewModel FileDuplicates { get; private set; }
-
-    public int DuplicateCount => fileDuplicates?.DuplicateCount ?? 0;
-
-    public DataSize TotalSize => fileDuplicates?.TotalSize ?? DataSize.Zero;
 
     public FindDuplicatesCommand(RequestBus requestBus)
     {
@@ -63,8 +56,8 @@ internal class FindDuplicatesCommand : IConsoleCommand
             CheckFilesExistence = CheckFilesExistence
         };
 
-        fileDuplicates = await requestBus.PlaceRequest<FindDuplicatesRequest, FileDuplicates>(request);
+        FindDuplicatesResponse response = await requestBus.PlaceRequest<FindDuplicatesRequest, FindDuplicatesResponse>(request);
 
-        FileDuplicates = new FileDuplicatesViewModel(fileDuplicates);
+        FileDuplicates = new FileDuplicatesViewModel(response.DuplicatePairs);
     }
 }

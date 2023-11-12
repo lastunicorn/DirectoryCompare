@@ -17,6 +17,7 @@
 using DustInTheWind.DirectoryCompare.DataAccess.PotFiles;
 using DustInTheWind.DirectoryCompare.DataAccess.PotFiles.SnapshotFileModel;
 using DustInTheWind.DirectoryCompare.DataAccess.Transformations;
+using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.ImportExport;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
@@ -196,5 +197,36 @@ public class SnapshotRepository : ISnapshotRepository
 
         snapshotFile.Delete();
         return true;
+    }
+
+    public Snapshot RetrieveSnapshot(SnapshotLocation location)
+    {
+        if (string.IsNullOrEmpty(location.PotName))
+            throw new Exception("Pot name was not provided.");
+
+        if (location.SnapshotIndex.HasValue)
+            return GetByIndex(location.PotName, location.SnapshotIndex.Value);
+
+        if (location.SnapshotDate.HasValue)
+        {
+            DateTime searchedDate = location.SnapshotDate.Value;
+
+            Snapshot snapshot = GetByExactDateTime(location.PotName, searchedDate);
+
+            if (snapshot == null && searchedDate.TimeOfDay == TimeSpan.Zero)
+            {
+                List<Snapshot> snapshots = GetByDate(location.PotName, searchedDate)
+                    .ToList();
+
+                if (snapshots.Count == 1)
+                    snapshot = snapshots[0];
+                else if (snapshots.Count > 1)
+                    throw new Exception($"There are multiple snapshots that match the specified date. Pot = {location.PotName}; Date = {searchedDate}");
+            }
+
+            return snapshot;
+        }
+
+        return GetLast(location.PotName);
     }
 }

@@ -15,9 +15,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.DirectoryCompare.Cli.Application.PotArea.PresentPot;
-using DustInTheWind.DirectoryCompare.Domain.PotModel;
-using DustInTheWind.DirectoryCompare.Infrastructure;
+using DustInTheWind.DirectoryCompare.Cli.Application;
+using DustInTheWind.DirectoryCompare.Cli.Application.UseCases.PotArea.PresentPot;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands;
 
@@ -33,7 +32,7 @@ public class DisplayPotCommand : IConsoleCommand
     [AnonymousParameter(DisplayName = "pot name", Order = 1, IsOptional = true)]
     public string PotName { get; set; }
 
-    public Pot Pot { get; private set; }
+    public PotDto Pot { get; private set; }
 
     public DisplayPotCommand(RequestBus requestBus)
     {

@@ -15,10 +15,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.RemoveDuplicates;
-using DustInTheWind.DirectoryCompare.Domain;
-using DustInTheWind.DirectoryCompare.Domain.Comparison;
-using DustInTheWind.DirectoryCompare.Infrastructure;
+using DustInTheWind.DirectoryCompare.Cli.Application;
+using DustInTheWind.DirectoryCompare.Cli.Application.UseCases.MiscellaneousArea.RemoveDuplicates;
+using DustInTheWind.DirectoryCompare.DataStructures;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands;
 

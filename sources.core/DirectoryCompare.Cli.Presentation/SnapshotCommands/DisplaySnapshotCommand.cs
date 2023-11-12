@@ -15,9 +15,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.PresentSnapshot;
-using DustInTheWind.DirectoryCompare.Domain.Entities;
-using DustInTheWind.DirectoryCompare.Infrastructure;
+using DustInTheWind.DirectoryCompare.Cli.Application;
+using DustInTheWind.DirectoryCompare.Cli.Application.UseCases.SnapshotArea.PresentSnapshot;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands;
 
@@ -33,7 +32,7 @@ public class DisplaySnapshotCommand : IConsoleCommand
     [AnonymousParameter(Order = 1)]
     public string SnapshotLocation { get; set; }
 
-    public Snapshot Snapshot { get; private set; }
+    public PresentSnapshotResponse Response { get; private set; }
 
     public DisplaySnapshotCommand(RequestBus requestBus)
     {
@@ -47,6 +46,6 @@ public class DisplaySnapshotCommand : IConsoleCommand
             Location = SnapshotLocation
         };
 
-        Snapshot = await requestBus.PlaceRequest<PresentSnapshotRequest, Snapshot>(request);
+        Response = await requestBus.PlaceRequest<PresentSnapshotRequest, PresentSnapshotResponse>(request);
     }
 }

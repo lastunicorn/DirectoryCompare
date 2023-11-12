@@ -15,8 +15,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.DirectoryCompare.Domain.Comparison;
-using DustInTheWind.DirectoryCompare.Domain.Utils;
+using DustInTheWind.DirectoryCompare.Cli.Application.UseCases.MiscellaneousArea.FindDuplicates;
+using DustInTheWind.DirectoryCompare.DataStructures;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands;
 
@@ -24,13 +24,13 @@ internal class FindDuplicatesCommandView : IView<FindDuplicatesCommand>
 {
     public void Display(FindDuplicatesCommand command)
     {
-        foreach (FilePair filePair in command.FileDuplicates)
+        foreach (FilePairDto filePair in command.FileDuplicates)
             WriteDuplicate(filePair);
 
-        WriteSummary(command.DuplicateCount, command.TotalSize);
+        WriteSummary(command.FileDuplicates.DuplicateCount, command.FileDuplicates.TotalSize);
     }
 
-    private static void WriteDuplicate(FilePair filePair)
+    private static void WriteDuplicate(FilePairDto filePair)
     {
         Console.WriteLine(filePair.FullPathLeft);
         Console.WriteLine(filePair.FullPathRight);

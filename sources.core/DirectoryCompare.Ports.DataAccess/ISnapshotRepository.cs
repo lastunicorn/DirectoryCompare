@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.ImportExport;
 
@@ -42,4 +43,6 @@ public interface ISnapshotRepository
     bool DeleteSingleByDate(string potName, DateTime dateTime);
 
     bool DeleteByExactDateTime(string potName, DateTime dateTime);
+
+    Snapshot RetrieveSnapshot(SnapshotLocation location);
 }

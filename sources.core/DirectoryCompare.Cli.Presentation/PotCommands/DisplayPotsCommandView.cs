@@ -16,7 +16,7 @@
 
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.DirectoryCompare.Domain.PotModel;
+using DustInTheWind.DirectoryCompare.Cli.Application.UseCases.PotArea.PresentPots;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands;
 
@@ -32,13 +32,13 @@ internal class DisplayPotsCommandView : ViewBase<DisplayPotsCommand>
             WriteInfo("There are no Pots.");
     }
 
-    private static void DisplayPots(List<Pot> pots)
+    private static void DisplayPots(List<PotDto> pots)
     {
-        foreach (Pot pot in pots)
+        foreach (PotDto pot in pots)
             DisplayPot(pot);
     }
 
-    private static void DisplayPot(Pot pot)
+    private static void DisplayPot(PotDto pot)
     {
         string guid = pot.Guid.ToString()[..8];
         CustomConsole.Write(guid);

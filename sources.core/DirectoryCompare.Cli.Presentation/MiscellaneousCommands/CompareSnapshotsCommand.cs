@@ -15,9 +15,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.CompareSnapshots;
-using DustInTheWind.DirectoryCompare.Domain.Comparison;
-using DustInTheWind.DirectoryCompare.Infrastructure;
+using DustInTheWind.DirectoryCompare.Cli.Application;
+using DustInTheWind.DirectoryCompare.Cli.Application.UseCases.MiscellaneousArea.CompareSnapshots;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands;
 
@@ -40,9 +39,9 @@ public class CompareSnapshotsCommand : IConsoleCommand
 
     public IReadOnlyList<string> OnlyInSnapshot2 { get; private set; }
 
-    public IReadOnlyList<ItemComparison> DifferentNames { get; private set; }
+    public IReadOnlyList<FilePairDto> DifferentNames { get; private set; }
 
-    public IReadOnlyList<ItemComparison> DifferentContent { get; private set; }
+    public IReadOnlyList<FilePairDto> DifferentContent { get; private set; }
 
     public string ExportDirectoryPath { get; private set; }
 

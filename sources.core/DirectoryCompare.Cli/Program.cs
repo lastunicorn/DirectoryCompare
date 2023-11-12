@@ -22,13 +22,12 @@ using DustInTheWind.ConsoleTools.Commando;
 using DustInTheWind.ConsoleTools.Commando.Setup.Autofac;
 using DustInTheWind.ConsoleTools.Controls;
 using DustInTheWind.DirectoryCompare.Cli.Application;
-using DustInTheWind.DirectoryCompare.Cli.Application.PotArea.PresentPots;
+using DustInTheWind.DirectoryCompare.Cli.Application.UseCases.PotArea.PresentPots;
 using DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands;
 using DustInTheWind.DirectoryCompare.ConfigAccess;
 using DustInTheWind.DirectoryCompare.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.ImportExport;
 using DustInTheWind.DirectoryCompare.FileSystemAccess;
-using DustInTheWind.DirectoryCompare.Infrastructure;
 using DustInTheWind.DirectoryCompare.LogAccess;
 using DustInTheWind.DirectoryCompare.Ports.ConfigAccess;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
@@ -100,7 +99,6 @@ internal static class Program
         containerBuilder.RegisterMediatR(mediatRConfiguration);
 
         containerBuilder.RegisterType<RequestBus>().AsSelf();
-        containerBuilder.RegisterType<SnapshotFactory>().AsSelf();
     }
 
     private static void EventHandler(object sender, UnhandledApplicationExceptionEventArgs ex)

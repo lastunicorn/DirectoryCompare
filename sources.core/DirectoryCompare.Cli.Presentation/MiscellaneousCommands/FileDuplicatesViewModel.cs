@@ -15,22 +15,28 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections;
-using DustInTheWind.DirectoryCompare.Domain.Comparison;
+using DustInTheWind.DirectoryCompare.Cli.Application.UseCases.MiscellaneousArea.FindDuplicates;
+using DustInTheWind.DirectoryCompare.DataStructures;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands;
 
-internal class FileDuplicatesViewModel : IEnumerable<FilePair>
+internal class FileDuplicatesViewModel : IEnumerable<FilePairDto>
 {
-    private readonly FileDuplicates fileDuplicates;
+    private readonly FilePairDto[] fileDuplicates;
 
-    public FileDuplicatesViewModel(FileDuplicates fileDuplicates)
+    public int DuplicateCount => fileDuplicates?.Length ?? 0;
+
+    public DataSize TotalSize => fileDuplicates?.Sum(x => (long)(ulong)x.Size) ?? DataSize.Zero;
+
+    public FileDuplicatesViewModel(FilePairDto[] fileDuplicates)
     {
         this.fileDuplicates = fileDuplicates ?? throw new ArgumentNullException(nameof(fileDuplicates));
     }
 
-    public IEnumerator<FilePair> GetEnumerator()
+    public IEnumerator<FilePairDto> GetEnumerator()
     {
-        return fileDuplicates.GetEnumerator();
+        IEnumerable<FilePairDto> enumerable = fileDuplicates;
+        return enumerable.GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()

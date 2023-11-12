@@ -15,10 +15,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.DirectoryCompare.Cli.Application.PotArea.PresentPots;
-using DustInTheWind.DirectoryCompare.Domain.PotModel;
-using DustInTheWind.DirectoryCompare.Infrastructure;
-using MediatR;
+using DustInTheWind.DirectoryCompare.Cli.Application;
+using DustInTheWind.DirectoryCompare.Cli.Application.UseCases.PotArea.PresentPots;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands;
 
@@ -31,9 +29,9 @@ public class DisplayPotsCommand : IConsoleCommand
 {
     private readonly RequestBus requestBus;
 
-    public List<Pot> Pots { get; private set; }
+    public List<PotDto> Pots { get; private set; }
 
-    public DisplayPotsCommand(RequestBus requestBus, IMediator mediator)
+    public DisplayPotsCommand(RequestBus requestBus)
     {
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
     }

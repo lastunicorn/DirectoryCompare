@@ -16,7 +16,7 @@
 
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.DirectoryCompare.Domain.Entities;
+using DustInTheWind.DirectoryCompare.Cli.Application.UseCases.SnapshotArea.PresentSnapshot;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands;
 
@@ -24,32 +24,32 @@ public class DisplaySnapshotCommandView : IView<DisplaySnapshotCommand>
 {
     public void Display(DisplaySnapshotCommand command)
     {
-        if (command.Snapshot == null)
+        if (command.Response == null)
             CustomConsole.WriteLine("There is no snapshot.");
         else
         {
-            Console.WriteLine($"Snapshot: {command.Snapshot.Id:D}");
-            Console.WriteLine($"Path: {command.Snapshot.OriginalPath}");
+            Console.WriteLine($"Snapshot: {command.Response.SnapshotId:D}");
+            Console.WriteLine($"Path: {command.Response.OriginalPath}");
             Console.WriteLine();
 
-            DisplayDirectory(command.Snapshot, 0);
+            DisplayDirectory(command.Response.RootDirectory, 0);
         }
     }
 
-    private static void DisplayDirectory(HDirectory hDirectory, int index)
+    private static void DisplayDirectory(DirectoryDto directory, int index)
     {
         string indent = new(' ', index * 2);
 
-        foreach (HDirectory xSubdirectory in hDirectory.Directories)
+        foreach (DirectoryDto subdirectory in directory.Directories)
         {
-            Console.WriteLine(indent + xSubdirectory.Name);
-            DisplayDirectory(xSubdirectory, index + 1);
+            Console.WriteLine(indent + subdirectory.Name);
+            DisplayDirectory(subdirectory, index + 1);
         }
 
-        foreach (HFile xFile in hDirectory.Files)
+        foreach (FileDto file in directory.Files)
         {
-            Console.Write(indent + xFile.Name);
-            CustomConsole.WriteLine(ConsoleColor.DarkGray, " [" + xFile.Hash + "]");
+            Console.Write(indent + file.Name);
+            CustomConsole.WriteLine(ConsoleColor.DarkGray, " [" + file.Hash + "]");
         }
     }
 }
