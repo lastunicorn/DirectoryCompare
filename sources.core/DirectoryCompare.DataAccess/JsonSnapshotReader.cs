@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.DataAccess.PotFiles.SnapshotFileModel;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.ImportExport;
-using DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel;
 using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.DataAccess;

@@ -14,14 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Domain.Utils;
 using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 
 namespace DustInTheWind.DirectoryCompare.FileSystemAccess;
 
 public class FileSystem : IFileSystem
 {
-    public IDiskCrawler CreateCrawler(string path, DiskPathCollection blackList)
+    public IDiskCrawler CreateCrawler(string path, List<string> blackList)
     {
         return new DiskCrawler(path, blackList);
     }

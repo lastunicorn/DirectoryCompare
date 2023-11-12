@@ -16,7 +16,7 @@
 
 using System.Collections.ObjectModel;
 
-namespace DustInTheWind.DirectoryCompare.JFiles.BlacklistFileModel;
+namespace DustInTheWind.DirectoryCompare.DataAccess.PotFiles.BlacklistFileModel;
 
 public class PathCollection : Collection<string>
 {

@@ -15,7 +15,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections;
-using DustInTheWind.DirectoryCompare.Domain.Utils;
 using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 
 namespace DustInTheWind.DirectoryCompare.FileSystemAccess;
@@ -23,13 +22,13 @@ namespace DustInTheWind.DirectoryCompare.FileSystemAccess;
 internal class DirectoryCrawler : IEnumerable<ICrawlerItem>
 {
     private readonly string path;
-    private readonly DiskPathCollection blackList;
+    private readonly List<string> blackList;
 
     private string[] filePaths;
     private string[] directoryPaths;
     private Exception exception;
 
-    public DirectoryCrawler(string path, DiskPathCollection blackList)
+    public DirectoryCrawler(string path, List<string> blackList)
     {
         this.path = path ?? throw new ArgumentNullException(nameof(path));
         this.blackList = blackList ?? throw new ArgumentNullException(nameof(blackList));

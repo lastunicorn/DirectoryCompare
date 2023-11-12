@@ -57,4 +57,11 @@ public class DiskPathCollection : Collection<DiskPath>
         foreach (DiskPath item in items)
             Items.Add(item);
     }
+
+    public List<string> ToListOfStrings()
+    {
+        return Items
+            .Select(x => (string)x)
+            .ToList();
+    }
 }

@@ -31,11 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All" />
-        <ProjectReference Include="..\DirectoryCompare.Ports.LogAccess\DirectoryCompare.Ports.LogAccess.csproj" PrivateAssets="All" />
-    </ItemGroup>
-
-    <ItemGroup>
         <Compile Remove="RequestHandlingPipeline\**" />
     </ItemGroup>
 

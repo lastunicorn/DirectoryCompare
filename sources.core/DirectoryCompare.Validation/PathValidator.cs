@@ -34,16 +34,11 @@ public class PathValidator : PropertyValidator
 
     private static DiskPath GetDiskPath(object propertyValue)
     {
-        switch (propertyValue)
+        return propertyValue switch
         {
-            case string path:
-                return new DiskPath(path);
-
-            case DiskPath path:
-                return path;
-
-            default:
-                return DiskPath.Empty;
-        }
+            string path => new DiskPath(path),
+            DiskPath path => path,
+            _ => DiskPath.Empty
+        };
     }
 }

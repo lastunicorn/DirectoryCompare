@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel;
+using DustInTheWind.DirectoryCompare.DataAccess.PotFiles.SnapshotFileModel;
 using Newtonsoft.Json;
 
-namespace DustInTheWind.DirectoryCompare.JFiles;
+namespace DustInTheWind.DirectoryCompare.DataAccess.PotFiles;
 
 public class SnapshotFile : JsonFileBase<JSnapshot>
 {

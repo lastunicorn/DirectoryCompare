@@ -16,7 +16,7 @@
 
 using Newtonsoft.Json;
 
-namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel;
+namespace DustInTheWind.DirectoryCompare.DataAccess.PotFiles.SnapshotFileModel;
 
 public class JFileReader : JReader
 {

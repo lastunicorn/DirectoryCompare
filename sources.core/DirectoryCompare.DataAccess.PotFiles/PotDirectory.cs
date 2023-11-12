@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.JFiles.BlacklistFileModel;
-using DustInTheWind.DirectoryCompare.JFiles.PotInfoFileModel;
+using DustInTheWind.DirectoryCompare.DataAccess.PotFiles.BlacklistFileModel;
+using DustInTheWind.DirectoryCompare.DataAccess.PotFiles.PotInfoFileModel;
 
-namespace DustInTheWind.DirectoryCompare.JFiles;
+namespace DustInTheWind.DirectoryCompare.DataAccess.PotFiles;
 
 public class PotDirectory
 {

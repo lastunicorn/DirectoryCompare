@@ -14,11 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.DataAccess.PotFiles;
+using DustInTheWind.DirectoryCompare.DataAccess.PotFiles.PotInfoFileModel;
 using DustInTheWind.DirectoryCompare.DataAccess.Transformations;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
-using DustInTheWind.DirectoryCompare.JFiles;
-using DustInTheWind.DirectoryCompare.JFiles.PotInfoFileModel;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 
 namespace DustInTheWind.DirectoryCompare.DataAccess;

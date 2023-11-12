@@ -16,7 +16,7 @@
 
 using Newtonsoft.Json;
 
-namespace DustInTheWind.DirectoryCompare.JFiles;
+namespace DustInTheWind.DirectoryCompare.DataAccess.PotFiles;
 
 public class JsonFileBase<TContent>
     where TContent : class

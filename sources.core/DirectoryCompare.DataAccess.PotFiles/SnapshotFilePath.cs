@@ -16,7 +16,7 @@
 
 using System.Text.RegularExpressions;
 
-namespace DustInTheWind.DirectoryCompare.JFiles;
+namespace DustInTheWind.DirectoryCompare.DataAccess.PotFiles;
 
 public class SnapshotFilePath
 {

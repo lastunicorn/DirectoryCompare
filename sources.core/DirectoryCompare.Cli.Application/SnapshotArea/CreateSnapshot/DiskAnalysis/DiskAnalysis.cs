@@ -120,7 +120,7 @@ public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
     {
         return Task.Run(() =>
         {
-            long dataSize = fileSystem.CreateCrawler(RootPath, rootedBlackList)
+            long dataSize = fileSystem.CreateCrawler(RootPath, rootedBlackList.ToListOfStrings())
                 .AsParallel()
                 .Where(x => x.Action == CrawlerAction.FileFound)
                 .Select(x => (long)(ulong)x.Size)
@@ -134,7 +134,7 @@ public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
     {
         return Task.Run(() =>
         {
-            IDiskCrawler diskCrawler = fileSystem.CreateCrawler(RootPath, rootedBlackList);
+            IDiskCrawler diskCrawler = fileSystem.CreateCrawler(RootPath, rootedBlackList.ToListOfStrings());
 
             foreach (ICrawlerItem crawlerItem in diskCrawler)
             {
