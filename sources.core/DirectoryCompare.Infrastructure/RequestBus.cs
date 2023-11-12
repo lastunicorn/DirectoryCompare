@@ -1,5 +1,5 @@
 ﻿// DirectoryCompare
-// Copyright (C) 2017-2020 Dust in the Wind
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ public class RequestBus
         this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
     }
 
-    public async  Task<TResponse> PlaceRequest<TRequest, TResponse>(TRequest request)
+    public async Task<TResponse> PlaceRequest<TRequest, TResponse>(TRequest request)
         where TRequest : IRequest<TResponse>
     {
         TResponse response = await mediator.Send(request, CancellationToken.None);

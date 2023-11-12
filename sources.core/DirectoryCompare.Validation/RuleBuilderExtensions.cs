@@ -1,5 +1,5 @@
 ﻿// DirectoryCompare
-// Copyright (C) 2017-2020 Dust in the Wind
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,13 +16,12 @@
 
 using FluentValidation;
 
-namespace DustInTheWind.DirectoryCompare.Validation
+namespace DustInTheWind.DirectoryCompare.Validation;
+
+public static class RuleBuilderExtensions
 {
-    public static class RuleBuilderExtensions
+    public static IRuleBuilderOptions<T, TProperty> IsValidPath<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder)
     {
-        public static IRuleBuilderOptions<T, TProperty> IsValidPath<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder)
-        {
-            return ruleBuilder.SetValidator(new PathValidator());
-        }
+        return ruleBuilder.SetValidator(new PathValidator());
     }
 }

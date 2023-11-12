@@ -1,5 +1,5 @@
 ﻿// DirectoryCompare
-// Copyright (C) 2017-2020 Dust in the Wind
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,89 +14,87 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.ComponentModel;
 
-namespace DustInTheWind.DirectoryCompare.Domain
+namespace DustInTheWind.DirectoryCompare.Domain;
+
+[TypeConverter(typeof(SnapshotLocationConverter))]
+public struct SnapshotLocation
 {
-    [TypeConverter(typeof(SnapshotLocationConverter))]
-    public struct SnapshotLocation
+    private readonly string rawValue;
+
+    public string PotName { get; }
+
+    public int? SnapshotIndex { get; }
+
+    public DateTime? SnapshotDate { get; }
+
+    public string InternalPath { get; }
+
+    public SnapshotLocation(string value)
     {
-        private readonly string rawValue;
+        rawValue = value;
 
-        public string PotName { get; }
-
-        public int? SnapshotIndex { get; }
-
-        public DateTime? SnapshotDate { get; }
-
-        public string InternalPath { get; }
-
-        public SnapshotLocation(string value)
+        if (value == null)
         {
-            rawValue = value;
+            PotName = null;
+            SnapshotIndex = null;
+            SnapshotDate = null;
+            InternalPath = null;
+        }
+        else
+        {
+            Tuple<string, string> parts = SplitByFirstOccurence(value, '>');
+            InternalPath = parts.Item2;
 
-            if (value == null)
+            parts = SplitByFirstOccurence(parts.Item1, '~');
+            PotName = parts.Item1;
+
+            if (int.TryParse(parts.Item2, out int snapshotIndex))
             {
-                PotName = null;
+                SnapshotIndex = snapshotIndex;
+                SnapshotDate = null;
+            }
+            else if (DateTime.TryParse(parts.Item2, out DateTime snapshotDate))
+            {
+                SnapshotIndex = null;
+                SnapshotDate = snapshotDate;
+            }
+            else
+            {
                 SnapshotIndex = null;
                 SnapshotDate = null;
-                InternalPath = null;
-            }
-            else
-            {
-                Tuple<string, string> parts = SplitByFirstOccurence(value, '>');
-                InternalPath = parts.Item2;
-
-                parts = SplitByFirstOccurence(parts.Item1, '~');
-                PotName = parts.Item1;
-
-                if (int.TryParse(parts.Item2, out int snapshotIndex))
-                {
-                    SnapshotIndex = snapshotIndex;
-                    SnapshotDate = null;
-                }
-                else if (DateTime.TryParse(parts.Item2, out DateTime snapshotDate))
-                {
-                    SnapshotIndex = null;
-                    SnapshotDate = snapshotDate;
-                }
-                else
-                {
-                    SnapshotIndex = null;
-                    SnapshotDate = null;
-                }
             }
         }
+    }
 
-        private static Tuple<string, string> SplitByFirstOccurence(string text, char c)
+    private static Tuple<string, string> SplitByFirstOccurence(string text, char c)
+    {
+        int pos = text.IndexOf(c);
+        string value1;
+        string value2;
+
+        if (pos >= 0)
         {
-            int pos = text.IndexOf(c);
-            string value1;
-            string value2;
-
-            if (pos >= 0)
-            {
-                value1 = text.Substring(0, pos);
-                value2 = text.Substring(pos + 1);
-            }
-            else
-            {
-                value1 = text;
-                value2 = null;
-            }
-
-            return new Tuple<string, string>(value1, value2);
+            value1 = text.Substring(0, pos);
+            value2 = text.Substring(pos + 1);
         }
-
-        public static implicit operator string(SnapshotLocation snapshotLocation)
+        else
         {
-            return snapshotLocation.rawValue;
+            value1 = text;
+            value2 = null;
         }
 
-        public static implicit operator SnapshotLocation(string path)
-        {
-            return new SnapshotLocation(path);
-        }
+        return new Tuple<string, string>(value1, value2);
+    }
+
+    public static implicit operator string(SnapshotLocation snapshotLocation)
+    {
+        return snapshotLocation.rawValue;
+    }
+
+    public static implicit operator SnapshotLocation(string path)
+    {
+        return new SnapshotLocation(path);
     }
 }

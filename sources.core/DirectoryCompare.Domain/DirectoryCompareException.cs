@@ -1,5 +1,5 @@
 ﻿// DirectoryCompare
-// Copyright (C) 2017-2020 Dust in the Wind
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,31 +14,29 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.Runtime.Serialization;
 
-namespace DustInTheWind.DirectoryCompare.Domain
+namespace DustInTheWind.DirectoryCompare.Domain;
+
+[Serializable]
+public class DirectoryCompareException : Exception
 {
-    [Serializable]
-    public class DirectoryCompareException : Exception
+    public DirectoryCompareException()
     {
-        public DirectoryCompareException()
-        {
-        }
+    }
 
-        public DirectoryCompareException(string message)
-            : base(message)
-        {
-        }
+    public DirectoryCompareException(string message)
+        : base(message)
+    {
+    }
 
-        public DirectoryCompareException(string message, Exception inner)
-            : base(message, inner)
-        {
-        }
+    public DirectoryCompareException(string message, Exception inner)
+        : base(message, inner)
+    {
+    }
 
-        protected DirectoryCompareException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
+    protected DirectoryCompareException(SerializationInfo info, StreamingContext context)
+        : base(info, context)
+    {
     }
 }

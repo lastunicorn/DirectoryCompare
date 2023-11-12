@@ -1,5 +1,5 @@
 ﻿// DirectoryCompare
-// Copyright (C) 2017-2020 Dust in the Wind
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,34 +17,33 @@
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 using FluentValidation.Validators;
 
-namespace DustInTheWind.DirectoryCompare.Validation
+namespace DustInTheWind.DirectoryCompare.Validation;
+
+public class PathValidator : PropertyValidator
 {
-    public class PathValidator : PropertyValidator
+    public PathValidator()
+        : base("The provided path is not valid.")
     {
-        public PathValidator()
-            : base("The provided path is not valid.")
+    }
+
+    protected override bool IsValid(PropertyValidatorContext context)
+    {
+        DiskPath diskPath = GetDiskPath(context.PropertyValue);
+        return diskPath.IsEmpty || diskPath.IsValid;
+    }
+
+    private static DiskPath GetDiskPath(object propertyValue)
+    {
+        switch (propertyValue)
         {
-        }
+            case string path:
+                return new DiskPath(path);
 
-        protected override bool IsValid(PropertyValidatorContext context)
-        {
-            DiskPath diskPath = GetDiskPath(context.PropertyValue);
-            return diskPath.IsEmpty || diskPath.IsValid;
-        }
+            case DiskPath path:
+                return path;
 
-        private static DiskPath GetDiskPath(object propertyValue)
-        {
-            switch (propertyValue)
-            {
-                case string path:
-                    return new DiskPath(path);
-
-                case DiskPath path:
-                    return path;
-
-                default:
-                    return DiskPath.Empty;
-            }
+            default:
+                return DiskPath.Empty;
         }
     }
 }
