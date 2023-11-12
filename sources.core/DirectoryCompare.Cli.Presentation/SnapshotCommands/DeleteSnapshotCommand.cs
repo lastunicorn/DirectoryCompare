@@ -16,7 +16,7 @@
 
 using DustInTheWind.ConsoleTools.Commando;
 using DustInTheWind.DirectoryCompare.Cli.Application;
-using DustInTheWind.DirectoryCompare.Cli.Application.UseCases.SnapshotArea.DeleteSnapshot;
+using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.DeleteSnapshot;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands;
 

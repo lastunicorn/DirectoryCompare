@@ -16,7 +16,7 @@
 
 using DustInTheWind.ConsoleTools.Commando;
 using DustInTheWind.DirectoryCompare.Cli.Application;
-using DustInTheWind.DirectoryCompare.Cli.Application.UseCases.BlackListArea.AddBlackPath;
+using DustInTheWind.DirectoryCompare.Cli.Application.BlackListArea.AddBlackPath;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.BlackListCommands;
 // Example:

@@ -16,7 +16,7 @@
 
 using DustInTheWind.ConsoleTools.Commando;
 using DustInTheWind.DirectoryCompare.Cli.Application;
-using DustInTheWind.DirectoryCompare.Cli.Application.UseCases.MiscellaneousArea.FindDuplicates;
+using DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.FindDuplicates;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands;
 // Example:

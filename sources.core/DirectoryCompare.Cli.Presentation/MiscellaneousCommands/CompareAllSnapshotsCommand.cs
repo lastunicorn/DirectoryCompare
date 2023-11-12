@@ -16,7 +16,7 @@
 
 using DustInTheWind.ConsoleTools.Commando;
 using DustInTheWind.DirectoryCompare.Cli.Application;
-using DustInTheWind.DirectoryCompare.Cli.Application.UseCases.MiscellaneousArea.CompareAllSnapshots;
+using DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.CompareAllSnapshots;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands;
 

@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections;
-using DustInTheWind.DirectoryCompare.Cli.Application.UseCases.MiscellaneousArea.FindDuplicates;
+using DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.FindDuplicates;
 using DustInTheWind.DirectoryCompare.DataStructures;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands;

@@ -16,7 +16,7 @@
 
 using DustInTheWind.ConsoleTools.Commando;
 using DustInTheWind.DirectoryCompare.Cli.Application;
-using DustInTheWind.DirectoryCompare.Cli.Application.UseCases.PotArea.PresentPots;
+using DustInTheWind.DirectoryCompare.Cli.Application.PotArea.PresentPots;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands;
 

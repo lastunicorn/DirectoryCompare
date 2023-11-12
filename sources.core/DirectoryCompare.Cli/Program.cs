@@ -22,7 +22,7 @@ using DustInTheWind.ConsoleTools.Commando;
 using DustInTheWind.ConsoleTools.Commando.Setup.Autofac;
 using DustInTheWind.ConsoleTools.Controls;
 using DustInTheWind.DirectoryCompare.Cli.Application;
-using DustInTheWind.DirectoryCompare.Cli.Application.UseCases.PotArea.PresentPots;
+using DustInTheWind.DirectoryCompare.Cli.Application.PotArea.PresentPots;
 using DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands;
 using DustInTheWind.DirectoryCompare.ConfigAccess;
 using DustInTheWind.DirectoryCompare.DataAccess;

@@ -16,8 +16,8 @@
 
 using DustInTheWind.ConsoleTools.Commando;
 using DustInTheWind.DirectoryCompare.Cli.Application;
-using DustInTheWind.DirectoryCompare.Cli.Application.UseCases.SnapshotArea.CreateSnapshot;
-using DustInTheWind.DirectoryCompare.Cli.Application.UseCases.SnapshotArea.CreateSnapshot.DiskAnalysis;
+using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot;
+using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands;
 

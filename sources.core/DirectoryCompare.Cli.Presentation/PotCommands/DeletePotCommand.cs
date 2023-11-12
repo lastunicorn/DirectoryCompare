@@ -16,7 +16,7 @@
 
 using DustInTheWind.ConsoleTools.Commando;
 using DustInTheWind.DirectoryCompare.Cli.Application;
-using DustInTheWind.DirectoryCompare.Cli.Application.UseCases.PotArea.DeletePot;
+using DustInTheWind.DirectoryCompare.Cli.Application.PotArea.DeletePot;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands;
 
