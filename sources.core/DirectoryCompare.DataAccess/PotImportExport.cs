@@ -1,5 +1,5 @@
 ﻿// DirectoryCompare
-// Copyright (C) 2017-2020 Dust in the Wind
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,43 +14,41 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.IO;
 using DustInTheWind.DirectoryCompare.DataAccess.Transformations;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.ImportExport;
 using DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel;
 using Newtonsoft.Json;
 
-namespace DustInTheWind.DirectoryCompare.DataAccess
+namespace DustInTheWind.DirectoryCompare.DataAccess;
+
+public class PotImportExport : IPotImportExport
 {
-    public class PotImportExport : IPotImportExport
+    public Snapshot ReadSnapshot(string filePath)
     {
-        public Snapshot ReadSnapshot(string filePath)
-        {
-            using StreamReader streamReader = File.OpenText(filePath);
-            using JsonTextReader jsonTextReader = new(streamReader);
-            
-            JsonSerializer serializer = new();
-            JSnapshot jSnapshot = (JSnapshot)serializer.Deserialize(jsonTextReader, typeof(JSnapshot));
+        using StreamReader streamReader = File.OpenText(filePath);
+        using JsonTextReader jsonTextReader = new(streamReader);
 
-            return jSnapshot.ToSnapshot();
-        }
+        JsonSerializer serializer = new();
+        JSnapshot jSnapshot = (JSnapshot)serializer.Deserialize(jsonTextReader, typeof(JSnapshot));
 
-        public void WriteSnapshot(Snapshot snapshot, string filePath)
-        {
-            using StreamWriter streamWriter = new(filePath);
-            WriteSnapshot(snapshot, streamWriter);
-        }
+        return jSnapshot.ToSnapshot();
+    }
 
-        internal static void WriteSnapshot(Snapshot snapshot, StreamWriter streamWriter)
-        {
-            JsonTextWriter jsonTextWriter = new(streamWriter);
-            jsonTextWriter.Formatting = Formatting.Indented;
-            
-            JSnapshotWriter jSnapshotWriter = new(jsonTextWriter);
-            JsonSnapshotWriter jsonSnapshotWriter = new(jSnapshotWriter);
-            
-            jsonSnapshotWriter.Write(snapshot);
-        }
+    public void WriteSnapshot(Snapshot snapshot, string filePath)
+    {
+        using StreamWriter streamWriter = new(filePath);
+        WriteSnapshot(snapshot, streamWriter);
+    }
+
+    internal static void WriteSnapshot(Snapshot snapshot, StreamWriter streamWriter)
+    {
+        JsonTextWriter jsonTextWriter = new(streamWriter);
+        jsonTextWriter.Formatting = Formatting.Indented;
+
+        JSnapshotWriter jSnapshotWriter = new(jsonTextWriter);
+        JsonSnapshotWriter jsonSnapshotWriter = new(jSnapshotWriter);
+
+        jsonSnapshotWriter.Write(snapshot);
     }
 }

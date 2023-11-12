@@ -1,5 +1,5 @@
 ﻿// DirectoryCompare
-// Copyright (C) 2017-2020 Dust in the Wind
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,99 +14,96 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
+namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel;
+
+public sealed class JSnapshotReader : JReader
 {
-    public sealed class JSnapshotReader : JReader
+    public JSnapshotFieldType CurrentPropertyType { get; private set; } = JSnapshotFieldType.None;
+
+    public JSnapshotReader(JsonTextReader jsonTextReader)
+        : base(jsonTextReader)
     {
-        public JSnapshotFieldType CurrentPropertyType { get; private set; } = JSnapshotFieldType.None;
+    }
 
-        public JSnapshotReader(JsonTextReader jsonTextReader)
-            : base(jsonTextReader)
+    public bool MoveNext()
+    {
+        MoveToNextState();
+
+        try
         {
-        }
+            bool success = MoveToNextProperty();
 
-        public bool MoveNext()
-        {
-            MoveToNextState();
-
-            try
+            if (success)
             {
-                bool success = MoveToNextProperty();
-
-                if (success)
-                {
-                    CurrentPropertyType = CalculateFieldType();
-                    return true;
-                }
-                else
-                {
-                    CurrentPropertyType = JSnapshotFieldType.None;
-                    return false;
-                }
+                CurrentPropertyType = CalculateFieldType();
+                return true;
             }
-            catch
+            else
             {
                 CurrentPropertyType = JSnapshotFieldType.None;
-                throw;
+                return false;
             }
         }
-
-        private JSnapshotFieldType CalculateFieldType()
+        catch
         {
-            return JsonTextReader.Value switch
-            {
-                "serializer-id" => JSnapshotFieldType.SerializerId,
-                "original-path" => JSnapshotFieldType.OriginalPath,
-                "creation-time" => JSnapshotFieldType.CreationTime,
-                _ => throw new Exception("Invalid field in directory object.")
-            };
+            CurrentPropertyType = JSnapshotFieldType.None;
+            throw;
         }
+    }
 
-        public Guid ReadSerializerId()
+    private JSnapshotFieldType CalculateFieldType()
+    {
+        return JsonTextReader.Value switch
         {
-            if (CurrentPropertyType != JSnapshotFieldType.SerializerId)
-                throw new Exception("Current property is not the serializer id.");
+            "serializer-id" => JSnapshotFieldType.SerializerId,
+            "original-path" => JSnapshotFieldType.OriginalPath,
+            "creation-time" => JSnapshotFieldType.CreationTime,
+            _ => throw new Exception("Invalid field in directory object.")
+        };
+    }
 
-            string rawValue = JsonTextReader.ReadAsString();
+    public Guid ReadSerializerId()
+    {
+        if (CurrentPropertyType != JSnapshotFieldType.SerializerId)
+            throw new Exception("Current property is not the serializer id.");
 
-            return Guid.Parse(rawValue);
-        }
+        string rawValue = JsonTextReader.ReadAsString();
 
-        public string ReadOriginalPath()
-        {
-            if (CurrentPropertyType != JSnapshotFieldType.OriginalPath)
-                throw new Exception("Current property is not the original path.");
+        return Guid.Parse(rawValue);
+    }
 
-            return JsonTextReader.ReadAsString();
-        }
+    public string ReadOriginalPath()
+    {
+        if (CurrentPropertyType != JSnapshotFieldType.OriginalPath)
+            throw new Exception("Current property is not the original path.");
 
-        public DateTime ReadCreationTime()
-        {
-            if (CurrentPropertyType != JSnapshotFieldType.CreationTime)
-                throw new Exception("Current property is not the creation time.");
+        return JsonTextReader.ReadAsString();
+    }
 
-            DateTime? readAsDateTime = JsonTextReader.ReadAsDateTime();
-            return readAsDateTime.Value;
-        }
+    public DateTime ReadCreationTime()
+    {
+        if (CurrentPropertyType != JSnapshotFieldType.CreationTime)
+            throw new Exception("Current property is not the creation time.");
 
-        public IEnumerable<JFileReader> ReadFiles()
-        {
-            if (CurrentPropertyType != JSnapshotFieldType.FileCollection)
-                throw new Exception("Current property is not the file collection.");
+        DateTime? readAsDateTime = JsonTextReader.ReadAsDateTime();
+        return readAsDateTime.Value;
+    }
 
-            return ReadFilesCollection();
-        }
+    public IEnumerable<JFileReader> ReadFiles()
+    {
+        if (CurrentPropertyType != JSnapshotFieldType.FileCollection)
+            throw new Exception("Current property is not the file collection.");
 
-        public IEnumerable<JDirectoryReader> ReadSubDirectories()
-        {
-            if (CurrentPropertyType != JSnapshotFieldType.DirectoryCollection)
-                throw new Exception("Current property is not the sub-directory collection.");
+        return ReadFilesCollection();
+    }
 
-            return ReadDirectoriesCollection();
-        }
+    public IEnumerable<JDirectoryReader> ReadSubDirectories()
+    {
+        if (CurrentPropertyType != JSnapshotFieldType.DirectoryCollection)
+            throw new Exception("Current property is not the sub-directory collection.");
+
+        return ReadDirectoriesCollection();
     }
 }

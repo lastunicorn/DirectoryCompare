@@ -1,5 +1,5 @@
 ﻿// DirectoryCompare
-// Copyright (C) 2017-2020 Dust in the Wind
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,133 +14,131 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using Newtonsoft.Json;
 
-namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
+namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel;
+
+public class JDirectoryWriter : IDisposable
 {
-    public class JDirectoryWriter : IDisposable
+    protected JsonTextWriter Writer { get; }
+
+    private JsonNodeState directoriesNodeState;
+    private JsonNodeState filesPropertyNodeState;
+
+    public JDirectoryWriter(JsonTextWriter jsonTextWriter)
     {
-        protected JsonTextWriter Writer { get; }
+        Writer = jsonTextWriter ?? throw new ArgumentNullException(nameof(jsonTextWriter));
 
-        private JsonNodeState directoriesNodeState;
-        private JsonNodeState filesPropertyNodeState;
+        directoriesNodeState = JsonNodeState.NotOpened;
+        filesPropertyNodeState = JsonNodeState.NotOpened;
+    }
 
-        public JDirectoryWriter(JsonTextWriter jsonTextWriter)
+    public void WriteStart()
+    {
+        Writer.WriteStartObject();
+    }
+
+    public void WriteName(string directoryName)
+    {
+        Writer.WritePropertyName("n");
+        Writer.WriteValue(directoryName);
+    }
+
+    public JFileWriter CreateFile()
+    {
+        WriteEndDirectoriesArray();
+        WriteStartFilesArray();
+
+        return new JFileWriter(Writer);
+    }
+
+    private void WriteStartFilesArray()
+    {
+        switch (filesPropertyNodeState)
         {
-            Writer = jsonTextWriter ?? throw new ArgumentNullException(nameof(jsonTextWriter));
+            case JsonNodeState.NotOpened:
+                Writer.WritePropertyName("f");
+                Writer.WriteStartArray();
 
-            directoriesNodeState = JsonNodeState.NotOpened;
-            filesPropertyNodeState = JsonNodeState.NotOpened;
+                filesPropertyNodeState = JsonNodeState.Opened;
+                break;
+
+            case JsonNodeState.Closed:
+                throw new Exception("Files list is already closed. No more files can be added.");
+
+            case JsonNodeState.Opened:
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException();
         }
+    }
 
-        public void WriteStart()
+    public JDirectoryWriter CreateSubDirectory()
+    {
+        WriteEndFilesArray();
+        WriteStartDirectoriesArray();
+
+        return new JDirectoryWriter(Writer);
+    }
+
+    private void WriteEndFilesArray()
+    {
+        if (filesPropertyNodeState != JsonNodeState.Opened)
+            return;
+
+        Writer.WriteEndArray();
+        filesPropertyNodeState = JsonNodeState.Closed;
+    }
+
+    private void WriteStartDirectoriesArray()
+    {
+        switch (directoriesNodeState)
         {
-            Writer.WriteStartObject();
+            case JsonNodeState.NotOpened:
+                Writer.WritePropertyName("d");
+                Writer.WriteStartArray();
+
+                directoriesNodeState = JsonNodeState.Opened;
+                break;
+
+            case JsonNodeState.Closed:
+                throw new Exception("Directories list is already closed. No more directories can be added.");
+
+            case JsonNodeState.Opened:
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException();
         }
+    }
 
-        public void WriteName(string directoryName)
-        {
-            Writer.WritePropertyName("n");
-            Writer.WriteValue(directoryName);
-        }
+    private void WriteEndDirectoriesArray()
+    {
+        if (directoriesNodeState != JsonNodeState.Opened)
+            return;
 
-        public JFileWriter CreateFile()
-        {
-            WriteEndDirectoriesArray();
-            WriteStartFilesArray();
+        Writer.WriteEndArray();
+        directoriesNodeState = JsonNodeState.Closed;
+    }
 
-            return new JFileWriter(Writer);
-        }
+    public void WriteEnd()
+    {
+        WriteEndFilesArray();
+        WriteEndDirectoriesArray();
 
-        private void WriteStartFilesArray()
-        {
-            switch (filesPropertyNodeState)
-            {
-                case JsonNodeState.NotOpened:
-                    Writer.WritePropertyName("f");
-                    Writer.WriteStartArray();
+        Writer.WriteEndObject();
+    }
 
-                    filesPropertyNodeState = JsonNodeState.Opened;
-                    break;
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
 
-                case JsonNodeState.Closed:
-                    throw new Exception("Files list is already closed. No more files can be added.");
-
-                case JsonNodeState.Opened:
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        public JDirectoryWriter CreateSubDirectory()
-        {
-            WriteEndFilesArray();
-            WriteStartDirectoriesArray();
-
-            return new JDirectoryWriter(Writer);
-        }
-
-        private void WriteEndFilesArray()
-        {
-            if (filesPropertyNodeState != JsonNodeState.Opened)
-                return;
-
-            Writer.WriteEndArray();
-            filesPropertyNodeState = JsonNodeState.Closed;
-        }
-
-        private void WriteStartDirectoriesArray()
-        {
-            switch (directoriesNodeState)
-            {
-                case JsonNodeState.NotOpened:
-                    Writer.WritePropertyName("d");
-                    Writer.WriteStartArray();
-
-                    directoriesNodeState = JsonNodeState.Opened;
-                    break;
-
-                case JsonNodeState.Closed:
-                    throw new Exception("Directories list is already closed. No more directories can be added.");
-
-                case JsonNodeState.Opened:
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        private void WriteEndDirectoriesArray()
-        {
-            if (directoriesNodeState != JsonNodeState.Opened)
-                return;
-
-            Writer.WriteEndArray();
-            directoriesNodeState = JsonNodeState.Closed;
-        }
-
-        public void WriteEnd()
-        {
-            WriteEndFilesArray();
-            WriteEndDirectoriesArray();
-
-            Writer.WriteEndObject();
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing) 
-                ((IDisposable)Writer)?.Dispose();
-        }
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+            ((IDisposable)Writer)?.Dispose();
     }
 }

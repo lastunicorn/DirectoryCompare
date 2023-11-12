@@ -26,17 +26,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Remove="ResultExporters\ConsoleComparisonReducedExporter.cs" />
+        <Compile Remove="ResultExporters\ConsoleComparisonReducedExporter.cs"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="ConsoleTools.Commando" Version="2.0.0-beta.5" />
+        <PackageReference Include="ConsoleTools.Commando" Version="2.0.0-beta.5"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\DirectoryCompare.Cli.Application\DirectoryCompare.Cli.Application.csproj" PrivateAssets="All" />
-        <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All" />
-        <ProjectReference Include="..\DirectoryCompare.Infrastructure\DirectoryCompare.Infrastructure.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.Cli.Application\DirectoryCompare.Cli.Application.csproj" PrivateAssets="All"/>
+        <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All"/>
+        <ProjectReference Include="..\DirectoryCompare.Infrastructure\DirectoryCompare.Infrastructure.csproj" PrivateAssets="All"/>
     </ItemGroup>
 
 </Project>

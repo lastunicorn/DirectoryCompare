@@ -1,5 +1,5 @@
 ﻿// DirectoryCompare
-// Copyright (C) 2017-2020 Dust in the Wind
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,97 +14,95 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using Newtonsoft.Json;
 
-namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
+namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel;
+
+public class JFileReader : JReader
 {
-    public class JFileReader : JReader
+    private JReaderState state = JReaderState.New;
+
+    public JFileFieldType CurrentPropertyType { get; private set; } = JFileFieldType.None;
+
+    public JFileReader(JsonTextReader jsonTextReader)
+        : base(jsonTextReader)
     {
-        private JReaderState state = JReaderState.New;
+    }
 
-        public JFileFieldType CurrentPropertyType { get; private set; } = JFileFieldType.None;
-
-        public JFileReader(JsonTextReader jsonTextReader)
-            : base(jsonTextReader)
+    public JFileFieldType MoveToNext()
+    {
+        switch (state)
         {
+            case JReaderState.New:
+                state = JReaderState.InProgress;
+                break;
+
+            case JReaderState.InProgress:
+                break;
+
+            case JReaderState.Finished:
+                throw new Exception("The reader already finished reading the json object.");
+
+            default:
+                throw new Exception("Invalid reader state.");
         }
 
-        public JFileFieldType MoveToNext()
+        try
         {
-            switch (state)
-            {
-                case JReaderState.New:
-                    state = JReaderState.InProgress;
-                    break;
+            bool success = MoveToNextProperty();
 
-                case JReaderState.InProgress:
-                    break;
+            CurrentPropertyType = success
+                ? JsonTextReader.Value switch
+                {
+                    "n" => JFileFieldType.FileName,
+                    "s" => JFileFieldType.FileSize,
+                    "m" => JFileFieldType.LastModifiedTime,
+                    "h" => JFileFieldType.Hash,
+                    _ => throw new Exception("Invalid field in file object.")
+                }
+                : JFileFieldType.None;
 
-                case JReaderState.Finished:
-                    throw new Exception("The reader already finished reading the json object.");
-
-                default:
-                    throw new Exception("Invalid reader state.");
-            }
-
-            try
-            {
-                bool success = MoveToNextProperty();
-
-                CurrentPropertyType = success
-                    ? JsonTextReader.Value switch
-                    {
-                        "n" => JFileFieldType.FileName,
-                        "s" => JFileFieldType.FileSize,
-                        "m" => JFileFieldType.LastModifiedTime,
-                        "h" => JFileFieldType.Hash,
-                        _ => throw new Exception("Invalid field in file object.")
-                    }
-                    : JFileFieldType.None;
-
-                return CurrentPropertyType;
-            }
-            catch
-            {
-                CurrentPropertyType = JFileFieldType.None;
-                throw;
-            }
+            return CurrentPropertyType;
         }
-
-        public string ReadName()
+        catch
         {
-            if (CurrentPropertyType != JFileFieldType.FileName)
-                throw new Exception("Current property is not the file name.");
-
-            return JsonTextReader.ReadAsString();
+            CurrentPropertyType = JFileFieldType.None;
+            throw;
         }
+    }
 
-        public ulong ReadSize()
-        {
-            if (CurrentPropertyType != JFileFieldType.FileSize)
-                throw new Exception("Current property is not the file size.");
+    public string ReadName()
+    {
+        if (CurrentPropertyType != JFileFieldType.FileName)
+            throw new Exception("Current property is not the file name.");
 
-            string rawValue = JsonTextReader.ReadAsString();
-            return ulong.Parse(rawValue);
-        }
+        return JsonTextReader.ReadAsString();
+    }
 
-        public DateTime ReadLastModifiedTime()
-        {
-            if (CurrentPropertyType != JFileFieldType.LastModifiedTime)
-                throw new Exception("Current property is not the last modified time.");
+    public ulong ReadSize()
+    {
+        if (CurrentPropertyType != JFileFieldType.FileSize)
+            throw new Exception("Current property is not the file size.");
 
-            DateTime? readAsDateTime = JsonTextReader.ReadAsDateTime();
-            return readAsDateTime.Value;
-        }
+        string rawValue = JsonTextReader.ReadAsString();
+        return ulong.Parse(rawValue);
+    }
 
-        public byte[] ReadHash()
-        {
-            if (CurrentPropertyType != JFileFieldType.Hash)
-                throw new Exception("Current property is not the file hash.");
+    public DateTime ReadLastModifiedTime()
+    {
+        if (CurrentPropertyType != JFileFieldType.LastModifiedTime)
+            throw new Exception("Current property is not the last modified time.");
 
-            byte[] bytes = JsonTextReader.ReadAsBytes();
-            return bytes;
-        }
+        DateTime? readAsDateTime = JsonTextReader.ReadAsDateTime();
+        return readAsDateTime.Value;
+    }
+
+    public byte[] ReadHash()
+    {
+        if (CurrentPropertyType != JFileFieldType.Hash)
+            throw new Exception("Current property is not the file hash.");
+
+        byte[] bytes = JsonTextReader.ReadAsBytes();
+        return bytes;
     }
 }

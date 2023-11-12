@@ -24,7 +24,7 @@ public class Config : IConfig
     private IConfiguration configuration;
 
     public string ConnectionString => configuration["ConnectionString"];
-    
+
     public Config()
     {
         configuration = new ConfigurationBuilder()

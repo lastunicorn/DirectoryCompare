@@ -1,5 +1,5 @@
 ﻿// DirectoryCompare
-// Copyright (C) 2017-2020 Dust in the Wind
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,45 +14,42 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
-using System.Linq;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel;
 
-namespace DustInTheWind.DirectoryCompare.DataAccess.Transformations
+namespace DustInTheWind.DirectoryCompare.DataAccess.Transformations;
+
+internal static class JDirectoryExtensions
 {
-    internal static class JDirectoryExtensions
+    public static HDirectory ToHDirectory(this JDirectory jDirectory)
     {
-        public static HDirectory ToHDirectory(this JDirectory jDirectory)
+        HDirectory directory = new()
         {
-            HDirectory directory = new HDirectory
-            {
-                Name = jDirectory.Name
-            };
+            Name = jDirectory.Name
+        };
 
-            List<HDirectory> directories = jDirectory.GetHDirectories();
-            if (directories != null)
-                directory.Directories.AddRange(directories);
+        List<HDirectory> directories = jDirectory.GetHDirectories();
+        if (directories != null)
+            directory.Directories.AddRange(directories);
 
-            List<HFile> files = jDirectory.GetHFiles();
-            if (files != null)
-                directory.Files.AddRange(files);
+        List<HFile> files = jDirectory.GetHFiles();
+        if (files != null)
+            directory.Files.AddRange(files);
 
-            return directory;
-        }
+        return directory;
+    }
 
-        private static List<HDirectory> GetHDirectories(this JDirectory jDirectory)
-        {
-            return jDirectory.Directories?
-                .Select(x => ToHDirectory(x))
-                .ToList();
-        }
+    private static List<HDirectory> GetHDirectories(this JDirectory jDirectory)
+    {
+        return jDirectory.Directories?
+            .Select(x => ToHDirectory(x))
+            .ToList();
+    }
 
-        private static List<HFile> GetHFiles(this JDirectory jDirectory)
-        {
-            return jDirectory.Files?
-                .Select(x => x.ToHFile())
-                .ToList();
-        }
+    private static List<HFile> GetHFiles(this JDirectory jDirectory)
+    {
+        return jDirectory.Files?
+            .Select(x => x.ToHFile())
+            .ToList();
     }
 }

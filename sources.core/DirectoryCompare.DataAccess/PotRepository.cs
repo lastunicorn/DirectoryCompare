@@ -1,5 +1,5 @@
 ﻿// DirectoryCompare
-// Copyright (C) 2017-2020 Dust in the Wind
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -50,8 +50,8 @@ public class PotRepository : IPotRepository
         {
             IEnumerable<Snapshot> snapshots = potDirectory.GetSnapshotFiles()
                 .Where(x => x.Open())
-                .Select(x=> x.Content.ToSnapshot());
-            
+                .Select(x => x.Content.ToSnapshot());
+
             pot.Snapshots.AddRange(snapshots);
         }
 

@@ -1,5 +1,5 @@
 ﻿// DirectoryCompare
-// Copyright (C) 2017-2020 Dust in the Wind
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,20 +17,18 @@
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel;
 
-namespace DustInTheWind.DirectoryCompare.DataAccess.Transformations
-{
-    internal static class JFileExtensions
-    {
+namespace DustInTheWind.DirectoryCompare.DataAccess.Transformations;
 
-        public static HFile ToHFile(this JFile jFile)
+internal static class JFileExtensions
+{
+    public static HFile ToHFile(this JFile jFile)
+    {
+        return new HFile
         {
-            return new HFile
-            {
-                Name = jFile.Name,
-                Size = jFile.Size,
-                Hash = jFile.Hash,
-                LastModifiedTime = jFile.LastModifiedTime
-            };
-        }
+            Name = jFile.Name,
+            Size = jFile.Size,
+            Hash = jFile.Hash,
+            LastModifiedTime = jFile.LastModifiedTime
+        };
     }
 }

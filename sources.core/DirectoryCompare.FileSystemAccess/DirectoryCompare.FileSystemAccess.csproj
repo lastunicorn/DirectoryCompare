@@ -26,8 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All" />
-        <ProjectReference Include="..\DirectoryCompare.Ports.FileSystemAccess\DirectoryCompare.Ports.FileSystemAccess.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All"/>
+        <ProjectReference Include="..\DirectoryCompare.Ports.FileSystemAccess\DirectoryCompare.Ports.FileSystemAccess.csproj" PrivateAssets="All"/>
     </ItemGroup>
 
 </Project>

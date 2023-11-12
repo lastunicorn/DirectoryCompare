@@ -1,5 +1,5 @@
 // DirectoryCompare
-// Copyright (C) 2017-2020 Dust in the Wind
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,30 +14,27 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands;
+
+internal class FileDuplicatesViewModel : IEnumerable<FilePair>
 {
-    internal class FileDuplicatesViewModel : IEnumerable<FilePair>
+    private readonly FileDuplicates fileDuplicates;
+
+    public FileDuplicatesViewModel(FileDuplicates fileDuplicates)
     {
-        private readonly FileDuplicates fileDuplicates;
+        this.fileDuplicates = fileDuplicates ?? throw new ArgumentNullException(nameof(fileDuplicates));
+    }
 
-        public FileDuplicatesViewModel(FileDuplicates fileDuplicates)
-        {
-            this.fileDuplicates = fileDuplicates ?? throw new ArgumentNullException(nameof(fileDuplicates));
-        }
+    public IEnumerator<FilePair> GetEnumerator()
+    {
+        return fileDuplicates.GetEnumerator();
+    }
 
-        public IEnumerator<FilePair> GetEnumerator()
-        {
-            return fileDuplicates.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }

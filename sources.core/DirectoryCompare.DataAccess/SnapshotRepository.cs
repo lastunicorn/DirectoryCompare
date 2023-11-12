@@ -1,5 +1,5 @@
 ﻿// DirectoryCompare
-// Copyright (C) 2017-2020 Dust in the Wind
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -58,7 +58,7 @@ public class SnapshotRepository : ISnapshotRepository
         foreach (SnapshotFile snapshotFile in allSnapshotFiles)
         {
             bool success = snapshotFile.Open();
-            
+
             if (success)
                 yield return snapshotFile.Content.ToSnapshot();
         }

@@ -1,158 +1,170 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿// DirectoryCompare
+// Copyright (C) 2017-2023 Dust in the Wind
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.ImportExport;
 using DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel;
 using Newtonsoft.Json;
 
-namespace DustInTheWind.DirectoryCompare.DataAccess
+namespace DustInTheWind.DirectoryCompare.DataAccess;
+
+public class JsonSnapshotReader : ISnapshotReader
 {
-    public class JsonSnapshotReader : ISnapshotReader
+    private readonly Stack<JDirectoryWriter> directoryStack = new();
+    private JSnapshotReader jSnapshotReader;
+
+    public Guid Id => new("9E93055D-7BDE-4F55-B340-DD5A4880D96E");
+
+    public JsonSnapshotReader(TextReader textReader)
     {
-        private readonly Stack<JDirectoryWriter> directoryStack = new();
-        private JSnapshotReader jSnapshotReader;
+        JsonTextReader jsonTextReader = new(textReader);
+        jSnapshotReader = new JSnapshotReader(jsonTextReader);
+    }
 
-        public Guid Id => new Guid("9E93055D-7BDE-4F55-B340-DD5A4880D96E");
-
-        public JsonSnapshotReader(TextReader textReader)
+    public SnapshotItemType CurrentItemType
+    {
+        get
         {
-            JsonTextReader jsonTextReader = new JsonTextReader(textReader);
-            jSnapshotReader = new JSnapshotReader(jsonTextReader);
-        }
-
-        public SnapshotItemType CurrentItemType
-        {
-            get
+            switch (jSnapshotReader.CurrentPropertyType)
             {
-                switch (jSnapshotReader.CurrentPropertyType)
-                {
-                    case JSnapshotFieldType.None:
-                        return SnapshotItemType.None;
+                case JSnapshotFieldType.None:
+                    return SnapshotItemType.None;
 
-                    case JSnapshotFieldType.SerializerId:
-                    case JSnapshotFieldType.OriginalPath:
-                    case JSnapshotFieldType.CreationTime:
-                        return SnapshotItemType.Info;
+                case JSnapshotFieldType.SerializerId:
+                case JSnapshotFieldType.OriginalPath:
+                case JSnapshotFieldType.CreationTime:
+                    return SnapshotItemType.Info;
 
-                    case JSnapshotFieldType.FileCollection:
-                        return SnapshotItemType.FileCollection;
+                case JSnapshotFieldType.FileCollection:
+                    return SnapshotItemType.FileCollection;
 
-                    case JSnapshotFieldType.DirectoryCollection:
-                        return SnapshotItemType.DirectoryCollection;
+                case JSnapshotFieldType.DirectoryCollection:
+                    return SnapshotItemType.DirectoryCollection;
 
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
+    }
 
-        public bool MoveNext()
+    public bool MoveNext()
+    {
+        return jSnapshotReader.MoveNext();
+    }
+
+    public SnapshotHeader ReadHeader()
+    {
+        Guid? serializerId = null;
+        string originalPath = null;
+        DateTime? creationTime = null;
+
+        bool isFinished = false;
+
+        while (!isFinished)
         {
-            return jSnapshotReader.MoveNext();
-        }
-
-        public SnapshotHeader ReadHeader()
-        {
-            Guid? serializerId = null;
-            string originalPath = null;
-            DateTime? creationTime = null;
-
-            bool isFinished = false;
-
-            while (!isFinished)
+            switch (jSnapshotReader.CurrentPropertyType)
             {
-                switch (jSnapshotReader.CurrentPropertyType)
-                {
-                    case JSnapshotFieldType.None:
-                    case JSnapshotFieldType.FileCollection:
-                    case JSnapshotFieldType.DirectoryCollection:
-                        isFinished = true;
-                        break;
+                case JSnapshotFieldType.None:
+                case JSnapshotFieldType.FileCollection:
+                case JSnapshotFieldType.DirectoryCollection:
+                    isFinished = true;
+                    break;
 
-                    case JSnapshotFieldType.SerializerId:
-                        serializerId = jSnapshotReader.ReadSerializerId();
-                        break;
+                case JSnapshotFieldType.SerializerId:
+                    serializerId = jSnapshotReader.ReadSerializerId();
+                    break;
 
-                    case JSnapshotFieldType.OriginalPath:
-                        originalPath = jSnapshotReader.ReadOriginalPath();
-                        break;
+                case JSnapshotFieldType.OriginalPath:
+                    originalPath = jSnapshotReader.ReadOriginalPath();
+                    break;
 
-                    case JSnapshotFieldType.CreationTime:
-                        creationTime = jSnapshotReader.ReadCreationTime();
-                        break;
+                case JSnapshotFieldType.CreationTime:
+                    creationTime = jSnapshotReader.ReadCreationTime();
+                    break;
 
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-
-                jSnapshotReader.MoveNext();
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
-            if (serializerId == null || originalPath == null || creationTime == null)
-                throw new Exception();
-
-            return new SnapshotHeader
-            {
-                SerializerId = serializerId.Value,
-                OriginalPath = originalPath,
-                CreationTime = creationTime.Value
-            };
+            jSnapshotReader.MoveNext();
         }
 
-        public IEnumerable<HFile> ReadFiles()
+        if (serializerId == null || originalPath == null || creationTime == null)
+            throw new Exception();
+
+        return new SnapshotHeader
         {
-            if (jSnapshotReader.CurrentPropertyType != JSnapshotFieldType.FileCollection)
-                throw new Exception();
+            SerializerId = serializerId.Value,
+            OriginalPath = originalPath,
+            CreationTime = creationTime.Value
+        };
+    }
 
-            IEnumerable<JFileReader> fileReaders = jSnapshotReader.ReadFiles();
+    public IEnumerable<HFile> ReadFiles()
+    {
+        if (jSnapshotReader.CurrentPropertyType != JSnapshotFieldType.FileCollection)
+            throw new Exception();
 
-            foreach (JFileReader jFileReader in fileReaders)
-                yield return ReadFile(jFileReader);
-        }
+        IEnumerable<JFileReader> fileReaders = jSnapshotReader.ReadFiles();
 
-        private HFile ReadFile(JFileReader jFileReader)
+        foreach (JFileReader jFileReader in fileReaders)
+            yield return ReadFile(jFileReader);
+    }
+
+    private HFile ReadFile(JFileReader jFileReader)
+    {
+        HFile hFile = new();
+
+        bool isFinished = false;
+        while (!isFinished)
         {
-            HFile hFile = new HFile();
-
-            bool isFinished = false;
-            while (!isFinished)
+            switch (jFileReader.CurrentPropertyType)
             {
-                switch (jFileReader.CurrentPropertyType)
-                {
-                    case JFileFieldType.None:
-                        isFinished = true;
-                        break;
+                case JFileFieldType.None:
+                    isFinished = true;
+                    break;
 
-                    case JFileFieldType.FileName:
-                        hFile.Name = jFileReader.ReadName();
-                        break;
+                case JFileFieldType.FileName:
+                    hFile.Name = jFileReader.ReadName();
+                    break;
 
-                    case JFileFieldType.FileSize:
-                        hFile.Size = jFileReader.ReadSize();
-                        break;
+                case JFileFieldType.FileSize:
+                    hFile.Size = jFileReader.ReadSize();
+                    break;
 
-                    case JFileFieldType.LastModifiedTime:
-                        hFile.LastModifiedTime = jFileReader.ReadLastModifiedTime();
-                        break;
+                case JFileFieldType.LastModifiedTime:
+                    hFile.LastModifiedTime = jFileReader.ReadLastModifiedTime();
+                    break;
 
-                    case JFileFieldType.Hash:
-                        hFile.Hash = jFileReader.ReadHash();
-                        break;
+                case JFileFieldType.Hash:
+                    hFile.Hash = jFileReader.ReadHash();
+                    break;
 
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-
-                jSnapshotReader.MoveNext();
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
-            return hFile;
+            jSnapshotReader.MoveNext();
         }
 
-        public IEnumerable<IDirectoryReader> ReadDirectories()
-        {
-            throw new NotImplementedException();
-        }
+        return hFile;
+    }
+
+    public IEnumerable<IDirectoryReader> ReadDirectories()
+    {
+        throw new NotImplementedException();
     }
 }

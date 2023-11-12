@@ -1,5 +1,5 @@
 ﻿// DirectoryCompare
-// Copyright (C) 2017-2020 Dust in the Wind
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,13 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
+namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel;
+
+public enum JDirectoryFieldType
 {
-    public enum JDirectoryFieldType
-    {
-        None,
-        DirectoryName,
-        FileCollection,
-        SubDirectoryCollection
-    }
+    None,
+    DirectoryName,
+    FileCollection,
+    SubDirectoryCollection
 }

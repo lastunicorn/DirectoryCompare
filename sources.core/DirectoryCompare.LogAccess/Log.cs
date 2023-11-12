@@ -1,5 +1,5 @@
 ﻿// DirectoryCompare
-// Copyright (C) 2017-2020 Dust in the Wind
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,111 +16,110 @@
 
 using log4net;
 
-namespace DustInTheWind.DirectoryCompare.LogAccess
+namespace DustInTheWind.DirectoryCompare.LogAccess;
+
+public sealed class Log : Ports.LogAccess.ILog
 {
-    public sealed class Log : Ports.LogAccess.ILog
+    private ILog log;
+
+    private void Open()
     {
-        private ILog log;
+        log = LogManager.GetLogger(typeof(Log));
+    }
 
-        private void Open()
-        {
-            log = LogManager.GetLogger(typeof(Log));
-        }
+    public void WriteDebug(string message)
+    {
+        if (log == null)
+            Open();
 
-        public void WriteDebug(string message)
-        {
-            if (log == null)
-                Open();
+        log.Debug(message);
+    }
 
-            log.Debug(message);
-        }
+    public void WriteDebug(string format, params object[] args)
+    {
+        if (log == null)
+            Open();
 
-        public void WriteDebug(string format, params object[] args)
-        {
-            if (log == null)
-                Open();
+        log.DebugFormat(format, args);
+    }
 
-            log.DebugFormat(format, args);
-        }
+    public void WriteInfo(string message)
+    {
+        if (log == null)
+            Open();
 
-        public void WriteInfo(string message)
-        {
-            if (log == null)
-                Open();
+        log.Info(message);
+    }
 
-            log.Info(message);
-        }
+    public void WriteInfo(string format, params object[] args)
+    {
+        if (log == null)
+            Open();
 
-        public void WriteInfo(string format, params object[] args)
-        {
-            if (log == null)
-                Open();
+        log.InfoFormat(format, args);
+    }
 
-            log.InfoFormat(format, args);
-        }
+    public void WriteWarning(string message)
+    {
+        if (log == null)
+            Open();
 
-        public void WriteWarning(string message)
-        {
-            if (log == null)
-                Open();
+        log.Warn(message);
+    }
 
-            log.Warn(message);
-        }
+    public void WriteWarning(string format, params object[] args)
+    {
+        if (log == null)
+            Open();
 
-        public void WriteWarning(string format, params object[] args)
-        {
-            if (log == null)
-                Open();
+        log.WarnFormat(format, args);
+    }
 
-            log.WarnFormat(format, args);
-        }
+    public void WriteWarning(string message, Exception ex)
+    {
+        if (log == null)
+            Open();
 
-        public void WriteWarning(string message, Exception ex)
-        {
-            if (log == null)
-                Open();
+        log.Warn(message, ex);
+    }
 
-            log.Warn(message, ex);
-        }
+    public void WriteWarning(Exception ex)
+    {
+        if (log == null)
+            Open();
 
-        public void WriteWarning(Exception ex)
-        {
-            if (log == null)
-                Open();
+        log.Warn(ex);
+    }
 
-            log.Warn(ex);
-        }
+    public void WriteError(string message)
+    {
+        if (log == null)
+            Open();
 
-        public void WriteError(string message)
-        {
-            if (log == null)
-                Open();
+        log.Error(message);
+    }
 
-            log.Error(message);
-        }
+    public void WriteError(string format, params object[] args)
+    {
+        if (log == null)
+            Open();
 
-        public void WriteError(string format, params object[] args)
-        {
-            if (log == null)
-                Open();
+        log.ErrorFormat(format, args);
+    }
 
-            log.ErrorFormat(format, args);
-        }
+    public void WriteError(string message, Exception ex)
+    {
+        if (log == null)
+            Open();
 
-        public void WriteError(string message, Exception ex)
-        {
-            if (log == null)
-                Open();
+        log.Error(message, ex);
+    }
 
-            log.Error(message, ex);
-        }
+    public void WriteError(Exception ex)
+    {
+        if (log == null)
+            Open();
 
-        public void WriteError(Exception ex)
-        {
-            if (log == null)
-                Open();
-
-            log.Error(ex);
-        }
+        log.Error(ex);
     }
 }

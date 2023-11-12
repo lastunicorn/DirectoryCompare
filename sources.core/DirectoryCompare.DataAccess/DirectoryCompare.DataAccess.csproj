@@ -26,13 +26,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All" />
-        <ProjectReference Include="..\DirectoryCompare.Ports.DataAccess\DirectoryCompare.Ports.DataAccess.csproj" PrivateAssets="All" />
-        <ProjectReference Include="..\DirectoryCompare.DataAccess.PotFiles\DirectoryCompare.DataAccess.PotFiles.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All"/>
+        <ProjectReference Include="..\DirectoryCompare.Ports.DataAccess\DirectoryCompare.Ports.DataAccess.csproj" PrivateAssets="All"/>
+        <ProjectReference Include="..\DirectoryCompare.DataAccess.PotFiles\DirectoryCompare.DataAccess.PotFiles.csproj" PrivateAssets="All"/>
     </ItemGroup>
 
 </Project>

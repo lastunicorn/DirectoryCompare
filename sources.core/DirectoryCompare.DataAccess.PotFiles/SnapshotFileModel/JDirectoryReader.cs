@@ -1,5 +1,5 @@
 ﻿// DirectoryCompare
-// Copyright (C) 2017-2020 Dust in the Wind
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,84 +14,81 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
+namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel;
+
+public class JDirectoryReader : JReader
 {
-    public class JDirectoryReader : JReader
+    public JDirectoryFieldType CurrentPropertyType { get; private set; } = JDirectoryFieldType.None;
+
+    public JDirectoryReader(JsonTextReader jsonTextReader)
+        : base(jsonTextReader)
     {
-        public JDirectoryFieldType CurrentPropertyType { get; private set; } = JDirectoryFieldType.None;
+    }
 
-        public JDirectoryReader(JsonTextReader jsonTextReader)
-            : base(jsonTextReader)
+    public JDirectoryFieldType MoveToNext()
+    {
+        switch (State)
         {
+            case JReaderState.New:
+                State = JReaderState.InProgress;
+                break;
+
+            case JReaderState.InProgress:
+                break;
+
+            case JReaderState.Finished:
+                throw new Exception("The reader already finished reading the json object.");
+
+            default:
+                throw new Exception("Invalid reader state.");
         }
 
-        public JDirectoryFieldType MoveToNext()
+        try
         {
-            switch (State)
-            {
-                case JReaderState.New:
-                    State = JReaderState.InProgress;
-                    break;
+            bool success = MoveToNextProperty();
 
-                case JReaderState.InProgress:
-                    break;
+            CurrentPropertyType = success
+                ? JsonTextReader.Value switch
+                {
+                    "n" => JDirectoryFieldType.DirectoryName,
+                    "f" => JDirectoryFieldType.FileCollection,
+                    "d" => JDirectoryFieldType.SubDirectoryCollection,
+                    _ => throw new Exception("Invalid field in directory object.")
+                }
+                : JDirectoryFieldType.None;
 
-                case JReaderState.Finished:
-                    throw new Exception("The reader already finished reading the json object.");
-
-                default:
-                    throw new Exception("Invalid reader state.");
-            }
-
-            try
-            {
-                bool success = MoveToNextProperty();
-
-                CurrentPropertyType = success
-                    ? JsonTextReader.Value switch
-                    {
-                        "n" => JDirectoryFieldType.DirectoryName,
-                        "f" => JDirectoryFieldType.FileCollection,
-                        "d" => JDirectoryFieldType.SubDirectoryCollection,
-                        _ => throw new Exception("Invalid field in directory object.")
-                    }
-                    : JDirectoryFieldType.None;
-
-                return CurrentPropertyType;
-            }
-            catch
-            {
-                CurrentPropertyType = JDirectoryFieldType.None;
-                throw;
-            }
+            return CurrentPropertyType;
         }
-
-        public string ReadName()
+        catch
         {
-            if (CurrentPropertyType != JDirectoryFieldType.DirectoryName)
-                throw new Exception("Current property is not the directory name.");
-
-            return JsonTextReader.ReadAsString();
+            CurrentPropertyType = JDirectoryFieldType.None;
+            throw;
         }
+    }
 
-        public IEnumerable<JFileReader> ReadFiles()
-        {
-            if (CurrentPropertyType != JDirectoryFieldType.FileCollection)
-                throw new Exception("Current property is not the file collection.");
+    public string ReadName()
+    {
+        if (CurrentPropertyType != JDirectoryFieldType.DirectoryName)
+            throw new Exception("Current property is not the directory name.");
 
-            return ReadFilesCollection();
-        }
+        return JsonTextReader.ReadAsString();
+    }
 
-        public IEnumerable<JDirectoryReader> ReadSubDirectories()
-        {
-            if (CurrentPropertyType != JDirectoryFieldType.SubDirectoryCollection)
-                throw new Exception("Current property is not the sub-directory collection.");
+    public IEnumerable<JFileReader> ReadFiles()
+    {
+        if (CurrentPropertyType != JDirectoryFieldType.FileCollection)
+            throw new Exception("Current property is not the file collection.");
 
-            return ReadDirectoriesCollection();
-        }
+        return ReadFilesCollection();
+    }
+
+    public IEnumerable<JDirectoryReader> ReadSubDirectories()
+    {
+        if (CurrentPropertyType != JDirectoryFieldType.SubDirectoryCollection)
+            throw new Exception("Current property is not the sub-directory collection.");
+
+        return ReadDirectoriesCollection();
     }
 }

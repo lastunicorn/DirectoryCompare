@@ -1,5 +1,5 @@
 ﻿// DirectoryCompare
-// Copyright (C) 2017-2020 Dust in the Wind
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,40 +14,38 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using Newtonsoft.Json;
 
-namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel
+namespace DustInTheWind.DirectoryCompare.JFiles.SnapshotFileModel;
+
+public sealed class JSnapshotWriter : JDirectoryWriter
 {
-    public sealed class JSnapshotWriter : JDirectoryWriter
+    public JSnapshotWriter(JsonTextWriter jsonTextWriter)
+        : base(jsonTextWriter)
     {
-        public JSnapshotWriter(JsonTextWriter jsonTextWriter)
-            : base(jsonTextWriter)
-        {
-        }
+    }
 
-        public void WriteSerializerId(Guid id)
-        {
-            Writer.WritePropertyName("serializer-id");
-            Writer.WriteValue(id);
-        }
+    public void WriteSerializerId(Guid id)
+    {
+        Writer.WritePropertyName("serializer-id");
+        Writer.WriteValue(id);
+    }
 
-        public void WriteAnalysisId(Guid analysisId)
-        {
-            Writer.WritePropertyName("analysis-id");
-            Writer.WriteValue(analysisId);
-        }
+    public void WriteAnalysisId(Guid analysisId)
+    {
+        Writer.WritePropertyName("analysis-id");
+        Writer.WriteValue(analysisId);
+    }
 
-        public void WriteOriginalPath(string originalPath)
-        {
-            Writer.WritePropertyName("original-path");
-            Writer.WriteValue(originalPath);
-        }
+    public void WriteOriginalPath(string originalPath)
+    {
+        Writer.WritePropertyName("original-path");
+        Writer.WriteValue(originalPath);
+    }
 
-        public void WriteCreationTime(DateTime creationTime)
-        {
-            Writer.WritePropertyName("creation-time");
-            Writer.WriteValue(creationTime);
-        }
+    public void WriteCreationTime(DateTime creationTime)
+    {
+        Writer.WritePropertyName("creation-time");
+        Writer.WriteValue(creationTime);
     }
 }

@@ -1,5 +1,5 @@
 ﻿// DirectoryCompare
-// Copyright (C) 2017-2020 Dust in the Wind
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -75,7 +75,7 @@ public class PotDirectory
             bool directoryExists = Directory.Exists(FullPath);
             if (!directoryExists)
                 return false;
-            
+
             if (!InfoFile.IsValid)
                 return false;
 
@@ -149,7 +149,7 @@ public class PotDirectory
     public BlackListFile OpenBlackListFile(string blackListName)
     {
         string blackListPath = Path.Combine(FullPath, blackListName);
-        BlackListFile blackListFile = new BlackListFile(blackListPath);
+        BlackListFile blackListFile = new(blackListPath);
         blackListFile.Open();
         return blackListFile;
     }
@@ -169,7 +169,7 @@ public class PotDirectory
     public SnapshotFile CreateSnapshotFile(in DateTime creationTime)
     {
         string snapshotsDirectoryPath = Path.Combine(FullPath, SnapshotsDirectoryName);
-        SnapshotFilePath snapshotFilePath = new SnapshotFilePath(creationTime, snapshotsDirectoryPath);
+        SnapshotFilePath snapshotFilePath = new(creationTime, snapshotsDirectoryPath);
 
         return new SnapshotFile(snapshotFilePath);
     }

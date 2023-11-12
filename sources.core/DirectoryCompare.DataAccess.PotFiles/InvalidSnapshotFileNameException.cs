@@ -1,5 +1,5 @@
 // DirectoryCompare
-// Copyright (C) 2017-2020 Dust in the Wind
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,17 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
+namespace DustInTheWind.DirectoryCompare.JFiles;
 
-namespace DustInTheWind.DirectoryCompare.JFiles
+public class InvalidSnapshotFileNameException : Exception
 {
-    public class InvalidSnapshotFileNameException : Exception
-    {
-        private const string DefaultMessage = "Invalid file name. The file name should be composed by the timestamp in the format: 'yyyy MM dd HHmmss' and the '.json' extension.";
+    private const string DefaultMessage = "Invalid file name. The file name should be composed by the timestamp in the format: 'yyyy MM dd HHmmss' and the '.json' extension.";
 
-        public InvalidSnapshotFileNameException()
-            :base(DefaultMessage)
-        {
-        }
+    public InvalidSnapshotFileNameException()
+        : base(DefaultMessage)
+    {
     }
 }
