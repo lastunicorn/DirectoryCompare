@@ -14,21 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
+namespace DustInTheWind.DirectoryCompare.Domain.Entities;
 
-namespace DustInTheWind.DirectoryCompare.Domain.Entities
+public class Snapshot : HDirectory
 {
-    public class Snapshot : HDirectory
+    public Guid Id { get; set; }
+
+    public string OriginalPath { get; set; }
+
+    public DateTime CreationTime { get; set; }
+
+    public Snapshot()
+        : base(string.Empty)
     {
-        public Guid Id { get; set; }
-        
-        public string OriginalPath { get; set; }
-
-        public DateTime CreationTime { get; set; }
-
-        public Snapshot()
-            : base(string.Empty)
-        {
-        }
     }
 }

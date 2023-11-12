@@ -63,7 +63,7 @@ public class FileDuplicates : IEnumerable<FilePair>
         for (int i = 0; i < files.Count; i++)
         {
             HFile fileLeft = files[i];
-                
+
             for (int j = i + 1; j < files.Count; j++)
             {
                 HFile fileRight = files[j];
@@ -77,7 +77,7 @@ public class FileDuplicates : IEnumerable<FilePair>
         for (int i = 0; i < filesLeft.Count; i++)
         {
             HFile fileLeft = filesLeft[i];
-                
+
             for (int j = 0; j < filesRight.Count; j++)
             {
                 HFile fileRight = filesRight[j];

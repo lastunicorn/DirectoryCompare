@@ -21,7 +21,7 @@ public struct DiskPath
     private readonly string value;
     private bool? isValid;
 
-    public static DiskPath Empty { get; } = new DiskPath();
+    public static DiskPath Empty { get; } = new();
 
     public bool IsEmpty => value == null;
 

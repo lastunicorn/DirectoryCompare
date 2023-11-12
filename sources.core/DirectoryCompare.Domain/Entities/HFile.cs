@@ -14,49 +14,47 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 
-namespace DustInTheWind.DirectoryCompare.Domain.Entities
+namespace DustInTheWind.DirectoryCompare.Domain.Entities;
+
+public class HFile : HItem, IEquatable<HFile>
 {
-    public class HFile : HItem, IEquatable<HFile>
+    public FileHash Hash { get; set; }
+
+    public DataSize Size { get; set; }
+
+    public DateTime LastModifiedTime { get; set; }
+
+    public bool Equals(HFile other)
     {
-        public FileHash Hash { get; set; }
-        
-        public DataSize Size { get; set; }
-        
-        public DateTime LastModifiedTime { get; set; }
+        if (ReferenceEquals(null, other)) return false;
+        if (ReferenceEquals(this, other)) return true;
 
-        public bool Equals(HFile other)
+        return base.Equals(other) &&
+               Hash == other.Hash &&
+               Size == other.Size &&
+               LastModifiedTime == other.LastModifiedTime;
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj.GetType() != GetType()) return false;
+
+        return Equals((HFile)obj);
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-
-            return base.Equals(other) &&
-                Hash == other.Hash &&
-                Size == other.Size &&
-                LastModifiedTime == other.LastModifiedTime;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-
-            return Equals((HFile)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = base.GetHashCode();
-                hashCode = (hashCode * 397) ^ Hash.GetHashCode();
-                hashCode = (hashCode * 397) ^ Size.GetHashCode();
-                hashCode = (hashCode * 397) ^ LastModifiedTime.GetHashCode();
-                return hashCode;
-            }
+            int hashCode = base.GetHashCode();
+            hashCode = (hashCode * 397) ^ Hash.GetHashCode();
+            hashCode = (hashCode * 397) ^ Size.GetHashCode();
+            hashCode = (hashCode * 397) ^ LastModifiedTime.GetHashCode();
+            return hashCode;
         }
     }
 }

@@ -33,36 +33,36 @@ public class CompareSnapshotsUseCase : IRequestHandler<CompareSnapshotsRequest, 
     {
         Snapshot snapshot1 = snapshotFactory.RetrieveSnapshot(request.Snapshot1);
         Snapshot snapshot2 = snapshotFactory.RetrieveSnapshot(request.Snapshot2);
-        SnapshotComparer comparer = CompareSnapshots(snapshot1, snapshot2);
-        string exportDirectoryPath = ExportToDiskIfRequested(comparer, request);
+        SnapshotComparison comparison = CompareSnapshots(snapshot1, snapshot2);
+        string exportDirectoryPath = ExportToDiskIfRequested(comparison, request);
 
         CompareSnapshotsResponse response = new ()
         {
-            OnlyInSnapshot1 = comparer.OnlyInSnapshot1,
-            OnlyInSnapshot2 = comparer.OnlyInSnapshot2,
-            DifferentNames = comparer.DifferentNames,
-            DifferentContent = comparer.DifferentContent,
+            OnlyInSnapshot1 = comparison.OnlyInSnapshot1,
+            OnlyInSnapshot2 = comparison.OnlyInSnapshot2,
+            DifferentNames = comparison.DifferentNames,
+            DifferentContent = comparison.DifferentContent,
             ExportDirectoryPath = exportDirectoryPath
         };
 
         return Task.FromResult(response);
     }
 
-    private static SnapshotComparer CompareSnapshots(Snapshot snapshot1, Snapshot snapshot2)
+    private static SnapshotComparison CompareSnapshots(Snapshot snapshot1, Snapshot snapshot2)
     {
-        SnapshotComparer comparer = new(snapshot1, snapshot2);
-        comparer.Compare();
-        return comparer;
+        SnapshotComparison comparison = new(snapshot1, snapshot2);
+        comparison.Compare();
+        return comparison;
     }
 
-    private static string ExportToDiskIfRequested(SnapshotComparer comparer, CompareSnapshotsRequest request)
+    private static string ExportToDiskIfRequested(SnapshotComparison comparison, CompareSnapshotsRequest request)
     {
         return request.IsExportRequested
-            ? ExportToDisk(comparer, request.ExportFileName)
+            ? ExportToDisk(comparison, request.ExportFileName)
             : null;
     }
 
-    private static string ExportToDisk(SnapshotComparer comparer, string exportFileName)
+    private static string ExportToDisk(SnapshotComparison comparison, string exportFileName)
     {
         FileComparisonExporter exporter = new()
         {
@@ -70,7 +70,7 @@ public class CompareSnapshotsUseCase : IRequestHandler<CompareSnapshotsRequest, 
             AddTimeStamp = true
         };
 
-        exporter.Export(comparer);
+        exporter.Export(comparison);
 
         return exporter.ExportDirectoryPath;
     }

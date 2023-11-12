@@ -46,7 +46,7 @@ public struct ItemComparison : IEquatable<ItemComparison>
     {
         if (ReferenceEquals(null, obj))
             return false;
-        
+
         return obj is ItemComparison comparison && Equals(comparison);
     }
 

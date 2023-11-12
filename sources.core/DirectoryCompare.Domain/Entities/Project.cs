@@ -16,12 +16,11 @@
 
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 
-namespace DustInTheWind.DirectoryCompare.Domain.Entities
-{
-    public class Project
-    {
-        public string Name { get; set; }
+namespace DustInTheWind.DirectoryCompare.Domain.Entities;
 
-        public DiskPath Path { get; set; }
-    }
+public class Project
+{
+    public string Name { get; set; }
+
+    public DiskPath Path { get; set; }
 }

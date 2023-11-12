@@ -16,12 +16,11 @@
 
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 
-namespace DustInTheWind.DirectoryCompare.Domain.ImportExport
-{
-    public interface IPotImportExport
-    {
-        Snapshot ReadSnapshot(string filePath);
+namespace DustInTheWind.DirectoryCompare.Domain.ImportExport;
 
-        void WriteSnapshot(Snapshot snapshot, string filePath);
-    }
+public interface IPotImportExport
+{
+    Snapshot ReadSnapshot(string filePath);
+
+    void WriteSnapshot(Snapshot snapshot, string filePath);
 }

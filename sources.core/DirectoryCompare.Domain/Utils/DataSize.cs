@@ -24,7 +24,7 @@ namespace DustInTheWind.DirectoryCompare.Domain.Utils;
 /// </summary>
 public struct DataSize : IEquatable<DataSize>
 {
-    private static readonly Regex Regex = new Regex(@"^\s*(\d+\.?\d*)\s*(b|kb|mb|gb|tb)*\s*$", RegexOptions.IgnoreCase);
+    private static readonly Regex Regex = new(@"^\s*(\d+\.?\d*)\s*(b|kb|mb|gb|tb)*\s*$", RegexOptions.IgnoreCase);
 
     /// <summary>
     /// Gets the value.
@@ -34,12 +34,17 @@ public struct DataSize : IEquatable<DataSize>
     /// <summary>
     /// Gets an empty <see cref="DataSize"/>.
     /// </summary>
-    public static DataSize Zero { get; } = new DataSize(0);
-    public static DataSize OneByte { get; } = new DataSize((ulong)1);
-    public static DataSize OneKilobyte { get; } = new DataSize((ulong)1024);
-    public static DataSize OneMegabyte { get; } = new DataSize((ulong)1024 * 1024);
-    public static DataSize OneGigabyte { get; } = new DataSize((ulong)1024 * 1024 * 1024);
-    public static DataSize OneTerabyte { get; } = new DataSize((ulong)1024 * 1024 * 1024 * 1024);
+    public static DataSize Zero { get; } = new(0);
+
+    public static DataSize OneByte { get; } = new((ulong)1);
+
+    public static DataSize OneKilobyte { get; } = new((ulong)1024);
+
+    public static DataSize OneMegabyte { get; } = new((ulong)1024 * 1024);
+
+    public static DataSize OneGigabyte { get; } = new((ulong)1024 * 1024 * 1024);
+
+    public static DataSize OneTerabyte { get; } = new((ulong)1024 * 1024 * 1024 * 1024);
 
     /// <summary>
     /// Gets the value converted in Bytes.

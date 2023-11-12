@@ -19,11 +19,11 @@ using DustInTheWind.DirectoryCompare.Domain.Entities;
 using FluentAssertions;
 using Xunit;
 
-namespace DustInTheWind.DirectoryCompare.Tests.Domain.Comparison.SnapshotComparerTests
+namespace DustInTheWind.DirectoryCompare.Tests.Domain.Comparison.SnapshotComparisonTests
 {
     public class IdenticalSnapshotsWithSameFileTwiceTests
     {
-        private readonly SnapshotComparer snapshotComparer;
+        private readonly SnapshotComparison snapshotComparison;
 
         public IdenticalSnapshotsWithSameFileTwiceTests()
         {
@@ -57,37 +57,37 @@ namespace DustInTheWind.DirectoryCompare.Tests.Domain.Comparison.SnapshotCompare
                 }
             });
             
-            snapshotComparer = new SnapshotComparer(snapshot1, snapshot2);
+            snapshotComparison = new SnapshotComparison(snapshot1, snapshot2);
         }
 
         [Fact]
         public void OnlyInSnapshot1_is_empty()
         {
-            snapshotComparer.Compare();
+            snapshotComparison.Compare();
 
-            snapshotComparer.OnlyInSnapshot1.Should().BeEmpty();
+            snapshotComparison.OnlyInSnapshot1.Should().BeEmpty();
         }
 
         [Fact]
         public void OnlyInSnapshot2_is_empty()
         {
-            snapshotComparer.Compare();
+            snapshotComparison.Compare();
 
-            snapshotComparer.OnlyInSnapshot2.Should().BeEmpty();
+            snapshotComparison.OnlyInSnapshot2.Should().BeEmpty();
         }
 
         [Fact]
         public void DifferentContent_is_empty()
         {
-            snapshotComparer.Compare();
+            snapshotComparison.Compare();
 
-            snapshotComparer.DifferentContent.Should().BeEmpty();
+            snapshotComparison.DifferentContent.Should().BeEmpty();
         }
 
         [Fact]
         public void DifferentNames_contains_data()
         {
-            snapshotComparer.Compare();
+            snapshotComparison.Compare();
 
             ItemComparison[] expected = new[]
             {
@@ -104,7 +104,7 @@ namespace DustInTheWind.DirectoryCompare.Tests.Domain.Comparison.SnapshotCompare
                     Item2 = new HFile { Name = "File1.txt", Hash = new byte[] { 1, 2, 3 } }
                 }
             };
-            snapshotComparer.DifferentNames.Should().Equal(expected);
+            snapshotComparison.DifferentNames.Should().Equal(expected);
         }
     }
 }

@@ -14,51 +14,47 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Linq;
+namespace DustInTheWind.DirectoryCompare.Domain.Entities;
 
-namespace DustInTheWind.DirectoryCompare.Domain.Entities
+public readonly struct BlackPath
 {
-    public readonly struct BlackPath
+    private readonly bool isRooted;
+    private readonly bool isDirectoryOnly;
+    private readonly string[] parts;
+
+    public BlackPath(string pattern)
     {
-        private readonly bool isRooted;
-        private readonly bool isDirectoryOnly;
-        private readonly string[] parts;
+        string trimmedPattern = pattern.TrimStart();
+        isRooted = trimmedPattern.StartsWith("/");
+        isDirectoryOnly = trimmedPattern.EndsWith("/");
+        parts = pattern
+            .Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)
+            .ToArray();
+    }
 
-        public BlackPath(string pattern)
+    public bool Matches(HItem hItem)
+    {
+        int index = parts.Length - 1;
+        HItem currentHItem = hItem;
+
+        while (index >= 0)
         {
-            string trimmedPattern = pattern.TrimStart();
-            isRooted = trimmedPattern.StartsWith("/");
-            isDirectoryOnly = trimmedPattern.EndsWith("/");
-            parts = pattern
-                .Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)
-                .ToArray();
-        }
-
-        public bool Matches(HItem hItem)
-        {
-            int index = parts.Length - 1;
-            HItem currentHItem = hItem;
-
-            while (index >= 0)
-            {
-                if (currentHItem == null)
-                    return false;
-
-                bool isMatch = currentHItem.Name == parts[index] && (index != parts.Length - 1 || !isDirectoryOnly || currentHItem is HDirectory);
-
-                if (isMatch)
-                    index--;
-                else
-                    index = parts.Length - 1;
-
-                currentHItem = currentHItem.Parent;
-            }
-
-            if (isRooted && currentHItem != null)
+            if (currentHItem == null)
                 return false;
 
-            return true;
+            bool isMatch = currentHItem.Name == parts[index] && (index != parts.Length - 1 || !isDirectoryOnly || currentHItem is HDirectory);
+
+            if (isMatch)
+                index--;
+            else
+                index = parts.Length - 1;
+
+            currentHItem = currentHItem.Parent;
         }
+
+        if (isRooted && currentHItem != null)
+            return false;
+
+        return true;
     }
 }

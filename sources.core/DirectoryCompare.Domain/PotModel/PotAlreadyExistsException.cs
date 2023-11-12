@@ -14,17 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
+namespace DustInTheWind.DirectoryCompare.Domain.PotModel;
 
-namespace DustInTheWind.DirectoryCompare.Domain.PotModel
+public class PotAlreadyExistsException : Exception
 {
-    public class PotAlreadyExistsException : Exception
-    {
-        private const string DefaultMessage = "Another pot with the same name already exists.";
+    private const string DefaultMessage = "Another pot with the same name already exists.";
 
-        public PotAlreadyExistsException()
-            : base(DefaultMessage)
-        {
-        }
+    public PotAlreadyExistsException()
+        : base(DefaultMessage)
+    {
     }
 }

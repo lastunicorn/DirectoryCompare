@@ -18,7 +18,7 @@ using DustInTheWind.DirectoryCompare.Domain.Entities;
 
 namespace DustInTheWind.DirectoryCompare.Domain.Comparison;
 
-public class SnapshotComparer
+public class SnapshotComparison
 {
     private readonly List<string> onlyInSnapshot1 = new();
     private readonly List<string> onlyInSnapshot2 = new();
@@ -43,7 +43,7 @@ public class SnapshotComparer
 
     public IReadOnlyList<ItemComparison> DifferentContent => differentContent;
 
-    public SnapshotComparer(Snapshot snapshot1, Snapshot snapshot2)
+    public SnapshotComparison(Snapshot snapshot1, Snapshot snapshot2)
     {
         Snapshot1 = snapshot1 ?? throw new ArgumentNullException(nameof(snapshot1));
         Snapshot2 = snapshot2 ?? throw new ArgumentNullException(nameof(snapshot2));

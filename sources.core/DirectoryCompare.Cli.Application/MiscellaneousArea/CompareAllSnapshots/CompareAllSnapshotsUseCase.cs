@@ -41,9 +41,9 @@ public class CompareAllSnapshotsUseCase : IRequestHandler<CompareAllSnapshotsReq
             Snapshot currentSnapshot = snapshots[i];
             Snapshot previousSnapshot = snapshots[i + 1];
 
-            SnapshotComparer comparer = CompareSnapshots(currentSnapshot, previousSnapshot);
+            SnapshotComparison comparison = CompareSnapshots(currentSnapshot, previousSnapshot);
 
-            ExportToDisk(comparer, request.ExportName);
+            ExportToDisk(comparison, request.ExportName);
         }
 
         CompareAllSnapshotsResponse response = new();
@@ -58,28 +58,28 @@ public class CompareAllSnapshotsUseCase : IRequestHandler<CompareAllSnapshotsReq
         return snapshots;
     }
 
-    private static SnapshotComparer CompareSnapshots(Snapshot snapshot1, Snapshot snapshot2)
+    private static SnapshotComparison CompareSnapshots(Snapshot snapshot1, Snapshot snapshot2)
     {
-        SnapshotComparer comparer = new(snapshot1, snapshot2);
-        comparer.Compare();
+        SnapshotComparison comparison = new(snapshot1, snapshot2);
+        comparison.Compare();
 
-        return comparer;
+        return comparison;
     }
 
-    private void ExportToDisk(SnapshotComparer comparer, string exportName)
+    private void ExportToDisk(SnapshotComparison comparison, string exportName)
     {
         FileComparisonExporter exporter = new()
         {
-            ExportName = CalculateExportDirectoryPath(comparer, exportName)
+            ExportName = CalculateExportDirectoryPath(comparison, exportName)
         };
 
-        exporter.Export(comparer);
+        exporter.Export(comparison);
     }
 
-    private string CalculateExportDirectoryPath(SnapshotComparer comparer, string exportName)
+    private string CalculateExportDirectoryPath(SnapshotComparison comparison, string exportName)
     {
         string exportDirectoryNameBase = $"{exportName} - {executionTime:yyyy MM dd HHmmss}";
-        string exportDirectoryName = $"{comparer.Snapshot1.CreationTime:yyyy MM dd HHmmss}";
+        string exportDirectoryName = $"{comparison.Snapshot1.CreationTime:yyyy MM dd HHmmss}";
         string exportDirectoryPath = Path.Combine(exportDirectoryNameBase, exportDirectoryName);
 
         return exportDirectoryPath;

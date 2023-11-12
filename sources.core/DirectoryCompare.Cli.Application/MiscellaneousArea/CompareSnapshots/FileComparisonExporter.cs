@@ -26,18 +26,18 @@ internal class FileComparisonExporter
 
     public string ExportDirectoryPath { get; private set; }
 
-    public void Export(SnapshotComparer comparer)
+    public void Export(SnapshotComparison comparison)
     {
         if (string.IsNullOrWhiteSpace(ExportName))
             throw new Exception("Cannot export comparison result. No export name was provided.");
 
         ExportDirectoryPath = CreateExportDirectory();
 
-        ExportInfoFile(comparer, ExportDirectoryPath);
-        ExportOnlyInSnapshot1(comparer, ExportDirectoryPath);
-        ExportOnlyInSnapshot2(comparer, ExportDirectoryPath);
-        ExportContentDifferentName(comparer, ExportDirectoryPath);
-        ExportSameNameDifferentContent(comparer, ExportDirectoryPath);
+        ExportInfoFile(comparison, ExportDirectoryPath);
+        ExportOnlyInSnapshot1(comparison, ExportDirectoryPath);
+        ExportOnlyInSnapshot2(comparison, ExportDirectoryPath);
+        ExportContentDifferentName(comparison, ExportDirectoryPath);
+        ExportSameNameDifferentContent(comparison, ExportDirectoryPath);
     }
 
     private string CreateExportDirectory()
@@ -60,79 +60,79 @@ internal class FileComparisonExporter
         return exportDirectoryPath;
     }
 
-    private static void ExportInfoFile(SnapshotComparer comparer, string exportDirectoryPath)
+    private static void ExportInfoFile(SnapshotComparison comparison, string exportDirectoryPath)
     {
         string filePath = Path.Combine(exportDirectoryPath, "info.txt");
         using StreamWriter streamWriter = new(filePath);
 
-        WriteFileHeader(streamWriter, comparer);
+        WriteFileHeader(streamWriter, comparison);
 
-        streamWriter.WriteLine("StartTime (UTC) : {0}", comparer.StartTimeUtc);
-        streamWriter.WriteLine("EndTime (UTC)   : {0}", comparer.EndTimeUtc);
-        streamWriter.WriteLine("TotalTime       : {0}", comparer.TotalTime);
+        streamWriter.WriteLine("StartTime (UTC) : {0}", comparison.StartTimeUtc);
+        streamWriter.WriteLine("EndTime (UTC)   : {0}", comparison.EndTimeUtc);
+        streamWriter.WriteLine("TotalTime       : {0}", comparison.TotalTime);
     }
 
-    private static void ExportOnlyInSnapshot1(SnapshotComparer comparer, string exportDirectoryPath)
+    private static void ExportOnlyInSnapshot1(SnapshotComparison comparison, string exportDirectoryPath)
     {
         string filePath = Path.Combine(exportDirectoryPath, "only-in-snapshot1.txt");
         using StreamWriter streamWriter = new(filePath);
 
-        WriteFileHeader(streamWriter, comparer);
+        WriteFileHeader(streamWriter, comparison);
 
         streamWriter.WriteLine("Files only in snapshot 1:");
-        foreach (string path in comparer.OnlyInSnapshot1)
+        foreach (string path in comparison.OnlyInSnapshot1)
             streamWriter.WriteLine(path);
     }
 
-    private static void ExportOnlyInSnapshot2(SnapshotComparer comparer, string exportDirectoryPath)
+    private static void ExportOnlyInSnapshot2(SnapshotComparison comparison, string exportDirectoryPath)
     {
         string filePath = Path.Combine(exportDirectoryPath, "only-in-snapshot2.txt");
         using StreamWriter streamWriter = new(filePath);
 
-        WriteFileHeader(streamWriter, comparer);
+        WriteFileHeader(streamWriter, comparison);
 
         streamWriter.WriteLine("Files only in snapshot 2:");
-        foreach (string path in comparer.OnlyInSnapshot2)
+        foreach (string path in comparison.OnlyInSnapshot2)
             streamWriter.WriteLine(path);
 
         streamWriter.WriteLine();
     }
 
-    private static void ExportContentDifferentName(SnapshotComparer comparer, string exportDirectoryPath)
+    private static void ExportContentDifferentName(SnapshotComparison comparison, string exportDirectoryPath)
     {
         string filePath = Path.Combine(exportDirectoryPath, "same-content-different-name.txt");
         using StreamWriter streamWriter = new(filePath);
 
-        WriteFileHeader(streamWriter, comparer);
+        WriteFileHeader(streamWriter, comparison);
 
         streamWriter.WriteLine("Different names:");
-        foreach (ItemComparison itemComparison in comparer.DifferentNames)
+        foreach (ItemComparison itemComparison in comparison.DifferentNames)
         {
             streamWriter.WriteLine("1 - " + itemComparison.FullName1);
             streamWriter.WriteLine("2 - " + itemComparison.FullName2);
         }
     }
 
-    private static void ExportSameNameDifferentContent(SnapshotComparer comparer, string exportDirectoryPath)
+    private static void ExportSameNameDifferentContent(SnapshotComparison comparison, string exportDirectoryPath)
     {
         string filePath = Path.Combine(exportDirectoryPath, "same-name-different-content.txt");
         using StreamWriter streamWriter = new(filePath);
 
-        WriteFileHeader(streamWriter, comparer);
+        WriteFileHeader(streamWriter, comparison);
 
         streamWriter.WriteLine("Different content:");
-        foreach (ItemComparison itemComparison in comparer.DifferentContent)
+        foreach (ItemComparison itemComparison in comparison.DifferentContent)
             streamWriter.WriteLine(itemComparison.FullName1);
     }
 
-    private static void WriteFileHeader(TextWriter streamWriter, SnapshotComparer comparer)
+    private static void WriteFileHeader(TextWriter streamWriter, SnapshotComparison comparison)
     {
-        string snapshot1OriginalPath = comparer.Snapshot1.OriginalPath;
-        DateTime snapshot1CreationTime = comparer.Snapshot1.CreationTime;
+        string snapshot1OriginalPath = comparison.Snapshot1.OriginalPath;
+        DateTime snapshot1CreationTime = comparison.Snapshot1.CreationTime;
         streamWriter.WriteLine("Snapshot 1: {0} [{1:yyyy MM dd HHmmss}]", snapshot1OriginalPath, snapshot1CreationTime);
 
-        string snapshot2OriginalPath = comparer.Snapshot2.OriginalPath;
-        DateTime snapshot2CreationTime = comparer.Snapshot2.CreationTime;
+        string snapshot2OriginalPath = comparison.Snapshot2.OriginalPath;
+        DateTime snapshot2CreationTime = comparison.Snapshot2.CreationTime;
         streamWriter.WriteLine("Snapshot 2: {0} [{1:yyyy MM dd HHmmss}]", snapshot2OriginalPath, snapshot2CreationTime);
 
         streamWriter.WriteLine();

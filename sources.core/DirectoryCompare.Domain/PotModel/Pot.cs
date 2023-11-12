@@ -14,23 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 
-namespace DustInTheWind.DirectoryCompare.Domain.PotModel
+namespace DustInTheWind.DirectoryCompare.Domain.PotModel;
+
+public class Pot
 {
-    public class Pot
-    {
-        public Guid Guid { get; init; }
+    public Guid Guid { get; init; }
 
-        public string Name { get; init; }
+    public string Name { get; init; }
 
-        public DiskPath Path { get; init; }
-        
-        public string Description { get; init; }
+    public DiskPath Path { get; init; }
 
-        public List<Snapshot> Snapshots { get; } = new();
-    }
+    public string Description { get; init; }
+
+    public List<Snapshot> Snapshots { get; } = new();
 }

@@ -14,94 +14,90 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 
-namespace DustInTheWind.DirectoryCompare.Domain.Entities
+namespace DustInTheWind.DirectoryCompare.Domain.Entities;
+
+public class HItemCollection<T> : Collection<T>
+    where T : HItem
 {
-    public class HItemCollection<T> : Collection<T>
-        where T : HItem
+    private HItem parent;
+
+    public HItem Parent
     {
-        private HItem parent;
-
-        public HItem Parent
+        get => parent;
+        set
         {
-            get => parent;
-            set
-            {
-                if (ReferenceEquals(value, parent))
-                    return;
+            if (ReferenceEquals(value, parent))
+                return;
 
-                parent = value;
+            parent = value;
 
-                foreach (T item in Items)
-                {
-                    item.Parent = value;
-                }
-            }
-        }
-
-        public HItemCollection(HItem parent)
-        {
-            this.parent = parent ?? throw new ArgumentNullException(nameof(parent));
-        }
-
-        protected override void InsertItem(int index, T item)
-        {
-            if (index < 0 || index > Items.Count)
-                throw new ArgumentOutOfRangeException(nameof(index));
-
-            if (item == null)
-                throw new ArgumentNullException(nameof(item));
-
-            item.Parent = Parent;
-
-            base.InsertItem(index, item);
-        }
-
-        protected override void RemoveItem(int index)
-        {
-            if (index < 0 || index >= Items.Count)
-                throw new ArgumentOutOfRangeException(nameof(index));
-
-            Items[index].Parent = null;
-            base.RemoveItem(index);
-        }
-
-        protected override void SetItem(int index, T item)
-        {
-            if (index < 0 || index >= Items.Count)
-                throw new ArgumentOutOfRangeException(nameof(index));
-
-            if (item == null)
-                throw new ArgumentNullException(nameof(item));
-
-            Items[index].Parent = null;
-
-            base.SetItem(index, item);
-
-            item.Parent = parent;
-        }
-
-        protected override void ClearItems()
-        {
             foreach (T item in Items)
-                item.Parent = null;
-
-            base.ClearItems();
-        }
-
-        public void AddRange(IEnumerable<T> items)
-        {
-            IEnumerable<T> notNullItems = items.Where(x => x != null);
-
-            foreach (T item in notNullItems)
             {
-                Items.Add(item);
-                item.Parent = parent;
+                item.Parent = value;
             }
+        }
+    }
+
+    public HItemCollection(HItem parent)
+    {
+        this.parent = parent ?? throw new ArgumentNullException(nameof(parent));
+    }
+
+    protected override void InsertItem(int index, T item)
+    {
+        if (index < 0 || index > Items.Count)
+            throw new ArgumentOutOfRangeException(nameof(index));
+
+        if (item == null)
+            throw new ArgumentNullException(nameof(item));
+
+        item.Parent = Parent;
+
+        base.InsertItem(index, item);
+    }
+
+    protected override void RemoveItem(int index)
+    {
+        if (index < 0 || index >= Items.Count)
+            throw new ArgumentOutOfRangeException(nameof(index));
+
+        Items[index].Parent = null;
+        base.RemoveItem(index);
+    }
+
+    protected override void SetItem(int index, T item)
+    {
+        if (index < 0 || index >= Items.Count)
+            throw new ArgumentOutOfRangeException(nameof(index));
+
+        if (item == null)
+            throw new ArgumentNullException(nameof(item));
+
+        Items[index].Parent = null;
+
+        base.SetItem(index, item);
+
+        item.Parent = parent;
+    }
+
+    protected override void ClearItems()
+    {
+        foreach (T item in Items)
+            item.Parent = null;
+
+        base.ClearItems();
+    }
+
+    public void AddRange(IEnumerable<T> items)
+    {
+        IEnumerable<T> notNullItems = items.Where(x => x != null);
+
+        foreach (T item in notNullItems)
+        {
+            Items.Add(item);
+            item.Parent = parent;
         }
     }
 }

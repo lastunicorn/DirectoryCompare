@@ -14,30 +14,27 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
 
-namespace DustInTheWind.DirectoryCompare.Domain.Entities
+namespace DustInTheWind.DirectoryCompare.Domain.Entities;
+
+public class BlackList : Collection<BlackPath>
 {
-    public class BlackList : Collection<BlackPath>
+    public BlackList(DiskPathCollection paths)
     {
-        public BlackList(DiskPathCollection paths)
-        {
-            IEnumerable<BlackPath> blackPaths = paths.Select(x => new BlackPath(x));
-            AddRange(blackPaths);
-        }
+        IEnumerable<BlackPath> blackPaths = paths.Select(x => new BlackPath(x));
+        AddRange(blackPaths);
+    }
 
-        private void AddRange(IEnumerable<BlackPath> blackPaths)
-        {
-            foreach (BlackPath blackPath in blackPaths)
-                Items.Add(blackPath);
-        }
+    private void AddRange(IEnumerable<BlackPath> blackPaths)
+    {
+        foreach (BlackPath blackPath in blackPaths)
+            Items.Add(blackPath);
+    }
 
-        public bool MatchPath(HItem item)
-        {
-            return Items.Any(x => x.Matches(item));
-        }
+    public bool MatchPath(HItem item)
+    {
+        return Items.Any(x => x.Matches(item));
     }
 }

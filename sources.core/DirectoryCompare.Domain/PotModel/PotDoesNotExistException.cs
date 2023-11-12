@@ -14,17 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
+namespace DustInTheWind.DirectoryCompare.Domain.PotModel;
 
-namespace DustInTheWind.DirectoryCompare.Domain.PotModel
+public class PotDoesNotExistException : Exception
 {
-    public class PotDoesNotExistException : Exception
-    {
-        private const string DefaultMessage = "There is no pot with the name '{0}'.";
+    private const string DefaultMessage = "There is no pot with the name '{0}'.";
 
-        public PotDoesNotExistException(string potName)
-            : base(string.Format(DefaultMessage, potName))
-        {
-        }
+    public PotDoesNotExistException(string potName)
+        : base(string.Format(DefaultMessage, potName))
+    {
     }
 }

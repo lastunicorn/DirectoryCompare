@@ -19,7 +19,7 @@ using DustInTheWind.DirectoryCompare.Domain.Entities;
 using FluentAssertions;
 using Xunit;
 
-namespace DustInTheWind.DirectoryCompare.Tests.Domain.Comparison.SnapshotComparerTests
+namespace DustInTheWind.DirectoryCompare.Tests.Domain.Comparison.SnapshotComparisonTests
 {
     public class CompareOneSubdirectoryTests
     {
@@ -40,10 +40,10 @@ namespace DustInTheWind.DirectoryCompare.Tests.Domain.Comparison.SnapshotCompare
                 new HDirectory("Dir1")
             });
 
-            SnapshotComparer comparer = new SnapshotComparer(snapshot1, snapshot2);
-            comparer.Compare();
+            SnapshotComparison comparison = new SnapshotComparison(snapshot1, snapshot2);
+            comparison.Compare();
 
-            comparer.OnlyInSnapshot1.Should().BeEmpty();
+            comparison.OnlyInSnapshot1.Should().BeEmpty();
         }
 
         [Fact]
@@ -57,10 +57,10 @@ namespace DustInTheWind.DirectoryCompare.Tests.Domain.Comparison.SnapshotCompare
 
             Snapshot snapshot2 = new Snapshot();
 
-            SnapshotComparer comparer = new SnapshotComparer(snapshot1, snapshot2);
-            comparer.Compare();
+            SnapshotComparison comparison = new SnapshotComparison(snapshot1, snapshot2);
+            comparison.Compare();
 
-            comparer.OnlyInSnapshot1.Should().Equal(new[] { "/Dir1/" });
+            comparison.OnlyInSnapshot1.Should().Equal(new[] { "/Dir1/" });
         }
 
         [Fact]
@@ -74,10 +74,10 @@ namespace DustInTheWind.DirectoryCompare.Tests.Domain.Comparison.SnapshotCompare
                 new HDirectory("Dir1")
             });
 
-            SnapshotComparer comparer = new SnapshotComparer(snapshot1, snapshot2);
-            comparer.Compare();
+            SnapshotComparison comparison = new SnapshotComparison(snapshot1, snapshot2);
+            comparison.Compare();
 
-            comparer.OnlyInSnapshot1.Should().BeEmpty();
+            comparison.OnlyInSnapshot1.Should().BeEmpty();
         }
 
         #endregion
@@ -99,10 +99,10 @@ namespace DustInTheWind.DirectoryCompare.Tests.Domain.Comparison.SnapshotCompare
                 new HDirectory("Dir1")
             });
 
-            SnapshotComparer comparer = new SnapshotComparer(snapshot1, snapshot2);
-            comparer.Compare();
+            SnapshotComparison comparison = new SnapshotComparison(snapshot1, snapshot2);
+            comparison.Compare();
 
-            comparer.OnlyInSnapshot2.Should().BeEmpty();
+            comparison.OnlyInSnapshot2.Should().BeEmpty();
         }
 
         [Fact]
@@ -116,10 +116,10 @@ namespace DustInTheWind.DirectoryCompare.Tests.Domain.Comparison.SnapshotCompare
                 new HDirectory("Dir1")
             });
 
-            SnapshotComparer comparer = new SnapshotComparer(snapshot1, snapshot2);
-            comparer.Compare();
+            SnapshotComparison comparison = new SnapshotComparison(snapshot1, snapshot2);
+            comparison.Compare();
 
-            comparer.OnlyInSnapshot2.Should().Equal(new[] { "/Dir1/" });
+            comparison.OnlyInSnapshot2.Should().Equal(new[] { "/Dir1/" });
         }
 
         [Fact]
@@ -133,10 +133,10 @@ namespace DustInTheWind.DirectoryCompare.Tests.Domain.Comparison.SnapshotCompare
 
             Snapshot snapshot2 = new Snapshot();
 
-            SnapshotComparer comparer = new SnapshotComparer(snapshot1, snapshot2);
-            comparer.Compare();
+            SnapshotComparison comparison = new SnapshotComparison(snapshot1, snapshot2);
+            comparison.Compare();
 
-            comparer.OnlyInSnapshot2.Should().BeEmpty();
+            comparison.OnlyInSnapshot2.Should().BeEmpty();
         }
 
         #endregion
