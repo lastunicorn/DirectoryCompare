@@ -21,7 +21,6 @@ using MediatR;
 namespace DustInTheWind.DirectoryCompare.Infrastructure.RequestPipeline;
 
 public class RequestValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : IRequest<TResponse>
 {
     private readonly IEnumerable<IValidator<TRequest>> validators;
 

@@ -14,23 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.DataStructures;
-using DustInTheWind.DirectoryCompare.Domain.Comparison;
+using DustInTheWind.ConsoleTools;
+using DustInTheWind.ConsoleTools.Commando;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.FindDuplicates;
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.BlackListCommands.CreateBlackList;
 
-public class FilePairDto
+internal class CreateBlackListCommandView : IView<CreateBlackListCommand>
 {
-    public string FullPathLeft { get; }
-
-    public string FullPathRight { get; }
-
-    public DataSize Size { get; }
-
-    public FilePairDto(FilePair filePair)
+    public void Display(CreateBlackListCommand command)
     {
-        FullPathLeft = filePair.FullPathLeft;
-        FullPathRight = filePair.FullPathRight;
-        Size = filePair.Size;
+        CustomConsole.WriteLineSuccess($"Black list '{command.BlackListName}' created successfully.");
     }
 }

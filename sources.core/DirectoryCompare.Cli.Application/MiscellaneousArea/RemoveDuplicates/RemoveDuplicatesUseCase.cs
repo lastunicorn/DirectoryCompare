@@ -36,8 +36,7 @@ public class RemoveDuplicatesUseCase : IRequestHandler<RemoveDuplicatesRequest>
         this.removeDuplicatesLog = removeDuplicatesLog ?? throw new ArgumentNullException(nameof(removeDuplicatesLog));
     }
 
-    // The real work will run asynchronously, while the promise will raise events whenever something important
-    // happened that the presentation layer should handle.
+    // This is a draft. Not yet finished.
     public Task Handle(RemoveDuplicatesRequest request, CancellationToken cancellationToken)
     {
         DiskPathCollection blackListPathsLeft = blackListRepository.Get(request.SnapshotLeft.PotName);
@@ -69,40 +68,77 @@ public class RemoveDuplicatesUseCase : IRequestHandler<RemoveDuplicatesRequest>
 
     private void RemoveDuplicates(RemoveDuplicatesRequest request, IEnumerable<FilePair> fileDuplicates)
     {
+        RemoveDuplicatesPlan removeDuplicatesPlan = new()
+        {
+            SnapshotLeft = request.SnapshotLeft.ToString(),
+            SnapshotRight = request.SnapshotRight.ToString(),
+            RemovePart = request.FileToRemove.ToString(),
+            PurgatoryDirectory = request.PurgatoryDirectory
+        };
+
+        removeDuplicatesLog.WritePlanInfo(removeDuplicatesPlan);
+        
         int fileRemovedCount = 0;
         DataSize totalSize = 0;
-
+        
         foreach (FilePair duplicate in fileDuplicates)
         {
-            bool bothFilesExist = duplicate.FileLeftExists && duplicate.FileRightExists;
+            removeDuplicatesLog.DuplicateFound(duplicate.FullPathLeft, duplicate.FullPathRight);
 
-            if (!bothFilesExist)
+            if (!duplicate.LeftFileExists && !duplicate.RightFileExists)
             {
-                // todo: announce that duplicate was not removed.
+                removeDuplicatesLog.WriteActionNoFileExists();
+                continue;
+            }
+
+            bool fileToKeepDoesNotExist = (!duplicate.LeftFileExists && request.FileToRemove == ComparisonSide.Right) || 
+                                          (!duplicate.RightFileExists && request.FileToRemove == ComparisonSide.Left);
+            if (fileToKeepDoesNotExist)
+            {
+                removeDuplicatesLog.WriteActionFileToKeepDoesNotExist();
+                continue;
+            }
+
+            bool fileIsAlreadyRemoved = (!duplicate.LeftFileExists && request.FileToRemove == ComparisonSide.Left) || 
+                                        (!duplicate.RightFileExists && request.FileToRemove == ComparisonSide.Right);
+            if (fileIsAlreadyRemoved)
+            {
+                removeDuplicatesLog.WriteActionFileIsAlreadyRemoved();
                 continue;
             }
 
             switch (request.FileToRemove)
             {
                 case ComparisonSide.Left:
-                    if (request.DestinationDirectory == null)
+                    if (request.PurgatoryDirectory == null)
+                    {
                         duplicate.DeleteLeft();
+                        removeDuplicatesLog.WriteActionFileDeleted("left");
+                    }
                     else
-                        duplicate.MoveLeft(request.DestinationDirectory);
+                    {
+                        duplicate.MoveLeft(request.PurgatoryDirectory);
+                        removeDuplicatesLog.WriteActionFileMoved("left");
+                    }
 
                     fileRemovedCount++;
                     totalSize += duplicate.Size;
-                    removeDuplicatesLog.WriteRemove(duplicate.FullPathLeft);
                     break;
 
                 case ComparisonSide.Right:
-                    if (request.DestinationDirectory == null)
+                    if (request.PurgatoryDirectory == null)
+                    {
                         duplicate.DeleteRight();
+                        removeDuplicatesLog.WriteActionFileDeleted("right");
+                    }
                     else
-                        duplicate.MoveRight(request.DestinationDirectory);
+                    {
+                        duplicate.MoveRight(request.PurgatoryDirectory);
+                        removeDuplicatesLog.WriteActionFileMoved("right");
+                    }
+                    
                     fileRemovedCount++;
                     totalSize += duplicate.Size;
-                    removeDuplicatesLog.WriteRemove(duplicate.FullPathRight);
                     break;
             }
         }

@@ -14,23 +14,24 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.DataStructures;
-using DustInTheWind.DirectoryCompare.Domain.Comparison;
+using DustInTheWind.ConsoleTools.Commando;
+using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.FindDuplicates;
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands.CreateSnapshot;
 
-public class FilePairDto
+public class CreateSnapshotCommandView : ViewBase<CreateSnapshotCommand>
 {
-    public string FullPathLeft { get; }
-
-    public string FullPathRight { get; }
-
-    public DataSize Size { get; }
-
-    public FilePairDto(FilePair filePair)
+    public override void Display(CreateSnapshotCommand command)
     {
-        FullPathLeft = filePair.FullPathLeft;
-        FullPathRight = filePair.FullPathRight;
-        Size = filePair.Size;
+    }
+
+    public void HandleProgress(DiskAnalysisProgressEventArgs eventArgs)
+    {
+        Console.WriteLine($"Progress: {eventArgs.Percentage:0.00} % ({eventArgs.ProcessedSize} / {eventArgs.TotalSize})");
+    }
+
+    public void FinishDisplay()
+    {
+        WriteSuccess("Done");
     }
 }

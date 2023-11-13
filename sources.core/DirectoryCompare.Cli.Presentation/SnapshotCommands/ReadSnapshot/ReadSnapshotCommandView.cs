@@ -14,23 +14,30 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.DataStructures;
-using DustInTheWind.DirectoryCompare.Domain.Comparison;
+using DustInTheWind.ConsoleTools.Commando;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.FindDuplicates;
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands.ReadSnapshot;
 
-public class FilePairDto
+public class ReadSnapshotCommandView : ViewBase<ReadSnapshotCommand>
 {
-    public string FullPathLeft { get; }
+    private int lastValue;
 
-    public string FullPathRight { get; }
-
-    public DataSize Size { get; }
-
-    public FilePairDto(FilePair filePair)
+    public override void Display(ReadSnapshotCommand command)
     {
-        FullPathLeft = filePair.FullPathLeft;
-        FullPathRight = filePair.FullPathRight;
-        Size = filePair.Size;
+        lastValue = -1;
+    }
+
+    public void HandleProgress(int percentage)
+    {
+        if (Math.Abs(lastValue - percentage) > 0.1)
+        {
+            Console.WriteLine($"Progress: {percentage}%");
+            lastValue = percentage;
+        }
+    }
+
+    public void FinishDisplay()
+    {
+        WriteSuccess("Done");
     }
 }

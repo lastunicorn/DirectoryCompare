@@ -15,30 +15,22 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.DataStructures;
+using FluentValidation;
 using FluentValidation.Validators;
 
 namespace DustInTheWind.DirectoryCompare.Infrastructure.Validation;
 
-public class PathValidator : PropertyValidator
+public class PathValidator<T> : PropertyValidator<T, DiskPath>
 {
-    public PathValidator()
-        : base("The provided path is not valid.")
+    public override string Name { get; } = "Disk Path Validator";
+
+    public override bool IsValid(ValidationContext<T> context, DiskPath value)
     {
+        return value.IsEmpty || value.IsValid;
     }
 
-    protected override bool IsValid(PropertyValidatorContext context)
+    protected override string GetDefaultMessageTemplate(string errorCode)
     {
-        DiskPath diskPath = GetDiskPath(context.PropertyValue);
-        return diskPath.IsEmpty || diskPath.IsValid;
-    }
-
-    private static DiskPath GetDiskPath(object propertyValue)
-    {
-        return propertyValue switch
-        {
-            string path => new DiskPath(path),
-            DiskPath path => path,
-            _ => DiskPath.Empty
-        };
+        return "The provided path is not valid.";
     }
 }

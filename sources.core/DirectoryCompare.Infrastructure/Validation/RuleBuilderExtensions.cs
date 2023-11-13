@@ -14,14 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.DataStructures;
 using FluentValidation;
 
 namespace DustInTheWind.DirectoryCompare.Infrastructure.Validation;
 
 public static class RuleBuilderExtensions
 {
-    public static IRuleBuilderOptions<T, TProperty> IsValidPath<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder)
-    {
-        return ruleBuilder.SetValidator(new PathValidator());
+    public static IRuleBuilderOptions<T, DiskPath> IsValidPath<T>(this IRuleBuilder<T, DiskPath> ruleBuilder) {
+        return ruleBuilder.SetValidator(new PathValidator<T>());
     }
 }

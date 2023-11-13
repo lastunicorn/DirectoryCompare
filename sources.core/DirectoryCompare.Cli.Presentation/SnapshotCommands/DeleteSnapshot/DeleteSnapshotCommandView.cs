@@ -14,23 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.DataStructures;
-using DustInTheWind.DirectoryCompare.Domain.Comparison;
+using DustInTheWind.ConsoleTools;
+using DustInTheWind.ConsoleTools.Commando;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.FindDuplicates;
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands.DeleteSnapshot;
 
-public class FilePairDto
+public class DeleteSnapshotCommandView : IView<DeleteSnapshotCommand>
 {
-    public string FullPathLeft { get; }
-
-    public string FullPathRight { get; }
-
-    public DataSize Size { get; }
-
-    public FilePairDto(FilePair filePair)
+    public void Display(DeleteSnapshotCommand command)
     {
-        FullPathLeft = filePair.FullPathLeft;
-        FullPathRight = filePair.FullPathRight;
-        Size = filePair.Size;
+        CustomConsole.WriteLineSuccess($"Snapshot '{command.SnapshotLocation}' deleted successfully.");
     }
 }

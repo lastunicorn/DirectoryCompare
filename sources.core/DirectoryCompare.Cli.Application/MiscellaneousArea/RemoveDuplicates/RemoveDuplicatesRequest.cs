@@ -27,5 +27,5 @@ public class RemoveDuplicatesRequest : IRequest
 
     public ComparisonSide FileToRemove { get; set; }
 
-    public string DestinationDirectory { get; set; }
+    public string PurgatoryDirectory { get; set; }
 }

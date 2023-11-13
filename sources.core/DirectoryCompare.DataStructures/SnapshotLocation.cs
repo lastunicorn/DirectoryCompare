@@ -88,6 +88,11 @@ public struct SnapshotLocation
         return new Tuple<string, string>(value1, value2);
     }
 
+    public override string ToString()
+    {
+        return rawValue;
+    }
+
     public static implicit operator string(SnapshotLocation snapshotLocation)
     {
         return snapshotLocation.rawValue;

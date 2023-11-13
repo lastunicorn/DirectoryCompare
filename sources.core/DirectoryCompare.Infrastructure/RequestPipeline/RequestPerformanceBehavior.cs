@@ -22,21 +22,19 @@ namespace DustInTheWind.DirectoryCompare.Infrastructure.RequestPipeline;
 
 public class RequestPerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
 {
-    private readonly Stopwatch timer;
     private readonly ILog log;
 
     public RequestPerformanceBehavior(ILog log)
     {
         this.log = log ?? throw new ArgumentNullException(nameof(log));
-        timer = new Stopwatch();
     }
 
     public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        timer.Start();
+        Stopwatch timer = Stopwatch.StartNew();
 
-        string name = typeof(TRequest).Name;
-        log.WriteDebug("Request {0} started.", name);
+        string requestName = typeof(TRequest).Name;
+        log.WriteDebug("Request {0} started.", requestName);
 
         try
         {
@@ -45,7 +43,7 @@ public class RequestPerformanceBehavior<TRequest, TResponse> : IPipelineBehavior
         finally
         {
             timer.Stop();
-            log.WriteDebug("Request {0} finished in {1:n0} milliseconds", name, timer.ElapsedMilliseconds);
+            log.WriteDebug("Request {0} finished in {1:n0} milliseconds", requestName, timer.ElapsedMilliseconds);
         }
     }
 }

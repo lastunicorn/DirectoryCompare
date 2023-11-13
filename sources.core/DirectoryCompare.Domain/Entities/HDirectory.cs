@@ -42,13 +42,19 @@ public class HDirectory : HItem, IEquatable<HDirectory>, IEnumerable<HItem>
         IEnumerable<HFile> filesQuery = EnumerateFiles(blackList);
 
         if (path != null)
-            filesQuery = filesQuery.Where(x =>
-            {
-                if (!path.StartsWith(Path.DirectorySeparatorChar))
-                    path = Path.DirectorySeparatorChar + path;
+        {
+            filesQuery = filesQuery
+                .Where(x =>
+                {
+                    if (!path.StartsWith(Path.DirectorySeparatorChar))
+                        path = Path.DirectorySeparatorChar + path;
+                    
+                    if (!path.EndsWith(Path.DirectorySeparatorChar))
+                        path += Path.DirectorySeparatorChar;
 
-                return x.GetPath().StartsWith(path);
-            });
+                    return x.GetPath().StartsWith(path);
+                });
+        }
 
         return filesQuery;
     }

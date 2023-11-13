@@ -41,21 +41,21 @@ public class FilePair
 
     public string FullPathRight => fileRight.GetOriginalPath();
 
-    public bool FileLeftExists
+    public bool LeftFileExists
     {
         get
         {
-            string fullPath1 = fileLeft.GetOriginalPath();
-            return File.Exists(fullPath1);
+            string fullPath = fileLeft.GetOriginalPath();
+            return File.Exists(fullPath);
         }
     }
 
-    public bool FileRightExists
+    public bool RightFileExists
     {
         get
         {
-            string fullPath2 = fileRight.GetOriginalPath();
-            return File.Exists(fullPath2);
+            string fullPath = fileRight.GetOriginalPath();
+            return File.Exists(fullPath);
         }
     }
 
@@ -71,7 +71,7 @@ public class FilePair
         bool filesAreEqual = fileLeft.Hash == fileRight.Hash && fileLeft.Size == fileRight.Size;
 
         return checkFilesExistence
-            ? filesAreEqual && FileLeftExists && FileRightExists
+            ? filesAreEqual && LeftFileExists && RightFileExists
             : filesAreEqual;
     }
 

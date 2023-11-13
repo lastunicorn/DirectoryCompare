@@ -23,16 +23,18 @@ using DustInTheWind.ConsoleTools.Commando.Setup.Autofac;
 using DustInTheWind.ConsoleTools.Controls;
 using DustInTheWind.DirectoryCompare.Cli.Application;
 using DustInTheWind.DirectoryCompare.Cli.Application.PotArea.PresentPots;
-using DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands;
+using DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands.DisplayPots;
 using DustInTheWind.DirectoryCompare.ConfigAccess;
 using DustInTheWind.DirectoryCompare.DataAccess;
 using DustInTheWind.DirectoryCompare.Domain.ImportExport;
 using DustInTheWind.DirectoryCompare.FileSystemAccess;
+using DustInTheWind.DirectoryCompare.Infrastructure.RequestPipeline;
 using DustInTheWind.DirectoryCompare.LogAccess;
 using DustInTheWind.DirectoryCompare.Ports.ConfigAccess;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 using DustInTheWind.DirectoryCompare.Ports.LogAccess;
+using FluentValidation;
 using MediatR.Extensions.Autofac.DependencyInjection;
 using MediatR.Extensions.Autofac.DependencyInjection.Builder;
 
@@ -94,9 +96,13 @@ internal static class Program
         MediatRConfiguration mediatRConfiguration = MediatRConfigurationBuilder
             .Create(applicationAssembly)
             .WithAllOpenGenericHandlerTypesRegistered()
+            .WithCustomPipelineBehaviors(new[] { typeof(RequestValidationBehavior<,>), typeof(RequestPerformanceBehavior<,>) })
             .Build();
 
         containerBuilder.RegisterMediatR(mediatRConfiguration);
+        containerBuilder.RegisterAssemblyTypes(applicationAssembly)
+            .Where(x => x.IsClosedTypeOf(typeof(IValidator<>)))
+            .AsImplementedInterfaces();
 
         containerBuilder.RegisterType<RequestBus>().AsSelf();
     }
