@@ -48,7 +48,7 @@ public class HDirectory : HItem, IEquatable<HDirectory>, IEnumerable<HItem>
                 {
                     if (!path.StartsWith(Path.DirectorySeparatorChar))
                         path = Path.DirectorySeparatorChar + path;
-                    
+
                     if (!path.EndsWith(Path.DirectorySeparatorChar))
                         path += Path.DirectorySeparatorChar;
 

@@ -21,7 +21,7 @@ namespace DustInTheWind.DirectoryCompare.Ports.LogAccess;
 public interface IRemoveDuplicatesLog
 {
     void WritePlanInfo(RemoveDuplicatesPlan removeDuplicatesPlan);
-    
+
     void DuplicateFound(string fullPathLeft, string fullPathRight);
 
     void WriteActionNoFileExists();

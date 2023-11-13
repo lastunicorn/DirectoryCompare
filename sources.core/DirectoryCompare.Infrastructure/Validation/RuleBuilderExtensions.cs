@@ -21,7 +21,8 @@ namespace DustInTheWind.DirectoryCompare.Infrastructure.Validation;
 
 public static class RuleBuilderExtensions
 {
-    public static IRuleBuilderOptions<T, DiskPath> IsValidPath<T>(this IRuleBuilder<T, DiskPath> ruleBuilder) {
+    public static IRuleBuilderOptions<T, DiskPath> IsValidPath<T>(this IRuleBuilder<T, DiskPath> ruleBuilder)
+    {
         return ruleBuilder.SetValidator(new PathValidator<T>());
     }
 }

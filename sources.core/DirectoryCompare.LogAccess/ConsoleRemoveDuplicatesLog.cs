@@ -35,7 +35,7 @@ public class ConsoleRemoveDuplicatesLog : IRemoveDuplicatesLog
 
         if (removeDuplicatesPlan.PurgatoryDirectory != null)
             Console.WriteLine("  Move to directory: " + removeDuplicatesPlan.PurgatoryDirectory);
-        
+
         Console.WriteLine();
     }
 
