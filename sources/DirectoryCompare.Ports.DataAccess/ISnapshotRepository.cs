@@ -22,27 +22,27 @@ namespace DustInTheWind.DirectoryCompare.Ports.DataAccess;
 
 public interface ISnapshotRepository
 {
-    ISnapshotWriter CreateWriter(string potName);
+    Task<ISnapshotWriter> CreateWriter(string potName);
 
-    IEnumerable<Snapshot> GetByPot(string potName);
+    IAsyncEnumerable<Snapshot> GetByPot(string potName);
 
-    Snapshot GetByIndex(string potName, int index);
+    Task<Snapshot> GetByIndex(string potName, int index);
 
-    Snapshot GetLast(string potName);
+    Task<Snapshot> GetLast(string potName);
 
-    IEnumerable<Snapshot> GetByDate(string potName, DateTime dateTime);
+    IAsyncEnumerable<Snapshot> GetByDate(string potName, DateTime dateTime);
 
-    Snapshot GetByExactDateTime(string potName, DateTime dateTime);
+    Task<Snapshot> GetByExactDateTime(string potName, DateTime dateTime);
 
-    void Add(string potName, Snapshot snapshot);
+    Task Add(string potName, Snapshot snapshot);
 
-    void DeleteByIndex(string potName, int index);
+    Task DeleteByIndex(string potName, int index);
 
-    void DeleteLast(string potName);
+    Task DeleteLast(string potName);
 
-    bool DeleteSingleByDate(string potName, DateTime dateTime);
+    Task<bool> DeleteSingleByDate(string potName, DateTime dateTime);
 
-    bool DeleteByExactDateTime(string potName, DateTime dateTime);
+    Task<bool> DeleteByExactDateTime(string potName, DateTime dateTime);
 
-    Snapshot Get(SnapshotLocation location);
+    Task<Snapshot> Get(SnapshotLocation location);
 }

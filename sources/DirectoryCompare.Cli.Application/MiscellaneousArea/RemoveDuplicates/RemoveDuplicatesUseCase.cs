@@ -37,29 +37,29 @@ public class RemoveDuplicatesUseCase : IRequestHandler<RemoveDuplicatesRequest>
     }
 
     // This is a draft. Not yet finished.
-    public Task Handle(RemoveDuplicatesRequest request, CancellationToken cancellationToken)
+    public async Task Handle(RemoveDuplicatesRequest request, CancellationToken cancellationToken)
     {
-        DiskPathCollection blackListPathsLeft = blackListRepository.Get(request.SnapshotLeft.PotName);
+        DiskPathCollection blackListPathsLeft = await blackListRepository.Get(request.SnapshotLeft.PotName);
         BlackList blackListLeft = new(blackListPathsLeft);
 
-        DiskPathCollection blackListPathsRight = blackListRepository.Get(request.SnapshotRight.PotName);
+        DiskPathCollection blackListPathsRight = await blackListRepository.Get(request.SnapshotRight.PotName);
         BlackList blackListRight = new(blackListPathsRight);
 
         FileDuplicates fileDuplicates = new()
         {
-            FilesLeft = EnumerateFiles(request.SnapshotLeft, blackListLeft).ToList(),
-            FilesRight = EnumerateFiles(request.SnapshotRight, blackListRight).ToList(),
+            FilesLeft = (await EnumerateFiles(request.SnapshotLeft, blackListLeft))
+                .ToList(),
+            FilesRight = (await EnumerateFiles(request.SnapshotRight, blackListRight))
+                .ToList(),
             CheckFilesExistence = true
         };
 
         RemoveDuplicates(request, fileDuplicates);
-
-        return Task.CompletedTask;
     }
 
-    private IEnumerable<HFile> EnumerateFiles(SnapshotLocation snapshotLocation, BlackList blackList = null)
+    private async Task<IEnumerable<HFile>> EnumerateFiles(SnapshotLocation snapshotLocation, BlackList blackList = null)
     {
-        Snapshot snapshot = snapshotRepository.Get(snapshotLocation);
+        Snapshot snapshot = await snapshotRepository.Get(snapshotLocation);
 
         return snapshot == null
             ? Enumerable.Empty<HFile>()

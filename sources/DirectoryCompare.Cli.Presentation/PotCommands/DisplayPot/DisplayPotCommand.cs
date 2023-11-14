@@ -25,21 +25,19 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands.DisplayPot
 
 [NamedCommand("pot", Description = "Displays the details of the specified pot.")]
 [CommandOrder(3)]
-public class DisplayPotCommand : IConsoleCommand
+public class DisplayPotCommand : IConsoleCommand<PotViewModel>
 {
     private readonly RequestBus requestBus;
 
     [AnonymousParameter(DisplayName = "pot name", Order = 1, IsOptional = true)]
     public string PotName { get; set; }
-
-    public PotDto Pot { get; private set; }
-
+    
     public DisplayPotCommand(RequestBus requestBus)
     {
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
     }
 
-    public async Task Execute()
+    public async Task<PotViewModel> Execute()
     {
         PresentPotRequest request = new()
         {
@@ -47,6 +45,6 @@ public class DisplayPotCommand : IConsoleCommand
         };
 
         PresentPotResponse response = await requestBus.PlaceRequest<PresentPotRequest, PresentPotResponse>(request);
-        Pot = response.Pot;
+        return new PotViewModel(response);
     }
 }

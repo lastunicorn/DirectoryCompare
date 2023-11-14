@@ -36,31 +36,29 @@ public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest, Find
         this.log = log ?? throw new ArgumentNullException(nameof(log));
     }
 
-    public Task<FindDuplicatesResponse> Handle(FindDuplicatesRequest request, CancellationToken cancellationToken)
+    public async Task<FindDuplicatesResponse> Handle(FindDuplicatesRequest request, CancellationToken cancellationToken)
     {
         log.WriteInfo("Searching for duplicates between pot '{0}' and '{1}'.", request.SnapshotLeft.PotName, request.SnapshotRight.PotName);
 
         FileDuplicates fileDuplicates = new()
         {
-            FilesLeft = GetFiles(request.SnapshotLeft),
+            FilesLeft = await GetFiles(request.SnapshotLeft),
             FilesRight = string.IsNullOrEmpty(request.SnapshotRight.PotName)
                 ? null
-                : GetFiles(request.SnapshotRight),
+                : await GetFiles(request.SnapshotRight),
             CheckFilesExistence = request.CheckFilesExistence
         };
 
-        FindDuplicatesResponse response = new()
+        return new FindDuplicatesResponse
         {
             DuplicatePairs = fileDuplicates.ToList().ToDto()
         };
-
-        return Task.FromResult(response);
     }
 
-    private List<HFile> GetFiles(SnapshotLocation snapshotLocation)
+    private async Task<List<HFile>> GetFiles(SnapshotLocation snapshotLocation)
     {
-        BlackList blackList = GetBlackList(snapshotLocation);
-        Snapshot snapshot = snapshotRepository.Get(snapshotLocation);
+        BlackList blackList = await GetBlackList(snapshotLocation);
+        Snapshot snapshot = await snapshotRepository.Get(snapshotLocation);
 
         IEnumerable<HFile> files = snapshot == null
             ? Enumerable.Empty<HFile>()
@@ -69,12 +67,12 @@ public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest, Find
         return files.ToList();
     }
 
-    private BlackList GetBlackList(SnapshotLocation snapshotLocation)
+    private async Task<BlackList> GetBlackList(SnapshotLocation snapshotLocation)
     {
         if (snapshotLocation.PotName == null)
             return null;
 
-        DiskPathCollection blackListPaths = blackListRepository.Get(snapshotLocation.PotName);
+        DiskPathCollection blackListPaths = await blackListRepository.Get(snapshotLocation.PotName);
         return new BlackList(blackListPaths);
     }
 }

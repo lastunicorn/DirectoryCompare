@@ -30,9 +30,10 @@ public class BlackListRepository : IBlackListRepository
         this.database = database ?? throw new ArgumentNullException(nameof(database));
     }
 
-    public DiskPathCollection Get(string potName)
+    public async Task<DiskPathCollection> Get(string potName)
     {
-        PotDirectory potDirectory = database.PotDirectories
+        IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
+        PotDirectory potDirectory = potDirectories
             .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == potName);
 
         if (potDirectory == null)
@@ -42,9 +43,10 @@ public class BlackListRepository : IBlackListRepository
         return new DiskPathCollection(blackListFile.Items);
     }
 
-    public void Add(string potName, DiskPath path)
+    public async Task Add(string potName, DiskPath path)
     {
-        PotDirectory potDirectory = database.PotDirectories
+        IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
+        PotDirectory potDirectory = potDirectories
             .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == potName);
 
         if (potDirectory == null)
@@ -55,9 +57,10 @@ public class BlackListRepository : IBlackListRepository
         blackListFile.Save();
     }
 
-    public void Delete(string potName, DiskPath path)
+    public async Task Delete(string potName, DiskPath path)
     {
-        PotDirectory potDirectory = database.PotDirectories
+        IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
+        PotDirectory potDirectory = potDirectories
             .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == potName);
 
         if (potDirectory == null)

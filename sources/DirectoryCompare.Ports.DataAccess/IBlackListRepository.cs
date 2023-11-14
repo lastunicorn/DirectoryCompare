@@ -20,9 +20,9 @@ namespace DustInTheWind.DirectoryCompare.Ports.DataAccess;
 
 public interface IBlackListRepository
 {
-    DiskPathCollection Get(string potName);
+    Task<DiskPathCollection> Get(string potName);
 
-    void Add(string potName, DiskPath path);
+    Task Add(string potName, DiskPath path);
 
-    void Delete(string potName, DiskPath path);
+    Task Delete(string potName, DiskPath path);
 }

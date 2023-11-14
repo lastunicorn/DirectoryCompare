@@ -20,13 +20,13 @@ namespace DustInTheWind.DirectoryCompare.Ports.DataAccess;
 
 public interface IPotRepository
 {
-    List<Pot> Get();
+    Task<List<Pot>> Get();
 
-    Pot Get(string name, bool includeSnapshots = false);
+    Task<Pot> Get(string name, bool includeSnapshots = false);
 
-    void Add(Pot pot);
+    Task Add(Pot pot);
 
-    bool Exists(string name);
+    Task<bool> Exists(string name);
 
-    void Delete(string name);
+    Task Delete(string name);
 }

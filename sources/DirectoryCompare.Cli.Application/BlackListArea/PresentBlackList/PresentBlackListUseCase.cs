@@ -29,10 +29,8 @@ public class PresentBlackListUseCase : IRequestHandler<PresentBlackListRequest, 
         this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
     }
 
-    public Task<DiskPathCollection> Handle(PresentBlackListRequest request, CancellationToken cancellationToken)
+    public async Task<DiskPathCollection> Handle(PresentBlackListRequest request, CancellationToken cancellationToken)
     {
-        DiskPathCollection diskPathCollection = blackListRepository.Get(request.PotName);
-
-        return Task.FromResult(diskPathCollection);
+        return await blackListRepository.Get(request.PotName);
     }
 }

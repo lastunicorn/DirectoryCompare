@@ -52,6 +52,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </ItemGroup>
 
     <ItemGroup>
+        <None Update="dircmp.bat">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
         <None Update="Log4Net.config">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>

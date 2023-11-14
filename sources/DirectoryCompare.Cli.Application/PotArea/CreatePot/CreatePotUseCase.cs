@@ -29,17 +29,15 @@ public class CreatePotUseCase : IRequestHandler<CreatePotRequest>
         this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
     }
 
-    public Task Handle(CreatePotRequest request, CancellationToken cancellationToken)
+    public async Task Handle(CreatePotRequest request, CancellationToken cancellationToken)
     {
-        VerifyPotDoesNotExist(request.Name);
+        await VerifyPotDoesNotExist(request.Name);
         CreateNewPot(request);
-
-        return Task.CompletedTask;
     }
 
-    private void VerifyPotDoesNotExist(string potName)
+    private async Task VerifyPotDoesNotExist(string potName)
     {
-        bool potAlreadyExists = potRepository.Exists(potName);
+        bool potAlreadyExists = await potRepository.Exists(potName);
 
         if (potAlreadyExists)
             throw new PotAlreadyExistsException();

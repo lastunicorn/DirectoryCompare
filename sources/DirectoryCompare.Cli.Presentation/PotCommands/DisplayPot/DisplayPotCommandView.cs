@@ -17,21 +17,20 @@
 using System.Globalization;
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.DirectoryCompare.Cli.Application.PotArea.PresentPot;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands.DisplayPot;
 
-internal class DisplayPotCommandView : ViewBase<DisplayPotCommand>
+internal class DisplayPotCommandView : ViewBase<PotViewModel>
 {
-    public override void Display(DisplayPotCommand command)
+    public override void Display(PotViewModel pot)
     {
-        if (command.Pot == null)
+        if (pot == null)
             CustomConsole.WriteWarning("The pot does not exist.");
         else
-            DisplayPotInfo(command.Pot);
+            DisplayPotInfo(pot);
     }
 
-    private void DisplayPotInfo(PotDto pot)
+    private void DisplayPotInfo(PotViewModel pot)
     {
         WriteValue("Name", pot.Name);
 
@@ -56,9 +55,9 @@ internal class DisplayPotCommandView : ViewBase<DisplayPotCommand>
         }
     }
 
-    private void DisplaySnapshots(List<SnapshotDto> snapshots)
+    private void DisplaySnapshots(List<SnapshotViewModel> snapshots)
     {
-        foreach (SnapshotDto snapshot in snapshots)
+        foreach (SnapshotViewModel snapshot in snapshots)
         {
             DateTime creationTime = snapshot.CreationTime.ToLocalTime();
             Guid id = snapshot.Id;

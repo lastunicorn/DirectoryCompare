@@ -32,9 +32,9 @@ public class CompareAllSnapshotsUseCase : IRequestHandler<CompareAllSnapshotsReq
         this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
     }
 
-    public Task<CompareAllSnapshotsResponse> Handle(CompareAllSnapshotsRequest request, CancellationToken cancellationToken)
+    public async Task<CompareAllSnapshotsResponse> Handle(CompareAllSnapshotsRequest request, CancellationToken cancellationToken)
     {
-        Snapshot[] snapshots = RetrieveAllSnapshots(request);
+        Snapshot[] snapshots = await RetrieveAllSnapshots(request);
 
         for (int i = 0; i < snapshots.Length - 1; i++)
         {
@@ -47,14 +47,14 @@ public class CompareAllSnapshotsUseCase : IRequestHandler<CompareAllSnapshotsReq
         }
 
         CompareAllSnapshotsResponse response = new();
-        return Task.FromResult(response);
+        return response;
     }
 
-    private Snapshot[] RetrieveAllSnapshots(CompareAllSnapshotsRequest request)
+    private async Task<Snapshot[]> RetrieveAllSnapshots(CompareAllSnapshotsRequest request)
     {
-        Snapshot[] snapshots = snapshotRepository.GetByPot(request.PotName)
+        Snapshot[] snapshots = await snapshotRepository.GetByPot(request.PotName)
             .OrderByDescending(x => x.CreationTime)
-            .ToArray();
+            .ToArrayAsync();
         return snapshots;
     }
 

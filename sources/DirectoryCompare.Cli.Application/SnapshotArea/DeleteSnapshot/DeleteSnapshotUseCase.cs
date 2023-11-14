@@ -28,32 +28,30 @@ public class DeleteSnapshotUseCase : IRequestHandler<DeleteSnapshotRequest>
         this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
     }
 
-    public Task Handle(DeleteSnapshotRequest request, CancellationToken cancellationToken)
+    public async Task Handle(DeleteSnapshotRequest request, CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(request.Location.PotName))
             throw new Exception("Pot name was not provided.");
 
         if (request.Location.SnapshotIndex.HasValue)
         {
-            snapshotRepository.DeleteByIndex(request.Location.PotName, request.Location.SnapshotIndex.Value);
+            await snapshotRepository.DeleteByIndex(request.Location.PotName, request.Location.SnapshotIndex.Value);
         }
         else if (request.Location.SnapshotDate.HasValue)
         {
             DateTime searchedDate = request.Location.SnapshotDate.Value;
 
-            bool foundEndDeleted = snapshotRepository.DeleteByExactDateTime(request.Location.PotName, searchedDate);
+            bool foundEndDeleted = await snapshotRepository.DeleteByExactDateTime(request.Location.PotName, searchedDate);
 
             if (foundEndDeleted)
-                return Task.CompletedTask;
+                return;
 
             if (searchedDate.TimeOfDay == TimeSpan.Zero)
-                snapshotRepository.DeleteSingleByDate(request.Location.PotName, searchedDate);
+                await snapshotRepository.DeleteSingleByDate(request.Location.PotName, searchedDate);
         }
         else
         {
-            snapshotRepository.DeleteLast(request.Location.PotName);
+            await snapshotRepository.DeleteLast(request.Location.PotName);
         }
-
-        return Task.CompletedTask;
     }
 }

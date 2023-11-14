@@ -42,17 +42,17 @@ public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest, IDis
         this.fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
     }
 
-    public Task<IDiskAnalysisProgress> Handle(CreateSnapshotRequest request, CancellationToken cancellationToken)
+    public async Task<IDiskAnalysisProgress> Handle(CreateSnapshotRequest request, CancellationToken cancellationToken)
     {
-        Pot pot = RetrievePot(request);
-        IDiskAnalysisProgress progress = StartPathAnalysis(pot);
+        Pot pot = await RetrievePot(request);
+        IDiskAnalysisProgress progress = await StartPathAnalysis(pot);
 
-        return Task.FromResult(progress);
+        return progress;
     }
 
-    private Pot RetrievePot(CreateSnapshotRequest request)
+    private async Task<Pot> RetrievePot(CreateSnapshotRequest request)
     {
-        Pot pot = potRepository.Get(request.PotName);
+        Pot pot = await potRepository.Get(request.PotName);
 
         if (pot == null)
             throw new PotDoesNotExistException(request.PotName);
@@ -60,15 +60,15 @@ public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest, IDis
         return pot;
     }
 
-    private DiskAnalysis.DiskAnalysis StartPathAnalysis(Pot pot)
+    private async Task<DiskAnalysis.DiskAnalysis> StartPathAnalysis(Pot pot)
     {
         log.WriteInfo("Scanning path: {0}", pot.Path);
 
         DiskAnalysis.DiskAnalysis diskAnalysis = new(fileSystem)
         {
             RootPath = pot.Path,
-            SnapshotWriter = snapshotRepository.CreateWriter(pot.Name),
-            BlackList = blackListRepository.Get(pot.Name)
+            SnapshotWriter = await snapshotRepository.CreateWriter(pot.Name),
+            BlackList = await blackListRepository.Get(pot.Name)
         };
 
         diskAnalysis.Starting += HandleDiskReaderStarting;

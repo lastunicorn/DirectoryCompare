@@ -23,19 +23,6 @@ public class Database
     private DatabaseState state = DatabaseState.Closed;
     private string rootDirectory;
 
-    public IEnumerable<PotDirectory> PotDirectories
-    {
-        get
-        {
-            if (state != DatabaseState.Opened)
-                throw new DatabaseNotOpenedException();
-
-            return Directory.GetDirectories(rootDirectory)
-                .Select(x => new PotDirectory(x))
-                .Where(x => x.IsValid);
-        }
-    }
-
     public void Open(string connectionString)
     {
         if (state == DatabaseState.Opened)
@@ -50,6 +37,19 @@ public class Database
             throw new DatabaseOpenException();
 
         state = DatabaseState.Opened;
+    }
+
+    public async Task<IEnumerable<PotDirectory>> GetPotDirectories()
+    {
+        if (state != DatabaseState.Opened)
+            throw new DatabaseNotOpenedException();
+
+        return await Task.Run(() =>
+        {
+            return Directory.GetDirectories(rootDirectory)
+                .Select(x => new PotDirectory(x))
+                .Where(x => x.IsValid);
+        });
     }
 
     public PotDirectory NewPotDirectory()

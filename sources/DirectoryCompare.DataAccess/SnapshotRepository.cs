@@ -33,9 +33,10 @@ public class SnapshotRepository : ISnapshotRepository
         this.database = database ?? throw new ArgumentNullException(nameof(database));
     }
 
-    public ISnapshotWriter CreateWriter(string potName)
+    public async Task<ISnapshotWriter> CreateWriter(string potName)
     {
-        PotDirectory potDirectory = database.PotDirectories
+        IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
+        PotDirectory potDirectory = potDirectories
             .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == potName);
 
         if (potDirectory == null)
@@ -46,9 +47,10 @@ public class SnapshotRepository : ISnapshotRepository
         return new JsonSnapshotWriter(jSnapshotWriter);
     }
 
-    public IEnumerable<Snapshot> GetByPot(string potName)
+    public async IAsyncEnumerable<Snapshot> GetByPot(string potName)
     {
-        PotDirectory potDirectory = database.PotDirectories
+        IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
+        PotDirectory potDirectory = potDirectories
             .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == potName);
 
         if (potDirectory == null)
@@ -65,9 +67,10 @@ public class SnapshotRepository : ISnapshotRepository
         }
     }
 
-    public Snapshot GetByIndex(string potName, int index = 0)
+    public async Task<Snapshot> GetByIndex(string potName, int index = 0)
     {
-        PotDirectory potDirectory = database.PotDirectories
+        IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
+        PotDirectory potDirectory = potDirectories
             .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == potName);
 
         if (potDirectory == null)
@@ -84,14 +87,15 @@ public class SnapshotRepository : ISnapshotRepository
         return snapshotFile.Content.ToSnapshot();
     }
 
-    public Snapshot GetLast(string potName)
+    public async Task<Snapshot> GetLast(string potName)
     {
-        return GetByIndex(potName);
+        return await GetByIndex(potName);
     }
 
-    public IEnumerable<Snapshot> GetByDate(string potName, DateTime dateTime)
+    public async IAsyncEnumerable<Snapshot> GetByDate(string potName, DateTime dateTime)
     {
-        PotDirectory potDirectory = database.PotDirectories
+        IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
+        PotDirectory potDirectory = potDirectories
             .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == potName);
 
         if (potDirectory == null)
@@ -107,9 +111,10 @@ public class SnapshotRepository : ISnapshotRepository
         }
     }
 
-    public Snapshot GetByExactDateTime(string potName, DateTime dateTime)
+    public async Task<Snapshot> GetByExactDateTime(string potName, DateTime dateTime)
     {
-        PotDirectory potDirectory = database.PotDirectories
+        IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
+        PotDirectory potDirectory = potDirectories
             .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == potName);
 
         if (potDirectory == null)
@@ -125,9 +130,10 @@ public class SnapshotRepository : ISnapshotRepository
         return snapshotFile.Content.ToSnapshot();
     }
 
-    public void Add(string potName, Snapshot snapshot)
+    public async Task Add(string potName, Snapshot snapshot)
     {
-        PotDirectory potDirectory = database.PotDirectories
+        IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
+        PotDirectory potDirectory = potDirectories
             .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == potName);
 
         if (potDirectory == null)
@@ -139,9 +145,10 @@ public class SnapshotRepository : ISnapshotRepository
         snapshotFile.Save();
     }
 
-    public void DeleteByIndex(string potName, int index = 0)
+    public async Task DeleteByIndex(string potName, int index = 0)
     {
-        PotDirectory potDirectory = database.PotDirectories
+        IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
+        PotDirectory potDirectory = potDirectories
             .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == potName);
 
         if (potDirectory == null)
@@ -154,14 +161,15 @@ public class SnapshotRepository : ISnapshotRepository
         snapshotFile?.Delete();
     }
 
-    public void DeleteLast(string potName)
+    public async Task DeleteLast(string potName)
     {
-        DeleteByIndex(potName);
+        await DeleteByIndex(potName);
     }
 
-    public bool DeleteSingleByDate(string potName, DateTime dateTime)
+    public async Task<bool> DeleteSingleByDate(string potName, DateTime dateTime)
     {
-        PotDirectory potDirectory = database.PotDirectories
+        IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
+        PotDirectory potDirectory = potDirectories
             .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == potName);
 
         if (potDirectory == null)
@@ -181,9 +189,10 @@ public class SnapshotRepository : ISnapshotRepository
         return true;
     }
 
-    public bool DeleteByExactDateTime(string potName, DateTime dateTime)
+    public async Task<bool> DeleteByExactDateTime(string potName, DateTime dateTime)
     {
-        PotDirectory potDirectory = database.PotDirectories
+        IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
+        PotDirectory potDirectory = potDirectories
             .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == potName);
 
         if (potDirectory == null)
@@ -199,25 +208,25 @@ public class SnapshotRepository : ISnapshotRepository
         return true;
     }
 
-    public Snapshot Get(SnapshotLocation location)
+    public async Task<Snapshot> Get(SnapshotLocation location)
     {
         if (string.IsNullOrEmpty(location.PotName))
             return null;
 
         if (location.SnapshotIndex.HasValue)
-            return GetByIndex(location.PotName, location.SnapshotIndex.Value);
+            return await GetByIndex(location.PotName, location.SnapshotIndex.Value);
 
         if (!location.SnapshotDate.HasValue)
-            return GetLast(location.PotName);
+            return await GetLast(location.PotName);
 
         DateTime searchedDate = location.SnapshotDate.Value;
 
-        Snapshot snapshot = GetByExactDateTime(location.PotName, searchedDate);
+        Snapshot snapshot = await GetByExactDateTime(location.PotName, searchedDate);
 
         if (snapshot == null && searchedDate.TimeOfDay == TimeSpan.Zero)
         {
-            List<Snapshot> snapshots = GetByDate(location.PotName, searchedDate)
-                .ToList();
+            IAsyncEnumerable<Snapshot> byDate = GetByDate(location.PotName, searchedDate);
+            List<Snapshot> snapshots = await byDate.ToListAsync();
 
             if (snapshots.Count == 1)
                 snapshot = snapshots[0];

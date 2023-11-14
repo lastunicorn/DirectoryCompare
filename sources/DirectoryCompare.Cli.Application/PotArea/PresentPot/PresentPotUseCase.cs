@@ -29,15 +29,21 @@ public class PresentPotUseCase : IRequestHandler<PresentPotRequest, PresentPotRe
         this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
     }
 
-    public Task<PresentPotResponse> Handle(PresentPotRequest request, CancellationToken cancellationToken)
+    public async Task<PresentPotResponse> Handle(PresentPotRequest request, CancellationToken cancellationToken)
     {
-        Pot pot = potRepository.Get(request.PotName, includeSnapshots: true);
+        Pot pot = await potRepository.Get(request.PotName, includeSnapshots: true);
 
-        PresentPotResponse response = new()
+        PresentPotResponse response = new();
+
+        if (pot != null)
         {
-            Pot = new PotDto(pot)
+            response.PotName = pot.Name;
+            response.PotGuid = pot.Guid;
+            response.PotPath = pot.Path;
+            response.PotDescription = pot.Description;
+            response.Snapshots = pot.Snapshots.ToDto();
         };
 
-        return Task.FromResult(response);
+        return response;
     }
 }

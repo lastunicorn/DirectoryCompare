@@ -1,5 +1,5 @@
-// DirectoryCompare
-// Copyright (C) 2017-2023 Dust in the Wind
+﻿// VeloCity
+// Copyright (C) 2022-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,11 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Domain.PotModel;
+using DustInTheWind.DirectoryCompare.Cli.Application.PotArea.PresentPot;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Application.PotArea.PresentPot;
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands.DisplayPot;
 
-public class PotDto
+public class PotViewModel
 {
     public string Name { get; }
 
@@ -28,17 +28,16 @@ public class PotDto
 
     public string Description { get; }
 
-    public List<SnapshotDto> Snapshots { get; } = new();
+    public List<SnapshotViewModel> Snapshots { get; }
 
-    public PotDto(Pot pot)
+    public PotViewModel(PresentPotResponse response)
     {
-        if (pot == null)
-            return;
-
-        Name = pot.Name;
-        Guid = pot.Guid;
-        Path = pot.Path;
-        Description = pot.Description;
-        Snapshots.AddRange(pot.Snapshots.ToDto());
+        Name = response.PotName;
+        Guid = response.PotGuid;
+        Path = response.PotPath;
+        Description = response.PotDescription;
+        Snapshots = response.Snapshots
+            .Select(x => new SnapshotViewModel(x))
+            .ToList();
     }
 }

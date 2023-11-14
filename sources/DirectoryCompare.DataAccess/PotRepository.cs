@@ -32,16 +32,16 @@ public class PotRepository : IPotRepository
         this.database = database ?? throw new ArgumentNullException(nameof(database));
     }
 
-    public List<Pot> Get()
+    public async Task<List<Pot>> Get()
     {
-        return database.PotDirectories
+        return (await database.GetPotDirectories())
             .Select(x => x.ToPot())
             .ToList();
     }
 
-    public Pot Get(string name, bool includeSnapshots)
+    public async Task<Pot> Get(string name, bool includeSnapshots)
     {
-        PotDirectory potDirectory = database.PotDirectories
+        PotDirectory potDirectory = (await database.GetPotDirectories())
             .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == name);
 
         Pot pot = potDirectory?.ToPot();
@@ -58,15 +58,16 @@ public class PotRepository : IPotRepository
         return pot;
     }
 
-    public bool Exists(string name)
+    public async Task<bool> Exists(string name)
     {
-        PotDirectory potDirectory = database.PotDirectories
+        IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
+        PotDirectory potDirectory = potDirectories
             .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == name);
 
         return potDirectory != null;
     }
 
-    public void Add(Pot pot)
+    public Task Add(Pot pot)
     {
         PotDirectory potDirectory = database.NewPotDirectory();
 
@@ -78,11 +79,14 @@ public class PotRepository : IPotRepository
         };
 
         potDirectory.InfoFile.Save();
+
+        return Task.CompletedTask;
     }
 
-    public void Delete(string name)
+    public async Task Delete(string name)
     {
-        PotDirectory potDirectory = database.PotDirectories
+        IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
+        PotDirectory potDirectory = potDirectories
             .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == name);
 
         if (potDirectory != null)

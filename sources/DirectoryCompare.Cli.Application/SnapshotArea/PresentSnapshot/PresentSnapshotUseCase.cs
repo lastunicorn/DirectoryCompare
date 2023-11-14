@@ -29,14 +29,14 @@ public class PresentSnapshotUseCase : IRequestHandler<PresentSnapshotRequest, Pr
         this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
     }
 
-    public Task<PresentSnapshotResponse> Handle(PresentSnapshotRequest request, CancellationToken cancellationToken)
+    public async Task<PresentSnapshotResponse> Handle(PresentSnapshotRequest request, CancellationToken cancellationToken)
     {
-        Snapshot snapshot = snapshotRepository.Get(request.Location);
+        Snapshot snapshot = await snapshotRepository.Get(request.Location);
 
         if (snapshot == null)
             throw new Exception("Invalid snapshot part. Verify that the pot name and snapshot identifier were provided correctly.");
 
-        PresentSnapshotResponse response = new()
+        return new PresentSnapshotResponse
         {
             PotName = request.Location.PotName,
             SnapshotId = snapshot.Id,
@@ -44,7 +44,5 @@ public class PresentSnapshotUseCase : IRequestHandler<PresentSnapshotRequest, Pr
             SnapshotCreationTime = snapshot.CreationTime,
             RootDirectory = new DirectoryDto(snapshot)
         };
-
-        return Task.FromResult(response);
     }
 }

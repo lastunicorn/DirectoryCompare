@@ -35,7 +35,7 @@ public class ImportSnapshotUseCase : IRequestHandler<ImportSnapshotRequest>
         this.potImportExport = potImportExport ?? throw new ArgumentNullException(nameof(potImportExport));
     }
 
-    public Task Handle(ImportSnapshotRequest request, CancellationToken cancellationToken)
+    public async Task Handle(ImportSnapshotRequest request, CancellationToken cancellationToken)
     {
         //ISnapshotReader reader = null;
         //ISnapshotWriter writer = null;
@@ -77,7 +77,7 @@ public class ImportSnapshotUseCase : IRequestHandler<ImportSnapshotRequest>
 
         Snapshot snapshot = potImportExport.ReadSnapshot(request.FilePath);
 
-        Pot pot = potRepository.Get(request.PotName);
+        Pot pot = await potRepository.Get(request.PotName);
 
         if (pot == null)
         {
@@ -96,7 +96,5 @@ public class ImportSnapshotUseCase : IRequestHandler<ImportSnapshotRequest>
         }
 
         snapshotRepository.Add(request.PotName, snapshot);
-
-        return Task.CompletedTask;
     }
 }

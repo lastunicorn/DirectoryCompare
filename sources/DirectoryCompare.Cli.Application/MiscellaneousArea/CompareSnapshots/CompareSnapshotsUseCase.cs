@@ -30,14 +30,14 @@ public class CompareSnapshotsUseCase : IRequestHandler<CompareSnapshotsRequest, 
         this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
     }
 
-    public Task<CompareSnapshotsResponse> Handle(CompareSnapshotsRequest request, CancellationToken cancellationToken)
+    public async Task<CompareSnapshotsResponse> Handle(CompareSnapshotsRequest request, CancellationToken cancellationToken)
     {
-        Snapshot snapshot1 = snapshotRepository.Get(request.Snapshot1);
+        Snapshot snapshot1 = await snapshotRepository.Get(request.Snapshot1);
 
         if (snapshot1 == null)
             throw new Exception("Pot name was not provided.");
 
-        Snapshot snapshot2 = snapshotRepository.Get(request.Snapshot2);
+        Snapshot snapshot2 = await snapshotRepository.Get(request.Snapshot2);
 
         if (snapshot2 == null)
             throw new Exception("Pot name was not provided.");
@@ -45,7 +45,7 @@ public class CompareSnapshotsUseCase : IRequestHandler<CompareSnapshotsRequest, 
         SnapshotComparison comparison = CompareSnapshots(snapshot1, snapshot2);
         string exportDirectoryPath = ExportToDiskIfRequested(comparison, request);
 
-        CompareSnapshotsResponse response = new()
+        return new CompareSnapshotsResponse
         {
             OnlyInSnapshot1 = comparison.OnlyInSnapshot1,
             OnlyInSnapshot2 = comparison.OnlyInSnapshot2,
@@ -53,8 +53,6 @@ public class CompareSnapshotsUseCase : IRequestHandler<CompareSnapshotsRequest, 
             DifferentContent = comparison.DifferentContent.ToDto(),
             ExportDirectoryPath = exportDirectoryPath
         };
-
-        return Task.FromResult(response);
     }
 
     private static SnapshotComparison CompareSnapshots(Snapshot snapshot1, Snapshot snapshot2)
