@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="ConsoleTools.Commando" Version="2.0.0-beta.5" />
+        <PackageReference Include="ConsoleTools.Commando" Version="2.0.0" />
         <PackageReference Include="ConsoleTools.Controls" Version="1.1.0" />
     </ItemGroup>
 
