@@ -45,9 +45,9 @@ internal class DisplayPotsCommandView : ViewBase<DisplayPotsCommand>
         CustomConsole.Write(" ");
 
         CustomConsole.WriteEmphasized(pot.Name);
-        CustomConsole.Write(" - ");
+        CustomConsole.Write(" ");
 
-        CustomConsole.WriteEmphasized(pot.Path);
+        CustomConsole.Write(ConsoleColor.DarkGray, pot.Path);
         CustomConsole.WriteLine();
     }
 }

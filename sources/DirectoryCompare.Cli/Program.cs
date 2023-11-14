@@ -15,28 +15,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Globalization;
-using System.Reflection;
-using Autofac;
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Commando;
 using DustInTheWind.ConsoleTools.Commando.Setup.Autofac;
 using DustInTheWind.ConsoleTools.Controls;
-using DustInTheWind.DirectoryCompare.Cli.Application;
-using DustInTheWind.DirectoryCompare.Cli.Application.PotArea.PresentPots;
 using DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands.DisplayPots;
-using DustInTheWind.DirectoryCompare.ConfigAccess;
-using DustInTheWind.DirectoryCompare.DataAccess;
-using DustInTheWind.DirectoryCompare.Domain.ImportExport;
-using DustInTheWind.DirectoryCompare.FileSystemAccess;
-using DustInTheWind.DirectoryCompare.Infrastructure.RequestPipeline;
-using DustInTheWind.DirectoryCompare.LogAccess;
-using DustInTheWind.DirectoryCompare.Ports.ConfigAccess;
-using DustInTheWind.DirectoryCompare.Ports.DataAccess;
-using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
-using DustInTheWind.DirectoryCompare.Ports.LogAccess;
-using FluentValidation;
-using MediatR.Extensions.Autofac.DependencyInjection;
-using MediatR.Extensions.Autofac.DependencyInjection.Builder;
 
 namespace DustInTheWind.DirectoryCompare.Cli;
 
@@ -46,18 +29,15 @@ internal static class Program
     {
         try
         {
-            ApplicationHeader applicationHeader = new();
-            applicationHeader.Display();
-
             Log4NetSetup.Setup();
 
             ConsoleTools.Commando.Application application = ApplicationBuilder.Create()
-                .ConfigureServices(ConfigureServices)
+                .ConfigureServices(DependencyContainer.Setup)
                 .RegisterCommandsFrom(typeof(DisplayPotsCommand).Assembly)
-                .HandleExceptions(EventHandler)
+                .HandleExceptions(HandleApplicationExceptions)
                 .Build();
 
-            application.Starting += HandleStarting;
+            application.Starting += HandleApplicationStarting;
 
             await application.RunAsync(args);
         }
@@ -67,57 +47,20 @@ internal static class Program
         }
     }
 
-    private static void ConfigureServices(ContainerBuilder containerBuilder)
-    {
-        containerBuilder.RegisterType<ConsoleRemoveDuplicatesLog>().As<IRemoveDuplicatesLog>().SingleInstance();
-        containerBuilder.RegisterType<Log>().As<ILog>().SingleInstance();
-        containerBuilder.RegisterType<Config>().As<IConfig>().SingleInstance();
-
-        containerBuilder
-            .Register(x =>
-            {
-                IConfig config = x.Resolve<IConfig>();
-
-                Database database = new();
-                database.Open(config.ConnectionString);
-
-                return database;
-            })
-            .AsSelf()
-            .SingleInstance();
-        containerBuilder.RegisterType<PotRepository>().As<IPotRepository>();
-        containerBuilder.RegisterType<BlackListRepository>().As<IBlackListRepository>();
-        containerBuilder.RegisterType<SnapshotRepository>().As<ISnapshotRepository>();
-        containerBuilder.RegisterType<PotImportExport>().As<IPotImportExport>();
-        containerBuilder.RegisterType<FileSystem>().As<IFileSystem>();
-
-        Assembly applicationAssembly = typeof(PresentPotsUseCase).Assembly;
-
-        MediatRConfiguration mediatRConfiguration = MediatRConfigurationBuilder
-            .Create(applicationAssembly)
-            .WithAllOpenGenericHandlerTypesRegistered()
-            .WithCustomPipelineBehaviors(new[] { typeof(RequestValidationBehavior<,>), typeof(RequestPerformanceBehavior<,>) })
-            .Build();
-
-        containerBuilder.RegisterMediatR(mediatRConfiguration);
-        containerBuilder.RegisterAssemblyTypes(applicationAssembly)
-            .Where(x => x.IsClosedTypeOf(typeof(IValidator<>)))
-            .AsImplementedInterfaces();
-
-        containerBuilder.RegisterType<RequestBus>().AsSelf();
-    }
-
-    private static void EventHandler(object sender, UnhandledApplicationExceptionEventArgs ex)
+    private static void HandleApplicationExceptions(object sender, UnhandledApplicationExceptionEventArgs ex)
     {
         // ILog log = ServiceProvider.GetService<ILog>();
         // log.WriteError(ex.ToString());
     }
 
-    private static void HandleStarting(object sender, EventArgs e)
+    private static void HandleApplicationStarting(object sender, EventArgs e)
     {
         CultureInfo cultureInfo = new("ro-RO");
 
         CultureInfo.CurrentCulture = cultureInfo;
         CultureInfo.CurrentUICulture = cultureInfo;
+        
+        ApplicationHeader applicationHeader = new();
+        applicationHeader.Display();
     }
 }
