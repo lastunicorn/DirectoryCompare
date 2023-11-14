@@ -1,5 +1,5 @@
-// DirectoryCompare
-// Copyright (C) 2017-2023 Dust in the Wind
+// VeloCity
+// Copyright (C) 2022-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -29,9 +29,9 @@ public class DisplayPotCommand : IConsoleCommand<PotViewModel>
 {
     private readonly RequestBus requestBus;
 
-    [AnonymousParameter(DisplayName = "pot name", Order = 1, IsOptional = true)]
+    [AnonymousParameter(DisplayName = "pot name", Order = 1, IsOptional = true, Description = "The name or the id of the pot to display.")]
     public string PotName { get; set; }
-    
+
     public DisplayPotCommand(RequestBus requestBus)
     {
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
@@ -45,6 +45,6 @@ public class DisplayPotCommand : IConsoleCommand<PotViewModel>
         };
 
         PresentPotResponse response = await requestBus.PlaceRequest<PresentPotRequest, PresentPotResponse>(request);
-        return new PotViewModel(response);
+        return new PotViewModel(response.Pot);
     }
 }

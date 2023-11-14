@@ -23,7 +23,7 @@ internal static class SnapshotsDtoExtensions
     public static List<SnapshotDto> ToDto(this IEnumerable<Snapshot> snapshots)
     {
         return snapshots
-            .Select(x => new SnapshotDto(x))
+            .Select((x, i) => new SnapshotDto(x, i))
             .ToList();
     }
 }

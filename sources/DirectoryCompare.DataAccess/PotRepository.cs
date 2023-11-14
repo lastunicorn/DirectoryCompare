@@ -46,7 +46,7 @@ public class PotRepository : IPotRepository
 
         Pot pot = potDirectory?.ToPot();
 
-        if (pot != null && includeSnapshots) 
+        if (pot != null && includeSnapshots)
             LoadSnapshots(potDirectory, pot);
 
         return pot;
@@ -61,23 +61,33 @@ public class PotRepository : IPotRepository
         pot.Snapshots.AddRange(snapshots);
     }
 
-    public async Task<Pot> GetById(Guid id)
+    public async Task<Pot> GetById(Guid id, bool includeSnapshots)
     {
         IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
         PotDirectory potDirectory = potDirectories
             .FirstOrDefault(x => x.InfoFile.IsValid && x.PotGuid == id);
 
-        return potDirectory?.ToPot();
+        Pot pot = potDirectory?.ToPot();
+
+        if (pot != null && includeSnapshots)
+            LoadSnapshots(potDirectory, pot);
+
+        return pot;
     }
 
-    public async Task<Pot> GetByPartialId(string partialId)
+    public async Task<Pot> GetByPartialId(string partialId, bool includeSnapshots)
     {
         IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
         PotDirectory potDirectory = potDirectories
             .Where(x => x.InfoFile.IsValid)
             .FirstOrDefault(x => x.PotGuid.ToString("N").StartsWith(partialId, StringComparison.InvariantCultureIgnoreCase));
 
-        return potDirectory?.ToPot();
+        Pot pot = potDirectory?.ToPot();
+
+        if (pot != null && includeSnapshots)
+            LoadSnapshots(potDirectory, pot);
+
+        return pot;
     }
 
     public async Task<bool> ExistsByName(string name)

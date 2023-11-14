@@ -18,13 +18,5 @@ namespace DustInTheWind.DirectoryCompare.Cli.Application.PotArea.PresentPot;
 
 public class PresentPotResponse
 {
-    public string PotName { get; set; }
-
-    public Guid PotGuid { get; set; }
-
-    public string PotPath { get; set; }
-
-    public string PotDescription { get; set; }
-
-    public List<SnapshotDto> Snapshots { get; set; }
+    public PotDto Pot { get; set; }
 }

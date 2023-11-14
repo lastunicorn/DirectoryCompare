@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.Cli.Application.Utils;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 using MediatR;
@@ -31,18 +32,12 @@ public class PresentPotUseCase : IRequestHandler<PresentPotRequest, PresentPotRe
 
     public async Task<PresentPotResponse> Handle(PresentPotRequest request, CancellationToken cancellationToken)
     {
-        Pot pot = await potRepository.GetByName(request.PotName, includeSnapshots: true);
+        Pot pot = await potRepository.GetByNameOrId(request.PotName, includeSnapshots: true);
 
         PresentPotResponse response = new();
 
-        if (pot != null)
-        {
-            response.PotName = pot.Name;
-            response.PotGuid = pot.Guid;
-            response.PotPath = pot.Path;
-            response.PotDescription = pot.Description;
-            response.Snapshots = pot.Snapshots.ToDto();
-        };
+        if (pot != null) 
+            response.Pot = new PotDto(pot);
 
         return response;
     }

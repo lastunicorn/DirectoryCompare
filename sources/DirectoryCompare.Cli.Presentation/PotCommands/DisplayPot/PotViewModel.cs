@@ -20,6 +20,8 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands.DisplayPot
 
 public class PotViewModel
 {
+    public bool Exists { get; }
+    
     public string Name { get; }
 
     public Guid Guid { get; }
@@ -30,13 +32,17 @@ public class PotViewModel
 
     public List<SnapshotViewModel> Snapshots { get; }
 
-    public PotViewModel(PresentPotResponse response)
+    public PotViewModel(PotDto pot)
     {
-        Name = response.PotName;
-        Guid = response.PotGuid;
-        Path = response.PotPath;
-        Description = response.PotDescription;
-        Snapshots = response.Snapshots
+        if (pot == null)
+            return;
+
+        Exists = true;
+        Name = pot.Name;
+        Guid = pot.Guid;
+        Path = pot.Path;
+        Description = pot.Description;
+        Snapshots = pot.Snapshots?
             .Select(x => new SnapshotViewModel(x))
             .ToList();
     }

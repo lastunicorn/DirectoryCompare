@@ -24,6 +24,8 @@ public class SnapshotViewModel
 
     public Guid Id { get; }
 
+    public int Index { get; }
+
     public SnapshotViewModel(SnapshotDto snapshot)
     {
         if (snapshot == null)
@@ -31,5 +33,6 @@ public class SnapshotViewModel
 
         CreationTime = snapshot.CreationTime;
         Id = snapshot.Id;
+        Index = snapshot.Index;
     }
 }

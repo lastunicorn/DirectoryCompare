@@ -24,12 +24,15 @@ public class SnapshotDto
 
     public Guid Id { get; }
 
-    public SnapshotDto(Snapshot snapshot)
+    public int Index { get; }
+
+    public SnapshotDto(Snapshot snapshot, int index)
     {
         if (snapshot == null)
             return;
 
         CreationTime = snapshot.CreationTime;
         Id = snapshot.Id;
+        Index = index;
     }
 }

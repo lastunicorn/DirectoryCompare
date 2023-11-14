@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Controls.InputControls;
 using DustInTheWind.DirectoryCompare.Ports.UserAccess;
 
@@ -23,13 +24,22 @@ public class UserInterface : IUserInterface
 {
     public Task<bool> ConfirmToDelete(PotDeletionRequest request)
     {
-        ValueControl<string>.QuickWrite("Pot Name", request.PotName);
-        ValueControl<Guid>.QuickWrite("Pot Id", request.PotId);
+        CustomConsole.WriteLineEmphasized("Deleting pot");
+        WriteLabeledValue("Pot Name", request.PotName);
+        WriteLabeledValue("Pot Id", request.PotId);
+        Console.WriteLine();
 
         return Task.Run(() =>
         {
             YesNoAnswer answer = YesNoQuestion.QuickRead("Are you sure you want to delete the pot?", YesNoAnswer.Yes);
             return answer == YesNoAnswer.Yes;
         });
+    }
+
+    private static void WriteLabeledValue(string label, object value)
+    {
+        CustomConsole.Write("  ");
+        CustomConsole.WriteEmphasized(label + ": ");
+        CustomConsole.WriteLine(ConsoleColor.DarkGray, value);
     }
 }

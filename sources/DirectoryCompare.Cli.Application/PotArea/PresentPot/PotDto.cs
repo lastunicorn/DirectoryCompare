@@ -1,5 +1,5 @@
-﻿// DirectoryCompare
-// Copyright (C) 2017-2023 Dust in the Wind
+// VeloCity
+// Copyright (C) 2022-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,23 +16,26 @@
 
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 
-namespace DustInTheWind.DirectoryCompare.Ports.DataAccess;
+namespace DustInTheWind.DirectoryCompare.Cli.Application.PotArea.PresentPot;
 
-public interface IPotRepository
+public class PotDto
 {
-    Task<IEnumerable<Pot>> GetAll();
+    public string Name { get; }
 
-    Task<Pot> GetByName(string name, bool includeSnapshots = false);
+    public Guid Guid { get; }
 
-    Task<Pot> GetById(Guid id, bool includeSnapshots);
+    public string Path { get; }
 
-    Task<Pot> GetByPartialId(string partialId, bool includeSnapshots);
+    public string Description { get; }
 
-    Task Add(Pot pot);
+    public List<SnapshotDto> Snapshots { get; }
 
-    Task<bool> ExistsByName(string name);
-
-    Task<bool> DeleteByName(string nameOrId);
-
-    Task<bool> DeleteById(Guid guid);
+    public PotDto(Pot pot)
+    {
+        Name = pot.Name;
+        Guid = pot.Guid;
+        Path = pot.Path;
+        Description = pot.Description;
+        Snapshots = pot.Snapshots.ToDto();
+    }
 }

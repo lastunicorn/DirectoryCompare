@@ -1,5 +1,5 @@
-﻿// DirectoryCompare
-// Copyright (C) 2017-2023 Dust in the Wind
+﻿// VeloCity
+// Copyright (C) 2022-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.Cli.Application.Utils;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 using DustInTheWind.DirectoryCompare.Ports.UserAccess;
@@ -34,7 +35,7 @@ public class DeletePotUseCase : IRequestHandler<DeletePotRequest>
 
     public async Task Handle(DeletePotRequest request, CancellationToken cancellationToken)
     {
-        Pot pot = await GetPot(request.PotName);
+        Pot pot = await potRepository.GetByNameOrId(request.PotName);
 
         PotDeletionRequest potDeletionRequest = new()
         {
@@ -47,29 +48,5 @@ public class DeletePotUseCase : IRequestHandler<DeletePotRequest>
             throw new OperationCanceledException($"The pot {pot.Name} was not deleted.");
 
         await potRepository.DeleteById(pot.Guid);
-    }
-
-    private async Task<Pot> GetPot(string nameOrId)
-    {
-        Pot pot =  await potRepository.GetByName(nameOrId);
-
-        if (pot == null)
-        {
-            bool parseSuccess = Guid.TryParse(nameOrId, out Guid guid);
-
-            if (parseSuccess)
-                pot = await potRepository.GetById(guid);
-        }
-
-        if (pot == null)
-        {
-            if (nameOrId.Length >= 8)
-                pot = await potRepository.GetByPartialId(nameOrId);
-        }
-
-        if (pot == null)
-            throw new Exception($"Pot '{nameOrId}' does not exist.");
-
-        return pot;
     }
 }

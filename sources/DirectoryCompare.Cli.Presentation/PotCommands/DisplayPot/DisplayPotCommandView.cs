@@ -1,5 +1,5 @@
-﻿// DirectoryCompare
-// Copyright (C) 2017-2023 Dust in the Wind
+﻿// VeloCity
+// Copyright (C) 2022-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Globalization;
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Commando;
 
@@ -24,10 +23,10 @@ internal class DisplayPotCommandView : ViewBase<PotViewModel>
 {
     public override void Display(PotViewModel pot)
     {
-        if (pot == null)
-            CustomConsole.WriteWarning("The pot does not exist.");
-        else
+        if (pot.Exists)
             DisplayPotInfo(pot);
+        else
+            CustomConsole.WriteWarning("The pot does not exist.");
     }
 
     private void DisplayPotInfo(PotViewModel pot)
@@ -44,10 +43,8 @@ internal class DisplayPotCommandView : ViewBase<PotViewModel>
 
         if (pot.Snapshots is { Count: > 0 })
         {
-            WithIndentation("Snapshots:", () =>
-            {
-                DisplaySnapshots(pot.Snapshots);
-            });
+            CustomConsole.WriteLineEmphasized("Snapshots:");
+            DisplaySnapshots(pot.Snapshots);
         }
         else
         {
@@ -59,10 +56,12 @@ internal class DisplayPotCommandView : ViewBase<PotViewModel>
     {
         foreach (SnapshotViewModel snapshot in snapshots)
         {
+            int index = snapshot.Index;
             DateTime creationTime = snapshot.CreationTime.ToLocalTime();
-            Guid id = snapshot.Id;
+            CustomConsole.Write($"  ({index}) {creationTime} - ");
 
-            WriteValue(creationTime.ToString(CultureInfo.CurrentUICulture), id.ToString("D"));
+            Guid id = snapshot.Id;
+            CustomConsole.WriteLine(ConsoleColor.DarkGray, id.ToString("D"));
         }
     }
 }
