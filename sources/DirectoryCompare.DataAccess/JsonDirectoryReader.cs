@@ -23,10 +23,6 @@ public class JsonDirectoryReader : IDirectoryReader
 {
     public DirectoryItemType CurrentItemType { get; }
 
-    public JsonDirectoryReader()
-    {
-    }
-
     public bool MoveNext()
     {
         throw new NotImplementedException();

@@ -54,7 +54,7 @@ public struct ItemComparison : IEquatable<ItemComparison>
     {
         unchecked
         {
-            int hashCode = (RootPath != null ? RootPath.GetHashCode() : 0);
+            int hashCode = RootPath != null ? RootPath.GetHashCode() : 0;
             hashCode = (hashCode * 397) ^ (Item1 != null ? Item1.GetHashCode() : 0);
             hashCode = (hashCode * 397) ^ (Item2 != null ? Item2.GetHashCode() : 0);
             return hashCode;

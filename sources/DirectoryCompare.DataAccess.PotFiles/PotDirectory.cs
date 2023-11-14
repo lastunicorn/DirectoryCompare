@@ -109,7 +109,7 @@ public class PotDirectory
             })
             .FirstOrDefault();
 
-        return potDirectory ?? PotDirectory.New(storagePath);
+        return potDirectory ?? New(storagePath);
     }
 
     public static PotDirectory New(string storagePath)

@@ -15,12 +15,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using log4net;
+using ILog = DustInTheWind.DirectoryCompare.Ports.LogAccess.ILog;
 
 namespace DustInTheWind.DirectoryCompare.LogAccess;
 
-public sealed class Log : Ports.LogAccess.ILog
+public sealed class Log : ILog
 {
-    private ILog log;
+    private log4net.ILog log;
 
     private void Open()
     {

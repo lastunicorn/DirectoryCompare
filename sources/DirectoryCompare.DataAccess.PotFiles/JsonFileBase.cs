@@ -31,7 +31,7 @@ public class JsonFileBase<TContent>
 
     public JsonFileBase(string snapshotFilePath)
     {
-        this.FilePath = snapshotFilePath ?? throw new ArgumentNullException(nameof(snapshotFilePath));
+        FilePath = snapshotFilePath ?? throw new ArgumentNullException(nameof(snapshotFilePath));
     }
 
     public bool TryOpen()

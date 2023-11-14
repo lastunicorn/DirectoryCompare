@@ -21,7 +21,7 @@ namespace DustInTheWind.DirectoryCompare.ConfigAccess;
 
 public class Config : IConfig
 {
-    private IConfiguration configuration;
+    private readonly IConfiguration configuration;
 
     public string ConnectionString => configuration["ConnectionString"];
 

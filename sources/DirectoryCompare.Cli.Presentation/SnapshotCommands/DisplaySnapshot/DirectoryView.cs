@@ -27,10 +27,9 @@ internal class DirectoryView
     public DirectoryView(DirectoryDto directory, GroupingLine parentGroupingLine = null)
     {
         this.directory = directory ?? throw new ArgumentNullException(nameof(directory));
-        
+
         int itemCount = this.directory.Directories.Count + this.directory.Files.Count;
         groupingLine = new GroupingLine(itemCount, parentGroupingLine);
-
     }
 
     public void Display()
@@ -43,7 +42,7 @@ internal class DirectoryView
             directoryView.Display();
         }
 
-        foreach (FileDto file in directory.Files) 
+        foreach (FileDto file in directory.Files)
             DisplayFileDetails(file);
     }
 

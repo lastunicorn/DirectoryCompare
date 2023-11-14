@@ -24,7 +24,7 @@ namespace DustInTheWind.DirectoryCompare.DataAccess;
 public class JsonSnapshotReader : ISnapshotReader
 {
     private readonly Stack<JDirectoryWriter> directoryStack = new();
-    private JSnapshotReader jSnapshotReader;
+    private readonly JSnapshotReader jSnapshotReader;
 
     public Guid Id => new("9E93055D-7BDE-4F55-B340-DD5A4880D96E");
 

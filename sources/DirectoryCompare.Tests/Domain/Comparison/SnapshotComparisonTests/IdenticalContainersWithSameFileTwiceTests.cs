@@ -89,7 +89,7 @@ public class IdenticalSnapshotsWithSameFileTwiceTests
     {
         snapshotComparison.Compare();
 
-        ItemComparison[] expected = new[]
+        ItemComparison[] expected =
         {
             new ItemComparison
             {

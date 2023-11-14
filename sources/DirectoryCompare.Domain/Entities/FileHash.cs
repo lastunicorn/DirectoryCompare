@@ -54,7 +54,7 @@ public readonly struct FileHash : IEquatable<FileHash>
 
     public override int GetHashCode()
     {
-        return (bytes != null ? bytes.GetHashCode() : 0);
+        return bytes != null ? bytes.GetHashCode() : 0;
     }
 
     public static FileHash Parse(string value)

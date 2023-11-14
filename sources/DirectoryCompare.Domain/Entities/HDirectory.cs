@@ -93,12 +93,16 @@ public class HDirectory : HItem, IEquatable<HDirectory>, IEnumerable<HItem>
     public IEnumerator<HItem> GetEnumerator()
     {
         if (Files != null)
+        {
             foreach (HFile file in Files)
                 yield return file;
+        }
 
         if (Directories != null)
+        {
             foreach (HDirectory directory in Directories)
                 yield return directory;
+        }
     }
 
     IEnumerator IEnumerable.GetEnumerator()
