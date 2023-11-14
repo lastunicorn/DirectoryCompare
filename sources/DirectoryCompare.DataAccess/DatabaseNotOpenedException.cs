@@ -1,5 +1,5 @@
-// DirectoryCompare
-// Copyright (C) 2017-2023 Dust in the Wind
+// VeloCity
+// Copyright (C) 2022-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,17 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.PresentSnapshot;
+using DustInTheWind.DirectoryCompare.Domain;
 
-public class PresentSnapshotResponse
+namespace DustInTheWind.DirectoryCompare.DataAccess;
+
+public class DatabaseNotOpenedException : DirectoryCompareException
 {
-    public string PotName { get; set; }
+    private const string DefaultMessage = "The database is not opened.";
 
-    public Guid SnapshotId { get; set; }
-
-    public string OriginalPath { get; set; }
-
-    public DateTime SnapshotCreationTime { get; set; }
-
-    public DirectoryDto RootDirectory { get; set; }
+    public DatabaseNotOpenedException()
+        : base(DefaultMessage)
+    {
+    }
 }

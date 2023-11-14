@@ -34,12 +34,14 @@ public class PresentSnapshotUseCase : IRequestHandler<PresentSnapshotRequest, Pr
         Snapshot snapshot = snapshotRepository.Get(request.Location);
 
         if (snapshot == null)
-            throw new Exception("Pot name was not provided.");
+            throw new Exception("Invalid snapshot part. Verify that the pot name and snapshot identifier were provided correctly.");
 
         PresentSnapshotResponse response = new()
         {
+            PotName = request.Location.PotName,
             SnapshotId = snapshot.Id,
             OriginalPath = snapshot.OriginalPath,
+            SnapshotCreationTime = snapshot.CreationTime,
             RootDirectory = new DirectoryDto(snapshot)
         };
 

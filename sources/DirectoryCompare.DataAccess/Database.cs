@@ -20,16 +20,17 @@ namespace DustInTheWind.DirectoryCompare.DataAccess;
 
 public class Database
 {
-    private string location;
+    private DatabaseState state = DatabaseState.Closed;
+    private string rootDirectory;
 
     public IEnumerable<PotDirectory> PotDirectories
     {
         get
         {
-            if (location == null)
-                throw new Exception("The database is not opened.");
+            if (state != DatabaseState.Opened)
+                throw new DatabaseNotOpenedException();
 
-            return Directory.GetDirectories(location)
+            return Directory.GetDirectories(rootDirectory)
                 .Select(x => new PotDirectory(x))
                 .Where(x => x.IsValid);
         }
@@ -37,18 +38,26 @@ public class Database
 
     public void Open(string connectionString)
     {
-        if (!Directory.Exists(connectionString))
-            throw new Exception($"Database '{connectionString}' does not exist.");
+        if (state == DatabaseState.Opened)
+            return;
 
-        location = connectionString;
+        rootDirectory = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
+
+        if (!Directory.Exists(rootDirectory))
+            Directory.CreateDirectory(rootDirectory);
+
+        if (!Directory.Exists(rootDirectory))
+            throw new DatabaseOpenException();
+
+        state = DatabaseState.Opened;
     }
 
     public PotDirectory NewPotDirectory()
     {
-        if (location == null)
-            throw new Exception("The database is not opened.");
+        if (state != DatabaseState.Opened)
+            throw new DatabaseNotOpenedException();
 
-        PotDirectory potDirectory = PotDirectory.New(location);
+        PotDirectory potDirectory = PotDirectory.New(rootDirectory);
         potDirectory.Create();
         return potDirectory;
     }

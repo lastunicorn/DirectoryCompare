@@ -1,4 +1,4 @@
-// DirectoryCompare
+﻿// DirectoryCompare
 // Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -16,40 +16,26 @@
 
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.PresentSnapshot;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands.DisplaySnapshot;
 
-public class DisplaySnapshotCommandView : IView<DisplaySnapshotCommand>
+public class DisplaySnapshotCommandView : ViewBase<DisplaySnapshotCommand>
 {
-    public void Display(DisplaySnapshotCommand command)
+    public override void Display(DisplaySnapshotCommand command)
     {
         if (command.Response == null)
             CustomConsole.WriteLine("There is no snapshot.");
         else
         {
-            Console.WriteLine($"Snapshot: {command.Response.SnapshotId:D}");
-            Console.WriteLine($"Path: {command.Response.OriginalPath}");
+            WriteValue("Pot", command.Response.PotName);
+            WriteValue("Snapshot", command.Response.SnapshotId.ToString("D"));
+            WriteValue("Path", command.Response.OriginalPath);
+            WriteValue("Creation Time", command.Response.SnapshotCreationTime.ToLocalTime());
+
             Console.WriteLine();
 
-            DisplayDirectory(command.Response.RootDirectory, 0);
-        }
-    }
-
-    private static void DisplayDirectory(DirectoryDto directory, int index)
-    {
-        string indent = new(' ', index * 2);
-
-        foreach (DirectoryDto subdirectory in directory.Directories)
-        {
-            Console.WriteLine(indent + subdirectory.Name);
-            DisplayDirectory(subdirectory, index + 1);
-        }
-
-        foreach (FileDto file in directory.Files)
-        {
-            Console.Write(indent + file.Name);
-            CustomConsole.WriteLine(ConsoleColor.DarkGray, " [" + file.Hash + "]");
+            DirectoryView directoryView = new(command.Response.RootDirectory);
+            directoryView.Display();
         }
     }
 }

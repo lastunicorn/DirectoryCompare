@@ -65,7 +65,9 @@ public readonly struct FileHash : IEquatable<FileHash>
 
     public override string ToString()
     {
-        return Convert.ToBase64String(bytes);
+        return bytes == null
+            ? null
+            : Convert.ToBase64String(bytes);
     }
 
     public static bool operator ==(FileHash fileHash1, FileHash fileHash2)

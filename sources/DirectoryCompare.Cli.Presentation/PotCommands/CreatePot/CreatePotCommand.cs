@@ -30,10 +30,10 @@ public class CreatePotCommand : IConsoleCommand
 {
     private readonly RequestBus requestBus;
 
-    [AnonymousParameter(Order = 1)]
+    [AnonymousParameter(Order = 1, Description = "The name of the pot to be created.")]
     public string PotName { get; set; }
 
-    [NamedParameter("path", ShortName = 'h')]
+    [AnonymousParameter(Order = 2, Description = "The path to be scanned and stored by the pot.")]
     public string TargetPath { get; set; }
 
     public CreatePotCommand(RequestBus requestBus)
