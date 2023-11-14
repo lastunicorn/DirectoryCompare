@@ -41,6 +41,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <ProjectReference Include="..\DirectoryCompare.Ports.DataAccess\DirectoryCompare.Ports.DataAccess.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.Ports.FileSystemAccess\DirectoryCompare.Ports.FileSystemAccess.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.Ports.LogAccess\DirectoryCompare.Ports.LogAccess.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.Ports.UserAccess\DirectoryCompare.Ports.UserAccess.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.UserAccess\DirectoryCompare.UserAccess.csproj" PrivateAssets="All" />
     </ItemGroup>
 
     <ItemGroup>
@@ -53,7 +55,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <ItemGroup>
         <None Update="dircmp.bat">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
         <None Update="Log4Net.config">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -14,25 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.DataAccess.PotFiles;
-using FluentAssertions;
-using Xunit;
+namespace DustInTheWind.DirectoryCompare.Ports.UserAccess;
 
-namespace DustInTheWind.DirectoryCompare.Tests.Adapters.PotFiles.SnapshotFilePathTests;
-
-public class ImplicitCastFromStringTests
+public class PotDeletionRequest
 {
-    [Fact]
-    public void HavingFilePathString_WhenImplicitlyCastFromString_ThenCreationTimeIsParsedCorrectly()
-    {
-        // arrange
-        const string pathAsString = "/this/is/some/path/2021 12 31 143918.json";
-
-        // act
-        SnapshotFilePath actual = pathAsString;
-
-        // assert
-        DateTime expected = new(2021, 12, 31, 14, 39, 18);
-        actual.CreationTime.Should().Be(expected);
-    }
+    public string PotName { get; set; }
+    public Guid PotId { get; set; }
 }

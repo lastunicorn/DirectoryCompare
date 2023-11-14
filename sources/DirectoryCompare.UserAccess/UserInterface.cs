@@ -1,4 +1,4 @@
-// VeloCity
+﻿// VeloCity
 // Copyright (C) 2022-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -14,25 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.DataAccess.PotFiles;
-using FluentAssertions;
-using Xunit;
+using DustInTheWind.ConsoleTools.Controls.InputControls;
+using DustInTheWind.DirectoryCompare.Ports.UserAccess;
 
-namespace DustInTheWind.DirectoryCompare.Tests.Adapters.PotFiles.SnapshotFilePathTests;
+namespace DustInTheWind.DirectoryCompare.UserAccess;
 
-public class ImplicitCastFromStringTests
+public class UserInterface : IUserInterface
 {
-    [Fact]
-    public void HavingFilePathString_WhenImplicitlyCastFromString_ThenCreationTimeIsParsedCorrectly()
+    public Task<bool> ConfirmToDelete(PotDeletionRequest request)
     {
-        // arrange
-        const string pathAsString = "/this/is/some/path/2021 12 31 143918.json";
+        ValueControl<string>.QuickWrite("Pot Name", request.PotName);
+        ValueControl<Guid>.QuickWrite("Pot Id", request.PotId);
 
-        // act
-        SnapshotFilePath actual = pathAsString;
-
-        // assert
-        DateTime expected = new(2021, 12, 31, 14, 39, 18);
-        actual.CreationTime.Should().Be(expected);
+        return Task.Run(() =>
+        {
+            YesNoAnswer answer = YesNoQuestion.QuickRead("Are you sure you want to delete the pot?", YesNoAnswer.Yes);
+            return answer == YesNoAnswer.Yes;
+        });
     }
 }

@@ -14,7 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
+using DustInTheWind.DirectoryCompare.Ports.UserAccess;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Application.PotArea.DeletePot;
@@ -22,16 +24,52 @@ namespace DustInTheWind.DirectoryCompare.Cli.Application.PotArea.DeletePot;
 public class DeletePotUseCase : IRequestHandler<DeletePotRequest>
 {
     private readonly IPotRepository potRepository;
+    private readonly IUserInterface userInterface;
 
-    public DeletePotUseCase(IPotRepository potRepository)
+    public DeletePotUseCase(IPotRepository potRepository, IUserInterface userInterface)
     {
         this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
+        this.userInterface = userInterface ?? throw new ArgumentNullException(nameof(userInterface));
     }
 
-    public Task Handle(DeletePotRequest request, CancellationToken cancellationToken)
+    public async Task Handle(DeletePotRequest request, CancellationToken cancellationToken)
     {
-        potRepository.Delete(request.PotName);
+        Pot pot = await GetPot(request.PotName);
 
-        return Task.CompletedTask;
+        PotDeletionRequest potDeletionRequest = new()
+        {
+            PotName = pot.Name,
+            PotId = pot.Guid
+        };
+        bool confirmation = await userInterface.ConfirmToDelete(potDeletionRequest);
+
+        if (!confirmation)
+            throw new OperationCanceledException($"The pot {pot.Name} was not deleted.");
+
+        await potRepository.DeleteById(pot.Guid);
+    }
+
+    private async Task<Pot> GetPot(string nameOrId)
+    {
+        Pot pot =  await potRepository.GetByName(nameOrId);
+
+        if (pot == null)
+        {
+            bool parseSuccess = Guid.TryParse(nameOrId, out Guid guid);
+
+            if (parseSuccess)
+                pot = await potRepository.GetById(guid);
+        }
+
+        if (pot == null)
+        {
+            if (nameOrId.Length >= 8)
+                pot = await potRepository.GetByPartialId(nameOrId);
+        }
+
+        if (pot == null)
+            throw new Exception($"Pot '{nameOrId}' does not exist.");
+
+        return pot;
     }
 }

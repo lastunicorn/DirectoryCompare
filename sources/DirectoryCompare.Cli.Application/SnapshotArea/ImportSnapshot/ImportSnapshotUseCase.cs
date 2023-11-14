@@ -77,7 +77,7 @@ public class ImportSnapshotUseCase : IRequestHandler<ImportSnapshotRequest>
 
         Snapshot snapshot = potImportExport.ReadSnapshot(request.FilePath);
 
-        Pot pot = await potRepository.Get(request.PotName);
+        Pot pot = await potRepository.GetByName(request.PotName);
 
         if (pot == null)
         {
@@ -87,7 +87,7 @@ public class ImportSnapshotUseCase : IRequestHandler<ImportSnapshotRequest>
                 Path = snapshot.OriginalPath
             };
 
-            potRepository.Add(pot);
+            await potRepository.Add(pot);
         }
         else
         {
@@ -95,6 +95,6 @@ public class ImportSnapshotUseCase : IRequestHandler<ImportSnapshotRequest>
                 throw new Exception("The url of the imported snapshot is different than the one of the pot.");
         }
 
-        snapshotRepository.Add(request.PotName, snapshot);
+        await snapshotRepository.Add(request.PotName, snapshot);
     }
 }

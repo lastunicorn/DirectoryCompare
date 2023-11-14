@@ -31,7 +31,7 @@ public class PresentPotUseCase : IRequestHandler<PresentPotRequest, PresentPotRe
 
     public async Task<PresentPotResponse> Handle(PresentPotRequest request, CancellationToken cancellationToken)
     {
-        Pot pot = await potRepository.Get(request.PotName, includeSnapshots: true);
+        Pot pot = await potRepository.GetByName(request.PotName, includeSnapshots: true);
 
         PresentPotResponse response = new();
 

@@ -28,10 +28,8 @@ public class AddBlackPathUseCase : IRequestHandler<AddBlackPathRequest>
         this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
     }
 
-    public Task Handle(AddBlackPathRequest request, CancellationToken cancellationToken)
+    public async Task Handle(AddBlackPathRequest request, CancellationToken cancellationToken)
     {
-        blackListRepository.Add(request.PotName, request.Path);
-
-        return Task.CompletedTask;
+        await blackListRepository.Add(request.PotName, request.Path);
     }
 }

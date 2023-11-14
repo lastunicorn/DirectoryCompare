@@ -30,7 +30,7 @@ public class DeletePotCommand : IConsoleCommand
 {
     private readonly RequestBus requestBus;
 
-    [AnonymousParameter(Order = 1)]
+    [AnonymousParameter(Order = 1, Description = "The name or id of the pot to be deleted.")]
     public string PotName { get; set; }
 
     public DeletePotCommand(RequestBus requestBus)

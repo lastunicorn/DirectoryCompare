@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 DirectoryCompare
 Copyright (C) 2017-2020 Dust in the Wind
 
@@ -21,20 +21,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
-        <AssemblyName>DustInTheWind.DirectoryCompare.DataAccess</AssemblyName>
-        <RootNamespace>DustInTheWind.DirectoryCompare.DataAccess</RootNamespace>
+        <AssemblyName>DustInTheWind.DirectoryCompare.UserAccess</AssemblyName>
+        <RootNamespace>DustInTheWind.DirectoryCompare.UserAccess</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="System.Linq.Async" Version="6.0.1" />
+        <PackageReference Include="ConsoleTools.Controls" Version="1.1.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All" />
-        <ProjectReference Include="..\DirectoryCompare.DataStructures\DirectoryCompare.DataStructures.csproj" PrivateAssets="All" />
-        <ProjectReference Include="..\DirectoryCompare.Ports.DataAccess\DirectoryCompare.Ports.DataAccess.csproj" PrivateAssets="All" />
-        <ProjectReference Include="..\DirectoryCompare.DataAccess.PotFiles\DirectoryCompare.DataAccess.PotFiles.csproj" PrivateAssets="All" />
+      <ProjectReference Include="..\DirectoryCompare.Ports.UserAccess\DirectoryCompare.Ports.UserAccess.csproj" PrivateAssets="All" />
     </ItemGroup>
 
 </Project>

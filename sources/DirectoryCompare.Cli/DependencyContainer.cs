@@ -28,6 +28,8 @@ using DustInTheWind.DirectoryCompare.Ports.ConfigAccess;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 using DustInTheWind.DirectoryCompare.Ports.LogAccess;
+using DustInTheWind.DirectoryCompare.Ports.UserAccess;
+using DustInTheWind.DirectoryCompare.UserAccess;
 using FluentValidation;
 using MediatR.Extensions.Autofac.DependencyInjection;
 using MediatR.Extensions.Autofac.DependencyInjection.Builder;
@@ -42,6 +44,7 @@ internal static class DependencyContainer
         RegisterConfigAccessAdapter(containerBuilder);
         RegisterDataAccessAdapter(containerBuilder);
         RegisterFileSystemAccessAdapter(containerBuilder);
+        RegisterUserAccessAdapter(containerBuilder);
 
         RegisterApplicationComponent(containerBuilder);
     }
@@ -81,6 +84,11 @@ internal static class DependencyContainer
     private static void RegisterFileSystemAccessAdapter(ContainerBuilder containerBuilder)
     {
         containerBuilder.RegisterType<FileSystem>().As<IFileSystem>();
+    }
+
+    private static void RegisterUserAccessAdapter(ContainerBuilder containerBuilder)
+    {
+        containerBuilder.RegisterType<UserInterface>().As<IUserInterface>();
     }
 
     private static void RegisterApplicationComponent(ContainerBuilder containerBuilder)

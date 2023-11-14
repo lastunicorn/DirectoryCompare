@@ -31,7 +31,7 @@ public class PresentPotsUseCase : IRequestHandler<PresentPotsRequest, PresentPot
 
     public async Task<PresentPotsResponse> Handle(PresentPotsRequest request, CancellationToken cancellationToken)
     {
-        List<Pot> pots = await potRepository.Get();
+        IEnumerable<Pot> pots = await potRepository.GetAll();
 
         return new PresentPotsResponse
         {

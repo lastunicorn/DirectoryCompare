@@ -32,18 +32,18 @@ public class CreatePotUseCase : IRequestHandler<CreatePotRequest>
     public async Task Handle(CreatePotRequest request, CancellationToken cancellationToken)
     {
         await VerifyPotDoesNotExist(request.Name);
-        CreateNewPot(request);
+        await CreateNewPot(request);
     }
 
     private async Task VerifyPotDoesNotExist(string potName)
     {
-        bool potAlreadyExists = await potRepository.Exists(potName);
+        bool potAlreadyExists = await potRepository.ExistsByName(potName);
 
         if (potAlreadyExists)
             throw new PotAlreadyExistsException();
     }
 
-    private void CreateNewPot(CreatePotRequest request)
+    private async Task CreateNewPot(CreatePotRequest request)
     {
         Pot newPot = new()
         {
@@ -51,6 +51,6 @@ public class CreatePotUseCase : IRequestHandler<CreatePotRequest>
             Path = request.Path
         };
 
-        potRepository.Add(newPot);
+        await potRepository.Add(newPot);
     }
 }

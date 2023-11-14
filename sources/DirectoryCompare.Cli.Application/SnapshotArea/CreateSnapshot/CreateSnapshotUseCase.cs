@@ -52,7 +52,7 @@ public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest, IDis
 
     private async Task<Pot> RetrievePot(CreateSnapshotRequest request)
     {
-        Pot pot = await potRepository.Get(request.PotName);
+        Pot pot = await potRepository.GetByName(request.PotName);
 
         if (pot == null)
             throw new PotDoesNotExistException(request.PotName);

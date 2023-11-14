@@ -32,33 +32,55 @@ public class PotRepository : IPotRepository
         this.database = database ?? throw new ArgumentNullException(nameof(database));
     }
 
-    public async Task<List<Pot>> Get()
+    public async Task<IEnumerable<Pot>> GetAll()
     {
-        return (await database.GetPotDirectories())
-            .Select(x => x.ToPot())
-            .ToList();
+        IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
+        return potDirectories
+            .Select(x => x.ToPot());
     }
 
-    public async Task<Pot> Get(string name, bool includeSnapshots)
+    public async Task<Pot> GetByName(string name, bool includeSnapshots)
     {
         PotDirectory potDirectory = (await database.GetPotDirectories())
             .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == name);
 
         Pot pot = potDirectory?.ToPot();
 
-        if (pot != null && includeSnapshots)
-        {
-            IEnumerable<Snapshot> snapshots = potDirectory.GetSnapshotFiles()
-                .Where(x => x.Open())
-                .Select(x => x.Content.ToSnapshot());
-
-            pot.Snapshots.AddRange(snapshots);
-        }
+        if (pot != null && includeSnapshots) 
+            LoadSnapshots(potDirectory, pot);
 
         return pot;
     }
 
-    public async Task<bool> Exists(string name)
+    private static void LoadSnapshots(PotDirectory potDirectory, Pot pot)
+    {
+        IEnumerable<Snapshot> snapshots = potDirectory.GetSnapshotFiles()
+            .Where(x => x.Open())
+            .Select(x => x.Content.ToSnapshot());
+
+        pot.Snapshots.AddRange(snapshots);
+    }
+
+    public async Task<Pot> GetById(Guid id)
+    {
+        IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
+        PotDirectory potDirectory = potDirectories
+            .FirstOrDefault(x => x.InfoFile.IsValid && x.PotGuid == id);
+
+        return potDirectory?.ToPot();
+    }
+
+    public async Task<Pot> GetByPartialId(string partialId)
+    {
+        IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
+        PotDirectory potDirectory = potDirectories
+            .Where(x => x.InfoFile.IsValid)
+            .FirstOrDefault(x => x.PotGuid.ToString("N").StartsWith(partialId, StringComparison.InvariantCultureIgnoreCase));
+
+        return potDirectory?.ToPot();
+    }
+
+    public async Task<bool> ExistsByName(string name)
     {
         IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
         PotDirectory potDirectory = potDirectories
@@ -83,15 +105,32 @@ public class PotRepository : IPotRepository
         return Task.CompletedTask;
     }
 
-    public async Task Delete(string name)
+    public async Task<bool> DeleteByName(string name)
     {
+        if (name == null) throw new ArgumentNullException(nameof(name));
+        if (string.IsNullOrEmpty(name)) throw new ArgumentException("The name was not provided.", nameof(name));
+
         IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
         PotDirectory potDirectory = potDirectories
             .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == name);
 
-        if (potDirectory != null)
-            potDirectory.Delete();
-        else
-            throw new Exception($"Pot '{name}' does not exist.");
+        if (potDirectory == null)
+            return false;
+
+        potDirectory.Delete();
+        return true;
+    }
+
+    public async Task<bool> DeleteById(Guid id)
+    {
+        IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
+        PotDirectory potDirectory = potDirectories
+            .FirstOrDefault(x => x.InfoFile.IsValid && x.PotGuid == id);
+
+        if (potDirectory == null)
+            return false;
+
+        potDirectory.Delete();
+        return true;
     }
 }
