@@ -56,7 +56,8 @@ public class JsonFileBase<TContent>
 
         using StreamReader streamReader = File.OpenText(FilePath);
         using JsonTextReader jsonTextReader = new(streamReader);
-
+        jsonTextReader.MaxDepth = 256;
+        
         JsonSerializer serializer = new();
         Content = (TContent)serializer.Deserialize(jsonTextReader, typeof(TContent));
 

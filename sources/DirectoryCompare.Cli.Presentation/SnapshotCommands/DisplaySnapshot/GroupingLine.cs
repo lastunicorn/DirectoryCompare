@@ -43,9 +43,10 @@ internal class GroupingLine
 
         if (IsFirstLine)
         {
+            // ∙ ┌
             string text = lineCount == 1
                 ? " ∙ "
-                : " ┌ ";
+                : " ├ ";
 
             CustomConsole.Write(ForegroundColor, text);
         }
@@ -59,7 +60,7 @@ internal class GroupingLine
         }
         else
         {
-            CustomConsole.Write(ForegroundColor, " │ ");
+            CustomConsole.Write(ForegroundColor, " ├ ");
         }
 
         index++;

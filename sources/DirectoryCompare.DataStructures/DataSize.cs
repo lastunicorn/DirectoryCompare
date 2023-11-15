@@ -24,6 +24,11 @@ namespace DustInTheWind.DirectoryCompare.DataStructures;
 /// </summary>
 public struct DataSize : IEquatable<DataSize>
 {
+    private const ulong OneKiloByte = 1024;
+    private const ulong OneMegaByte = OneKiloByte * 1024;
+    private const ulong OneGigaByte = OneMegaByte * 1024;
+    private const ulong OneTeraByte = OneGigaByte * 1024;
+    
     private static readonly Regex Regex = new(@"^\s*(\d+\.?\d*)\s*(b|kb|mb|gb|tb)*\s*$", RegexOptions.IgnoreCase);
 
     /// <summary>
@@ -410,32 +415,42 @@ public struct DataSize : IEquatable<DataSize>
     /// </summary>
     public override string ToString()
     {
-        const ulong oneKiloByte = 1024;
-        const ulong oneMegaByte = oneKiloByte * 1024;
-        const ulong oneGigaByte = oneMegaByte * 1024;
-
         double tempSize = Value;
 
-        if (tempSize >= oneGigaByte)
+        if (tempSize >= OneTeraByte)
         {
-            tempSize /= oneGigaByte;
+            tempSize /= OneTeraByte;
 
-            if (tempSize < 10)
-                return $"{tempSize:0.0} GB";
-
-            return $"{tempSize:N0} GB";
+            return tempSize < 10 
+                ? $"{tempSize:N2} TB"
+                : $"{tempSize:N0} TB";
         }
 
-        if (tempSize >= oneMegaByte)
+        if (tempSize >= OneGigaByte)
         {
-            tempSize /= oneMegaByte;
-            return $"{tempSize:N0} MB";
+            tempSize /= OneGigaByte;
+
+            return tempSize < 10
+                ? $"{tempSize:N2} GB"
+                : $"{tempSize:N0} GB";
         }
 
-        if (tempSize >= oneKiloByte)
+        if (tempSize >= OneMegaByte)
         {
-            tempSize /= oneKiloByte;
-            return $"{tempSize:N0} KB";
+            tempSize /= OneMegaByte;
+            
+            return tempSize < 10
+                ? $"{tempSize:N2} MB"
+                : $"{tempSize:N0} MB";
+        }
+
+        if (tempSize >= OneKiloByte)
+        {
+            tempSize /= OneKiloByte;
+            
+            return tempSize < 10
+                ? $"{tempSize:N2} KB"
+                : $"{tempSize:N0} KB";
         }
 
         return $"{tempSize:N0} B";

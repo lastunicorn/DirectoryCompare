@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.PresentSnapshot;
+using DustInTheWind.DirectoryCompare.DataStructures;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands.DisplaySnapshot;
 
@@ -33,6 +34,8 @@ public class SnapshotViewModel
     public int TotalFileCount { get; set; }
 
     public int TotalDirectoryCount { get; set; }
+    
+    public DataSize DataSize { get; set; }
 
     public SnapshotViewModel(PresentSnapshotResponse response)
     {
@@ -43,5 +46,6 @@ public class SnapshotViewModel
         RootDirectory = response.RootDirectory;
         TotalFileCount = response.TotalFileCount;
         TotalDirectoryCount = response.TotalDirectoryCount;
+        DataSize = response.DataSize;
     }
 }

@@ -14,14 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.DataStructures;
+
 namespace DustInTheWind.DirectoryCompare.Domain.Entities;
 
 public class HItemCounter
 {
     private readonly HDirectory rootDirectory;
 
+    public DataSize DataSize { get; private set; }
+
     public int FileCount { get; private set; }
-    
+
     public int DirectoryCount { get; private set; }
 
     public HItemCounter(HDirectory rootDirectory)
@@ -41,6 +45,9 @@ public class HItemCounter
     {
         FileCount += directory.Files.Count;
         DirectoryCount += directory.Directories.Count;
+
+        foreach (HFile file in directory.Files) 
+            DataSize += file.Size;
 
         foreach (HDirectory subdirectory in directory.Directories)
             Count(subdirectory);

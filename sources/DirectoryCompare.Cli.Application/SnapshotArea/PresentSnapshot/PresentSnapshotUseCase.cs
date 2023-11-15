@@ -46,7 +46,8 @@ public class PresentSnapshotUseCase : IRequestHandler<PresentSnapshotRequest, Pr
             SnapshotCreationTime = snapshot.CreationTime,
             RootDirectory = request.IncludeContent ? new DirectoryDto(snapshot) : null,
             TotalFileCount = itemCounter.FileCount,
-            TotalDirectoryCount = itemCounter.DirectoryCount
+            TotalDirectoryCount = itemCounter.DirectoryCount,
+            DataSize = itemCounter.DataSize
         };
     }
 }

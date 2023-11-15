@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools.Commando;
+using DustInTheWind.DirectoryCompare.DataStructures;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands.DisplaySnapshot;
 
@@ -26,8 +27,12 @@ public class DisplaySnapshotCommandView : ViewBase<SnapshotViewModel>
         WriteValue("Snapshot", snapshotViewModel.SnapshotId.ToString("D"));
         WriteValue("Path", snapshotViewModel.OriginalPath);
         WriteValue("Creation Time", snapshotViewModel.CreationTime.ToLocalTime());
-        WriteValue("Files", snapshotViewModel.TotalFileCount.ToString("N0"));
         WriteValue("Directories", snapshotViewModel.TotalDirectoryCount.ToString("N0"));
+        WriteValue("Files", snapshotViewModel.TotalFileCount.ToString("N0"));
+
+        string dataSize = snapshotViewModel.DataSize.ToString();
+        string dataSizeAsBytes = snapshotViewModel.DataSize.ToString(DataSizeUnit.Byte);
+        WriteValue("Data Size", $"{dataSize} ({dataSizeAsBytes})");
 
         if (snapshotViewModel.RootDirectory != null)
         {
