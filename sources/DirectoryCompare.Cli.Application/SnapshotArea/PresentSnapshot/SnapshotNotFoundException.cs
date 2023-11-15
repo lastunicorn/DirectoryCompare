@@ -1,5 +1,5 @@
-﻿// DirectoryCompare
-// Copyright (C) 2017-2023 Dust in the Wind
+﻿// VeloCity
+// Copyright (C) 2022-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,14 +14,28 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System.Runtime.Serialization;
 using DustInTheWind.DirectoryCompare.DataStructures;
-using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.PresentSnapshot;
 
-public class PresentSnapshotRequest : IRequest<PresentSnapshotResponse>
+[Serializable]
+public class SnapshotNotFoundException : Exception
 {
-    public SnapshotLocation Location { get; set; }
+    private const string DefaultMessage = "The snapshot '{0}' could not be found.";
 
-    public bool IncludeContent { get; set; }
+    public SnapshotNotFoundException(SnapshotLocation snapshotLocation)
+        : base(BuildMessage(snapshotLocation))
+    {
+    }
+
+    private static string BuildMessage(SnapshotLocation snapshotLocation)
+    {
+        return string.Format(DefaultMessage, snapshotLocation);
+    }
+
+    public SnapshotNotFoundException(SerializationInfo serializationInfo, StreamingContext streamingContext)
+        : base(serializationInfo, streamingContext)
+    {
+    }
 }

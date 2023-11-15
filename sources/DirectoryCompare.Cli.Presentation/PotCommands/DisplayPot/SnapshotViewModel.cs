@@ -20,19 +20,19 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands.DisplayPot
 
 public class SnapshotViewModel
 {
+    public int Index { get; }
+
     public DateTime CreationTime { get; }
 
     public Guid Id { get; }
-
-    public int Index { get; }
 
     public SnapshotViewModel(SnapshotDto snapshot)
     {
         if (snapshot == null)
             return;
 
+        Index = snapshot.Index;
         CreationTime = snapshot.CreationTime;
         Id = snapshot.Id;
-        Index = snapshot.Index;
     }
 }

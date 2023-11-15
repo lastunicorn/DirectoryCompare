@@ -37,6 +37,13 @@ public class HDirectory : HItem, IEquatable<HDirectory>, IEnumerable<HItem>
         Files = new HItemCollection<HFile>(this);
     }
 
+    public HItemCounter CountChildItems()
+    {
+        HItemCounter itemCounter = new(this);
+        itemCounter.Count();
+        return itemCounter;
+    }
+
     public IEnumerable<HFile> EnumerateFiles(string path, BlackList blackList = null)
     {
         IEnumerable<HFile> filesQuery = EnumerateFiles(blackList);

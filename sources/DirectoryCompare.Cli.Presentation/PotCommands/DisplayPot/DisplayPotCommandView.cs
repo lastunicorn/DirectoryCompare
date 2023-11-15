@@ -19,32 +19,32 @@ using DustInTheWind.ConsoleTools.Commando;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands.DisplayPot;
 
-internal class DisplayPotCommandView : ViewBase<PotViewModel>
+internal class DisplayPotCommandView : ViewBase<DisplayPotViewModel>
 {
-    public override void Display(PotViewModel pot)
+    public override void Display(DisplayPotViewModel viewModel)
     {
-        if (pot.Exists)
-            DisplayPotInfo(pot);
+        if (viewModel.Exists)
+            DisplayPotInfo(viewModel);
         else
             CustomConsole.WriteWarning("The pot does not exist.");
     }
 
-    private void DisplayPotInfo(PotViewModel pot)
+    private void DisplayPotInfo(DisplayPotViewModel viewModel)
     {
-        WriteValue("Name", pot.Name);
+        WriteValue("Name", viewModel.Name);
 
-        string guid = pot.Guid.ToString();
-        WriteValue("GUID", pot.Guid);
+        string guid = viewModel.Guid.ToString();
+        WriteValue("GUID", viewModel.Guid);
 
-        WriteValue("Path", pot.Path);
+        WriteValue("Path", viewModel.Path);
 
-        if (pot.Description != null)
-            WriteValue("Description", pot.Description);
+        if (viewModel.Description != null)
+            WriteValue("Description", viewModel.Description);
 
-        if (pot.Snapshots is { Count: > 0 })
+        if (viewModel.Snapshots is { Count: > 0 })
         {
-            CustomConsole.WriteLineEmphasized($"Snapshots ({pot.Snapshots.Count}):");
-            DisplaySnapshots(pot.Snapshots);
+            CustomConsole.WriteLineEmphasized($"Snapshots (Count = {viewModel.Snapshots.Count})");
+            DisplaySnapshots(viewModel.Snapshots);
         }
         else
         {

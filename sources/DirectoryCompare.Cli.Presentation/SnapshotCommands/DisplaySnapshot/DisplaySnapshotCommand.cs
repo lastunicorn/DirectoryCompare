@@ -31,7 +31,10 @@ public class DisplaySnapshotCommand : IConsoleCommand<SnapshotViewModel>
 
     [AnonymousParameter(Order = 1, Description = "The location of the snapshot that should be displayed. The location must include the pot and, optionally, an index or date.")]
     public string SnapshotLocation { get; set; }
-    
+
+    [NamedParameter("include-content", ShortName = 'c', IsOptional = true, Description = "If provided, also the tree of files and directories will be displayed.")]
+    public bool IncludeContent { get; set; }
+
     public DisplaySnapshotCommand(RequestBus requestBus)
     {
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
@@ -41,11 +44,11 @@ public class DisplaySnapshotCommand : IConsoleCommand<SnapshotViewModel>
     {
         PresentSnapshotRequest request = new()
         {
-            Location = SnapshotLocation
+            Location = SnapshotLocation,
+            IncludeContent = IncludeContent
         };
 
         PresentSnapshotResponse response = await requestBus.PlaceRequest<PresentSnapshotRequest, PresentSnapshotResponse>(request);
-
         return new SnapshotViewModel(response);
     }
 }

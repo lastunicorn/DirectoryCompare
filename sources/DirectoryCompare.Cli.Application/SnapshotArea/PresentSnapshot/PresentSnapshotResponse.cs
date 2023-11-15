@@ -27,4 +27,8 @@ public class PresentSnapshotResponse
     public DateTime SnapshotCreationTime { get; set; }
 
     public DirectoryDto RootDirectory { get; set; }
+
+    public int TotalFileCount { get; set; }
+
+    public int TotalDirectoryCount { get; set; }
 }

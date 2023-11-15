@@ -26,10 +26,15 @@ public class DisplaySnapshotCommandView : ViewBase<SnapshotViewModel>
         WriteValue("Snapshot", snapshotViewModel.SnapshotId.ToString("D"));
         WriteValue("Path", snapshotViewModel.OriginalPath);
         WriteValue("Creation Time", snapshotViewModel.CreationTime.ToLocalTime());
+        WriteValue("Files", snapshotViewModel.TotalFileCount.ToString("N0"));
+        WriteValue("Directories", snapshotViewModel.TotalDirectoryCount.ToString("N0"));
 
-        Console.WriteLine();
+        if (snapshotViewModel.RootDirectory != null)
+        {
+            Console.WriteLine();
 
-        DirectoryView directoryView = new(snapshotViewModel.RootDirectory);
-        directoryView.Display();
+            DirectoryView directoryView = new(snapshotViewModel.RootDirectory);
+            directoryView.Display();
+        }
     }
 }

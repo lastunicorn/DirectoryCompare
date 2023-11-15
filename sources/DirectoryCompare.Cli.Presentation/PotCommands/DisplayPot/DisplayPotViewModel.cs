@@ -18,7 +18,7 @@ using DustInTheWind.DirectoryCompare.Cli.Application.PotArea.PresentPot;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands.DisplayPot;
 
-public class PotViewModel
+public class DisplayPotViewModel
 {
     public bool Exists { get; }
     
@@ -32,7 +32,7 @@ public class PotViewModel
 
     public List<SnapshotViewModel> Snapshots { get; }
 
-    public PotViewModel(PotDto pot)
+    public DisplayPotViewModel(PotDto pot)
     {
         if (pot == null)
             return;

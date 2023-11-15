@@ -30,6 +30,10 @@ public class SnapshotViewModel
 
     public DirectoryDto RootDirectory { get; set; }
 
+    public int TotalFileCount { get; set; }
+
+    public int TotalDirectoryCount { get; set; }
+
     public SnapshotViewModel(PresentSnapshotResponse response)
     {
         PotName = response.PotName;
@@ -37,5 +41,7 @@ public class SnapshotViewModel
         OriginalPath = response.OriginalPath;
         CreationTime = response.SnapshotCreationTime;
         RootDirectory = response.RootDirectory;
+        TotalFileCount = response.TotalFileCount;
+        TotalDirectoryCount = response.TotalDirectoryCount;
     }
 }

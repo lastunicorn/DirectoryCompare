@@ -14,28 +14,33 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Runtime.Serialization;
-using DustInTheWind.DirectoryCompare.DataStructures;
+namespace DustInTheWind.DirectoryCompare.Domain.Entities;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.PresentSnapshot;
-
-[Serializable]
-public class SnapshotMissingException : Exception
+internal class DirectoryCounter
 {
-    private const string DefaultMessage = "The snapshot '{0}' could not be found.";
+    private readonly HDirectory rootDirectory;
 
-    public SnapshotMissingException(SnapshotLocation snapshotLocation)
-        : base(BuildMessage(snapshotLocation))
+    public int Value { get; private set; }
+
+    public DirectoryCounter(HDirectory rootDirectory)
     {
+        this.rootDirectory = rootDirectory ?? throw new ArgumentNullException(nameof(rootDirectory));
     }
 
-    private static string BuildMessage(SnapshotLocation snapshotLocation)
+    public int Count()
     {
-        return string.Format(DefaultMessage, snapshotLocation);
+        Value = 0;
+
+        Count(rootDirectory);
+
+        return Value;
     }
 
-    public SnapshotMissingException(SerializationInfo serializationInfo, StreamingContext streamingContext)
-        : base(serializationInfo, streamingContext)
+    private void Count(HDirectory directory)
     {
+        Value += directory.Directories.Count;
+
+        foreach (HDirectory subdirectory in directory.Directories)
+            Count(subdirectory);
     }
 }

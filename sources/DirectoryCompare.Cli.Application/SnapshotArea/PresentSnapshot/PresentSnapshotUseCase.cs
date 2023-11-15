@@ -34,7 +34,9 @@ public class PresentSnapshotUseCase : IRequestHandler<PresentSnapshotRequest, Pr
         Snapshot snapshot = await snapshotRepository.Get(request.Location);
 
         if (snapshot == null)
-            throw new SnapshotMissingException(request.Location);
+            throw new SnapshotNotFoundException(request.Location);
+
+        HItemCounter itemCounter = snapshot.CountChildItems();
 
         return new PresentSnapshotResponse
         {
@@ -42,7 +44,9 @@ public class PresentSnapshotUseCase : IRequestHandler<PresentSnapshotRequest, Pr
             SnapshotId = snapshot.Id,
             OriginalPath = snapshot.OriginalPath,
             SnapshotCreationTime = snapshot.CreationTime,
-            RootDirectory = new DirectoryDto(snapshot)
+            RootDirectory = request.IncludeContent ? new DirectoryDto(snapshot) : null,
+            TotalFileCount = itemCounter.FileCount,
+            TotalDirectoryCount = itemCounter.DirectoryCount
         };
     }
 }
