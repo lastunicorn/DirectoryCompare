@@ -34,7 +34,7 @@ public class PresentSnapshotUseCase : IRequestHandler<PresentSnapshotRequest, Pr
         Snapshot snapshot = await snapshotRepository.Get(request.Location);
 
         if (snapshot == null)
-            throw new Exception("Invalid snapshot part. Verify that the pot name and snapshot identifier were provided correctly.");
+            throw new SnapshotMissingException(request.Location);
 
         return new PresentSnapshotResponse
         {

@@ -22,44 +22,30 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands.
 
 [NamedCommand("compare", Description = "Compares two snapshots.")]
 [CommandOrder(10)]
-public class CompareSnapshotsCommand : IConsoleCommand
+public class CompareSnapshotsCommand : IConsoleCommand<CompareViewModel>
 {
     private readonly RequestBus requestBus;
 
-    [AnonymousParameter(Order = 1)]
+    [AnonymousParameter(Order = 1, Description = "The location of the first snapshot to be compared. The location includes the pot, snapshot and path.")]
     public string Snapshot1Location { get; set; }
 
-    [AnonymousParameter(Order = 2)]
+    [AnonymousParameter(Order = 2, Description = "The location of the first snapshot to be compared. The location includes the pot, snapshot and path.")]
     public string Snapshot2Location { get; set; }
 
-    [AnonymousParameter(Order = 3, IsOptional = true)]
+    [AnonymousParameter(Order = 3, IsOptional = true, Description = "If a name is provided, the results are exported in a directory on disk.")]
     public string ExportName { get; set; }
-
-    public IReadOnlyList<string> OnlyInSnapshot1 { get; private set; }
-
-    public IReadOnlyList<string> OnlyInSnapshot2 { get; private set; }
-
-    public IReadOnlyList<FilePairDto> DifferentNames { get; private set; }
-
-    public IReadOnlyList<FilePairDto> DifferentContent { get; private set; }
-
-    public string ExportDirectoryPath { get; private set; }
 
     public CompareSnapshotsCommand(RequestBus requestBus)
     {
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
     }
 
-    public async Task Execute()
+    public async Task<CompareViewModel> Execute()
     {
         CompareSnapshotsRequest request = CreateRequest();
         CompareSnapshotsResponse response = await requestBus.PlaceRequest<CompareSnapshotsRequest, CompareSnapshotsResponse>(request);
 
-        OnlyInSnapshot1 = response.OnlyInSnapshot1;
-        OnlyInSnapshot2 = response.OnlyInSnapshot2;
-        DifferentNames = response.DifferentNames;
-        DifferentContent = response.DifferentContent;
-        ExportDirectoryPath = response.ExportDirectoryPath;
+        return new CompareViewModel(response);
     }
 
     private CompareSnapshotsRequest CreateRequest()

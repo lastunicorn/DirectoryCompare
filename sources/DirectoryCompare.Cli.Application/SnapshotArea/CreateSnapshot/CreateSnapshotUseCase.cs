@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
+using DustInTheWind.DirectoryCompare.Cli.Application.Utils;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
@@ -52,7 +53,7 @@ public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest, IDis
 
     private async Task<Pot> RetrievePot(CreateSnapshotRequest request)
     {
-        Pot pot = await potRepository.GetByName(request.PotName);
+        Pot pot = await potRepository.GetByNameOrId(request.PotName);
 
         if (pot == null)
             throw new PotDoesNotExistException(request.PotName);

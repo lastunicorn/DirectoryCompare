@@ -29,7 +29,7 @@ public class DisplayPotCommand : IConsoleCommand<PotViewModel>
 {
     private readonly RequestBus requestBus;
 
-    [AnonymousParameter(DisplayName = "pot name", Order = 1, IsOptional = true, Description = "The name or the id of the pot to display.")]
+    [AnonymousParameter(DisplayName = "pot name", Order = 1, IsOptional = true, Description = "The name or the id of the pot to be displayed.")]
     public string PotName { get; set; }
 
     public DisplayPotCommand(RequestBus requestBus)

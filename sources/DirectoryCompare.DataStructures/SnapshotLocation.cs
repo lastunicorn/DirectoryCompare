@@ -19,7 +19,7 @@ using System.ComponentModel;
 namespace DustInTheWind.DirectoryCompare.DataStructures;
 
 [TypeConverter(typeof(SnapshotLocationConverter))]
-public struct SnapshotLocation
+public readonly struct SnapshotLocation
 {
     private readonly string rawValue;
 
@@ -44,10 +44,10 @@ public struct SnapshotLocation
         }
         else
         {
-            Tuple<string, string> parts = SplitByFirstOccurence(value, '>');
+            Tuple<string, string> parts = SplitByFirstOccurrence(value, '>');
             InternalPath = parts.Item2;
 
-            parts = SplitByFirstOccurence(parts.Item1, '~');
+            parts = SplitByFirstOccurrence(parts.Item1, '~');
             PotName = parts.Item1;
 
             if (int.TryParse(parts.Item2, out int snapshotIndex))
@@ -68,7 +68,7 @@ public struct SnapshotLocation
         }
     }
 
-    private static Tuple<string, string> SplitByFirstOccurence(string text, char c)
+    private static Tuple<string, string> SplitByFirstOccurrence(string text, char c)
     {
         int pos = text.IndexOf(c);
         string value1;

@@ -25,14 +25,14 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands.ReadS
 // Example:
 // read <pot-name>
 
-[NamedCommand("read", Description = "Creates a new snapshot in a specific pot.")]
+[NamedCommand("read", Description = "Creates a new snapshot in a specific pot. This is an alias for the create-snapshot command.")]
 [CommandOrder(9)]
 public class ReadSnapshotCommand : IConsoleCommand
 {
     private readonly RequestBus requestBus;
     private readonly CreateSnapshotCommandView view;
 
-    [AnonymousParameter(Order = 1)]
+    [AnonymousParameter(Order = 1, Description = "The name or id of the pot for which to create a new snapshot.")]
     public string PotName { get; set; }
 
     public ReadSnapshotCommand(RequestBus requestBus)

@@ -30,7 +30,7 @@ public class DeleteSnapshotCommand : IConsoleCommand
 {
     private readonly RequestBus requestBus;
 
-    [NamedParameter("location", ShortName = 'l')]
+    [AnonymousParameter(Order = 1, Description = "The location of the snapshot that should be deleted. The location must include the pot and, optionally, an index or date.")]
     public string SnapshotLocation { get; set; }
 
     public DeleteSnapshotCommand(RequestBus requestBus)

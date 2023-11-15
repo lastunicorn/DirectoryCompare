@@ -43,7 +43,7 @@ internal class DisplayPotCommandView : ViewBase<PotViewModel>
 
         if (pot.Snapshots is { Count: > 0 })
         {
-            CustomConsole.WriteLineEmphasized("Snapshots:");
+            CustomConsole.WriteLineEmphasized($"Snapshots ({pot.Snapshots.Count}):");
             DisplaySnapshots(pot.Snapshots);
         }
         else
@@ -52,7 +52,7 @@ internal class DisplayPotCommandView : ViewBase<PotViewModel>
         }
     }
 
-    private void DisplaySnapshots(List<SnapshotViewModel> snapshots)
+    private static void DisplaySnapshots(List<SnapshotViewModel> snapshots)
     {
         foreach (SnapshotViewModel snapshot in snapshots)
         {

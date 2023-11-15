@@ -32,7 +32,7 @@ public class CreateSnapshotCommand : IConsoleCommand
     private readonly RequestBus requestBus;
     private readonly CreateSnapshotCommandView view;
 
-    [NamedParameter("pot", ShortName = 'p')]
+    [AnonymousParameter(Order = 1, Description = "The name or id of the pot for which to create a new snapshot.")]
     public string PotName { get; set; }
 
     public CreateSnapshotCommand(RequestBus requestBus)

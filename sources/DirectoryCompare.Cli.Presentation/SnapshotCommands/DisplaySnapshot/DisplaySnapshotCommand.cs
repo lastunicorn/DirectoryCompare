@@ -25,27 +25,27 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands.Displ
 
 [NamedCommand("snapshot", Description = "Display detailed information about a snapshot.")]
 [CommandOrder(7)]
-public class DisplaySnapshotCommand : IConsoleCommand
+public class DisplaySnapshotCommand : IConsoleCommand<SnapshotViewModel>
 {
     private readonly RequestBus requestBus;
 
-    [AnonymousParameter(Order = 1)]
+    [AnonymousParameter(Order = 1, Description = "The location of the snapshot that should be displayed. The location must include the pot and, optionally, an index or date.")]
     public string SnapshotLocation { get; set; }
-
-    public PresentSnapshotResponse Response { get; private set; }
-
+    
     public DisplaySnapshotCommand(RequestBus requestBus)
     {
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
     }
 
-    public async Task Execute()
+    public async Task<SnapshotViewModel> Execute()
     {
         PresentSnapshotRequest request = new()
         {
             Location = SnapshotLocation
         };
 
-        Response = await requestBus.PlaceRequest<PresentSnapshotRequest, PresentSnapshotResponse>(request);
+        PresentSnapshotResponse response = await requestBus.PlaceRequest<PresentSnapshotRequest, PresentSnapshotResponse>(request);
+
+        return new SnapshotViewModel(response);
     }
 }

@@ -21,43 +21,43 @@ using DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.CompareSn
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands.CompareSnapshots;
 
-internal class CompareSnapshotsCommandView : IView<CompareSnapshotsCommand>
+internal class CompareSnapshotsCommandView : IView<CompareViewModel>
 {
-    public void Display(CompareSnapshotsCommand command)
+    public void Display(CompareViewModel compareViewModel)
     {
-        DisplayOnlyInSnapshot1(command);
-        DisplayOnlyInSnapshot2(command);
-        DisplayDifferentNames(command);
-        DisplayDifferentContent(command);
+        DisplayOnlyInSnapshot1(compareViewModel);
+        DisplayOnlyInSnapshot2(compareViewModel);
+        DisplayDifferentNames(compareViewModel);
+        DisplayDifferentContent(compareViewModel);
 
         Console.WriteLine();
-        if (command.ExportDirectoryPath != null)
-            CustomConsole.WriteLine("Results exported also into directory: {0}", command.ExportDirectoryPath);
+        if (compareViewModel.ExportDirectoryPath != null)
+            CustomConsole.WriteLine("Results exported also into directory: {0}", compareViewModel.ExportDirectoryPath);
     }
 
-    private static void DisplayOnlyInSnapshot1(CompareSnapshotsCommand command)
+    private static void DisplayOnlyInSnapshot1(CompareViewModel compareViewModel)
     {
         DisplaySubtitle("Files only in snapshot 1:");
 
-        foreach (string path in command.OnlyInSnapshot1)
+        foreach (string path in compareViewModel.OnlyInSnapshot1)
             Console.WriteLine(path);
     }
 
-    private static void DisplayOnlyInSnapshot2(CompareSnapshotsCommand command)
+    private static void DisplayOnlyInSnapshot2(CompareViewModel compareViewModel)
     {
         DisplaySubtitle("Files only in snapshot 2:");
 
-        foreach (string path in command.OnlyInSnapshot2)
+        foreach (string path in compareViewModel.OnlyInSnapshot2)
             Console.WriteLine(path);
     }
 
-    private static void DisplayDifferentNames(CompareSnapshotsCommand command)
+    private static void DisplayDifferentNames(CompareViewModel compareViewModel)
     {
         DisplaySubtitle("Different names:");
 
         bool isFirst = true;
 
-        foreach (FilePairDto itemComparison in command.DifferentNames)
+        foreach (FilePairDto itemComparison in compareViewModel.DifferentNames)
         {
             if (isFirst)
                 isFirst = false;
@@ -69,13 +69,13 @@ internal class CompareSnapshotsCommandView : IView<CompareSnapshotsCommand>
         }
     }
 
-    private static void DisplayDifferentContent(CompareSnapshotsCommand command)
+    private static void DisplayDifferentContent(CompareViewModel compareViewModel)
     {
         DisplaySubtitle("Different content:");
 
         bool isFirst = true;
 
-        foreach (FilePairDto itemComparison in command.DifferentContent)
+        foreach (FilePairDto itemComparison in compareViewModel.DifferentContent)
         {
             if (isFirst)
                 isFirst = false;
