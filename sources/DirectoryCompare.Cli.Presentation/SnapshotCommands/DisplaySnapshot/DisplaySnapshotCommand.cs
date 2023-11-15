@@ -23,7 +23,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands.Displ
 // Example:
 // snapshot <snapshot-location>
 
-[NamedCommand("snapshot")]
+[NamedCommand("snapshot", Description = "Display detailed information about a snapshot.")]
 [CommandOrder(7)]
 public class DisplaySnapshotCommand : IConsoleCommand
 {

@@ -20,7 +20,7 @@ using DustInTheWind.DirectoryCompare.Domain.ImportExport;
 
 namespace DustInTheWind.DirectoryCompare.DataAccess;
 
-public sealed class JsonSnapshotWriter : ISnapshotWriter
+internal sealed class JsonSnapshotWriter : ISnapshotWriter
 {
     private readonly JSnapshotWriter jSnapshotWriter;
     private readonly Stack<JDirectoryWriter> directoryStack = new();

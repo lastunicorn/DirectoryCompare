@@ -25,7 +25,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands.
 // find-duplicates snap1 -x
 // find-duplicates snap1 --check-files-existence
 
-[NamedCommand("find-duplicates")]
+[NamedCommand("find-duplicates", Description = "Search and display all the duplicate files in a snapshot or between two snapshots.")]
 [CommandOrder(11)]
 internal class FindDuplicatesCommand : IConsoleCommand
 {

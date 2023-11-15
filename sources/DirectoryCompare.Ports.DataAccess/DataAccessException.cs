@@ -1,4 +1,4 @@
-// DirectoryCompare
+﻿// DirectoryCompare
 // Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -15,20 +15,28 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Runtime.Serialization;
+using DustInTheWind.DirectoryCompare.Domain;
 
-namespace DustInTheWind.DirectoryCompare.DataAccess.PotFiles;
+namespace DustInTheWind.DirectoryCompare.Ports.DataAccess;
 
 [Serializable]
-public class FileNameNotSpecifiedException : Exception
+public class DataAccessException : DirectoryCompareException
 {
-    private const string DefaultMessage = "The provided path must specify a file name.";
-
-    public FileNameNotSpecifiedException()
-        : base(DefaultMessage)
+    public DataAccessException()
     {
     }
 
-    protected FileNameNotSpecifiedException(SerializationInfo info, StreamingContext context)
+    public DataAccessException(string message)
+        : base(message)
+    {
+    }
+
+    public DataAccessException(string message, Exception inner)
+        : base(message, inner)
+    {
+    }
+
+    protected DataAccessException(SerializationInfo info, StreamingContext context)
         : base(info, context)
     {
     }

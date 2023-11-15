@@ -14,16 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Domain;
+using System.Runtime.Serialization;
 
-namespace DustInTheWind.DirectoryCompare.DataAccess;
+namespace DustInTheWind.DirectoryCompare.Ports.DataAccess;
 
-public class DatabaseOpenException : DirectoryCompareException
+[Serializable]
+public class DatabaseNotOpenedException : DataAccessException
 {
-    private const string DefaultMessage = "The database could not be opened.";
+    private const string DefaultMessage = "The database is not opened.";
 
-    public DatabaseOpenException()
+    public DatabaseNotOpenedException()
         : base(DefaultMessage)
+    {
+    }
+
+    protected DatabaseNotOpenedException(SerializationInfo info, StreamingContext context)
+        : base(info, context)
     {
     }
 }

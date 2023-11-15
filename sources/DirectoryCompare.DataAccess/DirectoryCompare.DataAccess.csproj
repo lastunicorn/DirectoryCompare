@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <ItemGroup>
         <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.DataStructures\DirectoryCompare.DataStructures.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.Infrastructure\DirectoryCompare.Infrastructure.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.Ports.DataAccess\DirectoryCompare.Ports.DataAccess.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.DataAccess.PotFiles\DirectoryCompare.DataAccess.PotFiles.csproj" PrivateAssets="All" />
     </ItemGroup>

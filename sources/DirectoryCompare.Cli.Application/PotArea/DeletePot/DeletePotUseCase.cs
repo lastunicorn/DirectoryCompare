@@ -35,8 +35,18 @@ public class DeletePotUseCase : IRequestHandler<DeletePotRequest>
 
     public async Task Handle(DeletePotRequest request, CancellationToken cancellationToken)
     {
-        Pot pot = await potRepository.GetByNameOrId(request.PotName);
+        Pot pot = await RetrievePot(request.PotName);
+        await AskForConfirmation(pot);
+        await potRepository.DeleteById(pot.Guid);
+    }
 
+    private async Task<Pot> RetrievePot(string nameOrId)
+    {
+        return await potRepository.GetByNameOrId(nameOrId);
+    }
+
+    private async Task AskForConfirmation(Pot pot)
+    {
         PotDeletionRequest potDeletionRequest = new()
         {
             PotName = pot.Name,
@@ -46,7 +56,5 @@ public class DeletePotUseCase : IRequestHandler<DeletePotRequest>
 
         if (!confirmation)
             throw new OperationCanceledException($"The pot {pot.Name} was not deleted.");
-
-        await potRepository.DeleteById(pot.Guid);
     }
 }

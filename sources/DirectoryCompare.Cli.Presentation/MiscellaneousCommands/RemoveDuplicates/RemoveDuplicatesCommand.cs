@@ -21,7 +21,7 @@ using DustInTheWind.DirectoryCompare.DataStructures;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands.RemoveDuplicates;
 
-[NamedCommand("remove-duplicates")]
+[NamedCommand("remove-duplicates", Description = "Compares two snapshots or sub-parts of snapshots and remove the duplicate files from one of them.")]
 public class RemoveDuplicatesCommand : IConsoleCommand
 {
     private readonly RequestBus requestBus;

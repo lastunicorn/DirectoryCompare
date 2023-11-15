@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.DataAccess;
 
-public class JsonSnapshotReader : ISnapshotReader
+internal class JsonSnapshotReader : ISnapshotReader
 {
     private readonly Stack<JDirectoryWriter> directoryStack = new();
     private readonly JSnapshotReader jSnapshotReader;

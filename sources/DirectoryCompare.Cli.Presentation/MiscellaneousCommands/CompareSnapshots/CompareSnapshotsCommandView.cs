@@ -26,11 +26,8 @@ internal class CompareSnapshotsCommandView : IView<CompareSnapshotsCommand>
     public void Display(CompareSnapshotsCommand command)
     {
         DisplayOnlyInSnapshot1(command);
-
         DisplayOnlyInSnapshot2(command);
-
         DisplayDifferentNames(command);
-
         DisplayDifferentContent(command);
 
         Console.WriteLine();
@@ -92,18 +89,21 @@ internal class CompareSnapshotsCommandView : IView<CompareSnapshotsCommand>
 
     private static void DisplaySubtitle(string text)
     {
-        HorizontalLine horizontalLine1 = new()
+        CustomConsole.WithForegroundColor(ConsoleColor.DarkYellow, () =>
         {
-            Margin = "0 1 0 0"
-        };
-        horizontalLine1.Display();
+            HorizontalLine horizontalLine1 = new()
+            {
+                Margin = "0 1 0 0"
+            };
+            horizontalLine1.Display();
 
-        Console.WriteLine(text);
+            CustomConsole.WriteLine(text);
 
-        HorizontalLine horizontalLine2 = new()
-        {
-            Margin = "0 0 0 1"
-        };
-        horizontalLine2.Display();
+            HorizontalLine horizontalLine2 = new()
+            {
+                Margin = "0 0 0 1"
+            };
+            horizontalLine2.Display();
+        });
     }
 }
