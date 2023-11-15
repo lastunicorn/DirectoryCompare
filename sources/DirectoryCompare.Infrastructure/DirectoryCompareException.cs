@@ -16,7 +16,7 @@
 
 using System.Runtime.Serialization;
 
-namespace DustInTheWind.DirectoryCompare.Domain;
+namespace DustInTheWind.DirectoryCompare.Infrastructure;
 
 [Serializable]
 public class DirectoryCompareException : Exception

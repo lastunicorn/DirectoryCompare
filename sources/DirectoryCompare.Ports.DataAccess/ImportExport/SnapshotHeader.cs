@@ -14,19 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Domain.Entities;
+namespace DustInTheWind.DirectoryCompare.Ports.DataAccess.ImportExport;
 
-namespace DustInTheWind.DirectoryCompare.Domain.ImportExport;
-
-public interface ISnapshotReader
+public class SnapshotHeader
 {
-    SnapshotItemType CurrentItemType { get; }
+    public Guid SerializerId { get; set; }
 
-    bool MoveNext();
+    public string OriginalPath { get; set; }
 
-    SnapshotHeader ReadHeader();
-
-    IEnumerable<HFile> ReadFiles();
-
-    IEnumerable<IDirectoryReader> ReadDirectories();
+    public DateTime CreationTime { get; set; }
 }

@@ -18,8 +18,8 @@ using System.Diagnostics;
 using System.Security.Cryptography;
 using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
-using DustInTheWind.DirectoryCompare.Domain.ImportExport;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
+using DustInTheWind.DirectoryCompare.Ports.DataAccess.ImportExport;
 using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;

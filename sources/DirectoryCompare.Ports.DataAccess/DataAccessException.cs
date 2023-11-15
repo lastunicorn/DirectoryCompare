@@ -16,6 +16,7 @@
 
 using System.Runtime.Serialization;
 using DustInTheWind.DirectoryCompare.Domain;
+using DustInTheWind.DirectoryCompare.Infrastructure;
 
 namespace DustInTheWind.DirectoryCompare.Ports.DataAccess;
 

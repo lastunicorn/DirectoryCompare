@@ -15,9 +15,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.Domain.Entities;
-using DustInTheWind.DirectoryCompare.Domain.ImportExport;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
+using DustInTheWind.DirectoryCompare.Ports.DataAccess.ImportExport;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.ImportSnapshot;

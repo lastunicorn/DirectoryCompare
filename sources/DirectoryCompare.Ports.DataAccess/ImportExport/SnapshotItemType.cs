@@ -14,21 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Domain.Entities;
+namespace DustInTheWind.DirectoryCompare.Ports.DataAccess.ImportExport;
 
-namespace DustInTheWind.DirectoryCompare.Domain.ImportExport;
-
-public interface ISnapshotWriter : IDisposable
+public enum SnapshotItemType
 {
-    void Open(string originalPath, Guid analysisId);
-
-    void Add(HFile file);
-
-    void Add(HDirectory directory);
-
-    void AddAndOpen(HDirectory directory);
-
-    void CloseDirectory();
-
-    void Close();
+    None,
+    Info,
+    FileCollection,
+    DirectoryCollection
 }

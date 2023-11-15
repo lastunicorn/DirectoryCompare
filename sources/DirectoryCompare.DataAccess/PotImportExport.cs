@@ -17,7 +17,7 @@
 using DustInTheWind.DirectoryCompare.DataAccess.PotFiles.SnapshotFileModel;
 using DustInTheWind.DirectoryCompare.DataAccess.Transformations;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
-using DustInTheWind.DirectoryCompare.Domain.ImportExport;
+using DustInTheWind.DirectoryCompare.Ports.DataAccess.ImportExport;
 using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.DataAccess;

@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.Domain.Entities;
-using DustInTheWind.DirectoryCompare.Domain.ImportExport;
+using DustInTheWind.DirectoryCompare.Ports.DataAccess.ImportExport;
 
 namespace DustInTheWind.DirectoryCompare.DataAccess;
 
