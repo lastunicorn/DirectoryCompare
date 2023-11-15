@@ -20,14 +20,14 @@ using DustInTheWind.DirectoryCompare.DataStructures;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands.FindDuplicates;
 
-internal class FindDuplicatesCommandView : IView<FindDuplicatesCommand>
+internal class FindDuplicatesCommandView : IView<FileDuplicatesViewModel>
 {
-    public void Display(FindDuplicatesCommand command)
+    public void Display(FileDuplicatesViewModel fileDuplicates)
     {
-        foreach (FilePairDto filePair in command.FileDuplicates)
+        foreach (FilePairDto filePair in fileDuplicates)
             WriteDuplicate(filePair);
 
-        WriteSummary(command.FileDuplicates.DuplicateCount, command.FileDuplicates.TotalSize);
+        WriteSummary(fileDuplicates.DuplicateCount, fileDuplicates.TotalSize);
     }
 
     private static void WriteDuplicate(FilePairDto filePair)

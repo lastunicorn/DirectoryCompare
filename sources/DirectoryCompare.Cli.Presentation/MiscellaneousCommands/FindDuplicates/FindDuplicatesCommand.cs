@@ -25,29 +25,27 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands.
 // find-duplicates snap1 -x
 // find-duplicates snap1 --check-files-existence
 
-[NamedCommand("find-duplicates", Description = "Search and display all the duplicate files in a snapshot or between two snapshots.")]
+[NamedCommand("find-duplicates", Description = "Search and display all the duplicate files in a single snapshot or between two snapshots.")]
 [CommandOrder(11)]
-internal class FindDuplicatesCommand : IConsoleCommand
+internal class FindDuplicatesCommand : IConsoleCommand<FileDuplicatesViewModel>
 {
     private readonly RequestBus requestBus;
 
-    [AnonymousParameter(Order = 1)]
+    [AnonymousParameter(Order = 1, Description = "The location of the first snapshot to compare. Location structure: '<pot>~<snapshot>:<path>'.")]
     public string Snapshot1Location { get; set; }
 
-    [AnonymousParameter(Order = 2, IsOptional = true)]
+    [AnonymousParameter(Order = 2, IsOptional = true, Description = "The location of the second snapshot to compare. Location structure: '<pot>~<snapshot>:<path>'.")]
     public string Snapshot2Location { get; set; }
 
-    [NamedParameter("check-files-existence", ShortName = 'x', IsOptional = true)]
+    [NamedParameter("check-exist", ShortName = 'x', IsOptional = true, Description = "If specified, the files that does not actually exist on disk are not displayed.")]
     public bool CheckFilesExistence { get; set; }
-
-    public FileDuplicatesViewModel FileDuplicates { get; private set; }
-
+    
     public FindDuplicatesCommand(RequestBus requestBus)
     {
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
     }
 
-    public async Task Execute()
+    public async Task<FileDuplicatesViewModel> Execute()
     {
         FindDuplicatesRequest request = new()
         {
@@ -58,6 +56,6 @@ internal class FindDuplicatesCommand : IConsoleCommand
 
         FindDuplicatesResponse response = await requestBus.PlaceRequest<FindDuplicatesRequest, FindDuplicatesResponse>(request);
 
-        FileDuplicates = new FileDuplicatesViewModel(response.DuplicatePairs);
+        return new FileDuplicatesViewModel(response.DuplicatePairs);
     }
 }
