@@ -49,10 +49,10 @@ public class ReadSnapshotCommand : IConsoleCommand
             PotName = PotName
         };
 
-        IDiskAnalysisProgress diskAnalysisProgress = await requestBus.PlaceRequest<CreateSnapshotRequest, IDiskAnalysisProgress>(request);
-        diskAnalysisProgress.Progress += HandleAnalysisProgress;
+        IDiskAnalysisStateReport diskAnalysisStateReport = await requestBus.PlaceRequest<CreateSnapshotRequest, IDiskAnalysisStateReport>(request);
+        diskAnalysisStateReport.Progress += HandleAnalysisProgress;
 
-        diskAnalysisProgress.WaitToEnd();
+        diskAnalysisStateReport.WaitToEnd();
         view.FinishDisplay();
     }
 

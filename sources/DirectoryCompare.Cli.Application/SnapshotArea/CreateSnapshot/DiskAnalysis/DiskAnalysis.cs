@@ -24,18 +24,19 @@ using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
 
-public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
+public sealed class DiskAnalysis : IDisposable
 {
     private readonly IFileSystem fileSystem;
     private readonly Stopwatch stopwatch = new();
-    private readonly ManualResetEventSlim manualResetEventSlim = new(false);
     private readonly MD5 md5;
 
     private string rootPath;
     private Progress progress;
     private Guid analysisId;
-    private DiskPathCollection rootedBlackList;
     private float lastPercentageAnnounced;
+    private DiskAnalysisStateReport stateReport = new();
+
+    public IDiskAnalysisStateReport StateReport => stateReport;
 
     public string RootPath
     {
@@ -46,16 +47,6 @@ public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
     public ISnapshotWriter SnapshotWriter { get; set; }
 
     public DiskPathCollection BlackList { get; set; }
-
-    public DiskAnalysisState State { get; private set; }
-
-    public event EventHandler<ErrorEncounteredEventArgs> ErrorEncountered;
-
-    public event EventHandler<DiskReaderStartingEventArgs> Starting;
-
-    public event EventHandler<DiskAnalysisProgressEventArgs> Progress;
-
-    public event EventHandler Finished;
 
     public TimeSpan ElapsedTime => stopwatch.Elapsed;
 
@@ -71,16 +62,13 @@ public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
 
         try
         {
-            rootedBlackList = BlackList?.PrependPath(RootPath) ?? new DiskPathCollection();
-
-            DiskReaderStartingEventArgs eventArgs = new(rootedBlackList);
-            OnStarting(eventArgs);
-
-            CheckRootPathExists();
-            SnapshotWriter?.Open(RootPath, analysisId);
+            DiskReaderStartingEventArgs eventArgs = new(BlackList);
+            stateReport.OnStarting(eventArgs);
 
             DataSize totalSize = await CalculateTotalSize();
             progress = new Progress(totalSize);
+
+            SnapshotWriter?.Open(RootPath, analysisId);
 
             AnnounceProgress();
             await CalculateHashes();
@@ -89,29 +77,20 @@ public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
 
             SnapshotWriter?.Close();
         }
+        catch (Exception ex)
+        {
+            ErrorEncounteredEventArgs eventArgs = new(ex, null);
+            stateReport.OnErrorEncountered(eventArgs);
+        }
         finally
         {
             ConcludeAnalysis();
         }
     }
 
-    private void CheckRootPathExists()
-    {
-        bool exists = fileSystem.ExistsDirectory(RootPath);
-
-        if (!exists)
-            throw new Exception($"The path to scan does not exist: {RootPath}");
-    }
-
     private void ResetAnalysis()
     {
-        if (State == DiskAnalysisState.InProgress)
-            throw new AnalysisInProgressException();
-
-        State = DiskAnalysisState.InProgress;
-
         stopwatch.Start();
-        manualResetEventSlim.Reset();
         progress = null;
         analysisId = Guid.NewGuid();
         lastPercentageAnnounced = 0;
@@ -120,17 +99,16 @@ public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
     private void ConcludeAnalysis()
     {
         stopwatch.Stop();
-        State = DiskAnalysisState.Ready;
-        manualResetEventSlim.Set();
-
-        OnFinished();
+        stateReport.OnFinished();
     }
 
     private Task<DataSize> CalculateTotalSize()
     {
         return Task.Run(() =>
         {
-            long dataSize = fileSystem.CreateCrawler(RootPath, rootedBlackList.ToListOfStrings())
+            IDiskCrawler diskCrawler = fileSystem.CreateCrawler(RootPath, BlackList.ToListOfStrings());
+
+            long dataSize = diskCrawler.Crawl()
                 .AsParallel()
                 .Where(x => x.Action == CrawlerAction.FileFound)
                 .Select(x => (long)(ulong)x.Size)
@@ -144,9 +122,10 @@ public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
     {
         return Task.Run(() =>
         {
-            IDiskCrawler diskCrawler = fileSystem.CreateCrawler(RootPath, rootedBlackList.ToListOfStrings());
-
-            foreach (ICrawlerItem crawlerItem in diskCrawler)
+            IDiskCrawler diskCrawler = fileSystem.CreateCrawler(RootPath, BlackList.ToListOfStrings());
+            IEnumerable<ICrawlerItem> crawlerItems = diskCrawler.Crawl();
+            
+            foreach (ICrawlerItem crawlerItem in crawlerItems)
             {
                 switch (crawlerItem.Action)
                 {
@@ -215,7 +194,9 @@ public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
         }
         catch (Exception ex)
         {
-            OnErrorEncountered(new ErrorEncounteredEventArgs(ex, crawlerItem.Path));
+            ErrorEncounteredEventArgs eventArgs = new(ex, crawlerItem.Path);
+            stateReport.OnErrorEncountered(eventArgs);
+            
             hFile.Error = ex.Message;
         }
 
@@ -240,7 +221,7 @@ public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
             ProcessedSize = progress.Value - progress.MinValue,
             ElapsedTime = stopwatch.Elapsed
         };
-        OnProgress(args);
+        stateReport.OnProgress(args);
 
         lastPercentageAnnounced = progress.Percentage;
     }
@@ -248,7 +229,7 @@ public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
     private void ProcessError(ICrawlerItem crawlerItem)
     {
         ErrorEncounteredEventArgs args = new(crawlerItem.Exception, crawlerItem.Path);
-        OnErrorEncountered(args);
+        stateReport.OnErrorEncountered(args);
 
         HDirectory hDirectory = new()
         {
@@ -259,33 +240,8 @@ public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
         SnapshotWriter?.Add(hDirectory);
     }
 
-    public void WaitToEnd()
-    {
-        manualResetEventSlim.Wait();
-    }
-
     public void Dispose()
     {
         md5?.Dispose();
-    }
-
-    private void OnErrorEncountered(ErrorEncounteredEventArgs e)
-    {
-        ErrorEncountered?.Invoke(this, e);
-    }
-
-    private void OnStarting(DiskReaderStartingEventArgs e)
-    {
-        Starting?.Invoke(this, e);
-    }
-
-    private void OnProgress(DiskAnalysisProgressEventArgs e)
-    {
-        Progress?.Invoke(this, e);
-    }
-
-    private void OnFinished()
-    {
-        Finished?.Invoke(this, EventArgs.Empty);
     }
 }

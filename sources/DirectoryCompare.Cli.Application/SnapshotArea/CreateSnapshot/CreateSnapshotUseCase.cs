@@ -16,6 +16,7 @@
 
 using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Cli.Application.Utils;
+using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
@@ -24,7 +25,7 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot;
 
-public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest, IDiskAnalysisProgress>
+public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest, IDiskAnalysisStateReport>
 {
     private readonly ILog log;
     private readonly IPotRepository potRepository;
@@ -43,25 +44,50 @@ public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest, IDis
         this.fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
     }
 
-    public async Task<IDiskAnalysisProgress> Handle(CreateSnapshotRequest request, CancellationToken cancellationToken)
+    public async Task<IDiskAnalysisStateReport> Handle(CreateSnapshotRequest request, CancellationToken cancellationToken)
     {
-        Pot pot = await RetrievePot(request);
-        IDiskAnalysisProgress progress = await StartPathAnalysis(pot);
+        Pot pot = await RetrievePot(request.PotName);
+        CheckPotPathExists(pot.Path);
+        DiskPathCollection rootedBlackList = await RetrieveBlackListPaths(pot);
+        IDiskAnalysisStateReport stateReport = await StartPathAnalysis(pot, rootedBlackList);
 
-        return progress;
+        return stateReport;
     }
 
-    private async Task<Pot> RetrievePot(CreateSnapshotRequest request)
+    private async Task<Pot> RetrievePot(string potName)
     {
-        Pot pot = await potRepository.GetByNameOrId(request.PotName);
+        log.WriteInfo($"Retrieving pot: '{potName}'.");
+
+        Pot pot = await potRepository.GetByNameOrId(potName);
 
         if (pot == null)
-            throw new PotDoesNotExistException(request.PotName);
+            throw new PotDoesNotExistException(potName);
 
         return pot;
     }
 
-    private async Task<DiskAnalysis.DiskAnalysis> StartPathAnalysis(Pot pot)
+    private void CheckPotPathExists(DiskPath potPath)
+    {
+        log.WriteInfo($"Checking that pot path exists: '{potPath}'.");
+
+        bool exists = fileSystem.ExistsDirectory(potPath);
+
+        if (!exists)
+            throw new Exception($"The path to scan does not exist: {potPath}");
+    }
+
+    private async Task<DiskPathCollection> RetrieveBlackListPaths(Pot pot)
+    {
+        log.WriteInfo("Building the black list paths.");
+
+        DiskPathCollection blackList = await blackListRepository.Get(pot.Name);
+
+        return blackList == null
+            ? new DiskPathCollection()
+            : blackList.PrependPath(pot.Path);
+    }
+
+    private async Task<IDiskAnalysisStateReport> StartPathAnalysis(Pot pot, DiskPathCollection diskPathCollection)
     {
         log.WriteInfo("Scanning path: {0}", pot.Path);
 
@@ -69,16 +95,16 @@ public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest, IDis
         {
             RootPath = pot.Path,
             SnapshotWriter = await snapshotRepository.CreateWriter(pot.Name),
-            BlackList = await blackListRepository.Get(pot.Name)
+            BlackList = diskPathCollection
         };
 
-        diskAnalysis.Starting += HandleDiskReaderStarting;
-        diskAnalysis.ErrorEncountered += HandleDiskReaderErrorEncountered;
-        diskAnalysis.Finished += HandleDiskAnalysisFinished;
+        diskAnalysis.StateReport.Starting += HandleDiskReaderStarting;
+        diskAnalysis.StateReport.ErrorEncountered += HandleDiskReaderErrorEncountered;
+        diskAnalysis.StateReport.Finished += HandleDiskAnalysisFinished;
 
-        await diskAnalysis.Run();
+        _ = diskAnalysis.Run();
 
-        return diskAnalysis;
+        return diskAnalysis.StateReport;
     }
 
     private void HandleDiskReaderStarting(object sender, DiskReaderStartingEventArgs e)

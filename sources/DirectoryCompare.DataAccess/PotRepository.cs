@@ -52,15 +52,6 @@ public class PotRepository : IPotRepository
         return pot;
     }
 
-    private static void LoadSnapshots(PotDirectory potDirectory, Pot pot)
-    {
-        IEnumerable<Snapshot> snapshots = potDirectory.GetSnapshotFiles()
-            .Where(x => x.Open())
-            .Select(x => x.Content.ToSnapshot());
-
-        pot.Snapshots.AddRange(snapshots);
-    }
-
     public async Task<Pot> GetById(Guid id, bool includeSnapshots)
     {
         IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
@@ -142,5 +133,14 @@ public class PotRepository : IPotRepository
 
         potDirectory.Delete();
         return true;
+    }
+
+    private static void LoadSnapshots(PotDirectory potDirectory, Pot pot)
+    {
+        IEnumerable<Snapshot> snapshots = potDirectory.GetSnapshotFiles()
+            .Where(x => x.Open())
+            .Select(x => x.Content.ToSnapshot());
+
+        pot.Snapshots.AddRange(snapshots);
     }
 }

@@ -1,5 +1,5 @@
-﻿// DirectoryCompare
-// Copyright (C) 2017-2023 Dust in the Wind
+// VeloCity
+// Copyright (C) 2022-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,11 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
+namespace DustInTheWind.DirectoryCompare.DataAccess;
 
-public interface IDiskAnalysisProgress
+internal static class EnumerableExtensions
 {
-    event EventHandler<DiskAnalysisProgressEventArgs> Progress;
-
-    void WaitToEnd();
+    public static IEnumerable<T> Execute<T>(this IEnumerable<T> collection, Action<T> action)
+    {
+        foreach (T item in collection)
+        {
+            action(item);
+            yield return item;
+        }
+    }
 }

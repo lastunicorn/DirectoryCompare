@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections;
 using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 
 namespace DustInTheWind.DirectoryCompare.FileSystemAccess;
@@ -30,7 +29,7 @@ internal class DiskCrawler : IDiskCrawler
         this.blackList = blackList ?? throw new ArgumentNullException(nameof(blackList));
     }
 
-    public IEnumerator<ICrawlerItem> GetEnumerator()
+    public IEnumerable<ICrawlerItem> Crawl()
     {
         if (!Directory.Exists(path))
         {
@@ -44,10 +43,5 @@ internal class DiskCrawler : IDiskCrawler
             foreach (ICrawlerItem crawlerItem in directoryCrawler)
                 yield return crawlerItem;
         }
-    }
-
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
     }
 }

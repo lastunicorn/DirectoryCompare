@@ -16,6 +16,7 @@
 
 namespace DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 
-public interface IDiskCrawler : IEnumerable<ICrawlerItem>
+public interface IDiskCrawler
 {
+    IEnumerable<ICrawlerItem> Crawl();
 }
