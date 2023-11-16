@@ -76,7 +76,7 @@ public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest, IDis
         diskAnalysis.ErrorEncountered += HandleDiskReaderErrorEncountered;
         diskAnalysis.Finished += HandleDiskAnalysisFinished;
 
-        _ = diskAnalysis.Run();
+        await diskAnalysis.Run();
 
         return diskAnalysis;
     }

@@ -24,4 +24,9 @@ public class FileSystem : IFileSystem
     {
         return new DiskCrawler(path, blackList);
     }
+
+    public bool ExistsDirectory(string path)
+    {
+        return Directory.Exists(path);
+    }
 }

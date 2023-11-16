@@ -76,6 +76,7 @@ public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
             DiskReaderStartingEventArgs eventArgs = new(rootedBlackList);
             OnStarting(eventArgs);
 
+            CheckRootPathExists();
             SnapshotWriter?.Open(RootPath, analysisId);
 
             DataSize totalSize = await CalculateTotalSize();
@@ -92,6 +93,14 @@ public sealed class DiskAnalysis : IDiskAnalysisProgress, IDisposable
         {
             ConcludeAnalysis();
         }
+    }
+
+    private void CheckRootPathExists()
+    {
+        bool exists = fileSystem.ExistsDirectory(RootPath);
+
+        if (!exists)
+            throw new Exception($"The path to scan does not exist: {RootPath}");
     }
 
     private void ResetAnalysis()
