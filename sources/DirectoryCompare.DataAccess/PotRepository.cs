@@ -93,7 +93,7 @@ public class PotRepository : IPotRepository
 
         if (pot != null)
             return pot;
-        
+
         bool parseSuccess = Guid.TryParse(nameOrId, out Guid guid);
 
         if (parseSuccess)
@@ -101,7 +101,7 @@ public class PotRepository : IPotRepository
 
         if (pot != null)
             return pot;
-        
+
         if (nameOrId.Length >= 8)
             pot = await GetByPartialId(nameOrId, includeSnapshots);
 

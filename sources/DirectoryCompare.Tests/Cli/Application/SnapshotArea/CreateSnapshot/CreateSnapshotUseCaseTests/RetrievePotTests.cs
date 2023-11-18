@@ -87,7 +87,7 @@ public class RetrievePotTests
 
         CreateSnapshotRequest request = new()
         {
-            PotName = "pot1",
+            PotName = "pot1"
         };
 
         try
@@ -118,7 +118,7 @@ public class RetrievePotTests
 
         CreateSnapshotRequest request = new()
         {
-            PotName = "pot1",
+            PotName = "pot1"
         };
 
         Func<Task> action = () => useCase.Handle(request, CancellationToken.None);
