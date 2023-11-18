@@ -28,6 +28,8 @@ public interface IPotRepository
 
     Task<Pot> GetByPartialId(string partialId, bool includeSnapshots);
 
+    Task<Pot> GetByNameOrId(string nameOrId, bool includeSnapshots = false);
+
     Task Add(Pot pot);
 
     Task<bool> ExistsByName(string name);

@@ -17,96 +17,97 @@
 using System.Diagnostics;
 using System.Security.Cryptography;
 using DustInTheWind.DirectoryCompare.DataStructures;
-using DustInTheWind.DirectoryCompare.Domain.Entities;
+using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.DirectoryCompare.Domain.Utils;
+using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess.ImportExport;
 using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
+using DustInTheWind.DirectoryCompare.Ports.LogAccess;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
 
-public sealed class DiskAnalysis : IDisposable
+internal sealed class DiskAnalysis : IDisposable
 {
+    private readonly ILog log;
     private readonly IFileSystem fileSystem;
+    private readonly ISnapshotRepository snapshotRepository;
     private readonly Stopwatch stopwatch = new();
     private readonly MD5 md5;
+    private ISnapshotWriter snapshotWriter;
 
-    private string rootPath;
     private Progress progress;
     private Guid analysisId;
     private float lastPercentageAnnounced;
-    private DiskAnalysisStateReport stateReport = new();
 
-    public IDiskAnalysisStateReport StateReport => stateReport;
+    public Pot Pot { get; init; }
 
-    public string RootPath
+    public DiskPathCollection BlackList { get; init; }
+
+    public DiskAnalysisReport Report { get; private set; }
+
+    public DiskAnalysis(ILog log, IFileSystem fileSystem, ISnapshotRepository snapshotRepository)
     {
-        get => rootPath;
-        set => rootPath = value ?? string.Empty;
-    }
-
-    public ISnapshotWriter SnapshotWriter { get; set; }
-
-    public DiskPathCollection BlackList { get; set; }
-
-    public TimeSpan ElapsedTime => stopwatch.Elapsed;
-
-    public DiskAnalysis(IFileSystem fileSystem)
-    {
+        this.log = log ?? throw new ArgumentNullException(nameof(log));
         this.fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
+        this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
         md5 = MD5.Create();
     }
 
-    public async Task Run()
+    public DiskAnalysisReport Start()
     {
         ResetAnalysis();
 
-        try
+        _ = Task.Run(async () =>
         {
-            DiskReaderStartingEventArgs eventArgs = new(BlackList);
-            stateReport.OnStarting(eventArgs);
+            try
+            {
+                AnnounceStarting();
 
-            DataSize totalSize = await CalculateTotalSize();
-            progress = new Progress(totalSize);
+                DataSize totalSize = await CalculateTotalSize();
+                progress = new Progress(totalSize);
 
-            SnapshotWriter?.Open(RootPath, analysisId);
+                snapshotWriter = await snapshotRepository.CreateWriter(Pot.Name);
+                snapshotWriter?.Open(Pot.Name, analysisId);
 
-            AnnounceProgress();
-            await CalculateHashes();
-            if (Math.Abs(lastPercentageAnnounced - 100) > float.Epsilon)
                 AnnounceProgress();
+                await CalculateHashes();
 
-            SnapshotWriter?.Close();
-        }
-        catch (Exception ex)
-        {
-            ErrorEncounteredEventArgs eventArgs = new(ex, null);
-            stateReport.OnErrorEncountered(eventArgs);
-        }
-        finally
-        {
-            ConcludeAnalysis();
-        }
+                if (Math.Abs(lastPercentageAnnounced - 100) > float.Epsilon)
+                    AnnounceProgress();
+            }
+            catch (Exception ex)
+            {
+                AnnounceError(ex, null);
+            }
+            finally
+            {
+                ConcludeAnalysis();
+                AnnounceFinished();
+            }
+        });
+
+        return Report;
     }
 
     private void ResetAnalysis()
     {
         stopwatch.Start();
-        progress = null;
         analysisId = Guid.NewGuid();
+        progress = null;
         lastPercentageAnnounced = 0;
+        Report = new DiskAnalysisReport();
     }
 
     private void ConcludeAnalysis()
     {
         stopwatch.Stop();
-        stateReport.OnFinished();
     }
 
     private Task<DataSize> CalculateTotalSize()
     {
         return Task.Run(() =>
         {
-            IDiskCrawler diskCrawler = fileSystem.CreateCrawler(RootPath, BlackList.ToListOfStrings());
+            IDiskCrawler diskCrawler = fileSystem.CreateCrawler(Pot.Path, BlackList.ToListOfStrings());
 
             long dataSize = diskCrawler.Crawl()
                 .AsParallel()
@@ -122,98 +123,94 @@ public sealed class DiskAnalysis : IDisposable
     {
         return Task.Run(() =>
         {
-            IDiskCrawler diskCrawler = fileSystem.CreateCrawler(RootPath, BlackList.ToListOfStrings());
-            IEnumerable<ICrawlerItem> crawlerItems = diskCrawler.Crawl();
-            
-            foreach (ICrawlerItem crawlerItem in crawlerItems)
-            {
-                switch (crawlerItem.Action)
-                {
-                    case CrawlerAction.DirectoryOpened:
-                        if (crawlerItem.Path != RootPath)
-                            AddDirectory(crawlerItem);
-                        break;
+            IDiskCrawler diskCrawler = fileSystem.CreateCrawler(Pot.Path, BlackList.ToListOfStrings());
 
-                    case CrawlerAction.DirectoryClosed:
-                        if (crawlerItem.Path != RootPath)
-                            CloseDirectory();
-                        break;
+            IEnumerable<IAnalysisItem> analysisItems = diskCrawler.Crawl()
+                .Select(CreateAnalysisItem)
+                .Where(x => x != null);
 
-                    case CrawlerAction.FileFound:
-                        AddFile(crawlerItem);
-                        break;
-
-                    case CrawlerAction.Error:
-                        ProcessError(crawlerItem);
-                        break;
-
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
+            foreach (IAnalysisItem analysisItem in analysisItems)
+                ProcessAnalysisItem(analysisItem);
         });
     }
 
-    private void AddDirectory(ICrawlerItem crawlerItem)
+    private IAnalysisItem CreateAnalysisItem(ICrawlerItem crawlerItem)
     {
-        HDirectory hDirectory = new(crawlerItem.Name);
-        SnapshotWriter?.AddAndOpen(hDirectory);
-    }
-
-    private void CloseDirectory()
-    {
-        SnapshotWriter?.CloseDirectory();
-    }
-
-    private void AddFile(ICrawlerItem crawlerItem)
-    {
-        HFile hFile = AnalyzeFile(crawlerItem);
-        SnapshotWriter?.Add(hFile);
-
-        if (progress != null)
-            UpdateProgress(hFile.Size);
-    }
-
-    private HFile AnalyzeFile(ICrawlerItem crawlerItem)
-    {
-        HFile hFile = new()
+        switch (crawlerItem.Action)
         {
-            Name = crawlerItem.Name
-        };
+            case CrawlerAction.DirectoryOpened:
+                return crawlerItem.Path != Pot.Path
+                    ? new DirectoryOpenedAnalysisItem(crawlerItem)
+                    : null;
 
-        try
-        {
-            hFile.LastModifiedTime = crawlerItem.LastModifiedTime;
+            case CrawlerAction.DirectoryClosed:
+                return crawlerItem.Path != Pot.Path
+                    ? new DirectoryClosedAnalysisItem(crawlerItem)
+                    : null;
 
-            using Stream stream = crawlerItem.ReadContent();
+            case CrawlerAction.FileFound:
+                return new FileAnalysisItem(crawlerItem, md5);
 
-            hFile.Hash = md5.ComputeHash(stream);
-            long size = stream.Length;
+            case CrawlerAction.DirectoryError:
+                return new ErrorAnalysisItem(crawlerItem);
 
-            hFile.Size = size;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
-        catch (Exception ex)
-        {
-            ErrorEncounteredEventArgs eventArgs = new(ex, crawlerItem.Path);
-            stateReport.OnErrorEncountered(eventArgs);
-            
-            hFile.Error = ex.Message;
-        }
-
-        return hFile;
     }
 
-    private void UpdateProgress(DataSize dataSize)
+    private void ProcessAnalysisItem(IAnalysisItem analysisItem)
     {
-        progress.Value += dataSize;
-        float currentPercentageValue = progress.Percentage;
+        analysisItem.Analyze();
+        analysisItem.Save(snapshotWriter);
 
-        if (Math.Abs(lastPercentageAnnounced - currentPercentageValue) >= 0.1)
+        if (progress != null && analysisItem.Size > 0)
+        {
+            progress.Value += analysisItem.Size;
             AnnounceProgress();
+        }
+
+        if (analysisItem.Error != null)
+        {
+            AnnounceError(analysisItem.Error, analysisItem.Path);
+        }
+    }
+
+    private void AnnounceStarting()
+    {
+        log.WriteInfo("Scanning path: {0}", Pot.Path);
+
+        if (BlackList.Count == 0)
+        {
+            log.WriteInfo("No blacklist entries.");
+            return;
+        }
+
+        log.WriteInfo("Computed black list:");
+
+        foreach (string blackListItem in BlackList)
+            log.WriteInfo("- " + blackListItem);
+
+        DiskReaderStartingEventArgs eventArgs = new(BlackList);
+        Report.OnStarting(eventArgs);
+    }
+
+    private void AnnounceFinished()
+    {
+        log.WriteInfo("Finished scanning path in {0}", stopwatch.Elapsed);
+        snapshotWriter.Dispose();
+
+        Report.OnFinished();
     }
 
     private void AnnounceProgress()
     {
+        float currentPercentage = progress.Percentage;
+        float percentageDifference = currentPercentage - lastPercentageAnnounced;
+
+        if (percentageDifference < 0.1)
+            return;
+
         DiskAnalysisProgressEventArgs args = new()
         {
             Percentage = progress,
@@ -221,23 +218,17 @@ public sealed class DiskAnalysis : IDisposable
             ProcessedSize = progress.Value - progress.MinValue,
             ElapsedTime = stopwatch.Elapsed
         };
-        stateReport.OnProgress(args);
+        Report.OnProgress(args);
 
-        lastPercentageAnnounced = progress.Percentage;
+        lastPercentageAnnounced = currentPercentage;
     }
 
-    private void ProcessError(ICrawlerItem crawlerItem)
+    private void AnnounceError(Exception ex, string path)
     {
-        ErrorEncounteredEventArgs args = new(crawlerItem.Exception, crawlerItem.Path);
-        stateReport.OnErrorEncountered(args);
+        log.WriteError("Error while reading path '{0}': {1}", path, ex);
 
-        HDirectory hDirectory = new()
-        {
-            Name = crawlerItem.Name,
-            Error = crawlerItem.Exception.Message
-        };
-
-        SnapshotWriter?.Add(hDirectory);
+        ErrorEncounteredEventArgs eventArgs = new(ex, path);
+        Report.OnErrorEncountered(eventArgs);
     }
 
     public void Dispose()

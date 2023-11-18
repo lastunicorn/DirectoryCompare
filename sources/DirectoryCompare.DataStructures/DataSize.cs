@@ -347,6 +347,38 @@ public struct DataSize : IEquatable<DataSize>
         return dataSize1.Value >= dataSize2;
     }
 
+    public static bool operator <(DataSize dataSize1, int dataSize2)
+    {
+        if (dataSize2 < 0)
+            return false;
+                
+        return dataSize1.Value < (ulong)dataSize2;
+    }
+
+    public static bool operator >(DataSize dataSize1, int dataSize2)
+    {
+        if (dataSize2 < 0)
+            return true;
+
+        return dataSize1.Value > (ulong)dataSize2;
+    }
+
+    public static bool operator <=(DataSize dataSize1, int dataSize2)
+    {
+        if (dataSize2 < 0)
+            return false;
+
+        return dataSize1.Value <= (ulong)dataSize2;
+    }
+
+    public static bool operator >=(DataSize dataSize1, int dataSize2)
+    {
+        if (dataSize2 < 0)
+            return true;
+
+        return dataSize1.Value >= (ulong)dataSize2;
+    }
+
     #endregion
 
     #region Implicit Operators

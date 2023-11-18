@@ -21,5 +21,5 @@ public enum CrawlerAction
     DirectoryOpened,
     DirectoryClosed,
     FileFound,
-    Error
+    DirectoryError
 }

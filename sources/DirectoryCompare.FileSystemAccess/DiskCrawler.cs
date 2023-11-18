@@ -31,17 +31,18 @@ internal class DiskCrawler : IDiskCrawler
 
     public IEnumerable<ICrawlerItem> Crawl()
     {
-        if (!Directory.Exists(path))
+        if (Directory.Exists(path))
         {
-            Exception exception = new($"The path '{path}' does not exist.");
-            yield return new ErrorCrawlerItem(exception, path);
+            DirectoryCrawler directoryCrawler = new(path, blackList);
+            IEnumerable<ICrawlerItem> crawlerItems = directoryCrawler.Crawl();
+
+            foreach (ICrawlerItem crawlerItem in crawlerItems)
+                yield return crawlerItem;
         }
         else
         {
-            DirectoryCrawler directoryCrawler = new(path, blackList);
-
-            foreach (ICrawlerItem crawlerItem in directoryCrawler)
-                yield return crawlerItem;
+            Exception exception = new($"The path '{path}' does not exist.");
+            yield return new DirectoryErrorCrawlerItem(exception, path);
         }
     }
 }

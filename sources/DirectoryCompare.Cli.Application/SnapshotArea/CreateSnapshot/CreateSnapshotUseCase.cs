@@ -15,7 +15,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
-using DustInTheWind.DirectoryCompare.Cli.Application.Utils;
 using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
@@ -25,7 +24,7 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot;
 
-public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest, IDiskAnalysisStateReport>
+public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest, IDiskAnalysisReport>
 {
     private readonly ILog log;
     private readonly IPotRepository potRepository;
@@ -44,14 +43,14 @@ public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest, IDis
         this.fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
     }
 
-    public async Task<IDiskAnalysisStateReport> Handle(CreateSnapshotRequest request, CancellationToken cancellationToken)
+    public async Task<IDiskAnalysisReport> Handle(CreateSnapshotRequest request, CancellationToken cancellationToken)
     {
         Pot pot = await RetrievePot(request.PotName);
-        CheckPotPathExists(pot.Path);
+        CheckPotPathExists(pot);
         DiskPathCollection rootedBlackList = await RetrieveBlackListPaths(pot);
-        IDiskAnalysisStateReport stateReport = await StartPathAnalysis(pot, rootedBlackList);
+        IDiskAnalysisReport report = StartDiskAnalysis(pot, rootedBlackList);
 
-        return stateReport;
+        return report;
     }
 
     private async Task<Pot> RetrievePot(string potName)
@@ -61,19 +60,19 @@ public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest, IDis
         Pot pot = await potRepository.GetByNameOrId(potName);
 
         if (pot == null)
-            throw new PotDoesNotExistException(potName);
+            throw new PotNotFoundException(potName);
 
         return pot;
     }
 
-    private void CheckPotPathExists(DiskPath potPath)
+    private void CheckPotPathExists(Pot pot)
     {
-        log.WriteInfo($"Checking that pot path exists: '{potPath}'.");
+        log.WriteInfo($"Checking that pot path exists: '{pot.Path}'.");
 
-        bool exists = fileSystem.ExistsDirectory(potPath);
+        bool exists = fileSystem.ExistsDirectory(pot.Path);
 
         if (!exists)
-            throw new Exception($"The path to scan does not exist: {potPath}");
+            throw new PotPathDoesNotExistException(pot.Name, pot.Path);
     }
 
     private async Task<DiskPathCollection> RetrieveBlackListPaths(Pot pot)
@@ -87,51 +86,14 @@ public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest, IDis
             : blackList.PrependPath(pot.Path);
     }
 
-    private async Task<IDiskAnalysisStateReport> StartPathAnalysis(Pot pot, DiskPathCollection diskPathCollection)
+    private IDiskAnalysisReport StartDiskAnalysis(Pot pot, DiskPathCollection blackList)
     {
-        log.WriteInfo("Scanning path: {0}", pot.Path);
-
-        DiskAnalysis.DiskAnalysis diskAnalysis = new(fileSystem)
+        DiskAnalysis.DiskAnalysis diskAnalysis = new(log, fileSystem, snapshotRepository)
         {
-            RootPath = pot.Path,
-            SnapshotWriter = await snapshotRepository.CreateWriter(pot.Name),
-            BlackList = diskPathCollection
+            Pot = pot,
+            BlackList = blackList
         };
 
-        diskAnalysis.StateReport.Starting += HandleDiskReaderStarting;
-        diskAnalysis.StateReport.ErrorEncountered += HandleDiskReaderErrorEncountered;
-        diskAnalysis.StateReport.Finished += HandleDiskAnalysisFinished;
-
-        _ = diskAnalysis.Run();
-
-        return diskAnalysis.StateReport;
-    }
-
-    private void HandleDiskReaderStarting(object sender, DiskReaderStartingEventArgs e)
-    {
-        if (e.BlackList.Count == 0)
-        {
-            log.WriteInfo("No blacklist entries.");
-            return;
-        }
-
-        log.WriteInfo("Computed black list:");
-
-        foreach (string blackListItem in e.BlackList)
-            log.WriteInfo("- " + blackListItem);
-    }
-
-    private void HandleDiskReaderErrorEncountered(object sender, ErrorEncounteredEventArgs e)
-    {
-        log.WriteError("Error while reading path '{0}': {1}", e.Path, e.Exception);
-    }
-
-    private void HandleDiskAnalysisFinished(object sender, EventArgs e)
-    {
-        if (sender is DiskAnalysis.DiskAnalysis diskAnalysis)
-        {
-            log.WriteInfo("Finished scanning path in {0}", diskAnalysis.ElapsedTime);
-            diskAnalysis.SnapshotWriter.Dispose();
-        }
+        return diskAnalysis.Start();
     }
 }

@@ -19,7 +19,7 @@ using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 
 namespace DustInTheWind.DirectoryCompare.FileSystemAccess;
 
-internal class DirectoryCrawler : IEnumerable<ICrawlerItem>
+internal class DirectoryCrawler
 {
     private readonly string path;
     private readonly List<string> blackList;
@@ -34,13 +34,13 @@ internal class DirectoryCrawler : IEnumerable<ICrawlerItem>
         this.blackList = blackList ?? throw new ArgumentNullException(nameof(blackList));
     }
 
-    public IEnumerator<ICrawlerItem> GetEnumerator()
+    public IEnumerable<ICrawlerItem> Crawl()
     {
         OpenDirectory();
 
         if (exception != null)
         {
-            yield return new ErrorCrawlerItem(exception, path);
+            yield return new DirectoryErrorCrawlerItem(exception, path);
         }
         else
         {
@@ -49,11 +49,15 @@ internal class DirectoryCrawler : IEnumerable<ICrawlerItem>
             foreach (string filePath in filePaths)
                 yield return new FileCrawlerItem(filePath);
 
-            IEnumerable<ICrawlerItem> steps = directoryPaths
-                .Select(x => new DirectoryCrawler(x, blackList))
+            IEnumerable<ICrawlerItem> crawlerItems = directoryPaths
+                .Select(x =>
+                {
+                    DirectoryCrawler directoryCrawler = new(x, blackList);
+                    return directoryCrawler.Crawl();
+                })
                 .SelectMany(x => x);
 
-            foreach (ICrawlerItem crawlerItem in steps)
+            foreach (ICrawlerItem crawlerItem in crawlerItems)
                 yield return crawlerItem;
 
             yield return new DirectoryCloseCrawlerItem(path);
@@ -80,10 +84,5 @@ internal class DirectoryCrawler : IEnumerable<ICrawlerItem>
         {
             exception = ex;
         }
-    }
-
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
     }
 }

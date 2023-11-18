@@ -14,25 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.DataAccess.PotFiles;
-using FluentAssertions;
-using Xunit;
+using DustInTheWind.DirectoryCompare.DataStructures;
+using DustInTheWind.DirectoryCompare.Ports.DataAccess.ImportExport;
 
-namespace DustInTheWind.DirectoryCompare.Tests.Adapters.PotFiles.SnapshotFilePathTests;
+namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
 
-public class ToStringTests
+public interface IAnalysisItem
 {
-    [Fact]
-    public void HavingSnapshotFilePathInstance_WhenToStringCalled_ThenStringContainsFullPath()
-    {
-        // arrange
-        const string pathAsString = "/this/is/some/path/2021 12 31 143918.json";
-        SnapshotFilePath snapshotFilePath = new(pathAsString);
+    string Path { get; }
 
-        // act
-        string actual = snapshotFilePath.ToString();
+    DataSize Size { get; }
 
-        // assert
-        actual.Should().Be(pathAsString);
-    }
+    Exception Error { get; }
+
+    void Analyze();
+
+    void Save(ISnapshotWriter snapshotWriter);
 }

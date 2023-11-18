@@ -1,4 +1,4 @@
-// DirectoryCompare
+﻿// DirectoryCompare
 // Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -14,25 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.DataAccess.PotFiles;
-using FluentAssertions;
-using Xunit;
+using System.Runtime.Serialization;
 
-namespace DustInTheWind.DirectoryCompare.Tests.Adapters.PotFiles.SnapshotFilePathTests;
+namespace DustInTheWind.DirectoryCompare.Domain.PotModel;
 
-public class ToStringTests
+[Serializable]
+public class PotNotFoundException : Exception
 {
-    [Fact]
-    public void HavingSnapshotFilePathInstance_WhenToStringCalled_ThenStringContainsFullPath()
+    private const string DefaultMessage = "There is no pot with the name or id '{0}'.";
+
+    public PotNotFoundException(string potName)
+        : base(string.Format(DefaultMessage, potName))
     {
-        // arrange
-        const string pathAsString = "/this/is/some/path/2021 12 31 143918.json";
-        SnapshotFilePath snapshotFilePath = new(pathAsString);
+    }
 
-        // act
-        string actual = snapshotFilePath.ToString();
-
-        // assert
-        actual.Should().Be(pathAsString);
+    public PotNotFoundException(SerializationInfo info, StreamingContext context)
+        : base(info, context)
+    {
     }
 }

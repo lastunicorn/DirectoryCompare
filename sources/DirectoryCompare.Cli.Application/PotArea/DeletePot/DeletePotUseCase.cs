@@ -1,5 +1,5 @@
-﻿// VeloCity
-// Copyright (C) 2022-2023 Dust in the Wind
+﻿// DirectoryCompare
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Cli.Application.Utils;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 using DustInTheWind.DirectoryCompare.Ports.UserAccess;
@@ -42,7 +41,12 @@ public class DeletePotUseCase : IRequestHandler<DeletePotRequest>
 
     private async Task<Pot> RetrievePot(string nameOrId)
     {
-        return await potRepository.GetByNameOrId(nameOrId);
+        Pot pot = await potRepository.GetByNameOrId(nameOrId);
+
+        if (pot == null)
+            throw new PotNotFoundException(nameOrId);
+
+        return pot;
     }
 
     private async Task AskForConfirmation(Pot pot)

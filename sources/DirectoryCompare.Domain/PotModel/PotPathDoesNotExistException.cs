@@ -1,4 +1,4 @@
-﻿// DirectoryCompare
+// DirectoryCompare
 // Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -14,14 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System.Runtime.Serialization;
+
 namespace DustInTheWind.DirectoryCompare.Domain.PotModel;
 
-public class PotDoesNotExistException : Exception
+[Serializable]
+public class PotPathDoesNotExistException : Exception
 {
-    private const string DefaultMessage = "There is no pot with the name '{0}'.";
+    private const string DefaultMessage = "The path of the pot '{0}' does not exist on disk: {1}";
 
-    public PotDoesNotExistException(string potName)
-        : base(string.Format(DefaultMessage, potName))
+    public PotPathDoesNotExistException(string potName, string path)
+        : base(string.Format(DefaultMessage, potName, path))
+    {
+    }
+
+    public PotPathDoesNotExistException(SerializationInfo info, StreamingContext context)
+        : base(info, context)
     {
     }
 }

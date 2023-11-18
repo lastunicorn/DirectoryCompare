@@ -41,7 +41,8 @@ public class PotRepository : IPotRepository
 
     public async Task<Pot> GetByName(string name, bool includeSnapshots)
     {
-        PotDirectory potDirectory = (await database.GetPotDirectories())
+        IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
+        PotDirectory potDirectory = potDirectories
             .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == name);
 
         Pot pot = potDirectory?.ToPot();
@@ -77,6 +78,32 @@ public class PotRepository : IPotRepository
 
         if (pot != null && includeSnapshots)
             LoadSnapshots(potDirectory, pot);
+
+        return pot;
+    }
+
+    public async Task<Pot> GetByNameOrId(string nameOrId, bool includeSnapshots = false)
+    {
+        if (nameOrId == null) throw new ArgumentNullException(nameof(nameOrId));
+
+        if (string.IsNullOrEmpty(nameOrId))
+            throw new ArgumentException("The name or id must be provided.", nameof(nameOrId));
+
+        Pot pot = await GetByName(nameOrId, includeSnapshots);
+
+        if (pot != null)
+            return pot;
+        
+        bool parseSuccess = Guid.TryParse(nameOrId, out Guid guid);
+
+        if (parseSuccess)
+            pot = await GetById(guid, includeSnapshots);
+
+        if (pot != null)
+            return pot;
+        
+        if (nameOrId.Length >= 8)
+            pot = await GetByPartialId(nameOrId, includeSnapshots);
 
         return pot;
     }

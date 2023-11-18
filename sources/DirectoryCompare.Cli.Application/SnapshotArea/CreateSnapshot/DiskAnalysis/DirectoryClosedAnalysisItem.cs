@@ -1,4 +1,4 @@
-﻿// DirectoryCompare
+// DirectoryCompare
 // Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -14,28 +14,33 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Runtime.Serialization;
 using DustInTheWind.DirectoryCompare.DataStructures;
+using DustInTheWind.DirectoryCompare.Ports.DataAccess.ImportExport;
+using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.PresentSnapshot;
+namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
 
-[Serializable]
-public class SnapshotNotFoundException : Exception
+public class DirectoryClosedAnalysisItem : IAnalysisItem
 {
-    private const string DefaultMessage = "The snapshot '{0}' could not be found.";
+    private readonly ICrawlerItem crawlerItem;
 
-    public SnapshotNotFoundException(SnapshotLocation snapshotLocation)
-        : base(BuildMessage(snapshotLocation))
+    public string Path => crawlerItem.Path;
+
+    public DataSize Size => crawlerItem.Size;
+
+    public Exception Error => crawlerItem.Exception;
+
+    public DirectoryClosedAnalysisItem(ICrawlerItem crawlerItem)
+    {
+        this.crawlerItem = crawlerItem ?? throw new ArgumentNullException(nameof(crawlerItem));
+    }
+
+    public void Analyze()
     {
     }
 
-    private static string BuildMessage(SnapshotLocation snapshotLocation)
+    public void Save(ISnapshotWriter snapshotWriter)
     {
-        return string.Format(DefaultMessage, snapshotLocation);
-    }
-
-    public SnapshotNotFoundException(SerializationInfo serializationInfo, StreamingContext streamingContext)
-        : base(serializationInfo, streamingContext)
-    {
+        snapshotWriter?.CloseDirectory();
     }
 }

@@ -19,9 +19,9 @@ using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 
 namespace DustInTheWind.DirectoryCompare.FileSystemAccess;
 
-internal class ErrorCrawlerItem : ICrawlerItem
+internal class DirectoryErrorCrawlerItem : ICrawlerItem
 {
-    public CrawlerAction Action { get; } = CrawlerAction.Error;
+    public CrawlerAction Action { get; } = CrawlerAction.DirectoryError;
 
     public string Name => System.IO.Path.GetFileName(Path);
 
@@ -37,7 +37,7 @@ internal class ErrorCrawlerItem : ICrawlerItem
 
     public DataSize Size { get; }
 
-    public ErrorCrawlerItem(Exception exception, string path)
+    public DirectoryErrorCrawlerItem(Exception exception, string path)
     {
         Exception = exception;
         Path = path;

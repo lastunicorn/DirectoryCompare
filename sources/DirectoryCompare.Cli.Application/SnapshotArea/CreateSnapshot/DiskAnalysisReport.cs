@@ -1,5 +1,5 @@
-// VeloCity
-// Copyright (C) 2022-2023 Dust in the Wind
+// DirectoryCompare
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@ using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot
 
 namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot;
 
-internal sealed class DiskAnalysisStateReport : IDiskAnalysisStateReport, IDisposable
+internal sealed class DiskAnalysisReport : IDiskAnalysisReport, IDisposable
 {
     private readonly ManualResetEventSlim manualResetEventSlim = new(false);
 

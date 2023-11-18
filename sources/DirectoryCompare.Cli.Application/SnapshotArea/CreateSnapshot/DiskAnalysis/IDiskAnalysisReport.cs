@@ -1,5 +1,5 @@
-﻿// VeloCity
-// Copyright (C) 2022-2023 Dust in the Wind
+﻿// DirectoryCompare
+// Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 
 namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
 
-public interface IDiskAnalysisStateReport
+public interface IDiskAnalysisReport
 {
     event EventHandler<ErrorEncounteredEventArgs> ErrorEncountered;
 
