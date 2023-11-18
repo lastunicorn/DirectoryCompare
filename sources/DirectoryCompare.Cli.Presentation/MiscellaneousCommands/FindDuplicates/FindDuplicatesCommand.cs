@@ -39,7 +39,7 @@ internal class FindDuplicatesCommand : IConsoleCommand<FileDuplicatesViewModel>
 
     [NamedParameter("check-exist", ShortName = 'x', IsOptional = true, Description = "If specified, the files that does not actually exist on disk are not displayed.")]
     public bool CheckFilesExistence { get; set; }
-    
+
     public FindDuplicatesCommand(RequestBus requestBus)
     {
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));

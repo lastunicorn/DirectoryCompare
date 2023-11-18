@@ -59,7 +59,7 @@ internal static class Program
 
         CultureInfo.CurrentCulture = cultureInfo;
         CultureInfo.CurrentUICulture = cultureInfo;
-        
+
         ApplicationHeader applicationHeader = new();
         applicationHeader.Display();
     }

@@ -47,7 +47,7 @@ public class PresentPotUseCase : IRequestHandler<PresentPotRequest, PresentPotRe
 
         if (pot == null)
             throw new PotNotFoundException(request.PotName);
-        
+
         return pot;
     }
 }
