@@ -30,9 +30,11 @@ public class DisplaySnapshotCommandView : ViewBase<SnapshotViewModel>
         WriteValue("Directories", snapshotViewModel.TotalDirectoryCount.ToString("N0"));
         WriteValue("Files", snapshotViewModel.TotalFileCount.ToString("N0"));
 
-        string dataSize = snapshotViewModel.DataSize.ToString();
-        string dataSizeAsBytes = snapshotViewModel.DataSize.ToString(DataSizeUnit.Byte);
-        WriteValue("Data Size", $"{dataSize} ({dataSizeAsBytes})");
+        string dataSize = ToNiceString(snapshotViewModel.DataSize);
+        WriteValue("Data Size", dataSize);
+
+        string storageSize = ToNiceString(snapshotViewModel.StorageSize);
+        WriteValue("Snapshot Size", storageSize);
 
         if (snapshotViewModel.RootDirectory != null)
         {
@@ -41,5 +43,13 @@ public class DisplaySnapshotCommandView : ViewBase<SnapshotViewModel>
             DirectoryView directoryView = new(snapshotViewModel.RootDirectory);
             directoryView.Display();
         }
+    }
+
+    private static string ToNiceString(DataSize dataSize)
+    {
+        string dataSizeSmallValue = dataSize.ToString();
+        string dataSizeBytesValue = dataSize.ToString(DataSizeUnit.Byte);
+
+        return $"{dataSizeSmallValue} ({dataSizeBytesValue})";
     }
 }

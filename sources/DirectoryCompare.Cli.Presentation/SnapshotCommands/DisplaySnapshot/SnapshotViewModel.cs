@@ -21,21 +21,23 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands.Displ
 
 public class SnapshotViewModel
 {
-    public string PotName { get; set; }
+    public string PotName { get; }
 
-    public Guid SnapshotId { get; set; }
+    public Guid SnapshotId { get; }
 
-    public string OriginalPath { get; set; }
+    public string OriginalPath { get; }
 
-    public DateTime CreationTime { get; set; }
+    public DateTime CreationTime { get; }
 
-    public DirectoryDto RootDirectory { get; set; }
+    public DirectoryDto RootDirectory { get; }
 
-    public int TotalFileCount { get; set; }
+    public int TotalFileCount { get; }
 
-    public int TotalDirectoryCount { get; set; }
+    public int TotalDirectoryCount { get; }
 
-    public DataSize DataSize { get; set; }
+    public DataSize DataSize { get; }
+
+    public DataSize StorageSize { get; }
 
     public SnapshotViewModel(PresentSnapshotResponse response)
     {
@@ -47,5 +49,6 @@ public class SnapshotViewModel
         TotalFileCount = response.TotalFileCount;
         TotalDirectoryCount = response.TotalDirectoryCount;
         DataSize = response.DataSize;
+        StorageSize = response.StorageSize;
     }
 }

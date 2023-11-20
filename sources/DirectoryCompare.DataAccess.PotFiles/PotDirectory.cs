@@ -154,7 +154,7 @@ public class PotDirectory
         return blackListFile;
     }
 
-    public IEnumerable<SnapshotFile> GetSnapshotFiles()
+    public IEnumerable<SnapshotFile> EnumerateSnapshotFiles()
     {
         string snapshotsDirectoryPath = Path.Combine(FullPath, SnapshotsDirectoryName);
 

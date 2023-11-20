@@ -27,6 +27,8 @@ public class JsonFileBase<TContent>
 
     public TContent Content { get; set; }
 
+    public long Size => new FileInfo(FilePath).Length;
+
     public bool IsValid => Content != null;
 
     public JsonFileBase(string snapshotFilePath)

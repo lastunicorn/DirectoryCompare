@@ -35,4 +35,6 @@ public class PresentSnapshotResponse
     public int TotalDirectoryCount { get; set; }
 
     public DataSize DataSize { get; set; }
+
+    public DataSize StorageSize { get; set; }
 }

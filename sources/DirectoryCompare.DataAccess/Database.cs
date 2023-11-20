@@ -53,6 +53,14 @@ public class Database
         });
     }
 
+    public async Task<PotDirectory> GetPotDirectory(string potName)
+    {
+        IEnumerable<PotDirectory> potDirectories = await GetPotDirectories();
+
+        return potDirectories
+            .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == potName);
+    }
+
     public PotDirectory NewPotDirectory()
     {
         if (state != DatabaseState.Opened)

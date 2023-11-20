@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.PresentSnapshot;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
@@ -35,12 +36,12 @@ public class CompareSnapshotsUseCase : IRequestHandler<CompareSnapshotsRequest, 
         Snapshot snapshot1 = await snapshotRepository.Get(request.Snapshot1);
 
         if (snapshot1 == null)
-            throw new Exception("Pot name was not provided.");
+            throw new SnapshotNotFoundException(request.Snapshot1);
 
         Snapshot snapshot2 = await snapshotRepository.Get(request.Snapshot2);
 
         if (snapshot2 == null)
-            throw new Exception("Pot name was not provided.");
+            throw new SnapshotNotFoundException(request.Snapshot2);
 
         SnapshotComparison comparison = CompareSnapshots(snapshot1, snapshot2);
         string exportDirectoryPath = ExportToDiskIfRequested(comparison, request);

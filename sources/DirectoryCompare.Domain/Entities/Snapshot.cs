@@ -25,8 +25,6 @@ public class Snapshot : HDirectory
     public string OriginalPath { get; set; }
 
     public DateTime CreationTime { get; set; }
-
-    public DataSize DataSize { get; set; }
     
     public Snapshot()
         : base(string.Empty)

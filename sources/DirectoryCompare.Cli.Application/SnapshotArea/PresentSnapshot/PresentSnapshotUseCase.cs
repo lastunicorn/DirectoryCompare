@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 using MediatR;
@@ -36,6 +37,7 @@ public class PresentSnapshotUseCase : IRequestHandler<PresentSnapshotRequest, Pr
         if (snapshot == null)
             throw new SnapshotNotFoundException(request.Location);
 
+        DataSize storageSize = await snapshotRepository.GetStorageSize(request.Location);
         HItemCounter itemCounter = snapshot.CountChildItems();
 
         return new PresentSnapshotResponse
@@ -47,7 +49,8 @@ public class PresentSnapshotUseCase : IRequestHandler<PresentSnapshotRequest, Pr
             RootDirectory = request.IncludeContent ? new DirectoryDto(snapshot) : null,
             TotalFileCount = itemCounter.FileCount,
             TotalDirectoryCount = itemCounter.DirectoryCount,
-            DataSize = itemCounter.DataSize
+            DataSize = itemCounter.DataSize,
+            StorageSize = storageSize
         };
     }
 }

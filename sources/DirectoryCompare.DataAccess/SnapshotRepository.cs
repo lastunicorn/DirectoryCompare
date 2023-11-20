@@ -19,6 +19,7 @@ using DustInTheWind.DirectoryCompare.DataAccess.PotFiles.SnapshotFileModel;
 using DustInTheWind.DirectoryCompare.DataAccess.Transformations;
 using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
+using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess.ImportExport;
 
@@ -33,30 +34,28 @@ public class SnapshotRepository : ISnapshotRepository
         this.database = database ?? throw new ArgumentNullException(nameof(database));
     }
 
-    public async Task<ISnapshotWriter> CreateWriter(string potName)
+    public async Task<Snapshot> Get(SnapshotLocation location)
     {
-        IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
-        PotDirectory potDirectory = potDirectories
-            .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == potName);
+        if (string.IsNullOrEmpty(location.PotName))
+            return null;
 
-        if (potDirectory == null)
-            throw new Exception($"There is no pot with name '{potName}'.");
+        SnapshotFile snapshotFile = await GetSnapshotFile(location);
 
-        SnapshotFile snapshotFile = potDirectory.CreateSnapshotFile(DateTime.UtcNow);
-        JSnapshotWriter jSnapshotWriter = snapshotFile.OpenSnapshotWriter();
-        return new JsonSnapshotWriter(jSnapshotWriter);
+        if (snapshotFile == null)
+            return null;
+
+        snapshotFile.Open();
+        return snapshotFile.Content.ToSnapshot();
     }
 
     public async IAsyncEnumerable<Snapshot> GetByPot(string potName)
     {
-        IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
-        PotDirectory potDirectory = potDirectories
-            .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == potName);
+        PotDirectory potDirectory = await database.GetPotDirectory(potName);
 
         if (potDirectory == null)
-            throw new Exception($"There is no pot with name '{potName}'.");
+            throw new PotNotFoundException(potName);
 
-        IEnumerable<SnapshotFile> allSnapshotFiles = potDirectory.GetSnapshotFiles();
+        IEnumerable<SnapshotFile> allSnapshotFiles = potDirectory.EnumerateSnapshotFiles();
 
         foreach (SnapshotFile snapshotFile in allSnapshotFiles)
         {
@@ -67,74 +66,21 @@ public class SnapshotRepository : ISnapshotRepository
         }
     }
 
-    public async Task<Snapshot> GetByIndex(string potName, int index = 0)
+    public async Task<ISnapshotWriter> CreateWriter(string potName)
     {
-        IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
-        PotDirectory potDirectory = potDirectories
-            .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == potName);
+        PotDirectory potDirectory = await database.GetPotDirectory(potName);
 
         if (potDirectory == null)
             throw new Exception($"There is no pot with name '{potName}'.");
 
-        SnapshotFile snapshotFile = potDirectory.GetSnapshotFiles()
-            .Skip(index)
-            .FirstOrDefault();
-
-        if (snapshotFile == null)
-            return null;
-
-        snapshotFile.Open();
-        return snapshotFile.Content.ToSnapshot();
-    }
-
-    public async Task<Snapshot> GetLast(string potName)
-    {
-        return await GetByIndex(potName);
-    }
-
-    public async IAsyncEnumerable<Snapshot> GetByDate(string potName, DateTime dateTime)
-    {
-        IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
-        PotDirectory potDirectory = potDirectories
-            .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == potName);
-
-        if (potDirectory == null)
-            throw new Exception($"There is no pot with name '{potName}'.");
-
-        IEnumerable<SnapshotFile> snapshotFiles = potDirectory.GetSnapshotFiles()
-            .Where(x => x.CreationTime.HasValue && x.CreationTime.Value.Date == dateTime.Date);
-
-        foreach (SnapshotFile snapshotFile in snapshotFiles)
-        {
-            snapshotFile.Open();
-            yield return snapshotFile.Content.ToSnapshot();
-        }
-    }
-
-    public async Task<Snapshot> GetByExactDateTime(string potName, DateTime dateTime)
-    {
-        IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
-        PotDirectory potDirectory = potDirectories
-            .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == potName);
-
-        if (potDirectory == null)
-            throw new Exception($"There is no pot with name '{potName}'.");
-
-        SnapshotFile snapshotFile = potDirectory.GetSnapshotFiles()
-            .FirstOrDefault(x => x.CreationTime.HasValue && x.CreationTime.Value == dateTime);
-
-        if (snapshotFile == null)
-            return null;
-
-        snapshotFile.Open();
-        return snapshotFile.Content.ToSnapshot();
+        SnapshotFile snapshotFile = potDirectory.CreateSnapshotFile(DateTime.UtcNow);
+        JSnapshotWriter jSnapshotWriter = snapshotFile.OpenSnapshotWriter();
+        return new JsonSnapshotWriter(jSnapshotWriter);
     }
 
     public async Task Add(string potName, Snapshot snapshot)
     {
-        IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
-        PotDirectory potDirectory = potDirectories
-            .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == potName);
+        PotDirectory potDirectory = await database.GetPotDirectory(potName);
 
         if (potDirectory == null)
             throw new Exception($"There is no pot with name '{potName}'.");
@@ -147,14 +93,12 @@ public class SnapshotRepository : ISnapshotRepository
 
     public async Task DeleteByIndex(string potName, int index = 0)
     {
-        IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
-        PotDirectory potDirectory = potDirectories
-            .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == potName);
+        PotDirectory potDirectory = await database.GetPotDirectory(potName);
 
         if (potDirectory == null)
             throw new Exception($"There is no pot with name '{potName}'.");
 
-        SnapshotFile snapshotFile = potDirectory.GetSnapshotFiles()
+        SnapshotFile snapshotFile = potDirectory.EnumerateSnapshotFiles()
             .Skip(index)
             .FirstOrDefault();
 
@@ -168,14 +112,12 @@ public class SnapshotRepository : ISnapshotRepository
 
     public async Task<bool> DeleteSingleByDate(string potName, DateTime dateTime)
     {
-        IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
-        PotDirectory potDirectory = potDirectories
-            .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == potName);
+        PotDirectory potDirectory = await database.GetPotDirectory(potName);
 
         if (potDirectory == null)
             throw new Exception($"There is no pot with name '{potName}'.");
 
-        SnapshotFile[] snapshotFiles = potDirectory.GetSnapshotFiles()
+        SnapshotFile[] snapshotFiles = potDirectory.EnumerateSnapshotFiles()
             .Where(x => x.CreationTime.HasValue && x.CreationTime.Value.Date == dateTime.Date)
             .ToArray();
 
@@ -191,14 +133,12 @@ public class SnapshotRepository : ISnapshotRepository
 
     public async Task<bool> DeleteByExactDateTime(string potName, DateTime dateTime)
     {
-        IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
-        PotDirectory potDirectory = potDirectories
-            .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == potName);
+        PotDirectory potDirectory = await database.GetPotDirectory(potName);
 
         if (potDirectory == null)
             throw new Exception($"There is no pot with name '{potName}'.");
 
-        SnapshotFile snapshotFile = potDirectory.GetSnapshotFiles()
+        SnapshotFile snapshotFile = potDirectory.EnumerateSnapshotFiles()
             .FirstOrDefault(x => x.CreationTime.HasValue && x.CreationTime.Value == dateTime);
 
         if (snapshotFile == null)
@@ -208,32 +148,78 @@ public class SnapshotRepository : ISnapshotRepository
         return true;
     }
 
-    public async Task<Snapshot> Get(SnapshotLocation location)
+    public async Task<DataSize> GetStorageSize(SnapshotLocation location)
     {
         if (string.IsNullOrEmpty(location.PotName))
+            return DataSize.Zero;
+
+        SnapshotFile snapshotFile = await GetSnapshotFile(location);
+
+        return snapshotFile?.Size ?? DataSize.Zero;
+    }
+
+    private async Task<SnapshotFile> GetSnapshotFile(SnapshotLocation location)
+    {
+        if (location.SnapshotIndex.HasValue)
+        {
+            return await GetByIndex(location.PotName, location.SnapshotIndex.Value);
+        }
+        else if (location.SnapshotDate.HasValue)
+        {
+            DateTime searchedDate = location.SnapshotDate.Value;
+
+            SnapshotFile snapshotFile = await GetByExactDateTime(location.PotName, searchedDate);
+
+            if (snapshotFile == null && searchedDate.TimeOfDay == TimeSpan.Zero)
+                snapshotFile = await GetByDate(location.PotName, searchedDate);
+
+            return snapshotFile;
+        }
+        else
+        {
+            return await GetByIndex(location.PotName);
+        }
+    }
+
+    private async Task<SnapshotFile> GetByIndex(string potName, int index = 0)
+    {
+        PotDirectory potDirectory = await database.GetPotDirectory(potName);
+
+        return potDirectory?.EnumerateSnapshotFiles()
+            .Skip(index)
+            .FirstOrDefault();
+    }
+
+    private async Task<SnapshotFile> GetByExactDateTime(string potName, DateTime dateTime)
+    {
+        PotDirectory potDirectory = await database.GetPotDirectory(potName);
+
+        return potDirectory?.EnumerateSnapshotFiles()
+            .FirstOrDefault(x => x.CreationTime.HasValue && x.CreationTime.Value == dateTime);
+    }
+
+    private async Task<SnapshotFile> GetByDate(string potName, DateTime dateTime)
+    {
+        PotDirectory potDirectory = await database.GetPotDirectory(potName);
+
+        if (potDirectory == null)
             return null;
 
-        if (location.SnapshotIndex.HasValue)
-            return await GetByIndex(location.PotName, location.SnapshotIndex.Value);
+        IEnumerable<SnapshotFile> snapshotFiles = potDirectory.EnumerateSnapshotFiles()
+            .Where(x => x.CreationTime.HasValue && x.CreationTime.Value.Date == dateTime.Date);
 
-        if (!location.SnapshotDate.HasValue)
-            return await GetLast(location.PotName);
+        SnapshotFile theSnapshotFile = null;
+        int count = 0;
 
-        DateTime searchedDate = location.SnapshotDate.Value;
-
-        Snapshot snapshot = await GetByExactDateTime(location.PotName, searchedDate);
-
-        if (snapshot == null && searchedDate.TimeOfDay == TimeSpan.Zero)
+        foreach (SnapshotFile snapshotFile in snapshotFiles)
         {
-            IAsyncEnumerable<Snapshot> byDate = GetByDate(location.PotName, searchedDate);
-            List<Snapshot> snapshots = await byDate.ToListAsync();
+            if (count > 0)
+                throw new Exception($"There are multiple snapshots that match the specified date. Pot = {potName}; Date = {dateTime}");
 
-            if (snapshots.Count == 1)
-                snapshot = snapshots[0];
-            else if (snapshots.Count > 1)
-                throw new Exception($"There are multiple snapshots that match the specified date. Pot = {location.PotName}; Date = {searchedDate}");
+            theSnapshotFile = snapshotFile;
+            count++;
         }
 
-        return snapshot;
+        return theSnapshotFile;
     }
 }
