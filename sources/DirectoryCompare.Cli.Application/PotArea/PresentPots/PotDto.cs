@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Application.PotArea.PresentPots;
@@ -25,6 +26,8 @@ public class PotDto
     public Guid Guid { get; }
 
     public string Path { get; }
+    
+    public DataSize Size { get; set; }
 
     public PotDto(Pot pot)
     {

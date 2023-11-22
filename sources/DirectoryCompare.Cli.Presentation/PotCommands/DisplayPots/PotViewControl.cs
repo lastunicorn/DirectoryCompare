@@ -14,31 +14,36 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.ConsoleTools;
 using DustInTheWind.DirectoryCompare.DataStructures;
-using DustInTheWind.DirectoryCompare.Domain.PotModel;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Application.PotArea.PresentPot;
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands.DisplayPots;
 
-public class PotDto
+internal class PotViewControl
 {
-    public string Name { get; }
+    public Guid Guid { get; set; }
 
-    public Guid Guid { get; }
+    public string Name { get; set; }
 
-    public string Path { get; }
+    public string Path { get; set; }
 
-    public string Description { get; }
-    
     public DataSize Size { get; set; }
 
-    public List<SnapshotDto> Snapshots { get; }
+    public bool DisplaySize { get; set; }
 
-    public PotDto(Pot pot)
+    public void Display()
     {
-        Name = pot.Name;
-        Guid = pot.Guid;
-        Path = pot.Path;
-        Description = pot.Description;
-        Snapshots = pot.Snapshots.ToDto();
+        string guid = Guid.ToString()[..8];
+        CustomConsole.Write(guid);
+        CustomConsole.Write(" ");
+
+        CustomConsole.WriteEmphasized(Name);
+        CustomConsole.Write(" ");
+
+        if (DisplaySize) 
+            CustomConsole.Write(ConsoleColor.DarkGray, $"({Size}) ");
+
+        CustomConsole.Write(ConsoleColor.DarkGray, Path);
+        CustomConsole.WriteLine();
     }
 }

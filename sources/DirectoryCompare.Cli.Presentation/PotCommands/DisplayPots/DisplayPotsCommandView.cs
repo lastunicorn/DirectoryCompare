@@ -16,38 +16,44 @@
 
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.DirectoryCompare.Cli.Application.PotArea.PresentPots;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands.DisplayPots;
 
-internal class DisplayPotsCommandView : ViewBase<DisplayPotsCommand>
+internal class DisplayPotsCommandView : ViewBase<PotsViewModel>
 {
-    public override void Display(DisplayPotsCommand command)
+    public override void Display(PotsViewModel potsViewModel)
     {
-        bool hasPots = command.Pots is { Count: > 0 };
+        bool hasPots = potsViewModel.Pots is { Count: > 0 };
 
         if (hasPots)
-            DisplayPots(command.Pots);
+            DisplayPots(potsViewModel);
         else
             WriteInfo("There are no Pots.");
     }
 
-    private static void DisplayPots(List<PotDto> pots)
+    private static void DisplayPots(PotsViewModel potsViewModel)
     {
-        foreach (PotDto pot in pots)
-            DisplayPot(pot);
+        foreach (PotViewModel pot in potsViewModel.Pots)
+            DisplayPot(pot, potsViewModel.DisplaySizes);
+
+        if (potsViewModel.DisplaySizes)
+        {
+            CustomConsole.WriteLine();
+            CustomConsole.WriteLine($"Total Size: {potsViewModel.TotalSize}");
+        }
     }
 
-    private static void DisplayPot(PotDto pot)
+    private static void DisplayPot(PotViewModel pot, bool displaySizes)
     {
-        string guid = pot.Guid.ToString()[..8];
-        CustomConsole.Write(guid);
-        CustomConsole.Write(" ");
+        PotViewControl potViewControl = new()
+        {
+            Guid = pot.Guid,
+            Name = pot.Name,
+            Path = pot.Path,
+            Size = pot.Size,
+            DisplaySize = displaySizes
+        };
 
-        CustomConsole.WriteEmphasized(pot.Name);
-        CustomConsole.Write(" ");
-
-        CustomConsole.Write(ConsoleColor.DarkGray, pot.Path);
-        CustomConsole.WriteLine();
+        potViewControl.Display();
     }
 }

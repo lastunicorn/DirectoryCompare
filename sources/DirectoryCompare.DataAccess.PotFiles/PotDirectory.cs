@@ -146,6 +146,20 @@ public class PotDirectory
         Directory.Delete(FullPath, true);
     }
 
+    public long CalculateSize()
+    {
+        DirectoryInfo directoryInfo = new(FullPath);
+        return CalculateSize(directoryInfo);
+    }
+
+    private static long CalculateSize(DirectoryInfo directoryInfo)
+    {
+        long fileSizes = directoryInfo.GetFiles().Sum(x => x.Length);
+        long subdirSizes = directoryInfo.GetDirectories().Sum(CalculateSize);
+
+        return fileSizes + subdirSizes;
+    }
+
     public BlackListFile OpenBlackListFile(string blackListName)
     {
         string blackListPath = Path.Combine(FullPath, blackListName);

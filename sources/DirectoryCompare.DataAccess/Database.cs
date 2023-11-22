@@ -61,6 +61,14 @@ public class Database
             .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == potName);
     }
 
+    public async Task<PotDirectory> GetPotDirectory(Guid id)
+    {
+        IEnumerable<PotDirectory> potDirectories = await GetPotDirectories();
+
+        return potDirectories
+            .FirstOrDefault(x => x.InfoFile.IsValid && x.PotGuid == id);
+    }
+
     public PotDirectory NewPotDirectory()
     {
         if (state != DatabaseState.Opened)

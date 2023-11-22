@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.Cli.Application.PotArea.PresentPot;
+using DustInTheWind.DirectoryCompare.DataStructures;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands.DisplayPot;
 
@@ -29,6 +30,8 @@ public class DisplayPotViewModel
     public string Path { get; }
 
     public string Description { get; }
+    
+    public DataSize Size { get; }
 
     public List<SnapshotViewModel> Snapshots { get; }
 
@@ -42,6 +45,7 @@ public class DisplayPotViewModel
         Guid = pot.Guid;
         Path = pot.Path;
         Description = pot.Description;
+        Size = pot.Size;
         Snapshots = pot.Snapshots?
             .Select(x => new SnapshotViewModel(x))
             .ToList();

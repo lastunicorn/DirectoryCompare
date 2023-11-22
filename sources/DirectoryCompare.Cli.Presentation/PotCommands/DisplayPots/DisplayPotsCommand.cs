@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System.Security.Cryptography;
 using DustInTheWind.ConsoleTools.Commando;
 using DustInTheWind.DirectoryCompare.Cli.Application;
 using DustInTheWind.DirectoryCompare.Cli.Application.PotArea.PresentPots;
@@ -25,21 +26,33 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands.DisplayPot
 
 [NamedCommand("pots", Description = "Displays a list with all the existing pots.")]
 [CommandOrder(4)]
-public class DisplayPotsCommand : IConsoleCommand
+public class DisplayPotsCommand : IConsoleCommand<PotsViewModel>
 {
     private readonly RequestBus requestBus;
 
-    public List<PotDto> Pots { get; private set; }
-
+    [NamedParameter("size", ShortName = 's', Description = "When set, displays also the sizes of the pots.", IsOptional = true)]
+    public bool DisplaySizes { get; set; }
+    
     public DisplayPotsCommand(RequestBus requestBus)
     {
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
     }
 
-    public async Task Execute()
+    public async Task<PotsViewModel> Execute()
     {
-        PresentPotsRequest request = new();
+        PresentPotsRequest request = new()
+        {
+            IncludeSizes = DisplaySizes
+        };
         PresentPotsResponse response = await requestBus.PlaceRequest<PresentPotsRequest, PresentPotsResponse>(request);
-        Pots = response.Pots;
+
+        return new PotsViewModel
+        {
+            DisplaySizes = response.IncludeSizes,
+            TotalSize = response.TotalSize,
+            Pots = response.Pots
+                .Select(x=> new PotViewModel(x))
+                .ToList()
+        };
     }
 }

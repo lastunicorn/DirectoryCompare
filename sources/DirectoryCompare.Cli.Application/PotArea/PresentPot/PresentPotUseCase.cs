@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 using MediatR;
@@ -33,9 +34,14 @@ public class PresentPotUseCase : IRequestHandler<PresentPotRequest, PresentPotRe
     {
         Pot pot = await RetrievePot(request);
 
+        DataSize potSize = await potRepository.CalculateSize(pot.Guid);
+
         PresentPotResponse response = new()
         {
             Pot = new PotDto(pot)
+            {
+                Size = potSize
+            }
         };
 
         return response;

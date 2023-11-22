@@ -32,11 +32,9 @@ internal class DisplayPotCommandView : ViewBase<DisplayPotViewModel>
     private void DisplayPotInfo(DisplayPotViewModel viewModel)
     {
         WriteValue("Name", viewModel.Name);
-
-        string guid = viewModel.Guid.ToString();
         WriteValue("GUID", viewModel.Guid);
-
         WriteValue("Path", viewModel.Path);
+        WriteValue("Size", viewModel.Size.ToNiceString());
 
         if (viewModel.Description != null)
             WriteValue("Description", viewModel.Description);

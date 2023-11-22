@@ -14,9 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.DataStructures;
+
 namespace DustInTheWind.DirectoryCompare.Cli.Application.PotArea.PresentPots;
 
 public class PresentPotsResponse
 {
     public List<PotDto> Pots { get; init; }
+
+    public bool IncludeSizes { get; set; }
+
+    public DataSize TotalSize { get; set; }
 }

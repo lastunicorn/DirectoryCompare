@@ -17,6 +17,7 @@
 using DustInTheWind.DirectoryCompare.DataAccess.PotFiles;
 using DustInTheWind.DirectoryCompare.DataAccess.PotFiles.PotInfoFileModel;
 using DustInTheWind.DirectoryCompare.DataAccess.Transformations;
+using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
@@ -160,6 +161,12 @@ public class PotRepository : IPotRepository
 
         potDirectory.Delete();
         return true;
+    }
+
+    public async Task<DataSize> CalculateSize(Guid id)
+    {
+        PotDirectory potDirectory = await database.GetPotDirectory(id);
+        return potDirectory.CalculateSize();
     }
 
     private static void LoadSnapshots(PotDirectory potDirectory, Pot pot)

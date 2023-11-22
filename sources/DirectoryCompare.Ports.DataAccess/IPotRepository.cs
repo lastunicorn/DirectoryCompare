@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 
 namespace DustInTheWind.DirectoryCompare.Ports.DataAccess;
@@ -37,4 +38,6 @@ public interface IPotRepository
     Task<bool> DeleteByName(string nameOrId);
 
     Task<bool> DeleteById(Guid guid);
+
+    Task<DataSize> CalculateSize(Guid id);
 }

@@ -1,4 +1,4 @@
-﻿// DirectoryCompare
+// DirectoryCompare
 // Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -14,11 +14,26 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using MediatR;
+using DustInTheWind.DirectoryCompare.Cli.Application.PotArea.PresentPots;
+using DustInTheWind.DirectoryCompare.DataStructures;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Application.PotArea.PresentPots;
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands.DisplayPots;
 
-public class PresentPotsRequest : IRequest<PresentPotsResponse>
+public class PotViewModel
 {
-    public bool IncludeSizes { get; set; }
+    public string Name { get; }
+
+    public Guid Guid { get; }
+
+    public string Path { get; }
+    
+    public DataSize Size { get; }
+
+    public PotViewModel(PotDto potDto)
+    {
+        Name = potDto.Name;
+        Guid = potDto.Guid;
+        Path = potDto.Path;
+        Size = potDto.Size;
+    }
 }
