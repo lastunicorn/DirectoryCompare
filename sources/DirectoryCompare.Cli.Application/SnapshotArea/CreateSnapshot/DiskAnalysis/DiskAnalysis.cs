@@ -67,7 +67,7 @@ internal sealed class DiskAnalysis : IDisposable
                 progress = new Progress(totalSize);
 
                 snapshotWriter = await snapshotRepository.CreateWriter(Pot.Name);
-                snapshotWriter?.Open(Pot.Name, analysisId);
+                snapshotWriter?.Open(Pot.Path, analysisId);
 
                 AnnounceProgress();
                 await CalculateHashes();

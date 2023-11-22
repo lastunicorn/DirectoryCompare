@@ -117,12 +117,32 @@ public struct DiskPath
     public static bool operator ==(DiskPath diskPath, string path)
     {
         string value = diskPath.value.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        path = path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        
         return value == path;
     }
 
     public static bool operator !=(DiskPath diskPath, string path)
     {
         string value = diskPath.value.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        path = path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        
+        return value != path;
+    }
+
+    public static bool operator ==(string path, DiskPath diskPath)
+    {
+        string value = diskPath.value.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        path = path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        
+        return value == path;
+    }
+
+    public static bool operator !=(string path, DiskPath diskPath)
+    {
+        string value = diskPath.value.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        path = path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        
         return value != path;
     }
 }
