@@ -123,7 +123,7 @@ public class PotDirectory
     public void Create()
     {
         if (IsValid)
-            throw new Exception("The pot directory already exists.");
+            throw new PotDirectoryExistsException();
 
         for (int i = 0; i < 10000; i++)
         {
@@ -138,7 +138,7 @@ public class PotDirectory
             return;
         }
 
-        throw new Exception("Could not find a valid name for the pot's directory. All the tried name already exist.");
+        throw new NameGenerationException();
     }
 
     public void Delete()
@@ -188,7 +188,7 @@ public class PotDirectory
         return new SnapshotFile(snapshotFilePath);
     }
 
-    public JPotInfoFile GetInfoFile()
+    private JPotInfoFile GetInfoFile()
     {
         if (FullPath == null)
             return null;
