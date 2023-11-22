@@ -20,7 +20,7 @@ namespace DustInTheWind.DirectoryCompare.DataAccess.PotFiles;
 
 public class SnapshotFilePath
 {
-    private static readonly Regex FileNameRegex = new(@"^([1-9]\d*)\s(0[1-9]|1[0-2])\s(0[1-9]|[12]\d|3[01])\s([0-5]\d)([0-5]\d)([0-5]\d).json$", RegexOptions.Singleline);
+    private static readonly Regex FileNameRegex = new(@"^([1-9]\d*)\s(0[1-9]|1[0-2])\s(0[1-9]|[12]\d|3[01])\s([0-5]\d)([0-5]\d)([0-5]\d).(json|zip)$", RegexOptions.Singleline);
 
     private readonly string filePath;
 
@@ -29,13 +29,13 @@ public class SnapshotFilePath
     public SnapshotFilePath(DateTime creationTime)
     {
         CreationTime = creationTime;
-        filePath = $"{CreationTime:yyyy MM dd HHmmss}.json";
+        filePath = $"{CreationTime:yyyy MM dd HHmmss}.zip";
     }
 
     public SnapshotFilePath(DateTime creationTime, string rootPath)
     {
         CreationTime = creationTime;
-        string fileName = $"{CreationTime:yyyy MM dd HHmmss}.json";
+        string fileName = $"{CreationTime:yyyy MM dd HHmmss}.zip";
         filePath = Path.Combine(rootPath, fileName);
     }
 

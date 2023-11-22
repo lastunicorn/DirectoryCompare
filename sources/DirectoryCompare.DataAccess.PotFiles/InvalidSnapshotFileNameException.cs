@@ -21,7 +21,7 @@ namespace DustInTheWind.DirectoryCompare.DataAccess.PotFiles;
 [Serializable]
 public class InvalidSnapshotFileNameException : Exception
 {
-    private const string DefaultMessage = "Invalid file name. The file name should be composed by the timestamp in the format: 'yyyy MM dd HHmmss' and the '.json' extension.";
+    private const string DefaultMessage = "Invalid file name. The file name should be in the format: 'yyyy MM dd HHmmss.json'.";
 
     public InvalidSnapshotFileNameException()
         : base(DefaultMessage)
