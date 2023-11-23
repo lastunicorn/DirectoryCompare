@@ -16,7 +16,7 @@
 
 namespace DustInTheWind.DirectoryCompare.Ports.UserAccess;
 
-public interface IUserInterface
+public interface ICreateSnapshotUserInterface
 {
-    Task<bool> ConfirmToDelete(PotDeletionRequest request);
+    Task AnnounceSnapshotCreating(StartNewSnapshotInfo info);
 }

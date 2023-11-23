@@ -40,7 +40,7 @@ public class PresentPotsUseCase : IRequestHandler<PresentPotsRequest, PresentPot
 
         foreach (Pot pot in pots)
         {
-            DataSize potSize = await potRepository.CalculateSize(pot.Guid);
+            DataSize potSize = await potRepository.GetPotSize(pot.Guid);
             totalSize += potSize;
             
             PotDto potDto = new(pot)

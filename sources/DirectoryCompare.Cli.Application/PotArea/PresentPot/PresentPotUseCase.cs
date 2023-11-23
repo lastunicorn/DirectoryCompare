@@ -34,7 +34,7 @@ public class PresentPotUseCase : IRequestHandler<PresentPotRequest, PresentPotRe
     {
         Pot pot = await RetrievePot(request);
 
-        DataSize potSize = await potRepository.CalculateSize(pot.Guid);
+        DataSize potSize = await potRepository.GetPotSize(pot.Guid);
 
         PresentPotResponse response = new()
         {

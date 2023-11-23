@@ -20,6 +20,8 @@ using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 using DustInTheWind.DirectoryCompare.Ports.LogAccess;
+using DustInTheWind.DirectoryCompare.Ports.SystemAccess;
+using DustInTheWind.DirectoryCompare.Ports.UserAccess;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot;
@@ -31,23 +33,28 @@ public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest, IDis
     private readonly IBlackListRepository blackListRepository;
     private readonly ISnapshotRepository snapshotRepository;
     private readonly IFileSystem fileSystem;
+    private readonly ICreateSnapshotUserInterface createSnapshotUserInterface;
+    private readonly ISystemClock systemClock;
 
     public CreateSnapshotUseCase(ILog log, IPotRepository potRepository,
         IBlackListRepository blackListRepository, ISnapshotRepository snapshotRepository,
-        IFileSystem fileSystem)
+        IFileSystem fileSystem, ICreateSnapshotUserInterface createSnapshotUserInterface, ISystemClock systemClock)
     {
         this.log = log ?? throw new ArgumentNullException(nameof(log));
         this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
         this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
         this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
         this.fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
+        this.createSnapshotUserInterface = createSnapshotUserInterface ?? throw new ArgumentNullException(nameof(createSnapshotUserInterface));
+        this.systemClock = systemClock ?? throw new ArgumentNullException(nameof(systemClock));
     }
 
     public async Task<IDiskAnalysisReport> Handle(CreateSnapshotRequest request, CancellationToken cancellationToken)
     {
         Pot pot = await RetrievePot(request.PotName);
-        CheckPotPathExists(pot);
         DiskPathCollection rootedBlackList = await RetrieveBlackListPaths(pot);
+        await AnnounceSnapshotCreating(pot, rootedBlackList);
+        CheckPotPathExists(pot);
         IDiskAnalysisReport report = StartDiskAnalysis(pot, rootedBlackList);
 
         return report;
@@ -65,16 +72,6 @@ public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest, IDis
         return pot;
     }
 
-    private void CheckPotPathExists(Pot pot)
-    {
-        log.WriteInfo($"Checking that pot path exists: '{pot.Path}'.");
-
-        bool exists = fileSystem.ExistsDirectory(pot.Path);
-
-        if (!exists)
-            throw new PotPathDoesNotExistException(pot.Name, pot.Path);
-    }
-
     private async Task<DiskPathCollection> RetrieveBlackListPaths(Pot pot)
     {
         log.WriteInfo("Building the black list paths.");
@@ -84,6 +81,31 @@ public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest, IDis
         return blackList == null
             ? new DiskPathCollection()
             : blackList.PrependPath(pot.Path);
+    }
+
+    private async Task AnnounceSnapshotCreating(Pot pot, DiskPathCollection rootedBlackList)
+    {
+        StartNewSnapshotInfo info = new()
+        {
+            PotName = pot.Name,
+            Path = pot.Path,
+            BlackList = rootedBlackList
+                .Select(x => x.ToString())
+                .ToList(),
+            StartTime = systemClock.GetCurrentUtcTime()
+        };
+        
+        await createSnapshotUserInterface.AnnounceSnapshotCreating(info);
+    }
+
+    private void CheckPotPathExists(Pot pot)
+    {
+        log.WriteInfo($"Checking that pot path exists: '{pot.Path}'.");
+
+        bool exists = fileSystem.ExistsDirectory(pot.Path);
+
+        if (!exists)
+            throw new PotPathDoesNotExistException(pot.Name, pot.Path);
     }
 
     private IDiskAnalysisReport StartDiskAnalysis(Pot pot, DiskPathCollection blackList)

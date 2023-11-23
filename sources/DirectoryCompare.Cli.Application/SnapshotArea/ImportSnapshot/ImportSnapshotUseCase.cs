@@ -77,7 +77,7 @@ public class ImportSnapshotUseCase : IRequestHandler<ImportSnapshotRequest>
 
         Snapshot snapshot = potImportExport.ReadSnapshot(request.FilePath);
 
-        Pot pot = await potRepository.GetByName(request.PotName);
+        Pot pot = await potRepository.GetByNameOrId(request.PotName);
 
         if (pot == null)
         {

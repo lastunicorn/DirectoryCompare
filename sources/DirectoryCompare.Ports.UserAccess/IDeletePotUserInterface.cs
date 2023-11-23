@@ -1,4 +1,4 @@
-﻿// DirectoryCompare
+// DirectoryCompare
 // Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -14,22 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.DataStructures;
-using DustInTheWind.DirectoryCompare.Domain.PotModel;
+namespace DustInTheWind.DirectoryCompare.Ports.UserAccess;
 
-namespace DustInTheWind.DirectoryCompare.Ports.DataAccess;
-
-public interface IPotRepository
+public interface IDeletePotUserInterface
 {
-    Task<IEnumerable<Pot>> GetAll();
-
-    Task<Pot> GetByNameOrId(string nameOrId, bool includeSnapshots = false);
-
-    Task Add(Pot pot);
-
-    Task<bool> ExistsByName(string name);
-
-    Task<bool> DeleteById(Guid guid);
-
-    Task<DataSize> GetPotSize(Guid id);
+    Task<bool> ConfirmToDelete(PotDeletionRequest request);
 }

@@ -20,7 +20,7 @@ using DustInTheWind.DirectoryCompare.Ports.UserAccess;
 
 namespace DustInTheWind.DirectoryCompare.UserAccess;
 
-public class UserInterface : IUserInterface
+public class DeletePotUserInterface : IDeletePotUserInterface
 {
     public Task<bool> ConfirmToDelete(PotDeletionRequest request)
     {

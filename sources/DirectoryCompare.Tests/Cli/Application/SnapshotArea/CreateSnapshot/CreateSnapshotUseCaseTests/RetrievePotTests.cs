@@ -20,6 +20,8 @@ using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 using DustInTheWind.DirectoryCompare.Ports.LogAccess;
+using DustInTheWind.DirectoryCompare.Ports.SystemAccess;
+using DustInTheWind.DirectoryCompare.Ports.UserAccess;
 using FluentAssertions;
 using Moq;
 using Xunit;
@@ -39,7 +41,8 @@ public class RetrievePotTests
         fileSystem = new Mock<IFileSystem>();
 
         useCase = new CreateSnapshotUseCase(Mock.Of<ILog>(), potRepository.Object, Mock.Of<IBlackListRepository>(),
-            Mock.Of<ISnapshotRepository>(), fileSystem.Object);
+            Mock.Of<ISnapshotRepository>(), fileSystem.Object, Mock.Of<ICreateSnapshotUserInterface>(),
+            Mock.Of<ISystemClock>());
     }
 
     [Fact]

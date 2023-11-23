@@ -28,6 +28,7 @@ using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess.ImportExport;
 using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 using DustInTheWind.DirectoryCompare.Ports.LogAccess;
+using DustInTheWind.DirectoryCompare.Ports.SystemAccess;
 using DustInTheWind.DirectoryCompare.Ports.UserAccess;
 using DustInTheWind.DirectoryCompare.UserAccess;
 using FluentValidation;
@@ -40,28 +41,23 @@ internal static class DependencyContainer
 {
     public static void Setup(ContainerBuilder containerBuilder)
     {
-        RegisterLogAccessAdapter(containerBuilder);
-        RegisterConfigAccessAdapter(containerBuilder);
-        RegisterDataAccessAdapter(containerBuilder);
-        RegisterFileSystemAccessAdapter(containerBuilder);
-        RegisterUserAccessAdapter(containerBuilder);
-
-        RegisterApplicationComponent(containerBuilder);
+        RegisterAdapters(containerBuilder);
+        RegisterApplication(containerBuilder);
     }
 
-    private static void RegisterLogAccessAdapter(ContainerBuilder containerBuilder)
+    private static void RegisterAdapters(ContainerBuilder containerBuilder)
     {
+        // Log Access
+        
         containerBuilder.RegisterType<Log>().As<ILog>().SingleInstance();
         containerBuilder.RegisterType<ConsoleRemoveDuplicatesLog>().As<IRemoveDuplicatesLog>().SingleInstance();
-    }
-
-    private static void RegisterConfigAccessAdapter(ContainerBuilder containerBuilder)
-    {
+        
+        // Config Access
+        
         containerBuilder.RegisterType<Config>().As<IConfig>().SingleInstance();
-    }
-
-    private static void RegisterDataAccessAdapter(ContainerBuilder containerBuilder)
-    {
+        
+        // Data Access
+        
         containerBuilder
             .Register(x =>
             {
@@ -79,19 +75,22 @@ internal static class DependencyContainer
         containerBuilder.RegisterType<BlackListRepository>().As<IBlackListRepository>();
         containerBuilder.RegisterType<SnapshotRepository>().As<ISnapshotRepository>();
         containerBuilder.RegisterType<PotImportExport>().As<IPotImportExport>();
-    }
-
-    private static void RegisterFileSystemAccessAdapter(ContainerBuilder containerBuilder)
-    {
+        
+        // File System Access
+        
         containerBuilder.RegisterType<FileSystem>().As<IFileSystem>();
+        
+        // User Access
+        
+        containerBuilder.RegisterType<DeletePotUserInterface>().As<IDeletePotUserInterface>();
+        containerBuilder.RegisterType<CreateSnapshotUserInterface>().As<ICreateSnapshotUserInterface>();
+        
+        // System Access
+        
+        containerBuilder.RegisterType<SystemClock>().As<ISystemClock>();
     }
 
-    private static void RegisterUserAccessAdapter(ContainerBuilder containerBuilder)
-    {
-        containerBuilder.RegisterType<UserInterface>().As<IUserInterface>();
-    }
-
-    private static void RegisterApplicationComponent(ContainerBuilder containerBuilder)
+    private static void RegisterApplication(ContainerBuilder containerBuilder)
     {
         Assembly applicationAssembly = typeof(PresentPotsUseCase).Assembly;
 
