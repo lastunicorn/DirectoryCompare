@@ -110,7 +110,7 @@ public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest, IDis
 
     private IDiskAnalysisReport StartDiskAnalysis(Pot pot, DiskPathCollection blackList)
     {
-        DiskAnalysis.DiskAnalysis diskAnalysis = new(log, fileSystem, snapshotRepository)
+        DiskAnalysis.DiskAnalysis diskAnalysis = new(log, fileSystem, snapshotRepository, createSnapshotUserInterface, systemClock)
         {
             Pot = pot,
             BlackList = blackList

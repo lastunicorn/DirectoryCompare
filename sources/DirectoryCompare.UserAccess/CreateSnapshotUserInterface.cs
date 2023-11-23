@@ -36,7 +36,7 @@ public class CreateSnapshotUserInterface : ICreateSnapshotUserInterface
                 CustomConsole.WriteLine("    - " + blackPath);
         }
         
-        WriteLabeledValue("Start Time", info.StartTime);
+        WriteLabeledValue("Start Time", info.StartTime.ToLocalTime());
         CustomConsole.WriteLine();
 
         return Task.CompletedTask;

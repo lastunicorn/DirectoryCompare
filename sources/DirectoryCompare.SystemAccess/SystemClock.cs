@@ -1,6 +1,6 @@
 ﻿using DustInTheWind.DirectoryCompare.Ports.SystemAccess;
 
-namespace DustInTheWind.DirectoryCompare.LogAccess;
+namespace DustInTheWind.DirectoryCompare.SystemAccess;
 
 public class SystemClock : ISystemClock
 {

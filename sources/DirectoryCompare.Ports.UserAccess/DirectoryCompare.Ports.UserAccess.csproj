@@ -25,4 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <RootNamespace>DustInTheWind.DirectoryCompare.Ports.UserAccess</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\DirectoryCompare.DataStructures\DirectoryCompare.DataStructures.csproj" PrivateAssets="All" />
+    </ItemGroup>
+
 </Project>

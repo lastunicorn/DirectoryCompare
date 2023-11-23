@@ -30,6 +30,7 @@ using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 using DustInTheWind.DirectoryCompare.Ports.LogAccess;
 using DustInTheWind.DirectoryCompare.Ports.SystemAccess;
 using DustInTheWind.DirectoryCompare.Ports.UserAccess;
+using DustInTheWind.DirectoryCompare.SystemAccess;
 using DustInTheWind.DirectoryCompare.UserAccess;
 using FluentValidation;
 using MediatR.Extensions.Autofac.DependencyInjection;

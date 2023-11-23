@@ -23,6 +23,8 @@ using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess.ImportExport;
 using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 using DustInTheWind.DirectoryCompare.Ports.LogAccess;
+using DustInTheWind.DirectoryCompare.Ports.SystemAccess;
+using DustInTheWind.DirectoryCompare.Ports.UserAccess;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
 
@@ -31,6 +33,8 @@ internal sealed class DiskAnalysis : IDisposable
     private readonly ILog log;
     private readonly IFileSystem fileSystem;
     private readonly ISnapshotRepository snapshotRepository;
+    private readonly ICreateSnapshotUserInterface createSnapshotUserInterface;
+    private readonly ISystemClock systemClock;
     private readonly Stopwatch stopwatch = new();
     private readonly MD5 md5;
     private ISnapshotWriter snapshotWriter;
@@ -38,18 +42,21 @@ internal sealed class DiskAnalysis : IDisposable
     private Progress progress;
     private Guid analysisId;
     private float lastPercentageAnnounced;
+    private DiskAnalysisReport report;
 
     public Pot Pot { get; init; }
 
     public DiskPathCollection BlackList { get; init; }
 
-    public DiskAnalysisReport Report { get; private set; }
-
-    public DiskAnalysis(ILog log, IFileSystem fileSystem, ISnapshotRepository snapshotRepository)
+    public DiskAnalysis(ILog log, IFileSystem fileSystem, ISnapshotRepository snapshotRepository,
+        ICreateSnapshotUserInterface createSnapshotUserInterface, ISystemClock systemClock)
     {
         this.log = log ?? throw new ArgumentNullException(nameof(log));
         this.fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
         this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
+        this.createSnapshotUserInterface = createSnapshotUserInterface ?? throw new ArgumentNullException(nameof(createSnapshotUserInterface));
+        this.systemClock = systemClock ?? throw new ArgumentNullException(nameof(systemClock));
+
         md5 = MD5.Create();
     }
 
@@ -86,7 +93,7 @@ internal sealed class DiskAnalysis : IDisposable
             }
         });
 
-        return Report;
+        return report;
     }
 
     private void ResetAnalysis()
@@ -95,7 +102,7 @@ internal sealed class DiskAnalysis : IDisposable
         analysisId = Guid.NewGuid();
         progress = null;
         lastPercentageAnnounced = 0;
-        Report = new DiskAnalysisReport();
+        report = new DiskAnalysisReport();
     }
 
     private void ConcludeAnalysis()
@@ -192,7 +199,22 @@ internal sealed class DiskAnalysis : IDisposable
             log.WriteInfo("- " + blackListItem);
 
         DiskReaderStartingEventArgs eventArgs = new(BlackList);
-        Report.OnStarting(eventArgs);
+        report.OnStarting(eventArgs);
+    }
+
+    private async Task AnnounceSnapshotCreating()
+    {
+        StartNewSnapshotInfo info = new()
+        {
+            PotName = Pot.Name,
+            Path = Pot.Path,
+            BlackList = BlackList
+                .Select(x => x.ToString())
+                .ToList(),
+            StartTime = systemClock.GetCurrentUtcTime()
+        };
+        
+        await createSnapshotUserInterface.AnnounceSnapshotCreating(info);
     }
 
     private void AnnounceFinished()
@@ -200,7 +222,7 @@ internal sealed class DiskAnalysis : IDisposable
         log.WriteInfo("Finished scanning path in {0}", stopwatch.Elapsed);
         snapshotWriter.Dispose();
 
-        Report.OnFinished();
+        report.OnFinished();
     }
 
     private void AnnounceProgress()
@@ -218,7 +240,7 @@ internal sealed class DiskAnalysis : IDisposable
             ProcessedSize = progress.Value - progress.MinValue,
             ElapsedTime = stopwatch.Elapsed
         };
-        Report.OnProgress(args);
+        report.OnProgress(args);
 
         lastPercentageAnnounced = currentPercentage;
     }
@@ -228,7 +250,7 @@ internal sealed class DiskAnalysis : IDisposable
         log.WriteError("Error while reading path '{0}': {1}", path, ex);
 
         ErrorEncounteredEventArgs eventArgs = new(ex, path);
-        Report.OnErrorEncountered(eventArgs);
+        report.OnErrorEncountered(eventArgs);
     }
 
     public void Dispose()
