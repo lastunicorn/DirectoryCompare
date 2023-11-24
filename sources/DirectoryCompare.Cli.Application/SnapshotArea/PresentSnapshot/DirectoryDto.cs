@@ -26,7 +26,7 @@ public class DirectoryDto
 
     public List<FileDto> Files { get; }
 
-    public DirectoryDto(HDirectory hDirectory)
+    public DirectoryDto(HDirectory hDirectory, int subLevelCountToInclude)
     {
         if (hDirectory == null)
             return;
@@ -35,8 +35,12 @@ public class DirectoryDto
         Files = hDirectory.Files
             .Select(x => new FileDto(x))
             .ToList();
-        Directories = hDirectory.Directories
-            .Select(x => new DirectoryDto(x))
-            .ToList();
+
+        if (subLevelCountToInclude == 0)
+            Directories = new List<DirectoryDto>();
+        else
+            Directories = hDirectory.Directories
+                .Select(x => new DirectoryDto(x, subLevelCountToInclude - 1))
+                .ToList();
     }
 }

@@ -23,5 +23,5 @@ public class PresentSnapshotRequest : IRequest<PresentSnapshotResponse>
 {
     public SnapshotLocation Location { get; set; }
 
-    public bool IncludeContent { get; set; }
+    public int DirectoryLevel { get; set; }
 }

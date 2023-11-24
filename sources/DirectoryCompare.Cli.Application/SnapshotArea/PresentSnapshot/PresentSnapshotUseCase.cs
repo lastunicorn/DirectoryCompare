@@ -46,7 +46,9 @@ public class PresentSnapshotUseCase : IRequestHandler<PresentSnapshotRequest, Pr
             SnapshotId = snapshot.Id,
             OriginalPath = snapshot.OriginalPath,
             SnapshotCreationTime = snapshot.CreationTime,
-            RootDirectory = request.IncludeContent ? new DirectoryDto(snapshot) : null,
+            RootDirectory = request.DirectoryLevel == 0
+                ? null
+                : new DirectoryDto(snapshot, request.DirectoryLevel),
             TotalFileCount = itemCounter.FileCount,
             TotalDirectoryCount = itemCounter.DirectoryCount,
             DataSize = itemCounter.DataSize,

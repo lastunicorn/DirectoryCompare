@@ -18,6 +18,7 @@ using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Commando;
 using DustInTheWind.ConsoleTools.Controls;
 using DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.CompareSnapshots;
+using DustInTheWind.DirectoryCompare.DataStructures;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands.CompareSnapshots;
 
@@ -82,8 +83,11 @@ internal class CompareSnapshotsCommandView : IView<CompareViewModel>
             else
                 Console.WriteLine();
 
-            Console.WriteLine("1 - " + itemComparison.FullName1);
-            Console.WriteLine("2 - " + itemComparison.FullName2);
+            CustomConsole.Write($"1 - {itemComparison.FullName1}");
+            CustomConsole.WriteLine(ConsoleColor.DarkGray, $" ({itemComparison.Size1.ToString(DataSizeUnit.Byte)})");
+
+            CustomConsole.Write($"2 - {itemComparison.FullName2}");
+            CustomConsole.WriteLine(ConsoleColor.DarkGray, $" ({itemComparison.Size2.ToString(DataSizeUnit.Byte)})");
         }
     }
 
