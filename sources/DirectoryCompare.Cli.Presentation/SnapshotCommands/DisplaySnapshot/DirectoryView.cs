@@ -22,27 +22,29 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands.Displ
 internal class DirectoryView
 {
     private readonly DirectoryDto directory;
-    private readonly GroupingLine groupingLine;
-
-    public bool IsRoot { get; set; }
+    private readonly GroupingLine childGroupingLine;
+    private readonly bool isRoot;
 
     public DirectoryView(DirectoryDto directory, GroupingLine parentGroupingLine = null)
     {
         this.directory = directory ?? throw new ArgumentNullException(nameof(directory));
 
-        int itemCount = this.directory.Directories.Count + this.directory.Files.Count;
-        groupingLine = new GroupingLine(itemCount, parentGroupingLine);
+        isRoot = parentGroupingLine == null;
+
+        int childCount = directory.Directories.Count + directory.Files.Count;
+        childGroupingLine = new GroupingLine(childCount, parentGroupingLine)
+        {
+            HasParentLabel = !isRoot
+        };
     }
 
     public void Display()
     {
-        foreach (DirectoryDto subdirectory in directory.Directories)
-        {
-            DisplayDirectoryDetails(subdirectory);
+        if (!isRoot)
+            Console.WriteLine($"[{directory.Name}]");
 
-            DirectoryView directoryView = new(subdirectory, groupingLine);
-            directoryView.Display();
-        }
+        foreach (DirectoryDto subdirectory in directory.Directories)
+            DisplayDirectoryDetails(subdirectory);
 
         foreach (FileDto file in directory.Files)
             DisplayFileDetails(file);
@@ -50,13 +52,15 @@ internal class DirectoryView
 
     private void DisplayDirectoryDetails(DirectoryDto subdirectory)
     {
-        groupingLine.DisplayNext();
-        Console.WriteLine($"[{subdirectory.Name}]");
+        childGroupingLine.DisplayNext();
+
+        DirectoryView directoryView = new(subdirectory, childGroupingLine);
+        directoryView.Display();
     }
 
     private void DisplayFileDetails(FileDto file)
     {
-        groupingLine.DisplayNext();
+        childGroupingLine.DisplayNext();
 
         Console.Write(file.Name + " ");
 

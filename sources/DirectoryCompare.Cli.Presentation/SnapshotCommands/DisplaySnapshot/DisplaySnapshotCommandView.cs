@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System.Globalization;
 using DustInTheWind.ConsoleTools.Commando;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands.DisplaySnapshot;
@@ -25,7 +26,7 @@ public class DisplaySnapshotCommandView : ViewBase<SnapshotViewModel>
         WriteValue("Pot", snapshotViewModel.PotName);
         WriteValue("Snapshot", snapshotViewModel.SnapshotId.ToString("D"));
         WriteValue("Path", snapshotViewModel.OriginalPath);
-        WriteValue("Creation Time", snapshotViewModel.CreationTime.ToLocalTime());
+        WriteValue("Creation Time", $"{snapshotViewModel.CreationTime.ToLocalTime()} ({CultureInfo.CurrentUICulture.Name})");
         WriteValue("Directories", snapshotViewModel.TotalDirectoryCount.ToString("N0"));
         WriteValue("Files", snapshotViewModel.TotalFileCount.ToString("N0"));
 
@@ -39,10 +40,7 @@ public class DisplaySnapshotCommandView : ViewBase<SnapshotViewModel>
         {
             Console.WriteLine();
 
-            DirectoryView directoryView = new(snapshotViewModel.RootDirectory)
-            {
-                IsRoot = true
-            };
+            DirectoryView directoryView = new(snapshotViewModel.RootDirectory);
             directoryView.Display();
         }
     }

@@ -25,6 +25,8 @@ internal class GroupingLine
     private int index;
     private const ConsoleColor ForegroundColor = ConsoleColor.DarkGray;
 
+    public bool HasParentLabel { get; set; } = true;
+
     private bool IsFirstLine => index == 0;
 
     private bool IsLastLine => index == lineCount - 1;
@@ -46,7 +48,9 @@ internal class GroupingLine
             // ∙ ┌ │ ├ └
             string text = lineCount == 1
                 ? " ∙ "
-                : " ├ ";
+                : HasParentLabel
+                    ? " ├ "
+                    : " ┌ ";
 
             CustomConsole.Write(ForegroundColor, text);
         }
