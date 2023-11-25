@@ -26,20 +26,30 @@ public class FilePairDto
 
     public DataSize Size1 { get; }
 
+    public string Hash1 { get; }
+
     public string FullName2 { get; }
 
     public DataSize Size2 { get; }
+
+    public string Hash2 { get; }
 
     public FilePairDto(ItemComparison itemComparison)
     {
         FullName1 = itemComparison.FullName1;
 
         if (itemComparison.Item1 is HFile hFile1)
+        {
             Size1 = hFile1.Size;
+            Hash1 = hFile1.Hash.ToString();
+        }
 
         FullName2 = itemComparison.FullName2;
 
         if (itemComparison.Item2 is HFile hFile2)
+        {
             Size2 = hFile2.Size;
+            Hash2 = hFile2.Hash.ToString();
+        }
     }
 }

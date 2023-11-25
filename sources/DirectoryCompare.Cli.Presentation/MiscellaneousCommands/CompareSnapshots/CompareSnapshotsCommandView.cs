@@ -84,10 +84,10 @@ internal class CompareSnapshotsCommandView : IView<CompareViewModel>
                 Console.WriteLine();
 
             CustomConsole.Write($"1 - {itemComparison.FullName1}");
-            CustomConsole.WriteLine(ConsoleColor.DarkGray, $" ({itemComparison.Size1.ToString(DataSizeUnit.Byte)})");
+            CustomConsole.WriteLine(ConsoleColor.DarkGray, $" ({itemComparison.Size1.ToString(DataSizeUnit.Byte)} - {itemComparison.Hash1})");
 
             CustomConsole.Write($"2 - {itemComparison.FullName2}");
-            CustomConsole.WriteLine(ConsoleColor.DarkGray, $" ({itemComparison.Size2.ToString(DataSizeUnit.Byte)})");
+            CustomConsole.WriteLine(ConsoleColor.DarkGray, $" ({itemComparison.Size2.ToString(DataSizeUnit.Byte)} - {itemComparison.Hash2})");
         }
     }
 
