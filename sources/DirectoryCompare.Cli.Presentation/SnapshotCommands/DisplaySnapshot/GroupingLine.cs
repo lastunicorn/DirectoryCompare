@@ -43,7 +43,7 @@ internal class GroupingLine
 
         if (IsFirstLine)
         {
-            // ∙ ┌
+            // ∙ ┌ │ ├ └
             string text = lineCount == 1
                 ? " ∙ "
                 : " ├ ";

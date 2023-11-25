@@ -24,6 +24,8 @@ internal class DirectoryView
     private readonly DirectoryDto directory;
     private readonly GroupingLine groupingLine;
 
+    public bool IsRoot { get; set; }
+
     public DirectoryView(DirectoryDto directory, GroupingLine parentGroupingLine = null)
     {
         this.directory = directory ?? throw new ArgumentNullException(nameof(directory));

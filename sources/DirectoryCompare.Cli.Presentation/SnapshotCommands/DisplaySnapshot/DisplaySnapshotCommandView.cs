@@ -39,7 +39,10 @@ public class DisplaySnapshotCommandView : ViewBase<SnapshotViewModel>
         {
             Console.WriteLine();
 
-            DirectoryView directoryView = new(snapshotViewModel.RootDirectory);
+            DirectoryView directoryView = new(snapshotViewModel.RootDirectory)
+            {
+                IsRoot = true
+            };
             directoryView.Display();
         }
     }
