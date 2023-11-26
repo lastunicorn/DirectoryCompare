@@ -73,7 +73,7 @@ internal sealed class DiskAnalysis : IDisposable
             {
                 await AnnounceStarting();
 
-                await IndexFiles();
+                await CountFiles();
                 progress = new DataSizeProgress(totalDataSize);
 
                 snapshotWriter = await snapshotRepository.CreateWriter(Pot.Name);
@@ -87,7 +87,7 @@ internal sealed class DiskAnalysis : IDisposable
             }
             catch (Exception ex)
             {
-                AnnounceError(ex, null);
+                await AnnounceError(ex, null);
             }
             finally
             {
@@ -115,7 +115,7 @@ internal sealed class DiskAnalysis : IDisposable
         stopwatch.Stop();
     }
 
-    private Task IndexFiles()
+    private Task CountFiles()
     {
         return Task.Run(async () =>
         {
@@ -186,7 +186,7 @@ internal sealed class DiskAnalysis : IDisposable
 
     private Task CalculateHashes()
     {
-        return Task.Run(() =>
+        return Task.Run(async () =>
         {
             IDiskCrawler diskCrawler = fileSystem.CreateCrawler(Pot.Path, BlackList.ToListOfStrings());
 
@@ -195,7 +195,7 @@ internal sealed class DiskAnalysis : IDisposable
                 .Where(x => x != null);
 
             foreach (IAnalysisItem analysisItem in analysisItems)
-                ProcessAnalysisItem(analysisItem);
+                await ProcessAnalysisItem(analysisItem);
         });
     }
 
@@ -224,20 +224,27 @@ internal sealed class DiskAnalysis : IDisposable
         }
     }
 
-    private void ProcessAnalysisItem(IAnalysisItem analysisItem)
+    private async Task ProcessAnalysisItem(IAnalysisItem analysisItem)
     {
-        analysisItem.Analyze();
-        analysisItem.Save(snapshotWriter);
-
-        if (progress != null && analysisItem.Size > 0)
+        try
         {
-            progress.Value += analysisItem.Size;
-            AnnounceProgress();
+            analysisItem.Analyze();
+            analysisItem.Save(snapshotWriter);
+
+            if (progress != null && analysisItem.Size > 0)
+            {
+                progress.Value += analysisItem.Size;
+                AnnounceProgress();
+            }
+
+            if (analysisItem.Error != null)
+            {
+                await AnnounceError(analysisItem.Error, analysisItem.Path);
+            }
         }
-
-        if (analysisItem.Error != null)
+        catch (Exception ex)
         {
-            AnnounceError(analysisItem.Error, analysisItem.Path);
+            await AnnounceError(ex, analysisItem.Path);
         }
     }
 
@@ -305,12 +312,14 @@ internal sealed class DiskAnalysis : IDisposable
         lastPercentageAnnounced = currentPercentage;
     }
 
-    private void AnnounceError(Exception ex, string path)
+    private Task AnnounceError(Exception exception, string path)
     {
-        log.WriteError("Error while reading path '{0}': {1}", path, ex);
+        log.WriteError("Error while reading path '{0}': {1}", path, exception);
 
-        ErrorEncounteredEventArgs eventArgs = new(ex, path);
+        ErrorEncounteredEventArgs eventArgs = new(exception, path);
         report.OnErrorEncountered(eventArgs);
+        
+        return createSnapshotUserInterface.AnnounceAnalysisError(path, exception);
     }
 
     public void Dispose()

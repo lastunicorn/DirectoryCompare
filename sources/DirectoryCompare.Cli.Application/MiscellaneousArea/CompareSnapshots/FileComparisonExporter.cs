@@ -127,11 +127,11 @@ internal class FileComparisonExporter
 
     private static void WriteFileHeader(TextWriter streamWriter, SnapshotComparison comparison)
     {
-        string snapshot1OriginalPath = comparison.Snapshot1.OriginalPath;
+        string snapshot1OriginalPath = comparison.Snapshot1.OriginalPath + " > " + comparison.Path1;
         DateTime snapshot1CreationTime = comparison.Snapshot1.CreationTime;
         streamWriter.WriteLine("Snapshot 1: {0} [{1:yyyy MM dd HHmmss}]", snapshot1OriginalPath, snapshot1CreationTime);
 
-        string snapshot2OriginalPath = comparison.Snapshot2.OriginalPath;
+        string snapshot2OriginalPath = comparison.Snapshot2.OriginalPath + " > " + comparison.Path2;
         DateTime snapshot2CreationTime = comparison.Snapshot2.CreationTime;
         streamWriter.WriteLine("Snapshot 2: {0} [{1:yyyy MM dd HHmmss}]", snapshot2OriginalPath, snapshot2CreationTime);
 

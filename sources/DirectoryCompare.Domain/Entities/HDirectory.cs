@@ -148,4 +148,9 @@ public class HDirectory : HItem, IEquatable<HDirectory>, IEnumerable<HItem>
             return hashCode;
         }
     }
+
+    public HDirectory GetChildDirectory(string name)
+    {
+        return Directories.FirstOrDefault(x => x.Name == name);
+    }
 }

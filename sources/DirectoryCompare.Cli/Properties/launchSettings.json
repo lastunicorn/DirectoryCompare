@@ -2,7 +2,7 @@
   "profiles": {
     "DirectoryCompare.Cli": {
       "commandName": "Project",
-      "commandLineArgs": "read coraline"
+      "commandLineArgs": "compare \"rick>/Coraline - 2022 01 16\" coraline"
     }
   }
 }

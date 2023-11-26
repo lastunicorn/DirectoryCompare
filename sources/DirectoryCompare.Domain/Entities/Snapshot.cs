@@ -25,9 +25,31 @@ public class Snapshot : HDirectory
     public string OriginalPath { get; set; }
 
     public DateTime CreationTime { get; set; }
-    
+
     public Snapshot()
         : base(string.Empty)
     {
+    }
+
+    public HDirectory GetDirectory(SnapshotPath path)
+    {
+        HDirectory hDirectory = this;
+
+        IEnumerable<string> names = path.Enumerate();
+
+        foreach (string name in names)
+        {
+            hDirectory = hDirectory.GetChildDirectory(name);
+
+            if (hDirectory == null)
+                throw new Exception($"Directory could not be found: {path}");
+        }
+
+        return hDirectory;
+    }
+
+    public override string ToString()
+    {
+        return $"Snapshot: {Id:D)}; Path: {OriginalPath}";
     }
 }

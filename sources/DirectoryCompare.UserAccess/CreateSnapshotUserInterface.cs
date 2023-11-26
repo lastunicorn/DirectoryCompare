@@ -46,23 +46,24 @@ public class CreateSnapshotUserInterface : ICreateSnapshotUserInterface
     public Task AnnounceFilesIndexing()
     {
         CustomConsole.WriteLine("Starting to count files.");
-        
+
         return Task.CompletedTask;
     }
 
     public Task AnnounceFileIndexingProgress(FileIndexInfo fileIndexInfo)
     {
-        CustomConsole.WriteLine($"Files indexed so far: {fileIndexInfo.FileCount} ({fileIndexInfo.DataSize}).");
-        
+        CustomConsole.WriteLine($"Files indexed so far: {fileIndexInfo.FileCount:N0} ({fileIndexInfo.DataSize})");
+
         return Task.CompletedTask;
     }
 
     public Task AnnounceFilesIndexed(FileIndexInfo fileIndexInfo)
     {
         CustomConsole.WriteLineSuccess("Finished indexing files");
-        CustomConsole.WriteLineSuccess($"  File count: {fileIndexInfo.FileCount}).");
+        CustomConsole.WriteLineSuccess($"  File count: {fileIndexInfo.FileCount:N0}).");
         CustomConsole.WriteLineSuccess($"  Data Size: {fileIndexInfo.DataSize} ({fileIndexInfo.DataSize.ToString(DataSizeUnit.Byte)}).");
-        
+        CustomConsole.WriteLine();
+
         return Task.CompletedTask;
     }
 
@@ -70,7 +71,15 @@ public class CreateSnapshotUserInterface : ICreateSnapshotUserInterface
     {
         CustomConsole.WriteLineError($"Error while indexing path: {path}");
         CustomConsole.WriteLineError(exception);
-        
+
+        return Task.CompletedTask;
+    }
+
+    public Task AnnounceAnalysisError(string path, Exception exception)
+    {
+        CustomConsole.WriteLineError($"Error while analysing path: {path}");
+        CustomConsole.WriteLineError(exception);
+
         return Task.CompletedTask;
     }
 

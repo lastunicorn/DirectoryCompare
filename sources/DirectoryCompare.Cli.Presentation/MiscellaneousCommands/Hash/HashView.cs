@@ -14,19 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.Ports.UserAccess;
+using DustInTheWind.ConsoleTools.Commando;
 
-public interface ICreateSnapshotUserInterface
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands.Hash;
+
+internal class HashView : ViewBase<HashViewModel>
 {
-    Task AnnounceStarting(StartNewSnapshotInfo info);
-
-    Task AnnounceFilesIndexing();
-
-    Task AnnounceFileIndexingProgress(FileIndexInfo fileIndexInfo);
-
-    Task AnnounceFilesIndexed(FileIndexInfo fileIndexInfo);
-
-    Task AnnounceFileIndexingError(string path, Exception exception);
-
-    Task AnnounceAnalysisError(string path, Exception exception);
+    public override void Display(HashViewModel viewModel)
+    {
+        WriteValue("Hash", viewModel.Hash, viewModel.Format);
+    }
 }

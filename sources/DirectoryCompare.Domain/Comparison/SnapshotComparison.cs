@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 
 namespace DustInTheWind.DirectoryCompare.Domain.Comparison;
@@ -28,6 +29,10 @@ public class SnapshotComparison
     public Snapshot Snapshot1 { get; }
 
     public Snapshot Snapshot2 { get; }
+
+    public SnapshotPath Path1 { get; set; }
+
+    public SnapshotPath Path2 { get; set; }
 
     public DateTime StartTimeUtc { get; private set; }
 
@@ -60,8 +65,11 @@ public class SnapshotComparison
             differentNames.Clear();
             differentContent.Clear();
 
-            CompareChildFiles(Snapshot1, Snapshot2, "/");
-            CompareChildDirectories(Snapshot1, Snapshot2, "/");
+            HDirectory hDirectory1 = Snapshot1.GetDirectory(Path1);
+            HDirectory hDirectory2 = Snapshot2.GetDirectory(Path2);
+            
+            CompareChildFiles(hDirectory1, hDirectory2, "/");
+            CompareChildDirectories(hDirectory1, hDirectory2, "/");
         }
         finally
         {

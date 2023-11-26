@@ -161,24 +161,12 @@ public class SnapshotRepository : ISnapshotRepository
     private async Task<SnapshotFile> GetSnapshotFile(SnapshotLocation location)
     {
         if (location.SnapshotIndex.HasValue)
-        {
             return await GetByIndex(location.PotName, location.SnapshotIndex.Value);
-        }
-        else if (location.SnapshotDate.HasValue)
-        {
-            DateTime searchedDate = location.SnapshotDate.Value;
 
-            SnapshotFile snapshotFile = await GetByExactDateTime(location.PotName, searchedDate);
+        if (location.SnapshotDate.HasValue)
+            return await GetByDateAndOptionalTime(location.PotName, location.SnapshotDate.Value);
 
-            if (snapshotFile == null && searchedDate.TimeOfDay == TimeSpan.Zero)
-                snapshotFile = await GetByDate(location.PotName, searchedDate);
-
-            return snapshotFile;
-        }
-        else
-        {
-            return await GetByIndex(location.PotName);
-        }
+        return await GetByIndex(location.PotName);
     }
 
     private async Task<SnapshotFile> GetByIndex(string potName, int index = 0)
@@ -190,6 +178,16 @@ public class SnapshotRepository : ISnapshotRepository
             .FirstOrDefault();
     }
 
+    private async Task<SnapshotFile> GetByDateAndOptionalTime(string potName, DateTime dateTime)
+    {
+        SnapshotFile snapshotFile = await GetByExactDateTime(potName, dateTime);
+
+        if (snapshotFile == null && dateTime.TimeOfDay == TimeSpan.Zero)
+            snapshotFile = await GetByDateOnly(potName, dateTime);
+        
+        return snapshotFile;
+    }
+
     private async Task<SnapshotFile> GetByExactDateTime(string potName, DateTime dateTime)
     {
         PotDirectory potDirectory = await database.GetPotDirectory(potName);
@@ -198,7 +196,7 @@ public class SnapshotRepository : ISnapshotRepository
             .FirstOrDefault(x => x.CreationTime.HasValue && x.CreationTime.Value == dateTime);
     }
 
-    private async Task<SnapshotFile> GetByDate(string potName, DateTime dateTime)
+    private async Task<SnapshotFile> GetByDateOnly(string potName, DateTime dateTime)
     {
         PotDirectory potDirectory = await database.GetPotDirectory(potName);
 

@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.PresentSnapshot;
+using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
@@ -33,17 +34,10 @@ public class CompareSnapshotsUseCase : IRequestHandler<CompareSnapshotsRequest, 
 
     public async Task<CompareSnapshotsResponse> Handle(CompareSnapshotsRequest request, CancellationToken cancellationToken)
     {
-        Snapshot snapshot1 = await snapshotRepository.Get(request.Snapshot1);
+        Snapshot snapshot1 = await RetrieveSnapshot(request.Snapshot1);
+        Snapshot snapshot2 = await RetrieveSnapshot(request.Snapshot2);
 
-        if (snapshot1 == null)
-            throw new SnapshotNotFoundException(request.Snapshot1);
-
-        Snapshot snapshot2 = await snapshotRepository.Get(request.Snapshot2);
-
-        if (snapshot2 == null)
-            throw new SnapshotNotFoundException(request.Snapshot2);
-
-        SnapshotComparison comparison = CompareSnapshots(snapshot1, snapshot2);
+        SnapshotComparison comparison = CompareSnapshots(snapshot1, request.Snapshot1.InternalPath, snapshot2, request.Snapshot2.InternalPath);
         string exportDirectoryPath = ExportToDiskIfRequested(comparison, request);
 
         return new CompareSnapshotsResponse
@@ -56,9 +50,22 @@ public class CompareSnapshotsUseCase : IRequestHandler<CompareSnapshotsRequest, 
         };
     }
 
-    private static SnapshotComparison CompareSnapshots(Snapshot snapshot1, Snapshot snapshot2)
+    private async Task<Snapshot> RetrieveSnapshot(SnapshotLocation snapshotLocation)
     {
-        SnapshotComparison comparison = new(snapshot1, snapshot2);
+        Snapshot snapshot = await snapshotRepository.Get(snapshotLocation);
+
+        if (snapshot == null)
+            throw new SnapshotNotFoundException(snapshotLocation);
+        return snapshot;
+    }
+
+    private static SnapshotComparison CompareSnapshots(Snapshot snapshot1, SnapshotPath snapshotPath1, Snapshot snapshot2, SnapshotPath snapshotPath2)
+    {
+        SnapshotComparison comparison = new(snapshot1, snapshot2)
+        {
+            Path1 = snapshotPath1,
+            Path2 = snapshotPath2
+        };
         comparison.Compare();
         return comparison;
     }
