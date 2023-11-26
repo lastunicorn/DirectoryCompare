@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Commando;
 using DustInTheWind.DirectoryCompare.Cli.Application;
 using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot;
@@ -51,9 +52,16 @@ public class CreateSnapshotCommand : IConsoleCommand
 
         IDiskAnalysisReport diskAnalysisReport = await requestBus.PlaceRequest<CreateSnapshotRequest, IDiskAnalysisReport>(request);
         diskAnalysisReport.Progress += HandleAnalysisProgress;
+        diskAnalysisReport.ErrorEncountered += HandleErrorEncountered;
 
         diskAnalysisReport.WaitToEnd();
         view.FinishDisplay();
+    }
+
+    private void HandleErrorEncountered(object sender, ErrorEncounteredEventArgs e)
+    {
+        CustomConsole.WriteError($"Error while reading path: {e.Path}");
+        CustomConsole.WriteError(e.Exception);
     }
 
     private void HandleAnalysisProgress(object sender, DiskAnalysisProgressEventArgs e)

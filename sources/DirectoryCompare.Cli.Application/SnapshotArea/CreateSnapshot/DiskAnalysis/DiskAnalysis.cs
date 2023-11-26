@@ -39,7 +39,10 @@ internal sealed class DiskAnalysis : IDisposable
     private readonly MD5 md5;
     private ISnapshotWriter snapshotWriter;
 
-    private Progress progress;
+
+    private DataSize totalDataSize;
+    private int totalFileCount;
+    private DataSizeProgress progress;
     private Guid analysisId;
     private float lastPercentageAnnounced;
     private DiskAnalysisReport report;
@@ -68,10 +71,10 @@ internal sealed class DiskAnalysis : IDisposable
         {
             try
             {
-                AnnounceStarting();
+                await AnnounceStarting();
 
-                DataSize totalSize = await CalculateTotalSize();
-                progress = new Progress(totalSize);
+                await IndexFiles();
+                progress = new DataSizeProgress(totalDataSize);
 
                 snapshotWriter = await snapshotRepository.CreateWriter(Pot.Name);
                 snapshotWriter?.Open(Pot.Path, analysisId);
@@ -100,6 +103,8 @@ internal sealed class DiskAnalysis : IDisposable
     {
         stopwatch.Start();
         analysisId = Guid.NewGuid();
+        totalDataSize = DataSize.Zero;
+        totalFileCount = 0;
         progress = null;
         lastPercentageAnnounced = 0;
         report = new DiskAnalysisReport();
@@ -110,20 +115,73 @@ internal sealed class DiskAnalysis : IDisposable
         stopwatch.Stop();
     }
 
-    private Task<DataSize> CalculateTotalSize()
+    private Task IndexFiles()
     {
-        return Task.Run(() =>
+        return Task.Run(async () =>
         {
             IDiskCrawler diskCrawler = fileSystem.CreateCrawler(Pot.Path, BlackList.ToListOfStrings());
 
-            long dataSize = diskCrawler.Crawl()
-                .AsParallel()
-                .Where(x => x.Action == CrawlerAction.FileFound)
-                .Select(x => (long)(ulong)x.Size)
-                .Sum();
+            await AnnounceFilesIndexing();
 
-            return (DataSize)dataSize;
+            IEnumerable<ICrawlerItem> crawlerItems = diskCrawler.Crawl()
+                .Where(x => x.Action == CrawlerAction.FileFound);
+
+            ulong dataSize = 0;
+            int fileCount = 0;
+
+            foreach (ICrawlerItem crawlerItem in crawlerItems)
+            {
+                try
+                {
+                    fileCount++;
+                    dataSize += crawlerItem.Size;
+                }
+                catch (Exception ex)
+                {
+                    await AnnounceFileIndexingError(crawlerItem.Path, ex);
+                }
+
+                if (fileCount % 1000 == 0)
+                    await AnnounceFileIndexingProgress(dataSize, fileCount);
+            }
+
+            totalDataSize = dataSize;
+            totalFileCount = fileCount;
+
+            await AnnounceFilesIndexed(dataSize, fileCount);
         });
+    }
+
+    private Task AnnounceFileIndexingError(string path, Exception exception)
+    {
+        return createSnapshotUserInterface.AnnounceFileIndexingError(path, exception);
+    }
+
+    private Task AnnounceFilesIndexing()
+    {
+        return createSnapshotUserInterface.AnnounceFilesIndexing();
+    }
+
+    private Task AnnounceFileIndexingProgress(ulong dataSize, int fileCount)
+    {
+        FileIndexInfo fileIndexInfo1 = new()
+        {
+            DataSize = dataSize,
+            FileCount = fileCount
+        };
+
+        return createSnapshotUserInterface.AnnounceFileIndexingProgress(fileIndexInfo1);
+    }
+
+    private Task AnnounceFilesIndexed(ulong dataSize, int fileCount)
+    {
+        FileIndexInfo fileIndexInfo2 = new()
+        {
+            DataSize = dataSize,
+            FileCount = fileCount
+        };
+
+        return createSnapshotUserInterface.AnnounceFilesIndexed(fileIndexInfo2);
     }
 
     private Task CalculateHashes()
@@ -183,7 +241,7 @@ internal sealed class DiskAnalysis : IDisposable
         }
     }
 
-    private void AnnounceStarting()
+    private async Task AnnounceStarting()
     {
         log.WriteInfo("Scanning path: {0}", Pot.Path);
 
@@ -200,6 +258,8 @@ internal sealed class DiskAnalysis : IDisposable
 
         DiskReaderStartingEventArgs eventArgs = new(BlackList);
         report.OnStarting(eventArgs);
+
+        await AnnounceSnapshotCreating();
     }
 
     private async Task AnnounceSnapshotCreating()
@@ -213,15 +273,15 @@ internal sealed class DiskAnalysis : IDisposable
                 .ToList(),
             StartTime = systemClock.GetCurrentUtcTime()
         };
-        
-        await createSnapshotUserInterface.AnnounceSnapshotCreating(info);
+
+        await createSnapshotUserInterface.AnnounceStarting(info);
     }
 
     private void AnnounceFinished()
     {
         log.WriteInfo("Finished scanning path in {0}", stopwatch.Elapsed);
-        snapshotWriter.Dispose();
 
+        snapshotWriter?.Dispose();
         report.OnFinished();
     }
 

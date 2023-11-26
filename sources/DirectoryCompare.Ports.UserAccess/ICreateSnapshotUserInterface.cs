@@ -18,5 +18,13 @@ namespace DustInTheWind.DirectoryCompare.Ports.UserAccess;
 
 public interface ICreateSnapshotUserInterface
 {
-    Task AnnounceSnapshotCreating(StartNewSnapshotInfo info);
+    Task AnnounceStarting(StartNewSnapshotInfo info);
+
+    Task AnnounceFilesIndexing();
+
+    Task AnnounceFileIndexingProgress(FileIndexInfo fileIndexInfo);
+
+    Task AnnounceFilesIndexed(FileIndexInfo fileIndexInfo);
+
+    Task AnnounceFileIndexingError(string path, Exception exception);
 }

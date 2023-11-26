@@ -29,7 +29,7 @@ public class ProgressTests
     [InlineData(51, 1)]
     public void Test(int underlyingValue, float expectedPercentageValue)
     {
-        Progress progress = new(50, 150)
+        DataSizeProgress progress = new(50, 150)
         {
             Value = underlyingValue
         };

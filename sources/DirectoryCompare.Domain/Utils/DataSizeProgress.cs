@@ -18,7 +18,7 @@ using DustInTheWind.DirectoryCompare.DataStructures;
 
 namespace DustInTheWind.DirectoryCompare.Domain.Utils;
 
-public class Progress
+public class DataSizeProgress
 {
     private DataSize value;
 
@@ -40,17 +40,12 @@ public class Progress
         }
     }
 
-    public Progress()
-        : this(0, 100)
+    public DataSizeProgress(DataSize maxValue)
+        : this(DataSize.Zero, maxValue)
     {
     }
 
-    public Progress(DataSize maxValue)
-        : this(0, maxValue)
-    {
-    }
-
-    public Progress(DataSize minValue, DataSize maxValue)
+    public DataSizeProgress(DataSize minValue, DataSize maxValue)
     {
         if (maxValue <= minValue)
             throw new ArgumentOutOfRangeException(nameof(maxValue));
@@ -70,12 +65,12 @@ public class Progress
         return $"{Percentage:N2}%";
     }
 
-    public static implicit operator float(Progress progress)
+    public static implicit operator float(DataSizeProgress progress)
     {
         return progress.Percentage;
     }
 
-    public static implicit operator double(Progress progress)
+    public static implicit operator double(DataSizeProgress progress)
     {
         return progress.Percentage;
     }

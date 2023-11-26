@@ -95,7 +95,7 @@ public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest, IDis
             StartTime = systemClock.GetCurrentUtcTime()
         };
         
-        await createSnapshotUserInterface.AnnounceSnapshotCreating(info);
+        await createSnapshotUserInterface.AnnounceStarting(info);
     }
 
     private void CheckPotPathExists(Pot pot)

@@ -15,13 +15,14 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools;
+using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Ports.UserAccess;
 
 namespace DustInTheWind.DirectoryCompare.UserAccess;
 
 public class CreateSnapshotUserInterface : ICreateSnapshotUserInterface
 {
-    public Task AnnounceSnapshotCreating(StartNewSnapshotInfo info)
+    public Task AnnounceStarting(StartNewSnapshotInfo info)
     {
         CustomConsole.WriteLine("Creating a new snapshot:");
         WriteLabeledValue("Pot Name", info.PotName);
@@ -35,10 +36,41 @@ public class CreateSnapshotUserInterface : ICreateSnapshotUserInterface
             foreach (string blackPath in info.BlackList)
                 CustomConsole.WriteLine("    - " + blackPath);
         }
-        
+
         WriteLabeledValue("Start Time", info.StartTime.ToLocalTime());
         CustomConsole.WriteLine();
 
+        return Task.CompletedTask;
+    }
+
+    public Task AnnounceFilesIndexing()
+    {
+        CustomConsole.WriteLine("Starting to count files.");
+        
+        return Task.CompletedTask;
+    }
+
+    public Task AnnounceFileIndexingProgress(FileIndexInfo fileIndexInfo)
+    {
+        CustomConsole.WriteLine($"Files indexed so far: {fileIndexInfo.FileCount} ({fileIndexInfo.DataSize}).");
+        
+        return Task.CompletedTask;
+    }
+
+    public Task AnnounceFilesIndexed(FileIndexInfo fileIndexInfo)
+    {
+        CustomConsole.WriteLineSuccess("Finished indexing files");
+        CustomConsole.WriteLineSuccess($"  File count: {fileIndexInfo.FileCount}).");
+        CustomConsole.WriteLineSuccess($"  Data Size: {fileIndexInfo.DataSize} ({fileIndexInfo.DataSize.ToString(DataSizeUnit.Byte)}).");
+        
+        return Task.CompletedTask;
+    }
+
+    public Task AnnounceFileIndexingError(string path, Exception exception)
+    {
+        CustomConsole.WriteLineError($"Error while indexing path: {path}");
+        CustomConsole.WriteLineError(exception);
+        
         return Task.CompletedTask;
     }
 

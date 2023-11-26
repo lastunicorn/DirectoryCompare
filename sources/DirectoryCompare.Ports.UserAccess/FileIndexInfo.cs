@@ -1,4 +1,4 @@
-﻿// DirectoryCompare
+// DirectoryCompare
 // Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -14,17 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
+using DustInTheWind.DirectoryCompare.DataStructures;
 
-public class ErrorEncounteredEventArgs : EventArgs
+namespace DustInTheWind.DirectoryCompare.Ports.UserAccess;
+
+public class FileIndexInfo
 {
-    public Exception Exception { get; }
+    public DataSize DataSize { get; init; }
 
-    public string Path { get; }
-
-    public ErrorEncounteredEventArgs(Exception exception, string path)
-    {
-        Exception = exception ?? throw new ArgumentNullException(nameof(exception));
-        Path = path;
-    }
+    public int FileCount { get; init; }
 }
