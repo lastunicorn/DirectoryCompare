@@ -38,6 +38,7 @@ internal static class Program
                 .Build();
 
             application.Starting += HandleApplicationStarting;
+            application.Ended += HandleApplicationEnded;
 
             await application.RunAsync(args);
         }
@@ -45,6 +46,11 @@ internal static class Program
         {
             CustomConsole.WriteLineError(ex);
         }
+    }
+
+    private static void HandleApplicationEnded(object sender, EventArgs e)
+    {
+        CustomConsole.WriteLine();
     }
 
     private static void HandleApplicationExceptions(object sender, UnhandledApplicationExceptionEventArgs ex)

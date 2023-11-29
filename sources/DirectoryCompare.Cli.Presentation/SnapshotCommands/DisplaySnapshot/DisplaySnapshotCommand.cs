@@ -35,6 +35,9 @@ public class DisplaySnapshotCommand : IConsoleCommand<SnapshotViewModel>
     [NamedParameter("directory-level", ShortName = 'l', IsOptional = true, Description = "Specify how many directory levels deep to display. 0 = None (Default); -1 = All")]
     public int DirectoryLevel { get; set; }
 
+    [NamedParameter("directory-path", ShortName = 'p', IsOptional = true, Description = "Specify the path from the snapshot to be displayed.")]
+    public string DirectoryPath { get; set; }
+
     public DisplaySnapshotCommand(RequestBus requestBus)
     {
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
@@ -45,7 +48,8 @@ public class DisplaySnapshotCommand : IConsoleCommand<SnapshotViewModel>
         PresentSnapshotRequest request = new()
         {
             Location = SnapshotLocation,
-            DirectoryLevel = DirectoryLevel
+            DirectoryLevel = DirectoryLevel,
+            DirectoryPath = DirectoryPath
         };
 
         PresentSnapshotResponse response = await requestBus.PlaceRequest<PresentSnapshotRequest, PresentSnapshotResponse>(request);

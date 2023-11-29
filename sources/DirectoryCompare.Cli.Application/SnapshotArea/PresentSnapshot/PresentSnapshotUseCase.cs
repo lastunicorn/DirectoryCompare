@@ -40,19 +40,38 @@ public class PresentSnapshotUseCase : IRequestHandler<PresentSnapshotRequest, Pr
         DataSize storageSize = await snapshotRepository.GetStorageSize(request.Location);
         HItemCounter itemCounter = snapshot.CountChildItems();
 
+        DirectoryDto directoryToDisplay = GetDirectoryToDisplay(snapshot, request);
+
         return new PresentSnapshotResponse
         {
             PotName = request.Location.PotName,
             SnapshotId = snapshot.Id,
             OriginalPath = snapshot.OriginalPath,
             SnapshotCreationTime = snapshot.CreationTime,
-            RootDirectory = request.DirectoryLevel == 0
-                ? null
-                : new DirectoryDto(snapshot, request.DirectoryLevel),
+            RootDirectory = directoryToDisplay,
             TotalFileCount = itemCounter.FileCount,
             TotalDirectoryCount = itemCounter.DirectoryCount,
             DataSize = itemCounter.DataSize,
             StorageSize = storageSize
         };
+    }
+
+    private static DirectoryDto GetDirectoryToDisplay(Snapshot snapshot, PresentSnapshotRequest request)
+    {
+        if (!request.DirectoryPath.IsEmpty)
+        {
+            HDirectory hDirectoryToReturn = snapshot.GetDirectory(request.DirectoryPath);
+            int directoryLevel = request.DirectoryLevel > 0
+                ? request.DirectoryLevel
+                : -1;
+            return new DirectoryDto(hDirectoryToReturn, directoryLevel);
+        }
+        
+        if (request.DirectoryLevel > 0)
+        {
+            return new DirectoryDto(snapshot, request.DirectoryLevel);
+        }
+
+        return null;
     }
 }

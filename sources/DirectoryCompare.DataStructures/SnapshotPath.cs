@@ -25,6 +25,8 @@ public readonly struct SnapshotPath
         this.path = path;
     }
 
+    public bool IsEmpty => string.IsNullOrEmpty(path);
+
     public IEnumerable<string> Enumerate()
     {
         if (path == null)
