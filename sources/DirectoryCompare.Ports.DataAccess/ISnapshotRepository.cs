@@ -39,4 +39,6 @@ public interface ISnapshotRepository
     Task<bool> DeleteByExactDateTime(string potName, DateTime dateTime);
 
     Task<DataSize> GetStorageSize(SnapshotLocation location);
+
+    Task<DataSize> GetSnapshotSize(Guid potId, Guid snapshotId);
 }

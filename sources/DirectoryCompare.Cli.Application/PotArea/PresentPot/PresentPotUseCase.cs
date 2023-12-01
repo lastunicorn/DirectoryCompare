@@ -24,10 +24,12 @@ namespace DustInTheWind.DirectoryCompare.Cli.Application.PotArea.PresentPot;
 public class PresentPotUseCase : IRequestHandler<PresentPotRequest, PresentPotResponse>
 {
     private readonly IPotRepository potRepository;
+    private readonly ISnapshotRepository snapshotRepository;
 
-    public PresentPotUseCase(IPotRepository potRepository)
+    public PresentPotUseCase(IPotRepository potRepository, ISnapshotRepository snapshotRepository)
     {
         this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
+        this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
     }
 
     public async Task<PresentPotResponse> Handle(PresentPotRequest request, CancellationToken cancellationToken)
@@ -43,6 +45,9 @@ public class PresentPotUseCase : IRequestHandler<PresentPotRequest, PresentPotRe
                 Size = potSize
             }
         };
+
+        foreach (SnapshotDto snapshotDto in response.Pot.Snapshots) 
+            snapshotDto.Size = await snapshotRepository.GetSnapshotSize(response.Pot.Guid, snapshotDto.Id);
 
         return response;
     }

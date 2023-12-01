@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.Cli.Application.PotArea.PresentPot;
+using DustInTheWind.DirectoryCompare.DataStructures;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands.DisplayPot;
 
@@ -26,6 +27,8 @@ public class SnapshotViewModel
 
     public Guid Id { get; }
 
+    public DataSize Size { get; }
+
     public SnapshotViewModel(SnapshotDto snapshot)
     {
         if (snapshot == null)
@@ -34,5 +37,6 @@ public class SnapshotViewModel
         Index = snapshot.Index;
         CreationTime = snapshot.CreationTime;
         Id = snapshot.Id;
+        Size = snapshot.Size;
     }
 }

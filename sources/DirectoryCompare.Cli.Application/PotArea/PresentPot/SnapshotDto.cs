@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Application.PotArea.PresentPot;
@@ -25,6 +26,8 @@ public class SnapshotDto
     public Guid Id { get; }
 
     public int Index { get; }
+
+    public DataSize Size { get; set; }
 
     public SnapshotDto(Snapshot snapshot, int index)
     {

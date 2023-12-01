@@ -56,10 +56,10 @@ internal class DisplayPotCommandView : ViewBase<DisplayPotViewModel>
         {
             int index = snapshot.Index;
             DateTime creationTime = snapshot.CreationTime.ToLocalTime();
-            CustomConsole.Write($"  [{index}] {creationTime} - ");
+            CustomConsole.Write($"  [{index}] {creationTime}");
 
-            Guid id = snapshot.Id;
-            CustomConsole.WriteLine(ConsoleColor.DarkGray, id.ToString("D"));
+            CustomConsole.Write(ConsoleColor.DarkGray, $" ({snapshot.Size})");
+            CustomConsole.WriteLine(ConsoleColor.DarkGray, $" {snapshot.Id:D}");
         }
     }
 }

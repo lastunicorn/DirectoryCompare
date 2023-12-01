@@ -158,6 +158,32 @@ public class SnapshotRepository : ISnapshotRepository
         return snapshotFile?.Size ?? DataSize.Zero;
     }
 
+    public async Task<DataSize> GetSnapshotSize(Guid potId, Guid snapshotId)
+    {
+        SnapshotFile snapshotFile = await GetById(potId, snapshotId);
+        return snapshotFile?.Size ?? DataSize.Zero;
+    }
+
+    private async Task<SnapshotFile> GetById(Guid potId, Guid snapshotId)
+    {
+        PotDirectory potDirectory = await database.GetPotDirectory(potId);
+
+        if (potDirectory == null)
+            return null;
+
+        IEnumerable<SnapshotFile> snapshotFiles = potDirectory.EnumerateSnapshotFiles();
+
+        foreach (SnapshotFile snapshotFile in snapshotFiles)
+        {
+            snapshotFile.Open();
+
+            if (snapshotFile.Content.AnalysisId == snapshotId)
+                return snapshotFile;
+        }
+
+        return null;
+    }
+
     private async Task<SnapshotFile> GetSnapshotFile(SnapshotLocation location)
     {
         if (location.SnapshotIndex.HasValue)
