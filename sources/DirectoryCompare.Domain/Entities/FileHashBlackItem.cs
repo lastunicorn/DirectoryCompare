@@ -1,4 +1,4 @@
-﻿// DirectoryCompare
+// DirectoryCompare
 // Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -14,27 +14,24 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.ObjectModel;
 using DustInTheWind.DirectoryCompare.DataStructures;
 
 namespace DustInTheWind.DirectoryCompare.Domain.Entities;
 
-public class BlackList : Collection<BlackPath>
+public class FileHashBlackItem : IBlackItem
 {
-    public BlackList(DiskPathCollection paths)
+    private readonly FileHash fileHash;
+
+    public FileHashBlackItem(FileHash fileHash)
     {
-        IEnumerable<BlackPath> blackPaths = paths.Select(x => new BlackPath(x));
-        AddRange(blackPaths);
+        this.fileHash = fileHash;
     }
 
-    private void AddRange(IEnumerable<BlackPath> blackPaths)
+    public bool Match(HItem item)
     {
-        foreach (BlackPath blackPath in blackPaths)
-            Items.Add(blackPath);
-    }
+        if (item is HFile hFile)
+            return hFile.Hash == fileHash;
 
-    public bool MatchPath(HItem item)
-    {
-        return Items.Any(x => x.Matches(item));
+        return false;
     }
 }

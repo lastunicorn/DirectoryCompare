@@ -23,7 +23,6 @@ public class FilePair
 {
     private readonly HFile fileLeft;
     private readonly HFile fileRight;
-    private readonly bool checkFilesExistence;
     private bool? areEqual;
 
     public bool AreEqual
@@ -36,43 +35,23 @@ public class FilePair
     }
 
     public DataSize Size => fileLeft.Size;
+    
+    public FileHash Hash => fileLeft.Hash;
 
     public string FullPathLeft => fileLeft.GetOriginalPath();
 
     public string FullPathRight => fileRight.GetOriginalPath();
 
-    public bool LeftFileExists
-    {
-        get
-        {
-            string fullPath = fileLeft.GetOriginalPath();
-            return File.Exists(fullPath);
-        }
-    }
-
-    public bool RightFileExists
-    {
-        get
-        {
-            string fullPath = fileRight.GetOriginalPath();
-            return File.Exists(fullPath);
-        }
-    }
-
-    public FilePair(HFile fileLeft, HFile fileRight, bool checkFilesExistence)
+    public FilePair(HFile fileLeft, HFile fileRight)
     {
         this.fileLeft = fileLeft ?? throw new ArgumentNullException(nameof(fileLeft));
         this.fileRight = fileRight ?? throw new ArgumentNullException(nameof(fileRight));
-        this.checkFilesExistence = checkFilesExistence;
     }
 
     private bool CalculateEquality()
     {
-        bool filesAreEqual = fileLeft.Hash == fileRight.Hash && fileLeft.Size == fileRight.Size;
-
-        return checkFilesExistence
-            ? filesAreEqual && LeftFileExists && RightFileExists
-            : filesAreEqual;
+        return fileLeft.Hash == fileRight.Hash &&
+               fileLeft.Size == fileRight.Size;
     }
 
     public void DeleteLeft()

@@ -14,26 +14,34 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.DataStructures;
-using DustInTheWind.DirectoryCompare.Domain.Comparison;
+using System.Collections.ObjectModel;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.FindDuplicates;
+namespace DustInTheWind.DirectoryCompare.DataStructures;
 
-public class FilePairDto
+public class FileHashCollection : Collection<FileHash>
 {
-    public string FullPathLeft { get; }
-
-    public string FullPathRight { get; }
-
-    public DataSize Size { get; }
-
-    public FileHash Hash { get; set; }
-
-    public FilePairDto(FilePair filePair)
+    public FileHashCollection()
     {
-        FullPathLeft = filePair.FullPathLeft;
-        FullPathRight = filePair.FullPathRight;
-        Size = filePair.Size;
-        Hash = filePair.Hash;
+    }
+
+    public FileHashCollection(IList<FileHash> items)
+        : base(items)
+    {
+    }
+
+    public FileHashCollection(IEnumerable<FileHash> items)
+        : base(items.ToArray())
+    {
+    }
+
+    public FileHashCollection(IEnumerable<string> items)
+        : base(items.Select(FileHash.Parse).ToArray())
+    {
+    }
+
+    public void AddRange(IEnumerable<FileHash> items)
+    {
+        foreach (FileHash item in items)
+            Items.Add(item);
     }
 }

@@ -18,6 +18,7 @@ using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
+using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 using DustInTheWind.DirectoryCompare.Ports.LogAccess;
 using MediatR;
 
@@ -28,21 +29,26 @@ public class RemoveDuplicatesUseCase : IRequestHandler<RemoveDuplicatesRequest>
     private readonly ISnapshotRepository snapshotRepository;
     private readonly IBlackListRepository blackListRepository;
     private readonly IRemoveDuplicatesLog removeDuplicatesLog;
+    private readonly IFileSystem fileSystem;
 
-    public RemoveDuplicatesUseCase(ISnapshotRepository snapshotRepository, IBlackListRepository blackListRepository, IRemoveDuplicatesLog removeDuplicatesLog)
+    public RemoveDuplicatesUseCase(ISnapshotRepository snapshotRepository, IBlackListRepository blackListRepository,
+        IRemoveDuplicatesLog removeDuplicatesLog, IFileSystem fileSystem)
     {
         this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
         this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
         this.removeDuplicatesLog = removeDuplicatesLog ?? throw new ArgumentNullException(nameof(removeDuplicatesLog));
+        this.fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
     }
 
     // This is a draft. Not yet finished.
     public async Task Handle(RemoveDuplicatesRequest request, CancellationToken cancellationToken)
     {
-        DiskPathCollection blackListPathsLeft = await blackListRepository.Get(request.SnapshotLeft.PotName);
+        IEnumerable<PathBlackItem> blackListPathsLeft = (await blackListRepository.Get(request.SnapshotLeft.PotName))
+            .Select(x => new PathBlackItem(x));
         BlackList blackListLeft = new(blackListPathsLeft);
 
-        DiskPathCollection blackListPathsRight = await blackListRepository.Get(request.SnapshotRight.PotName);
+        IEnumerable<PathBlackItem> blackListPathsRight = (await blackListRepository.Get(request.SnapshotRight.PotName))
+            .Select(x => new PathBlackItem(x));
         BlackList blackListRight = new(blackListPathsRight);
 
         FileDuplicates fileDuplicates = new()
@@ -50,8 +56,7 @@ public class RemoveDuplicatesUseCase : IRequestHandler<RemoveDuplicatesRequest>
             FilesLeft = (await EnumerateFiles(request.SnapshotLeft, blackListLeft))
                 .ToList(),
             FilesRight = (await EnumerateFiles(request.SnapshotRight, blackListRight))
-                .ToList(),
-            CheckFilesExistence = true
+                .ToList()
         };
 
         RemoveDuplicates(request, fileDuplicates);
@@ -85,22 +90,25 @@ public class RemoveDuplicatesUseCase : IRequestHandler<RemoveDuplicatesRequest>
         {
             removeDuplicatesLog.DuplicateFound(duplicate.FullPathLeft, duplicate.FullPathRight);
 
-            if (!duplicate.LeftFileExists && !duplicate.RightFileExists)
+            bool leftFileExists = fileSystem.FileExists(duplicate.FullPathLeft);
+            bool rightFileExists = fileSystem.FileExists(duplicate.FullPathRight);
+
+            if (!leftFileExists && !rightFileExists)
             {
                 removeDuplicatesLog.WriteActionNoFileExists();
                 continue;
             }
 
-            bool fileToKeepDoesNotExist = (!duplicate.LeftFileExists && request.FileToRemove == ComparisonSide.Right) ||
-                                          (!duplicate.RightFileExists && request.FileToRemove == ComparisonSide.Left);
+            bool fileToKeepDoesNotExist = (!leftFileExists && request.FileToRemove == ComparisonSide.Right) ||
+                                          (!rightFileExists && request.FileToRemove == ComparisonSide.Left);
             if (fileToKeepDoesNotExist)
             {
                 removeDuplicatesLog.WriteActionFileToKeepDoesNotExist();
                 continue;
             }
 
-            bool fileIsAlreadyRemoved = (!duplicate.LeftFileExists && request.FileToRemove == ComparisonSide.Left) ||
-                                        (!duplicate.RightFileExists && request.FileToRemove == ComparisonSide.Right);
+            bool fileIsAlreadyRemoved = (!leftFileExists && request.FileToRemove == ComparisonSide.Left) ||
+                                        (!rightFileExists && request.FileToRemove == ComparisonSide.Right);
             if (fileIsAlreadyRemoved)
             {
                 removeDuplicatesLog.WriteActionFileIsAlreadyRemoved();

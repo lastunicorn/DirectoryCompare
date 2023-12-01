@@ -18,6 +18,7 @@ using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
+using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 using DustInTheWind.DirectoryCompare.Ports.LogAccess;
 using MediatR;
 
@@ -28,36 +29,50 @@ public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest, Find
     private readonly ISnapshotRepository snapshotRepository;
     private readonly IBlackListRepository blackListRepository;
     private readonly ILog log;
+    private readonly IFileSystem fileSystem;
 
-    public FindDuplicatesUseCase(ISnapshotRepository snapshotRepository, IBlackListRepository blackListRepository, ILog log)
+    public FindDuplicatesUseCase(ISnapshotRepository snapshotRepository, IBlackListRepository blackListRepository, ILog log, IFileSystem fileSystem)
     {
         this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
         this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
         this.log = log ?? throw new ArgumentNullException(nameof(log));
+        this.fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
     }
 
     public async Task<FindDuplicatesResponse> Handle(FindDuplicatesRequest request, CancellationToken cancellationToken)
     {
-        log.WriteInfo("Searching for duplicates between pot '{0}' and '{1}'.", request.SnapshotLeft.PotName, request.SnapshotRight.PotName);
+        string potNameLeft = request.SnapshotLeft.PotName;
+        string potNameRight = request.SnapshotRight.PotName;
+        log.WriteInfo("Searching for duplicates between pot '{0}' and '{1}'.", potNameLeft, potNameRight);
 
-        FileDuplicates fileDuplicates = new()
-        {
-            FilesLeft = await GetFiles(request.SnapshotLeft),
-            FilesRight = string.IsNullOrEmpty(request.SnapshotRight.PotName)
-                ? null
-                : await GetFiles(request.SnapshotRight),
-            CheckFilesExistence = request.CheckFilesExistence
-        };
+        List<HFile> filesLeft = await GetLeftFiles(request);
+        List<HFile> filesRight = await GetRightFiles(request);
+
+        IEnumerable<FilePair> duplicates = ComputeDuplicates(filesLeft, filesRight, request.CheckFilesExistence);
 
         return new FindDuplicatesResponse
         {
-            DuplicatePairs = fileDuplicates.ToList().ToDto()
+            DuplicatePairs = duplicates
+                .Select(x => new FilePairDto(x))
+                .ToArray()
         };
+    }
+
+    private async Task<List<HFile>> GetLeftFiles(FindDuplicatesRequest request)
+    {
+        return await GetFiles(request.SnapshotLeft);
+    }
+
+    private async Task<List<HFile>> GetRightFiles(FindDuplicatesRequest request)
+    {
+        return string.IsNullOrEmpty(request.SnapshotRight.PotName)
+            ? null
+            : await GetFiles(request.SnapshotRight);
     }
 
     private async Task<List<HFile>> GetFiles(SnapshotLocation snapshotLocation)
     {
-        BlackList blackList = await GetBlackList(snapshotLocation);
+        BlackList blackList = await GetBlackList(snapshotLocation.PotName);
         Snapshot snapshot = await snapshotRepository.Get(snapshotLocation);
 
         IEnumerable<HFile> files = snapshot == null
@@ -67,12 +82,37 @@ public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest, Find
         return files.ToList();
     }
 
-    private async Task<BlackList> GetBlackList(SnapshotLocation snapshotLocation)
+    private async Task<BlackList> GetBlackList(string potName)
     {
-        if (snapshotLocation.PotName == null)
+        if (potName == null)
             return null;
 
-        DiskPathCollection blackListPaths = await blackListRepository.Get(snapshotLocation.PotName);
-        return new BlackList(blackListPaths);
+        IEnumerable<IBlackItem> blackListPaths = (await blackListRepository.Get(potName))
+            .Select(x => new PathBlackItem(x));
+
+        IEnumerable<IBlackItem> blackListHashes = (await blackListRepository.GetDuplicateExcludes(potName))
+            .Select(x => new FileHashBlackItem(x));
+
+        IEnumerable<IBlackItem> blackListItems = blackListPaths.Concat(blackListHashes);
+        return new BlackList(blackListItems);
+    }
+
+    private IEnumerable<FilePair> ComputeDuplicates(List<HFile> filesLeft, List<HFile> filesRight, bool checkFilesExistence)
+    {
+        FileDuplicates fileDuplicates = new()
+        {
+            FilesLeft = filesLeft,
+            FilesRight = filesRight
+        };
+
+        IEnumerable<FilePair> duplicates = fileDuplicates;
+
+        if (checkFilesExistence)
+        {
+            duplicates = duplicates
+                .Where(x => fileSystem.FileExists(x.FullPathLeft) && fileSystem.FileExists(x.FullPathRight));
+        }
+
+        return duplicates;
     }
 }

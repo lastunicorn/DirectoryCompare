@@ -66,13 +66,13 @@ public class HDirectory : HItem, IEquatable<HDirectory>, IEnumerable<HItem>
         return filesQuery;
     }
 
-    public IEnumerable<HFile> EnumerateFiles(BlackList blackList = null)
+    private IEnumerable<HFile> EnumerateFiles(BlackList blackList = null)
     {
         if (Files != null)
         {
             foreach (HFile file in Files)
             {
-                if (blackList != null && blackList.MatchPath(file))
+                if (blackList != null && blackList.Match(file))
                     continue;
 
                 yield return file;
@@ -83,12 +83,12 @@ public class HDirectory : HItem, IEquatable<HDirectory>, IEnumerable<HItem>
         {
             foreach (HDirectory xSubDirectory in Directories)
             {
-                if (blackList != null && blackList.MatchPath(xSubDirectory))
+                if (blackList != null && blackList.Match(xSubDirectory))
                     continue;
 
                 foreach (HFile file in xSubDirectory.EnumerateFiles())
                 {
-                    if (blackList != null && blackList.MatchPath(file))
+                    if (blackList != null && blackList.Match(file))
                         continue;
 
                     yield return file;

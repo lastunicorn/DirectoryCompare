@@ -22,11 +22,11 @@ namespace DustInTheWind.DirectoryCompare.Tests.Domain.Entities.BlackPathTests;
 
 public class PatternIsDirectoryTests
 {
-    private readonly BlackPath blackPath;
+    private readonly PathBlackItem blackPath;
 
     public PatternIsDirectoryTests()
     {
-        blackPath = new BlackPath("item-1/");
+        blackPath = new PathBlackItem("item-1/");
     }
 
     [Fact]
@@ -40,7 +40,7 @@ public class PatternIsDirectoryTests
             Name = "item-1"
         };
 
-        bool actual = blackPath.Matches(hFile);
+        bool actual = blackPath.Match(hFile);
 
         actual.Should().BeFalse();
     }
@@ -56,7 +56,7 @@ public class PatternIsDirectoryTests
             Name = "item-1"
         };
 
-        bool actual = blackPath.Matches(hDirectory);
+        bool actual = blackPath.Match(hDirectory);
 
         actual.Should().BeTrue();
     }
@@ -76,7 +76,7 @@ public class PatternIsDirectoryTests
             }
         };
 
-        bool actual = blackPath.Matches(hFile);
+        bool actual = blackPath.Match(hFile);
 
         actual.Should().BeFalse();
     }
@@ -96,7 +96,7 @@ public class PatternIsDirectoryTests
             }
         };
 
-        bool actual = blackPath.Matches(hDirectory);
+        bool actual = blackPath.Match(hDirectory);
 
         actual.Should().BeTrue();
     }
@@ -116,7 +116,7 @@ public class PatternIsDirectoryTests
             }
         };
 
-        bool actual = blackPath.Matches(hFile);
+        bool actual = blackPath.Match(hFile);
 
         actual.Should().BeTrue();
     }

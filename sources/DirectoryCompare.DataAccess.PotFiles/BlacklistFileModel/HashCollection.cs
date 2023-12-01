@@ -14,16 +14,24 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Domain.Comparison;
+using System.Collections.ObjectModel;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.FindDuplicates;
+namespace DustInTheWind.DirectoryCompare.DataAccess.PotFiles.BlacklistFileModel;
 
-internal static class FilePairDtoExtensions
+public class HashCollection: Collection<string>
 {
-    public static FilePairDto[] ToDto(this IEnumerable<FilePair> duplicatePairs)
+    public HashCollection()
     {
-        return duplicatePairs
-            .Select(x => new FilePairDto(x))
-            .ToArray();
+    }
+
+    public HashCollection(IList<string> items)
+        : base(items)
+    {
+    }
+
+    public void AddRange(IEnumerable<string> items)
+    {
+        foreach (string item in items)
+            Items.Add(item);
     }
 }

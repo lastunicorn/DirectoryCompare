@@ -16,13 +16,13 @@
 
 namespace DustInTheWind.DirectoryCompare.DataAccess.PotFiles.BlacklistFileModel;
 
-public class BlackListFile
+public class BlackListForReadFile
 {
     private readonly string filePath;
 
     public PathCollection Items { get; private set; }
 
-    public BlackListFile(string filePath)
+    public BlackListForReadFile(string filePath)
     {
         this.filePath = filePath;
     }

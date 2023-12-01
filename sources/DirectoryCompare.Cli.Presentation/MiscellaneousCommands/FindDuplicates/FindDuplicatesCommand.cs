@@ -20,12 +20,12 @@ using DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.FindDupli
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands.FindDuplicates;
 // Example:
-// find-duplicates snap1 snap2 -x
-// find-duplicates snap1 snap2 --check-files-existence
-// find-duplicates snap1 -x
-// find-duplicates snap1 --check-files-existence
+// duplicates snap1 snap2 -x
+// duplicates snap1 snap2 --check-files-existence
+// duplicates snap1 -x
+// duplicates snap1 --check-files-existence
 
-[NamedCommand("find-duplicates", Description = "Search and display all the duplicate files in a single snapshot or between two snapshots.")]
+[NamedCommand("duplicates", Description = "Search and display all the duplicate files in a single snapshot or between two snapshots.")]
 [CommandOrder(11)]
 internal class FindDuplicatesCommand : IConsoleCommand<FileDuplicatesViewModel>
 {

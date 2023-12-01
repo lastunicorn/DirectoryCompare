@@ -16,13 +16,13 @@
 
 namespace DustInTheWind.DirectoryCompare.Domain.Entities;
 
-public readonly struct BlackPath
+public class PathBlackItem : IBlackItem
 {
     private readonly bool isRooted;
     private readonly bool isDirectoryOnly;
     private readonly string[] parts;
 
-    public BlackPath(string pattern)
+    public PathBlackItem(string pattern)
     {
         string trimmedPattern = pattern.TrimStart();
         isRooted = trimmedPattern.StartsWith("/");
@@ -32,7 +32,7 @@ public readonly struct BlackPath
             .ToArray();
     }
 
-    public bool Matches(HItem hItem)
+    public bool Match(HItem hItem)
     {
         int index = parts.Length - 1;
         HItem currentHItem = hItem;

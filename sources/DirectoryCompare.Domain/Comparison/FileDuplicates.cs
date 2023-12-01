@@ -26,8 +26,6 @@ public class FileDuplicates : IEnumerable<FilePair>
 
     public List<HFile> FilesRight { get; set; }
 
-    public bool CheckFilesExistence { get; set; }
-
     public int DuplicateCount { get; private set; }
 
     public DataSize TotalSize { get; private set; }
@@ -67,7 +65,7 @@ public class FileDuplicates : IEnumerable<FilePair>
             for (int j = i + 1; j < files.Count; j++)
             {
                 HFile fileRight = files[j];
-                yield return new FilePair(fileLeft, fileRight, CheckFilesExistence);
+                yield return new FilePair(fileLeft, fileRight);
             }
         }
     }
@@ -81,7 +79,7 @@ public class FileDuplicates : IEnumerable<FilePair>
             for (int j = 0; j < filesRight.Count; j++)
             {
                 HFile fileRight = filesRight[j];
-                yield return new FilePair(fileLeft, fileRight, CheckFilesExistence);
+                yield return new FilePair(fileLeft, fileRight);
             }
         }
     }

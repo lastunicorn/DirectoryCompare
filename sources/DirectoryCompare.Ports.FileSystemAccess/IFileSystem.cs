@@ -21,4 +21,6 @@ public interface IFileSystem
     IDiskCrawler CreateCrawler(string path, List<string> blackList);
 
     bool ExistsDirectory(string path);
+
+    bool FileExists(string path);
 }

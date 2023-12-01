@@ -22,11 +22,11 @@ namespace DustInTheWind.DirectoryCompare.Tests.Domain.Entities.BlackPathTests;
 
 public class PatternIsRootedFileWithPathTests
 {
-    private readonly BlackPath blackPath;
+    private readonly PathBlackItem blackPath;
 
     public PatternIsRootedFileWithPathTests()
     {
-        blackPath = new BlackPath("/dir-2/file-or-dir-1");
+        blackPath = new PathBlackItem("/dir-2/file-or-dir-1");
     }
 
     [Fact]
@@ -40,7 +40,7 @@ public class PatternIsRootedFileWithPathTests
             Name = "file-or-dir-1"
         };
 
-        bool actual = blackPath.Matches(hFile);
+        bool actual = blackPath.Match(hFile);
 
         actual.Should().BeFalse();
     }
@@ -56,7 +56,7 @@ public class PatternIsRootedFileWithPathTests
             Name = "file-or-dir-1"
         };
 
-        bool actual = blackPath.Matches(hDirectory);
+        bool actual = blackPath.Match(hDirectory);
 
         actual.Should().BeFalse();
     }
@@ -76,7 +76,7 @@ public class PatternIsRootedFileWithPathTests
             }
         };
 
-        bool actual = blackPath.Matches(hFile);
+        bool actual = blackPath.Match(hFile);
 
         actual.Should().BeTrue();
     }
@@ -96,7 +96,7 @@ public class PatternIsRootedFileWithPathTests
             }
         };
 
-        bool actual = blackPath.Matches(hDirectory);
+        bool actual = blackPath.Match(hDirectory);
 
         actual.Should().BeTrue();
     }

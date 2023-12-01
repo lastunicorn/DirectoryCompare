@@ -25,4 +25,6 @@ public interface IBlackListRepository
     Task Add(string potName, DiskPath path);
 
     Task Delete(string potName, DiskPath path);
+
+    Task<FileHashCollection> GetDuplicateExcludes(string potName);
 }

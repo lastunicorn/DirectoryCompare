@@ -160,10 +160,18 @@ public class PotDirectory
         return fileSizes + subdirSizes;
     }
 
-    public BlackListFile OpenBlackListFile(string blackListName)
+    public BlackListForReadFile OpenBlackListForReadFile()
     {
-        string blackListPath = Path.Combine(FullPath, blackListName);
-        BlackListFile blackListFile = new(blackListPath);
+        string blackListPath = Path.Combine(FullPath, "bl");
+        BlackListForReadFile blackListFile = new(blackListPath);
+        blackListFile.Open();
+        return blackListFile;
+    }
+
+    public BlackListForDuplicatesFile OpenBlackListForDuplicatesFile()
+    {
+        string blackListPath = Path.Combine(FullPath, "bl-duplicates");
+        BlackListForDuplicatesFile blackListFile = new(blackListPath);
         blackListFile.Open();
         return blackListFile;
     }

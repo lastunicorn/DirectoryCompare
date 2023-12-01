@@ -32,42 +32,47 @@ public class BlackListRepository : IBlackListRepository
 
     public async Task<DiskPathCollection> Get(string potName)
     {
-        IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
-        PotDirectory potDirectory = potDirectories
-            .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == potName);
-
-        if (potDirectory == null)
-            throw new Exception($"There is no pot with name '{potName}'.");
-
-        BlackListFile blackListFile = potDirectory.OpenBlackListFile("bl");
+        PotDirectory potDirectory = await GetPotDirectory(potName);
+        
+        BlackListForReadFile blackListFile = potDirectory.OpenBlackListForReadFile();
         return new DiskPathCollection(blackListFile.Items);
     }
 
     public async Task Add(string potName, DiskPath path)
     {
-        IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
-        PotDirectory potDirectory = potDirectories
-            .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == potName);
+        PotDirectory potDirectory = await GetPotDirectory(potName);
 
-        if (potDirectory == null)
-            throw new Exception($"There is no pot with name '{potName}'.");
-
-        BlackListFile blackListFile = potDirectory.OpenBlackListFile("bl");
+        BlackListForReadFile blackListFile = potDirectory.OpenBlackListForReadFile();
         blackListFile.Add(path);
         blackListFile.Save();
     }
 
     public async Task Delete(string potName, DiskPath path)
     {
+        PotDirectory potDirectory = await GetPotDirectory(potName);
+
+        BlackListForReadFile blackListFile = potDirectory.OpenBlackListForReadFile();
+        blackListFile.Remove(path);
+        blackListFile.Save();
+    }
+
+    public async Task<FileHashCollection> GetDuplicateExcludes(string potName)
+    {
+        PotDirectory potDirectory = await GetPotDirectory(potName);
+
+        BlackListForDuplicatesFile blackListFile = potDirectory.OpenBlackListForDuplicatesFile();
+        return new FileHashCollection(blackListFile.Items);
+    }
+
+    private async Task<PotDirectory> GetPotDirectory(string potName)
+    {
         IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
         PotDirectory potDirectory = potDirectories
             .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == potName);
 
         if (potDirectory == null)
             throw new Exception($"There is no pot with name '{potName}'.");
-
-        BlackListFile blackListFile = potDirectory.OpenBlackListFile("bl");
-        blackListFile.Remove(path);
-        blackListFile.Save();
+        
+        return potDirectory;
     }
 }

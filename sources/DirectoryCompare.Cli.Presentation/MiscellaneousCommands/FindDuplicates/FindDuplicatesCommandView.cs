@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Commando;
 using DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.FindDuplicates;
 using DustInTheWind.DirectoryCompare.DataStructures;
@@ -35,7 +36,11 @@ internal class FindDuplicatesCommandView : IView<FileDuplicatesViewModel>
         Console.WriteLine(filePair.FullPathLeft);
         Console.WriteLine(filePair.FullPathRight);
 
-        Console.WriteLine($"{filePair.Size} ({filePair.Size.ToString(DataSizeUnit.Byte)})");
+        DataSize sizeShort = filePair.Size;
+        string sizeLong = filePair.Size.ToString(DataSizeUnit.Byte);
+        FileHash fileHash = filePair.Hash;
+        CustomConsole.WriteLine(ConsoleColor.DarkGray, $"{sizeShort} ({sizeLong}) - {fileHash}");
+        
         Console.WriteLine();
     }
 
