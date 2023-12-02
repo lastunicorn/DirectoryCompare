@@ -51,7 +51,7 @@ public class CreateSnapshotUi : EnhancedConsole, ICreateSnapshotUi
 
     public Task AnnounceFilesIndexing()
     {
-        CustomConsole.WriteLine("Starting to count files.");
+        CustomConsole.WriteLine("Counting files...");
 
         return Task.CompletedTask;
     }
@@ -66,7 +66,6 @@ public class CreateSnapshotUi : EnhancedConsole, ICreateSnapshotUi
     public Task AnnounceFilesIndexed(FileIndexInfo fileIndexInfo)
     {
         CustomConsole.WriteLine();
-        CustomConsole.WriteLineSuccess("Finished indexing files");
 
         WithIndentation(() =>
         {
@@ -79,19 +78,33 @@ public class CreateSnapshotUi : EnhancedConsole, ICreateSnapshotUi
         return Task.CompletedTask;
     }
 
-    public Task AnnounceFileIndexingError(string path, Exception exception)
+    public Task AnnounceFileIndexingError(IndexingErrorInfo info)
     {
-        CustomConsole.WriteLineError($"Error while indexing path: {path}");
-        CustomConsole.WriteLineError(exception);
+        CustomConsole.WriteLineError($"Error while indexing path: {info.Path}");
+        CustomConsole.WriteLineError(info.Exception);
 
         return Task.CompletedTask;
     }
 
-    public Task AnnounceAnalysisError(string path, Exception exception)
+    public Task AnnounceAnalysisError(AnalysisErrorInfo info)
     {
-        CustomConsole.WriteLineError($"Error while analysing path: {path}");
-        CustomConsole.WriteLineError(exception);
+        CustomConsole.WriteLineError($"Error while indexing path: {info.Path}");
+        CustomConsole.WriteLineError(info.Exception);
 
+        return Task.CompletedTask;
+    }
+
+    public Task AnnounceAnalysisProgress(DiskAnalysisProgressInfo info)
+    {
+        Console.WriteLine($"Progress: {info.Percentage:0.00} % ({info.ProcessedSize} / {info.TotalSize})");
+
+        return Task.CompletedTask;
+    }
+
+    public Task AnnounceAnalysisFinished()
+    {
+        WriteSuccess("Done");
+        
         return Task.CompletedTask;
     }
 }

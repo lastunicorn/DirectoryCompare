@@ -1,4 +1,4 @@
-﻿// DirectoryCompare
+// DirectoryCompare
 // Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -16,13 +16,13 @@
 
 using DustInTheWind.DirectoryCompare.DataStructures;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
+namespace DustInTheWind.DirectoryCompare.Ports.UserAccess;
 
-public class DiskReaderStartingEventArgs : EventArgs
+public class AnalysisStartingInfo : EventArgs
 {
     public DiskPathCollection BlackList { get; }
 
-    public DiskReaderStartingEventArgs(DiskPathCollection blackList)
+    public AnalysisStartingInfo(DiskPathCollection blackList)
     {
         BlackList = blackList;
     }

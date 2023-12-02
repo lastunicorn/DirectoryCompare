@@ -21,6 +21,8 @@ namespace DustInTheWind.DirectoryCompare.FileSystemAccess;
 
 internal class DirectoryErrorCrawlerItem : ICrawlerItem
 {
+    public IDiskCrawler Owner { get; set; }
+
     public CrawlerAction Action { get; } = CrawlerAction.DirectoryError;
 
     public string Name => System.IO.Path.GetFileName(Path);

@@ -18,7 +18,6 @@ using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Commando;
 using DustInTheWind.DirectoryCompare.Cli.Application;
 using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot;
-using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands.CreateSnapshot;
 
@@ -31,7 +30,6 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands.Creat
 public class CreateSnapshotCommand : IConsoleCommand
 {
     private readonly RequestBus requestBus;
-    private readonly CreateSnapshotCommandView view;
 
     [AnonymousParameter(Order = 1, Description = "The name or id of the pot for which to create a new snapshot.")]
     public string PotName { get; set; }
@@ -39,8 +37,6 @@ public class CreateSnapshotCommand : IConsoleCommand
     public CreateSnapshotCommand(RequestBus requestBus)
     {
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
-
-        view = new CreateSnapshotCommandView();
     }
 
     public async Task Execute()
@@ -50,22 +46,6 @@ public class CreateSnapshotCommand : IConsoleCommand
             PotName = PotName
         };
 
-        IDiskAnalysisReport diskAnalysisReport = await requestBus.PlaceRequest<CreateSnapshotRequest, IDiskAnalysisReport>(request);
-        diskAnalysisReport.Progress += HandleAnalysisProgress;
-        diskAnalysisReport.ErrorEncountered += HandleErrorEncountered;
-
-        diskAnalysisReport.WaitToEnd();
-        view.FinishDisplay();
-    }
-
-    private void HandleErrorEncountered(object sender, ErrorEncounteredEventArgs e)
-    {
-        CustomConsole.WriteError($"Error while reading path: {e.Path}");
-        CustomConsole.WriteError(e.Exception);
-    }
-
-    private void HandleAnalysisProgress(object sender, DiskAnalysisProgressEventArgs e)
-    {
-        view.HandleProgress(e);
+        await requestBus.PlaceRequest(request);
     }
 }

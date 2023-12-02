@@ -15,7 +15,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot;
-using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
@@ -148,8 +147,6 @@ public class RetrievePotTests
             PotName = "pot1"
         };
 
-        IDiskAnalysisReport report = await useCase.Handle(request, CancellationToken.None);
-
-        report.Should().NotBeNull();
+        await useCase.Handle(request, CancellationToken.None);
     }
 }

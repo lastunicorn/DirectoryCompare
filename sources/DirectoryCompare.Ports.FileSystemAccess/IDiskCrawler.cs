@@ -19,4 +19,6 @@ namespace DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 public interface IDiskCrawler
 {
     IEnumerable<ICrawlerItem> Crawl();
+
+    string RootPath { get; }
 }

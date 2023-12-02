@@ -18,6 +18,7 @@ using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot
 using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
+using DustInTheWind.DirectoryCompare.Ports.DataAccess.ImportExport;
 using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 using DustInTheWind.DirectoryCompare.Ports.LogAccess;
 using DustInTheWind.DirectoryCompare.Ports.SystemAccess;
@@ -26,7 +27,7 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot;
 
-public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest, IDiskAnalysisReport>
+public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest>
 {
     private readonly ILog log;
     private readonly IPotRepository potRepository;
@@ -49,14 +50,12 @@ public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest, IDis
         this.systemClock = systemClock ?? throw new ArgumentNullException(nameof(systemClock));
     }
 
-    public async Task<IDiskAnalysisReport> Handle(CreateSnapshotRequest request, CancellationToken cancellationToken)
+    public async Task Handle(CreateSnapshotRequest request, CancellationToken cancellationToken)
     {
         Pot pot = await RetrievePot(request.PotName);
-        DiskPathCollection rootedBlackList = await RetrieveBlackListPaths(pot);
+        DiskPathCollection blackList = await RetrieveBlackListPaths(pot);
         CheckPotPathExists(pot);
-        IDiskAnalysisReport report = StartDiskAnalysis(pot, rootedBlackList);
-
-        return report;
+        await StartDiskAnalysis(pot, blackList);
     }
 
     private async Task<Pot> RetrievePot(string potName)
@@ -92,14 +91,73 @@ public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest, IDis
             throw new PotPathDoesNotExistException(pot.Name, pot.Path);
     }
 
-    private IDiskAnalysisReport StartDiskAnalysis(Pot pot, DiskPathCollection blackList)
+    private async Task StartDiskAnalysis(Pot pot, DiskPathCollection blackList)
     {
-        DiskAnalysis.DiskAnalysis diskAnalysis = new(log, fileSystem, snapshotRepository, createSnapshotUi, systemClock)
+        await AnnounceStarting(pot, blackList);
+
+        IDiskCrawler diskCrawler = CreateDiskCrawler(pot, blackList);
+        PreAnalysis preAnalysis = await RunPreAnalysis(diskCrawler);
+        using ISnapshotWriter snapshotWriter = await OpenSnapshotWriter(pot);
+
+        DiskAnalysis.DiskAnalysis diskAnalysis = new(log, createSnapshotUi)
         {
-            Pot = pot,
-            BlackList = blackList
+            DiskCrawler = diskCrawler,
+            PreAnalysis = preAnalysis,
+            SnapshotWriter = snapshotWriter
         };
 
-        return diskAnalysis.Start();
+        await diskAnalysis.RunAsync();
+    }
+
+    private async Task AnnounceStarting(Pot pot, DiskPathCollection blackList)
+    {
+        log.WriteInfo("Scanning path: {0}", pot.Path);
+
+        if (blackList.Count == 0)
+        {
+            log.WriteInfo("No blacklist entries.");
+            return;
+        }
+
+        log.WriteInfo("Computed black list:");
+
+        foreach (string blackListItem in blackList)
+            log.WriteInfo("- " + blackListItem);
+
+        await AnnounceSnapshotCreating(pot, blackList);
+    }
+
+    private async Task AnnounceSnapshotCreating(Pot pot, DiskPathCollection blackList)
+    {
+        StartNewSnapshotInfo info = new()
+        {
+            PotName = pot.Name,
+            Path = pot.Path,
+            BlackList = blackList
+                .Select(x => x.ToString())
+                .ToList(),
+            StartTime = systemClock.GetCurrentUtcTime()
+        };
+
+        await createSnapshotUi.AnnounceStarting(info);
+    }
+
+    private IDiskCrawler CreateDiskCrawler(Pot pot, DiskPathCollection blackList)
+    {
+        IDiskCrawler diskCrawler = fileSystem.CreateCrawler(pot.Path, blackList.ToListOfStrings());
+        return diskCrawler;
+    }
+
+    private async Task<PreAnalysis> RunPreAnalysis(IDiskCrawler diskCrawler)
+    {
+        PreAnalysis preAnalysis = new(diskCrawler, createSnapshotUi);
+        await preAnalysis.RunAsync();
+
+        return preAnalysis;
+    }
+
+    private Task<ISnapshotWriter> OpenSnapshotWriter(Pot pot)
+    {
+        return snapshotRepository.CreateWriter(pot.Name);
     }
 }

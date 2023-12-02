@@ -14,30 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.ConsoleTools.Commando;
+namespace DustInTheWind.DirectoryCompare.Ports.UserAccess;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands.ReadSnapshot;
-
-public class ReadSnapshotCommandView : ViewBase<ReadSnapshotCommand>
+public class IndexingErrorInfo : EventArgs
 {
-    private int lastValue;
+    public Exception Exception { get; }
 
-    public override void Display(ReadSnapshotCommand command)
-    {
-        lastValue = -1;
-    }
+    public string Path { get; }
 
-    public void HandleProgress(int percentage)
+    public IndexingErrorInfo(Exception exception, string path)
     {
-        if (Math.Abs(lastValue - percentage) > 0.1)
-        {
-            Console.WriteLine($"Progress: {percentage}%");
-            lastValue = percentage;
-        }
-    }
-
-    public void FinishDisplay()
-    {
-        WriteSuccess("Done");
+        Exception = exception ?? throw new ArgumentNullException(nameof(exception));
+        Path = path;
     }
 }

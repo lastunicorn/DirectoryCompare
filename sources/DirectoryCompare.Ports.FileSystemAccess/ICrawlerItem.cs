@@ -20,6 +20,8 @@ namespace DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 
 public interface ICrawlerItem
 {
+    IDiskCrawler Owner { get; set; }
+
     CrawlerAction Action { get; }
 
     string Name { get; }
@@ -35,6 +37,8 @@ public interface ICrawlerItem
     DateTime LastModifiedTime { get; }
 
     DataSize Size { get; }
+
+    bool IsRoot => Path == Owner?.RootPath;
 
     Stream ReadContent();
 }

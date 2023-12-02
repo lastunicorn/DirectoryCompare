@@ -20,29 +20,36 @@ namespace DustInTheWind.DirectoryCompare.FileSystemAccess;
 
 internal class DiskCrawler : IDiskCrawler
 {
-    private readonly string path;
     private readonly List<string> blackList;
+
+    public string RootPath { get; }
 
     public DiskCrawler(string path, List<string> blackList)
     {
-        this.path = path ?? throw new ArgumentNullException(nameof(path));
+        RootPath = path ?? throw new ArgumentNullException(nameof(path));
         this.blackList = blackList ?? throw new ArgumentNullException(nameof(blackList));
     }
 
     public IEnumerable<ICrawlerItem> Crawl()
     {
-        if (Directory.Exists(path))
+        if (Directory.Exists(RootPath))
         {
-            DirectoryCrawler directoryCrawler = new(path, blackList);
+            DirectoryCrawler directoryCrawler = new(RootPath, blackList);
             IEnumerable<ICrawlerItem> crawlerItems = directoryCrawler.Crawl();
 
             foreach (ICrawlerItem crawlerItem in crawlerItems)
+            {
+                crawlerItem.Owner = this;
                 yield return crawlerItem;
+            }
         }
         else
         {
-            Exception exception = new($"The path '{path}' does not exist.");
-            yield return new DirectoryErrorCrawlerItem(exception, path);
+            Exception exception = new($"The path '{RootPath}' does not exist.");
+            yield return new DirectoryErrorCrawlerItem(exception, RootPath)
+            {
+                Owner = this
+            };
         }
     }
 }

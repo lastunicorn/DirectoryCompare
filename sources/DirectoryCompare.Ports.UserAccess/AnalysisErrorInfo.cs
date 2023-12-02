@@ -14,15 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
+namespace DustInTheWind.DirectoryCompare.Ports.UserAccess;
 
-public class ErrorEncounteredEventArgs : EventArgs
+public class AnalysisErrorInfo : EventArgs
 {
     public Exception Exception { get; }
 
     public string Path { get; }
 
-    public ErrorEncounteredEventArgs(Exception exception, string path)
+    public AnalysisErrorInfo(Exception exception, string path)
     {
         Exception = exception ?? throw new ArgumentNullException(nameof(exception));
         Path = path;

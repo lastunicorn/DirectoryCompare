@@ -22,11 +22,15 @@ public interface ICreateSnapshotUi
 
     Task AnnounceFilesIndexing();
 
-    Task AnnounceFileIndexingProgress(FileIndexInfo fileIndexInfo);
+    Task AnnounceFileIndexingProgress(FileIndexInfo info);
 
-    Task AnnounceFilesIndexed(FileIndexInfo fileIndexInfo);
+    Task AnnounceFilesIndexed(FileIndexInfo info);
 
-    Task AnnounceFileIndexingError(string path, Exception exception);
+    Task AnnounceFileIndexingError(IndexingErrorInfo info);
 
-    Task AnnounceAnalysisError(string path, Exception exception);
+    Task AnnounceAnalysisProgress(DiskAnalysisProgressInfo info);
+
+    Task AnnounceAnalysisError(AnalysisErrorInfo info);
+
+    Task AnnounceAnalysisFinished();
 }

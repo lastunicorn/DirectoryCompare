@@ -19,7 +19,7 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot;
 
-public class CreateSnapshotRequest : IRequest<IDiskAnalysisReport>, IRequest
+public class CreateSnapshotRequest : IRequest
 {
     public string PotName { get; set; }
 }

@@ -1,4 +1,4 @@
-﻿// DirectoryCompare
+// DirectoryCompare
 // Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -14,17 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
+using DustInTheWind.DirectoryCompare.DataStructures;
 
-public interface IDiskAnalysisReport
+namespace DustInTheWind.DirectoryCompare.Ports.UserAccess;
+
+public class DiskAnalysisProgressInfo : EventArgs
 {
-    event EventHandler<ErrorEncounteredEventArgs> ErrorEncountered;
+    public float Percentage { get; init; }
 
-    event EventHandler<DiskReaderStartingEventArgs> Starting;
+    public DataSize ProcessedSize { get; init; }
 
-    event EventHandler<DiskAnalysisProgressEventArgs> Progress;
+    public DataSize TotalSize { get; init; }
 
-    event EventHandler Finished;
-
-    void WaitToEnd();
+    public TimeSpan ElapsedTime { get; init; }
 }
