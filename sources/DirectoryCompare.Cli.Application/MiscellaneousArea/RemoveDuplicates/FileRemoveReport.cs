@@ -1,4 +1,4 @@
-﻿// DirectoryCompare
+// DirectoryCompare
 // Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -16,23 +16,11 @@
 
 using DustInTheWind.DirectoryCompare.DataStructures;
 
-namespace DustInTheWind.DirectoryCompare.Ports.LogAccess;
+namespace DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.RemoveDuplicates;
 
-public interface IRemoveDuplicatesLog
+internal class FileRemoveReport
 {
-    void WritePlanInfo(RemoveDuplicatesPlan removeDuplicatesPlan);
+    public int FileRemovedCount { get; set; }
 
-    void DuplicateFound(string fullPathLeft, string fullPathRight);
-
-    void WriteActionNoFileExists();
-
-    void WriteActionFileToKeepDoesNotExist(string path);
-
-    void WriteActionFileIsAlreadyRemoved(string path);
-
-    void WriteActionFileDeleted(string path);
-
-    void WriteActionFileMoved(string path);
-
-    void WriteSummary(int removedFiles, DataSize removedSize);
+    public DataSize TotalSize { get; set; }
 }

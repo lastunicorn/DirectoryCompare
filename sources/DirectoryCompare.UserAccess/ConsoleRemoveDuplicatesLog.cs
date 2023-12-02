@@ -14,65 +14,90 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.ConsoleTools.Commando;
 using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Ports.LogAccess;
 
 namespace DustInTheWind.DirectoryCompare.UserAccess;
 
-public class ConsoleRemoveDuplicatesLog : IRemoveDuplicatesLog
+public class ConsoleRemoveDuplicatesLog : EnhancedConsole, IRemoveDuplicatesLog
 {
     public void WritePlanInfo(RemoveDuplicatesPlan removeDuplicatesPlan)
     {
-        Console.WriteLine("Removing duplicates");
-        Console.WriteLine("  Snapshot Left:  " + removeDuplicatesPlan.SnapshotLeft);
-        Console.WriteLine("  Snapshot Right: " + removeDuplicatesPlan.SnapshotRight);
-        Console.WriteLine("  Remove Part: " + removeDuplicatesPlan.RemovePart);
+        WithIndentation("Removing duplicates:", () =>
+        {
+            WriteValue("Snapshot Left", removeDuplicatesPlan.SnapshotLeft);
+            WriteValue("Snapshot Right:", removeDuplicatesPlan.SnapshotRight);
+            WriteValue("Remove Part:", removeDuplicatesPlan.RemovePart);
 
-        string action = removeDuplicatesPlan.PurgatoryDirectory == null
-            ? "delete"
-            : "move";
-        Console.WriteLine("  Action: " + action);
+            string action = removeDuplicatesPlan.PurgatoryDirectory == null
+                ? "delete"
+                : "move";
+            WriteValue("Action", action);
 
-        if (removeDuplicatesPlan.PurgatoryDirectory != null)
-            Console.WriteLine("  Move to directory: " + removeDuplicatesPlan.PurgatoryDirectory);
+            if (removeDuplicatesPlan.PurgatoryDirectory != null)
+                WriteValue("Move to directory", removeDuplicatesPlan.PurgatoryDirectory);
+        });
 
         Console.WriteLine();
     }
 
     public void DuplicateFound(string fullPathLeft, string fullPathRight)
     {
-        Console.WriteLine("Duplicate found:");
-        Console.WriteLine("  Left:  " + fullPathLeft);
-        Console.WriteLine("  Right: " + fullPathRight);
+        WithIndentation("Duplicate found:", () =>
+        {
+            WriteValue("Left ", fullPathLeft);
+            WriteValue("Right", fullPathRight);
+        });
     }
 
     public void WriteActionNoFileExists()
     {
-        Console.WriteLine("  Action: [none] None of the files exists on disk.");
+        WithIndentation(() =>
+        {
+            WriteInfo("Action: [none]; None of the files exists on disk.");
+        });
+
         Console.WriteLine();
     }
 
-    public void WriteActionFileToKeepDoesNotExist()
+    public void WriteActionFileToKeepDoesNotExist(string path)
     {
-        Console.WriteLine("  Action: [none] Only the file scheduled to be removed exists on disk.");
+        WithIndentation(() =>
+        {
+            WriteInfo($"Action: [none]; File to keep does not exist on disk. File: {path}");
+        });
+
         Console.WriteLine();
     }
 
-    public void WriteActionFileIsAlreadyRemoved()
+    public void WriteActionFileIsAlreadyRemoved(string path)
     {
-        Console.WriteLine("  Action: [none] File scheduled to be removed does not exist.");
+        WithIndentation(() =>
+        {
+            WriteInfo($"Action: [none]; File scheduled to be removed does not exist. File: {path}");
+        });
+
         Console.WriteLine();
     }
 
     public void WriteActionFileDeleted(string path)
     {
-        Console.WriteLine($"  Action: [deleted] File: {path}");
+        WithIndentation(() =>
+        {
+            WriteInfo($"Action: [deleted]; File: {path}");
+        });
+
         Console.WriteLine();
     }
 
     public void WriteActionFileMoved(string path)
     {
-        Console.WriteLine($"  Action: [moved] File: {path}");
+        WithIndentation(() =>
+        {
+            WriteInfo($"Action: [moved]; File: {path}");
+        });
+
         Console.WriteLine();
     }
 

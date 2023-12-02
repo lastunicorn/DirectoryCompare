@@ -21,6 +21,10 @@ using DustInTheWind.DirectoryCompare.DataStructures;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands.RemoveDuplicates;
 
+// Example:
+// remove-duplicates snap1 snap2
+// remove-duplicates snap1 snap2 --remove-from left --purgatory /home/user-name/Temp
+
 [NamedCommand("remove-duplicates", Description = "Compares two snapshots or sub-parts of snapshots and remove the duplicate files from one of them.")]
 public class RemoveDuplicatesCommand : IConsoleCommand
 {

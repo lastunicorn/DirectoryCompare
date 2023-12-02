@@ -73,22 +73,13 @@ public class RemoveDuplicatesUseCase : IRequestHandler<RemoveDuplicatesRequest>
 
     private void RemoveDuplicates(RemoveDuplicatesRequest request, IEnumerable<FilePair> fileDuplicates)
     {
-        RemoveDuplicatesPlan removeDuplicatesPlan = new()
-        {
-            SnapshotLeft = request.SnapshotLeft.ToString(),
-            SnapshotRight = request.SnapshotRight.ToString(),
-            RemovePart = request.FileToRemove.ToString(),
-            PurgatoryDirectory = request.PurgatoryDirectory
-        };
+        AnnounceStart(request);
 
-        removeDuplicatesLog.WritePlanInfo(removeDuplicatesPlan);
-
-        int fileRemovedCount = 0;
-        DataSize totalSize = 0;
+        FileRemoveReport report = new();
 
         foreach (FilePair duplicate in fileDuplicates)
         {
-            removeDuplicatesLog.DuplicateFound(duplicate.FullPathLeft, duplicate.FullPathRight);
+            AnnounceDuplicateFound(duplicate);
 
             bool leftFileExists = fileSystem.FileExists(duplicate.FullPathLeft);
             bool rightFileExists = fileSystem.FileExists(duplicate.FullPathRight);
@@ -99,26 +90,18 @@ public class RemoveDuplicatesUseCase : IRequestHandler<RemoveDuplicatesRequest>
                 continue;
             }
 
-            bool fileToKeepDoesNotExist = (!leftFileExists && request.FileToRemove == ComparisonSide.Right) ||
-                                          (!rightFileExists && request.FileToRemove == ComparisonSide.Left);
-            if (fileToKeepDoesNotExist)
-            {
-                removeDuplicatesLog.WriteActionFileToKeepDoesNotExist();
-                continue;
-            }
-
-            bool fileIsAlreadyRemoved = (!leftFileExists && request.FileToRemove == ComparisonSide.Left) ||
-                                        (!rightFileExists && request.FileToRemove == ComparisonSide.Right);
-            if (fileIsAlreadyRemoved)
-            {
-                removeDuplicatesLog.WriteActionFileIsAlreadyRemoved();
-                continue;
-            }
-
             switch (request.FileToRemove)
             {
                 case ComparisonSide.Left:
-                    if (request.PurgatoryDirectory == null)
+                    if (!rightFileExists)
+                    {
+                        removeDuplicatesLog.WriteActionFileToKeepDoesNotExist("right");
+                    }
+                    else if (!leftFileExists)
+                    {
+                        removeDuplicatesLog.WriteActionFileIsAlreadyRemoved("left");
+                    }
+                    else if (request.PurgatoryDirectory == null)
                     {
                         duplicate.DeleteLeft();
                         removeDuplicatesLog.WriteActionFileDeleted("left");
@@ -129,12 +112,20 @@ public class RemoveDuplicatesUseCase : IRequestHandler<RemoveDuplicatesRequest>
                         removeDuplicatesLog.WriteActionFileMoved("left");
                     }
 
-                    fileRemovedCount++;
-                    totalSize += duplicate.Size;
+                    report.FileRemovedCount++;
+                    report.TotalSize += duplicate.Size;
                     break;
 
                 case ComparisonSide.Right:
-                    if (request.PurgatoryDirectory == null)
+                    if (!leftFileExists)
+                    {
+                        removeDuplicatesLog.WriteActionFileToKeepDoesNotExist("left");
+                    }
+                    else if (!rightFileExists)
+                    {
+                        removeDuplicatesLog.WriteActionFileIsAlreadyRemoved("right");
+                    }
+                    else if (request.PurgatoryDirectory == null)
                     {
                         duplicate.DeleteRight();
                         removeDuplicatesLog.WriteActionFileDeleted("right");
@@ -145,12 +136,41 @@ public class RemoveDuplicatesUseCase : IRequestHandler<RemoveDuplicatesRequest>
                         removeDuplicatesLog.WriteActionFileMoved("right");
                     }
 
-                    fileRemovedCount++;
-                    totalSize += duplicate.Size;
+                    report.FileRemovedCount++;
+                    report.TotalSize += duplicate.Size;
                     break;
             }
         }
 
+        AnnounceFinish(report);
+    }
+
+    private void AnnounceDuplicateFound(FilePair duplicate)
+    {
+        string pathLeft = duplicate.FullPathLeft;
+        string pathRight = duplicate.FullPathRight;
+
+        removeDuplicatesLog.DuplicateFound(pathLeft, pathRight);
+    }
+
+    private void AnnounceFinish(FileRemoveReport report)
+    {
+        int fileRemovedCount = report.FileRemovedCount;
+        DataSize totalSize = report.TotalSize;
+
         removeDuplicatesLog.WriteSummary(fileRemovedCount, totalSize);
+    }
+
+    private void AnnounceStart(RemoveDuplicatesRequest request)
+    {
+        RemoveDuplicatesPlan removeDuplicatesPlan = new()
+        {
+            SnapshotLeft = request.SnapshotLeft.ToString(),
+            SnapshotRight = request.SnapshotRight.ToString(),
+            RemovePart = request.FileToRemove.ToString(),
+            PurgatoryDirectory = request.PurgatoryDirectory
+        };
+
+        removeDuplicatesLog.WritePlanInfo(removeDuplicatesPlan);
     }
 }
