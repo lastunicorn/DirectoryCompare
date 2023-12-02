@@ -34,7 +34,7 @@ internal class DisplayPotCommandView : ViewBase<DisplayPotViewModel>
         WriteValue("Name", viewModel.Name);
         WriteValue("GUID", viewModel.Guid);
         WriteValue("Path", viewModel.Path);
-        WriteValue("Size", viewModel.Size.ToNiceString());
+        WriteValue("Size", viewModel.Size.ToString("D"));
 
         if (viewModel.Description != null)
             WriteValue("Description", viewModel.Description);

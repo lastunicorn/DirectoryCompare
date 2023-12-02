@@ -30,10 +30,10 @@ public class DisplaySnapshotCommandView : ViewBase<SnapshotViewModel>
         WriteValue("Directories", snapshotViewModel.TotalDirectoryCount.ToString("N0"));
         WriteValue("Files", snapshotViewModel.TotalFileCount.ToString("N0"));
 
-        string dataSize = snapshotViewModel.DataSize.ToNiceString();
+        string dataSize = snapshotViewModel.DataSize.ToString("D");
         WriteValue("Data Size", dataSize);
 
-        string storageSize = snapshotViewModel.StorageSize.ToNiceString();
+        string storageSize = snapshotViewModel.StorageSize.ToString("D");
         WriteValue("Snapshot Size", storageSize);
 
         if (snapshotViewModel.RootDirectory != null)
