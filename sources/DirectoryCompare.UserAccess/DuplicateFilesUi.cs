@@ -1,4 +1,4 @@
-﻿// DirectoryCompare
+// DirectoryCompare
 // Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -16,22 +16,29 @@
 
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.FindDuplicates;
 using DustInTheWind.DirectoryCompare.DataStructures;
+using DustInTheWind.DirectoryCompare.Ports.UserAccess;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands.FindDuplicates;
+namespace DustInTheWind.DirectoryCompare.UserAccess;
 
-internal class FindDuplicatesCommandView : IView<FileDuplicatesViewModel>
+public class DuplicateFilesUi : EnhancedConsole, IDuplicateFilesUi
 {
-    public void Display(FileDuplicatesViewModel fileDuplicates)
+    public Task AnnounceStart(SnapshotLocation snapshotLeft, SnapshotLocation snapshotRight)
     {
-        foreach (FilePairDto filePair in fileDuplicates)
-            WriteDuplicate(filePair);
+        CustomConsole.WriteLine("Searching for duplicates between:");
 
-        WriteSummary(fileDuplicates.DuplicateCount, fileDuplicates.TotalSize);
+        WithIndentation(() =>
+        {
+            WriteValue("Snapshot 1", snapshotLeft);
+            WriteValue("Snapshot 2", snapshotRight);
+        });
+
+        CustomConsole.WriteLine();
+
+        return Task.CompletedTask;
     }
 
-    private static void WriteDuplicate(FilePairDto filePair)
+    public Task AnnounceDuplicate(FilePairDto filePair)
     {
         Console.WriteLine(filePair.FullPathLeft);
         Console.WriteLine(filePair.FullPathRight);
@@ -40,14 +47,18 @@ internal class FindDuplicatesCommandView : IView<FileDuplicatesViewModel>
         string sizeLong = filePair.Size.ToString(DataSizeUnit.Byte);
         FileHash fileHash = filePair.Hash;
         CustomConsole.WriteLine(ConsoleColor.DarkGray, $"{sizeShort} ({sizeLong}) - {fileHash}");
-        
+
         Console.WriteLine();
+
+        return Task.CompletedTask;
     }
 
-    private static void WriteSummary(int duplicateCount, DataSize totalSize)
+    public Task AnnounceFinished(int duplicateCount, DataSize totalSize)
     {
-        Console.WriteLine($"Total duplicates: {duplicateCount:n0} files");
-        Console.WriteLine($"Total size: {totalSize} ({totalSize.ToString(DataSizeUnit.Byte)})");
+        WriteValue("Duplicates", duplicateCount.ToString("N0"));
+        WriteValue("Total size", totalSize.ToString("D"));
         Console.WriteLine();
+
+        return Task.CompletedTask;
     }
 }

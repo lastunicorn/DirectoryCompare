@@ -22,13 +22,13 @@ namespace DustInTheWind.DirectoryCompare.DataStructures;
 /// Represents the size of some data.
 /// It contains a value and a measurement unit.
 /// </summary>
-public struct DataSize : IEquatable<DataSize>
+public struct DataSize : IEquatable<DataSize>, IFormattable
 {
     private const ulong OneKiloByte = 1024;
     private const ulong OneMegaByte = OneKiloByte * 1024;
     private const ulong OneGigaByte = OneMegaByte * 1024;
     private const ulong OneTeraByte = OneGigaByte * 1024;
-    
+
     private static readonly Regex Regex = new(@"^\s*(\d+\.?\d*)\s*(b|kb|mb|gb|tb)*\s*$", RegexOptions.IgnoreCase);
 
     /// <summary>
@@ -50,6 +50,8 @@ public struct DataSize : IEquatable<DataSize>
     public static DataSize OneGigabyte { get; } = new((ulong)1024 * 1024 * 1024);
 
     public static DataSize OneTerabyte { get; } = new((ulong)1024 * 1024 * 1024 * 1024);
+
+    public bool IsZero => Value == 0;
 
     /// <summary>
     /// Gets the value converted in Bytes.
@@ -351,7 +353,7 @@ public struct DataSize : IEquatable<DataSize>
     {
         if (dataSize2 < 0)
             return false;
-                
+
         return dataSize1.Value < (ulong)dataSize2;
     }
 
@@ -453,7 +455,7 @@ public struct DataSize : IEquatable<DataSize>
         {
             tempSize /= OneTeraByte;
 
-            return tempSize < 10 
+            return tempSize < 10
                 ? $"{tempSize:N2} TB"
                 : $"{tempSize:N0} TB";
         }
@@ -470,7 +472,7 @@ public struct DataSize : IEquatable<DataSize>
         if (tempSize >= OneMegaByte)
         {
             tempSize /= OneMegaByte;
-            
+
             return tempSize < 10
                 ? $"{tempSize:N2} MB"
                 : $"{tempSize:N0} MB";
@@ -479,13 +481,36 @@ public struct DataSize : IEquatable<DataSize>
         if (tempSize >= OneKiloByte)
         {
             tempSize /= OneKiloByte;
-            
+
             return tempSize < 10
                 ? $"{tempSize:N2} KB"
                 : $"{tempSize:N0} KB";
         }
 
         return $"{tempSize:N0} B";
+    }
+
+    public string ToString(string format)
+    {
+        return ToString(format, null);
+    }
+
+    public string ToString(string format, IFormatProvider formatProvider)
+    {
+        if (format is "S" or "simple")
+        {
+            return ToString() ?? string.Empty;
+        }
+
+        if (format is "D" or "detailed")
+        {
+            string simple = ToString();
+            string asBytes = ToString(DataSizeUnit.Byte);
+
+            return $"{simple} ({asBytes})";
+        }
+
+        return ToString() ?? string.Empty;
     }
 
     /// <summary>

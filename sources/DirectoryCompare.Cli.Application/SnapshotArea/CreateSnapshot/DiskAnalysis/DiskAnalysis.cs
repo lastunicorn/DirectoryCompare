@@ -33,7 +33,7 @@ internal sealed class DiskAnalysis : IDisposable
     private readonly ILog log;
     private readonly IFileSystem fileSystem;
     private readonly ISnapshotRepository snapshotRepository;
-    private readonly ICreateSnapshotUserInterface createSnapshotUserInterface;
+    private readonly ICreateSnapshotUi createSnapshotUi;
     private readonly ISystemClock systemClock;
     private readonly Stopwatch stopwatch = new();
     private readonly MD5 md5;
@@ -41,7 +41,6 @@ internal sealed class DiskAnalysis : IDisposable
 
 
     private DataSize totalDataSize;
-    private int totalFileCount;
     private DataSizeProgress progress;
     private Guid analysisId;
     private float lastPercentageAnnounced;
@@ -52,12 +51,12 @@ internal sealed class DiskAnalysis : IDisposable
     public DiskPathCollection BlackList { get; init; }
 
     public DiskAnalysis(ILog log, IFileSystem fileSystem, ISnapshotRepository snapshotRepository,
-        ICreateSnapshotUserInterface createSnapshotUserInterface, ISystemClock systemClock)
+        ICreateSnapshotUi createSnapshotUi, ISystemClock systemClock)
     {
         this.log = log ?? throw new ArgumentNullException(nameof(log));
         this.fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
         this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
-        this.createSnapshotUserInterface = createSnapshotUserInterface ?? throw new ArgumentNullException(nameof(createSnapshotUserInterface));
+        this.createSnapshotUi = createSnapshotUi ?? throw new ArgumentNullException(nameof(createSnapshotUi));
         this.systemClock = systemClock ?? throw new ArgumentNullException(nameof(systemClock));
 
         md5 = MD5.Create();
@@ -104,7 +103,6 @@ internal sealed class DiskAnalysis : IDisposable
         stopwatch.Start();
         analysisId = Guid.NewGuid();
         totalDataSize = DataSize.Zero;
-        totalFileCount = 0;
         progress = null;
         lastPercentageAnnounced = 0;
         report = new DiskAnalysisReport();
@@ -115,51 +113,45 @@ internal sealed class DiskAnalysis : IDisposable
         stopwatch.Stop();
     }
 
-    private Task CountFiles()
+    private async Task CountFiles()
     {
-        return Task.Run(async () =>
+        IDiskCrawler diskCrawler = fileSystem.CreateCrawler(Pot.Path, BlackList.ToListOfStrings());
+
+        await AnnounceFilesIndexing();
+
+        IEnumerable<ICrawlerItem> crawlerItems = diskCrawler.Crawl()
+            .Where(x => x.Action == CrawlerAction.FileFound);
+
+        totalDataSize = 0;
+        int fileCount = 0;
+
+        foreach (ICrawlerItem crawlerItem in crawlerItems)
         {
-            IDiskCrawler diskCrawler = fileSystem.CreateCrawler(Pot.Path, BlackList.ToListOfStrings());
-
-            await AnnounceFilesIndexing();
-
-            IEnumerable<ICrawlerItem> crawlerItems = diskCrawler.Crawl()
-                .Where(x => x.Action == CrawlerAction.FileFound);
-
-            ulong dataSize = 0;
-            int fileCount = 0;
-
-            foreach (ICrawlerItem crawlerItem in crawlerItems)
+            try
             {
-                try
-                {
-                    fileCount++;
-                    dataSize += crawlerItem.Size;
-                }
-                catch (Exception ex)
-                {
-                    await AnnounceFileIndexingError(crawlerItem.Path, ex);
-                }
-
-                if (fileCount % 1000 == 0)
-                    await AnnounceFileIndexingProgress(dataSize, fileCount);
+                fileCount++;
+                totalDataSize += crawlerItem.Size;
+            }
+            catch (Exception ex)
+            {
+                await AnnounceFileIndexingError(crawlerItem.Path, ex);
             }
 
-            totalDataSize = dataSize;
-            totalFileCount = fileCount;
+            if (fileCount % 1000 == 0)
+                await AnnounceFileIndexingProgress(totalDataSize, fileCount);
+        }
 
-            await AnnounceFilesIndexed(dataSize, fileCount);
-        });
+        await AnnounceFilesIndexed(totalDataSize, fileCount);
     }
 
     private Task AnnounceFileIndexingError(string path, Exception exception)
     {
-        return createSnapshotUserInterface.AnnounceFileIndexingError(path, exception);
+        return createSnapshotUi.AnnounceFileIndexingError(path, exception);
     }
 
     private Task AnnounceFilesIndexing()
     {
-        return createSnapshotUserInterface.AnnounceFilesIndexing();
+        return createSnapshotUi.AnnounceFilesIndexing();
     }
 
     private Task AnnounceFileIndexingProgress(ulong dataSize, int fileCount)
@@ -170,7 +162,7 @@ internal sealed class DiskAnalysis : IDisposable
             FileCount = fileCount
         };
 
-        return createSnapshotUserInterface.AnnounceFileIndexingProgress(fileIndexInfo1);
+        return createSnapshotUi.AnnounceFileIndexingProgress(fileIndexInfo1);
     }
 
     private Task AnnounceFilesIndexed(ulong dataSize, int fileCount)
@@ -181,7 +173,7 @@ internal sealed class DiskAnalysis : IDisposable
             FileCount = fileCount
         };
 
-        return createSnapshotUserInterface.AnnounceFilesIndexed(fileIndexInfo2);
+        return createSnapshotUi.AnnounceFilesIndexed(fileIndexInfo2);
     }
 
     private Task CalculateHashes()
@@ -281,7 +273,7 @@ internal sealed class DiskAnalysis : IDisposable
             StartTime = systemClock.GetCurrentUtcTime()
         };
 
-        await createSnapshotUserInterface.AnnounceStarting(info);
+        await createSnapshotUi.AnnounceStarting(info);
     }
 
     private void AnnounceFinished()
@@ -318,8 +310,8 @@ internal sealed class DiskAnalysis : IDisposable
 
         ErrorEncounteredEventArgs eventArgs = new(exception, path);
         report.OnErrorEncountered(eventArgs);
-        
-        return createSnapshotUserInterface.AnnounceAnalysisError(path, exception);
+
+        return createSnapshotUi.AnnounceAnalysisError(path, exception);
     }
 
     public void Dispose()

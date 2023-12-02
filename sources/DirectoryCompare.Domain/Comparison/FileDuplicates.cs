@@ -15,7 +15,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections;
-using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 
 namespace DustInTheWind.DirectoryCompare.Domain.Comparison;
@@ -26,15 +25,8 @@ public class FileDuplicates : IEnumerable<FilePair>
 
     public List<HFile> FilesRight { get; set; }
 
-    public int DuplicateCount { get; private set; }
-
-    public DataSize TotalSize { get; private set; }
-
     public IEnumerator<FilePair> GetEnumerator()
     {
-        DuplicateCount = 0;
-        TotalSize = 0;
-
         if (FilesLeft == null)
             yield break;
 
@@ -42,11 +34,7 @@ public class FileDuplicates : IEnumerable<FilePair>
             .Where(x => x.AreEqual);
 
         foreach (FilePair filePair in duplicates)
-        {
-            DuplicateCount++;
-            TotalSize += filePair.Size;
             yield return filePair;
-        }
     }
 
     private IEnumerable<FilePair> GeneratePairs()
@@ -56,7 +44,7 @@ public class FileDuplicates : IEnumerable<FilePair>
             : GeneratePairs(FilesLeft, FilesRight);
     }
 
-    private IEnumerable<FilePair> GeneratePairs(IReadOnlyList<HFile> files)
+    private static IEnumerable<FilePair> GeneratePairs(IReadOnlyList<HFile> files)
     {
         for (int i = 0; i < files.Count; i++)
         {
@@ -70,7 +58,7 @@ public class FileDuplicates : IEnumerable<FilePair>
         }
     }
 
-    private IEnumerable<FilePair> GeneratePairs(IReadOnlyList<HFile> filesLeft, IReadOnlyList<HFile> filesRight)
+    private static IEnumerable<FilePair> GeneratePairs(IReadOnlyList<HFile> filesLeft, IReadOnlyList<HFile> filesRight)
     {
         for (int i = 0; i < filesLeft.Count; i++)
         {

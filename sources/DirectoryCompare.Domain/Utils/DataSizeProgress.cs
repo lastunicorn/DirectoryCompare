@@ -47,17 +47,21 @@ public class DataSizeProgress
 
     public DataSizeProgress(DataSize minValue, DataSize maxValue)
     {
-        if (maxValue <= minValue)
+        if (maxValue < minValue)
             throw new ArgumentOutOfRangeException(nameof(maxValue));
 
         MinValue = minValue;
         MaxValue = maxValue;
         Size = maxValue - minValue;
+        
+        RecalculatePercentageValue();
     }
 
     private void RecalculatePercentageValue()
     {
-        Percentage = (float)(Value - MinValue) * 100 / Size;
+        Percentage = Size.IsZero
+            ? 100
+            : (float)(Value - MinValue) * 100 / Size;
     }
 
     public override string ToString()

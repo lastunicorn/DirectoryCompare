@@ -27,7 +27,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands.
 
 [NamedCommand("duplicates", Description = "Search and display all the duplicate files in a single snapshot or between two snapshots.")]
 [CommandOrder(11)]
-internal class FindDuplicatesCommand : IConsoleCommand<FileDuplicatesViewModel>
+internal class FindDuplicatesCommand : IConsoleCommand
 {
     private readonly RequestBus requestBus;
 
@@ -45,7 +45,7 @@ internal class FindDuplicatesCommand : IConsoleCommand<FileDuplicatesViewModel>
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
     }
 
-    public async Task<FileDuplicatesViewModel> Execute()
+    public async Task Execute()
     {
         FindDuplicatesRequest request = new()
         {
@@ -54,8 +54,6 @@ internal class FindDuplicatesCommand : IConsoleCommand<FileDuplicatesViewModel>
             CheckFilesExistence = CheckFilesExistence
         };
 
-        FindDuplicatesResponse response = await requestBus.PlaceRequest<FindDuplicatesRequest, FindDuplicatesResponse>(request);
-
-        return new FileDuplicatesViewModel(response.DuplicatePairs);
+        await requestBus.PlaceRequest(request);
     }
 }

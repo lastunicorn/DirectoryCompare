@@ -33,19 +33,19 @@ public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest, IDis
     private readonly IBlackListRepository blackListRepository;
     private readonly ISnapshotRepository snapshotRepository;
     private readonly IFileSystem fileSystem;
-    private readonly ICreateSnapshotUserInterface createSnapshotUserInterface;
+    private readonly ICreateSnapshotUi createSnapshotUi;
     private readonly ISystemClock systemClock;
 
     public CreateSnapshotUseCase(ILog log, IPotRepository potRepository,
         IBlackListRepository blackListRepository, ISnapshotRepository snapshotRepository,
-        IFileSystem fileSystem, ICreateSnapshotUserInterface createSnapshotUserInterface, ISystemClock systemClock)
+        IFileSystem fileSystem, ICreateSnapshotUi createSnapshotUi, ISystemClock systemClock)
     {
         this.log = log ?? throw new ArgumentNullException(nameof(log));
         this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
         this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
         this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
         this.fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
-        this.createSnapshotUserInterface = createSnapshotUserInterface ?? throw new ArgumentNullException(nameof(createSnapshotUserInterface));
+        this.createSnapshotUi = createSnapshotUi ?? throw new ArgumentNullException(nameof(createSnapshotUi));
         this.systemClock = systemClock ?? throw new ArgumentNullException(nameof(systemClock));
     }
 
@@ -53,7 +53,6 @@ public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest, IDis
     {
         Pot pot = await RetrievePot(request.PotName);
         DiskPathCollection rootedBlackList = await RetrieveBlackListPaths(pot);
-        await AnnounceSnapshotCreating(pot, rootedBlackList);
         CheckPotPathExists(pot);
         IDiskAnalysisReport report = StartDiskAnalysis(pot, rootedBlackList);
 
@@ -83,21 +82,6 @@ public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest, IDis
             : blackList.PrependPath(pot.Path);
     }
 
-    private async Task AnnounceSnapshotCreating(Pot pot, DiskPathCollection rootedBlackList)
-    {
-        StartNewSnapshotInfo info = new()
-        {
-            PotName = pot.Name,
-            Path = pot.Path,
-            BlackList = rootedBlackList
-                .Select(x => x.ToString())
-                .ToList(),
-            StartTime = systemClock.GetCurrentUtcTime()
-        };
-        
-        await createSnapshotUserInterface.AnnounceStarting(info);
-    }
-
     private void CheckPotPathExists(Pot pot)
     {
         log.WriteInfo($"Checking that pot path exists: '{pot.Path}'.");
@@ -110,7 +94,7 @@ public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest, IDis
 
     private IDiskAnalysisReport StartDiskAnalysis(Pot pot, DiskPathCollection blackList)
     {
-        DiskAnalysis.DiskAnalysis diskAnalysis = new(log, fileSystem, snapshotRepository, createSnapshotUserInterface, systemClock)
+        DiskAnalysis.DiskAnalysis diskAnalysis = new(log, fileSystem, snapshotRepository, createSnapshotUi, systemClock)
         {
             Pot = pot,
             BlackList = blackList

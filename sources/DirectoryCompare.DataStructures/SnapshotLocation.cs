@@ -21,6 +21,9 @@ namespace DustInTheWind.DirectoryCompare.DataStructures;
 [TypeConverter(typeof(SnapshotLocationConverter))]
 public readonly struct SnapshotLocation
 {
+    private const char SnapshotIndicator = '~';
+    private const char PathIndicator = ':';
+
     private readonly string rawValue;
 
     public string PotName { get; }
@@ -44,10 +47,10 @@ public readonly struct SnapshotLocation
         }
         else
         {
-            Tuple<string, string> parts = SplitByFirstOccurrence(value, '>');
+            Tuple<string, string> parts = SplitByFirstOccurrence(value, PathIndicator);
             InternalPath = parts.Item2;
 
-            parts = SplitByFirstOccurrence(parts.Item1, '~');
+            parts = SplitByFirstOccurrence(parts.Item1, SnapshotIndicator);
             PotName = parts.Item1;
 
             if (int.TryParse(parts.Item2, out int snapshotIndex))

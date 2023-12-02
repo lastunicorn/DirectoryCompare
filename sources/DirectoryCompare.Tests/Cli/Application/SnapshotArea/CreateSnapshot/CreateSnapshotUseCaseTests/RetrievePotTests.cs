@@ -41,7 +41,7 @@ public class RetrievePotTests
         fileSystem = new Mock<IFileSystem>();
 
         useCase = new CreateSnapshotUseCase(Mock.Of<ILog>(), potRepository.Object, Mock.Of<IBlackListRepository>(),
-            Mock.Of<ISnapshotRepository>(), fileSystem.Object, Mock.Of<ICreateSnapshotUserInterface>(),
+            Mock.Of<ISnapshotRepository>(), fileSystem.Object, Mock.Of<ICreateSnapshotUi>(),
             Mock.Of<ISystemClock>());
     }
 

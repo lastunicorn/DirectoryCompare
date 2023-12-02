@@ -19,20 +19,13 @@ using DustInTheWind.DirectoryCompare.Domain.Entities;
 
 namespace DustInTheWind.DirectoryCompare.Domain.Comparison;
 
-public class FilePair
+public readonly struct FilePair
 {
     private readonly HFile fileLeft;
     private readonly HFile fileRight;
-    private bool? areEqual;
 
-    public bool AreEqual
-    {
-        get
-        {
-            areEqual ??= CalculateEquality();
-            return areEqual.Value;
-        }
-    }
+    public bool AreEqual => fileLeft.Hash == fileRight.Hash &&
+                            fileLeft.Size == fileRight.Size;
 
     public DataSize Size => fileLeft.Size;
     
@@ -46,12 +39,6 @@ public class FilePair
     {
         this.fileLeft = fileLeft ?? throw new ArgumentNullException(nameof(fileLeft));
         this.fileRight = fileRight ?? throw new ArgumentNullException(nameof(fileRight));
-    }
-
-    private bool CalculateEquality()
-    {
-        return fileLeft.Hash == fileRight.Hash &&
-               fileLeft.Size == fileRight.Size;
     }
 
     public void DeleteLeft()

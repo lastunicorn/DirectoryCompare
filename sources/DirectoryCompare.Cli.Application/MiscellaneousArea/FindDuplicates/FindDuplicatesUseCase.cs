@@ -20,58 +20,60 @@ using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 using DustInTheWind.DirectoryCompare.Ports.LogAccess;
+using DustInTheWind.DirectoryCompare.Ports.UserAccess;
 using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.FindDuplicates;
 
-public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest, FindDuplicatesResponse>
+public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest>
 {
     private readonly ISnapshotRepository snapshotRepository;
     private readonly IBlackListRepository blackListRepository;
     private readonly ILog log;
     private readonly IFileSystem fileSystem;
+    private readonly IDuplicateFilesUi duplicateFilesUi;
 
-    public FindDuplicatesUseCase(ISnapshotRepository snapshotRepository, IBlackListRepository blackListRepository, ILog log, IFileSystem fileSystem)
+    private int count;
+    private DataSize totalSize;
+
+
+    public FindDuplicatesUseCase(ISnapshotRepository snapshotRepository, IBlackListRepository blackListRepository,
+        ILog log, IFileSystem fileSystem, IDuplicateFilesUi duplicateFilesUi)
     {
         this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
         this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
         this.log = log ?? throw new ArgumentNullException(nameof(log));
         this.fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
+        this.duplicateFilesUi = duplicateFilesUi ?? throw new ArgumentNullException(nameof(duplicateFilesUi));
     }
 
-    public async Task<FindDuplicatesResponse> Handle(FindDuplicatesRequest request, CancellationToken cancellationToken)
+    public async Task Handle(FindDuplicatesRequest request, CancellationToken cancellationToken)
+    {
+        await AnnounceStart(request);
+
+        List<HFile> filesLeft = await GetFiles(request.SnapshotLeft);
+        List<HFile> filesRight = await GetFiles(request.SnapshotRight);
+
+        IEnumerable<FilePair> duplicates = ComputeDuplicates(filesLeft, filesRight, request.CheckFilesExistence);
+        await AddToResponse(duplicates);
+
+        await AnnounceFinished();
+    }
+
+    private async Task AnnounceStart(FindDuplicatesRequest request)
     {
         string potNameLeft = request.SnapshotLeft.PotName;
         string potNameRight = request.SnapshotRight.PotName;
         log.WriteInfo("Searching for duplicates between pot '{0}' and '{1}'.", potNameLeft, potNameRight);
 
-        List<HFile> filesLeft = await GetLeftFiles(request);
-        List<HFile> filesRight = await GetRightFiles(request);
-
-        IEnumerable<FilePair> duplicates = ComputeDuplicates(filesLeft, filesRight, request.CheckFilesExistence);
-
-        return new FindDuplicatesResponse
-        {
-            DuplicatePairs = duplicates
-                .Select(x => new FilePairDto(x))
-                .ToArray()
-        };
-    }
-
-    private async Task<List<HFile>> GetLeftFiles(FindDuplicatesRequest request)
-    {
-        return await GetFiles(request.SnapshotLeft);
-    }
-
-    private async Task<List<HFile>> GetRightFiles(FindDuplicatesRequest request)
-    {
-        return string.IsNullOrEmpty(request.SnapshotRight.PotName)
-            ? null
-            : await GetFiles(request.SnapshotRight);
+        await duplicateFilesUi.AnnounceStart(request.SnapshotLeft, request.SnapshotRight);
     }
 
     private async Task<List<HFile>> GetFiles(SnapshotLocation snapshotLocation)
     {
+        if (string.IsNullOrEmpty(snapshotLocation.PotName))
+            return null;
+
         BlackList blackList = await GetBlackList(snapshotLocation.PotName);
         Snapshot snapshot = await snapshotRepository.Get(snapshotLocation);
 
@@ -99,13 +101,11 @@ public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest, Find
 
     private IEnumerable<FilePair> ComputeDuplicates(List<HFile> filesLeft, List<HFile> filesRight, bool checkFilesExistence)
     {
-        FileDuplicates fileDuplicates = new()
+        IEnumerable<FilePair> duplicates = new FileDuplicates
         {
             FilesLeft = filesLeft,
             FilesRight = filesRight
         };
-
-        IEnumerable<FilePair> duplicates = fileDuplicates;
 
         if (checkFilesExistence)
         {
@@ -114,5 +114,29 @@ public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest, Find
         }
 
         return duplicates;
+    }
+
+    private async Task AddToResponse(IEnumerable<FilePair> duplicates)
+    {
+        foreach (FilePair filePair in duplicates)
+        {
+            count++;
+            totalSize += filePair.Size;
+
+            Ports.UserAccess.FilePairDto filePairDto = new()
+            {
+                FullPathLeft = filePair.FullPathLeft,
+                FullPathRight = filePair.FullPathRight,
+                Size = filePair.Size,
+                Hash = filePair.Hash
+            };
+
+            await duplicateFilesUi.AnnounceDuplicate(filePairDto);
+        }
+    }
+
+    private async Task AnnounceFinished()
+    {
+        await duplicateFilesUi.AnnounceFinished(count, totalSize);
     }
 }

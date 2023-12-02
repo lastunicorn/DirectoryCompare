@@ -16,17 +16,7 @@
 
 namespace DustInTheWind.DirectoryCompare.Ports.UserAccess;
 
-public interface ICreateSnapshotUserInterface
+public interface IDeletePotUi
 {
-    Task AnnounceStarting(StartNewSnapshotInfo info);
-
-    Task AnnounceFilesIndexing();
-
-    Task AnnounceFileIndexingProgress(FileIndexInfo fileIndexInfo);
-
-    Task AnnounceFilesIndexed(FileIndexInfo fileIndexInfo);
-
-    Task AnnounceFileIndexingError(string path, Exception exception);
-
-    Task AnnounceAnalysisError(string path, Exception exception);
+    Task<bool> ConfirmToDelete(PotDeletionRequest request);
 }

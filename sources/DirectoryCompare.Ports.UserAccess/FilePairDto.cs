@@ -14,9 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.DataStructures;
+
 namespace DustInTheWind.DirectoryCompare.Ports.UserAccess;
 
-public interface IDeletePotUserInterface
+public class FilePairDto
 {
-    Task<bool> ConfirmToDelete(PotDeletionRequest request);
+    public string FullPathLeft { get; set; }
+
+    public string FullPathRight { get; set; }
+
+    public DataSize Size { get; set; }
+
+    public FileHash Hash { get; set; }
 }

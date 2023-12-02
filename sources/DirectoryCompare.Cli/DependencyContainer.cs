@@ -83,8 +83,9 @@ internal static class DependencyContainer
         
         // User Access
         
-        containerBuilder.RegisterType<DeletePotUserInterface>().As<IDeletePotUserInterface>();
-        containerBuilder.RegisterType<CreateSnapshotUserInterface>().As<ICreateSnapshotUserInterface>();
+        containerBuilder.RegisterType<DeletePotUi>().As<IDeletePotUi>();
+        containerBuilder.RegisterType<CreateSnapshotUi>().As<ICreateSnapshotUi>();
+        containerBuilder.RegisterType<DuplicateFilesUi>().As<IDuplicateFilesUi>();
         
         // System Access
         

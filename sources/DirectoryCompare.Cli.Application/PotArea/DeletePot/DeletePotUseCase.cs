@@ -24,12 +24,12 @@ namespace DustInTheWind.DirectoryCompare.Cli.Application.PotArea.DeletePot;
 public class DeletePotUseCase : IRequestHandler<DeletePotRequest>
 {
     private readonly IPotRepository potRepository;
-    private readonly IDeletePotUserInterface deletePotUserInterface;
+    private readonly IDeletePotUi deletePotUi;
 
-    public DeletePotUseCase(IPotRepository potRepository, IDeletePotUserInterface deletePotUserInterface)
+    public DeletePotUseCase(IPotRepository potRepository, IDeletePotUi deletePotUi)
     {
         this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
-        this.deletePotUserInterface = deletePotUserInterface ?? throw new ArgumentNullException(nameof(deletePotUserInterface));
+        this.deletePotUi = deletePotUi ?? throw new ArgumentNullException(nameof(deletePotUi));
     }
 
     public async Task Handle(DeletePotRequest request, CancellationToken cancellationToken)
@@ -56,7 +56,7 @@ public class DeletePotUseCase : IRequestHandler<DeletePotRequest>
             PotName = pot.Name,
             PotId = pot.Guid
         };
-        bool confirmation = await deletePotUserInterface.ConfirmToDelete(potDeletionRequest);
+        bool confirmation = await deletePotUi.ConfirmToDelete(potDeletionRequest);
 
         if (!confirmation)
             throw new OperationCanceledException($"The pot {pot.Name} was not deleted.");

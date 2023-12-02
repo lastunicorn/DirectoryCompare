@@ -15,29 +15,35 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools;
+using DustInTheWind.ConsoleTools.Commando;
 using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Ports.UserAccess;
 
 namespace DustInTheWind.DirectoryCompare.UserAccess;
 
-public class CreateSnapshotUserInterface : ICreateSnapshotUserInterface
+public class CreateSnapshotUi : EnhancedConsole, ICreateSnapshotUi
 {
     public Task AnnounceStarting(StartNewSnapshotInfo info)
     {
-        CustomConsole.WriteLine("Creating a new snapshot:");
-        WriteLabeledValue("Pot Name", info.PotName);
-        WriteLabeledValue("Path", info.Path);
-
-        if (info.BlackList is { Count: > 0 })
+        WithIndentation("Creating a new snapshot", () =>
         {
-            CustomConsole.Write("  ");
-            CustomConsole.WriteEmphasized("Black Listed Paths:");
+            WriteValue("Pot Name", info.PotName);
+            WriteValue("Path", info.Path);
 
-            foreach (string blackPath in info.BlackList)
-                CustomConsole.WriteLine("    - " + blackPath);
-        }
+            if (info.BlackList is { Count: > 0 })
+            {
+                WriteValue("Black Listed Paths", " ");
 
-        WriteLabeledValue("Start Time", info.StartTime.ToLocalTime());
+                WithIndentation(() =>
+                {
+                    foreach (string blackPath in info.BlackList)
+                        WriteInfo($"- {blackPath}");
+                });
+            }
+
+            WriteValue("Start Time", info.StartTime.ToLocalTime());
+        });
+
         CustomConsole.WriteLine();
 
         return Task.CompletedTask;
@@ -59,9 +65,15 @@ public class CreateSnapshotUserInterface : ICreateSnapshotUserInterface
 
     public Task AnnounceFilesIndexed(FileIndexInfo fileIndexInfo)
     {
+        CustomConsole.WriteLine();
         CustomConsole.WriteLineSuccess("Finished indexing files");
-        CustomConsole.WriteLineSuccess($"  File count: {fileIndexInfo.FileCount:N0}).");
-        CustomConsole.WriteLineSuccess($"  Data Size: {fileIndexInfo.DataSize} ({fileIndexInfo.DataSize.ToString(DataSizeUnit.Byte)}).");
+
+        WithIndentation(() =>
+        {
+            CustomConsole.WriteLineSuccess($"File count: {fileIndexInfo.FileCount:N0}");
+            CustomConsole.WriteLineSuccess($"Data Size: {fileIndexInfo.DataSize.ToString("D")}");
+        });
+
         CustomConsole.WriteLine();
 
         return Task.CompletedTask;
@@ -81,12 +93,5 @@ public class CreateSnapshotUserInterface : ICreateSnapshotUserInterface
         CustomConsole.WriteLineError(exception);
 
         return Task.CompletedTask;
-    }
-
-    private static void WriteLabeledValue(string label, object value)
-    {
-        CustomConsole.Write("  ");
-        CustomConsole.WriteEmphasized(label + ": ");
-        CustomConsole.WriteLine(ConsoleColor.DarkGray, value);
     }
 }
