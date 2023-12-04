@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29926.136
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34322.80
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.Cli.Application", "DirectoryCompare.Cli.Application\DirectoryCompare.Cli.Application.csproj", "{44F2CA03-CBFA-4DE8-A0C0-1A0801BC462E}"
 EndProject
@@ -21,9 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.Cli.Presen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.DataAccess.PotFiles", "DirectoryCompare.DataAccess.PotFiles\DirectoryCompare.DataAccess.PotFiles.csproj", "{0545F6ED-0FFD-4FD8-8808-DD45733098B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.LogAccess", "DirectoryCompare.LogAccess\DirectoryCompare.LogAccess.csproj", "{C337B27B-3B07-4E9A-9EE9-B85279EC1CDF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.LogAccess", "DirectoryCompare.LogAccess\DirectoryCompare.LogAccess.csproj", "{C337B27B-3B07-4E9A-9EE9-B85279EC1CDF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.IntegrationTests", "DirectoryCompare.IntegrationTests\DirectoryCompare.IntegrationTests.csproj", "{37021573-59A3-4CBE-8F3B-F49DA40E8F3F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.IntegrationTests", "DirectoryCompare.IntegrationTests\DirectoryCompare.IntegrationTests.csproj", "{37021573-59A3-4CBE-8F3B-F49DA40E8F3F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{CA4EEBA7-A574-4FC1-A8F1-7966CA0F9314}"
 	ProjectSection(SolutionItems) = preProject
@@ -34,25 +34,25 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{29814016
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ports", "Ports", "{0B0E3A9F-2FEC-4171-ACA9-26F50DAE9973}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.Ports.LogAccess", "DirectoryCompare.Ports.LogAccess\DirectoryCompare.Ports.LogAccess.csproj", "{53245E94-8445-483C-B856-F9BFBEC76E93}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.Ports.LogAccess", "DirectoryCompare.Ports.LogAccess\DirectoryCompare.Ports.LogAccess.csproj", "{53245E94-8445-483C-B856-F9BFBEC76E93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.Ports.DataAccess", "DirectoryCompare.Ports.DataAccess\DirectoryCompare.Ports.DataAccess.csproj", "{FF5A2501-2E86-4E22-8D57-C168E7168C78}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.Ports.DataAccess", "DirectoryCompare.Ports.DataAccess\DirectoryCompare.Ports.DataAccess.csproj", "{FF5A2501-2E86-4E22-8D57-C168E7168C78}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.Ports.ConfigAccess", "DirectoryCompare.Ports.ConfigAccess\DirectoryCompare.Ports.ConfigAccess.csproj", "{FB7CCB2C-F42E-4821-B5E1-EA90E8E77B3F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.Ports.ConfigAccess", "DirectoryCompare.Ports.ConfigAccess\DirectoryCompare.Ports.ConfigAccess.csproj", "{FB7CCB2C-F42E-4821-B5E1-EA90E8E77B3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.ConfigAccess", "DirectoryCompare.ConfigAccess\DirectoryCompare.ConfigAccess.csproj", "{57EF6EC4-7EBE-4B41-A110-3E05F9F06CB3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.ConfigAccess", "DirectoryCompare.ConfigAccess\DirectoryCompare.ConfigAccess.csproj", "{57EF6EC4-7EBE-4B41-A110-3E05F9F06CB3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.Ports.FileSystemAccess", "DirectoryCompare.Ports.FileSystemAccess\DirectoryCompare.Ports.FileSystemAccess.csproj", "{345CCF93-B734-406E-8965-6750F9B9B750}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.Ports.FileSystemAccess", "DirectoryCompare.Ports.FileSystemAccess\DirectoryCompare.Ports.FileSystemAccess.csproj", "{345CCF93-B734-406E-8965-6750F9B9B750}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.FileSystemAccess", "DirectoryCompare.FileSystemAccess\DirectoryCompare.FileSystemAccess.csproj", "{D9ED4D44-3F11-4B82-AAD6-02ED27BB3EB8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.FileSystemAccess", "DirectoryCompare.FileSystemAccess\DirectoryCompare.FileSystemAccess.csproj", "{D9ED4D44-3F11-4B82-AAD6-02ED27BB3EB8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.DataStructures", "DirectoryCompare.DataStructures\DirectoryCompare.DataStructures.csproj", "{44324EBA-20FD-483D-AB39-EE43FBBE9831}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.DataStructures", "DirectoryCompare.DataStructures\DirectoryCompare.DataStructures.csproj", "{44324EBA-20FD-483D-AB39-EE43FBBE9831}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.Infrastructure", "DirectoryCompare.Infrastructure\DirectoryCompare.Infrastructure.csproj", "{79505928-3AA7-4A43-8A06-3C383FE27204}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.Infrastructure", "DirectoryCompare.Infrastructure\DirectoryCompare.Infrastructure.csproj", "{79505928-3AA7-4A43-8A06-3C383FE27204}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.Ports.UserAccess", "DirectoryCompare.Ports.UserAccess\DirectoryCompare.Ports.UserAccess.csproj", "{846F304A-0C8D-4613-89BF-205CA976EC76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.Ports.UserAccess", "DirectoryCompare.Ports.UserAccess\DirectoryCompare.Ports.UserAccess.csproj", "{846F304A-0C8D-4613-89BF-205CA976EC76}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.UserAccess", "DirectoryCompare.UserAccess\DirectoryCompare.UserAccess.csproj", "{9CBAAF07-1F05-444D-921A-222F152AEE7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectoryCompare.UserAccess", "DirectoryCompare.UserAccess\DirectoryCompare.UserAccess.csproj", "{9CBAAF07-1F05-444D-921A-222F152AEE7B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryCompare.Ports.SystemAccess", "DirectoryCompare.Ports.SystemAccess\DirectoryCompare.Ports.SystemAccess.csproj", "{610A9C3D-4C55-4AF4-BACF-96619FFF1831}"
 EndProject
@@ -128,7 +128,6 @@ Global
 		{F4445650-0D0C-43F2-A113-FA5A38093F62}.Release|x64.Build.0 = Release|Any CPU
 		{F4445650-0D0C-43F2-A113-FA5A38093F62}.Release|x86.ActiveCfg = Release|Any CPU
 		{F4445650-0D0C-43F2-A113-FA5A38093F62}.Release|x86.Build.0 = Release|Any CPU
-		{F4445650-0D0C-43F2-A113-FA5A38093F62}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{0609FA89-0257-4103-A74D-EAAA90340CAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0609FA89-0257-4103-A74D-EAAA90340CAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0609FA89-0257-4103-A74D-EAAA90340CAE}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -326,14 +325,14 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{44F2CA03-CBFA-4DE8-A0C0-1A0801BC462E} = {2CABD000-FEDF-4858-B3E1-51ADF6F56C1D}
 		{258D4B7B-1A21-4A15-9BF9-B2B05CC96EB7} = {88D27769-CFD0-417C-96BB-64A05415B47C}
+		{2CF6E858-2FB9-45BC-A1B6-6E513413FD1F} = {29814016-68CC-4128-A623-91A133C29D95}
 		{F4445650-0D0C-43F2-A113-FA5A38093F62} = {2CABD000-FEDF-4858-B3E1-51ADF6F56C1D}
 		{0609FA89-0257-4103-A74D-EAAA90340CAE} = {2CABD000-FEDF-4858-B3E1-51ADF6F56C1D}
 		{0545F6ED-0FFD-4FD8-8808-DD45733098B8} = {88D27769-CFD0-417C-96BB-64A05415B47C}
-		{44F2CA03-CBFA-4DE8-A0C0-1A0801BC462E} = {2CABD000-FEDF-4858-B3E1-51ADF6F56C1D}
-		{37021573-59A3-4CBE-8F3B-F49DA40E8F3F} = {29814016-68CC-4128-A623-91A133C29D95}
-		{2CF6E858-2FB9-45BC-A1B6-6E513413FD1F} = {29814016-68CC-4128-A623-91A133C29D95}
 		{C337B27B-3B07-4E9A-9EE9-B85279EC1CDF} = {88D27769-CFD0-417C-96BB-64A05415B47C}
+		{37021573-59A3-4CBE-8F3B-F49DA40E8F3F} = {29814016-68CC-4128-A623-91A133C29D95}
 		{53245E94-8445-483C-B856-F9BFBEC76E93} = {0B0E3A9F-2FEC-4171-ACA9-26F50DAE9973}
 		{FF5A2501-2E86-4E22-8D57-C168E7168C78} = {0B0E3A9F-2FEC-4171-ACA9-26F50DAE9973}
 		{FB7CCB2C-F42E-4821-B5E1-EA90E8E77B3F} = {0B0E3A9F-2FEC-4171-ACA9-26F50DAE9973}
@@ -342,8 +341,6 @@ Global
 		{D9ED4D44-3F11-4B82-AAD6-02ED27BB3EB8} = {88D27769-CFD0-417C-96BB-64A05415B47C}
 		{846F304A-0C8D-4613-89BF-205CA976EC76} = {0B0E3A9F-2FEC-4171-ACA9-26F50DAE9973}
 		{9CBAAF07-1F05-444D-921A-222F152AEE7B} = {88D27769-CFD0-417C-96BB-64A05415B47C}
-		{610A9C3D-4C55-4AF4-BACF-96619FFF1831} = {0B0E3A9F-2FEC-4171-ACA9-26F50DAE9973}
-		{E93538A0-A52B-412F-8633-94D30796FA7E} = {88D27769-CFD0-417C-96BB-64A05415B47C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {86D5FACB-2648-4347-86B1-9D6DAAAD7AE9}

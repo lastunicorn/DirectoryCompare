@@ -1,3 +1,3 @@
 @echo off
 
-dotnet DirectoryCompare.dll %*
+dotnet %~dp0DirectoryCompare.dll %*
