@@ -1,4 +1,4 @@
-﻿// DirectoryCompare
+// DirectoryCompare
 // Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -14,14 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.DataStructures;
-using MediatR;
+using DustInTheWind.ConsoleTools;
+using DustInTheWind.ConsoleTools.Commando;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Application.PotArea.CreatePot;
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands.CreatePot;
 
-public class CreatePotRequest : IRequest<CreatePotResponse>
+internal class CreatePotView : ViewBase<CreatePotViewModel>
 {
-    public string Name { get; set; }
-
-    public DiskPath Path { get; set; }
+    public override void Display(CreatePotViewModel viewModel)
+    {
+        CustomConsole.WriteLineSuccess($"Pot successfully created: {viewModel.NewPotId}");
+    }
 }

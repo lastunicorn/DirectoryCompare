@@ -20,7 +20,7 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Application.PotArea.CreatePot;
 
-public class CreatePotUseCase : IRequestHandler<CreatePotRequest>
+public class CreatePotUseCase : IRequestHandler<CreatePotRequest, CreatePotResponse>
 {
     private readonly IPotRepository potRepository;
 
@@ -29,10 +29,15 @@ public class CreatePotUseCase : IRequestHandler<CreatePotRequest>
         this.potRepository = potRepository ?? throw new ArgumentNullException(nameof(potRepository));
     }
 
-    public async Task Handle(CreatePotRequest request, CancellationToken cancellationToken)
+    public async Task<CreatePotResponse> Handle(CreatePotRequest request, CancellationToken cancellationToken)
     {
         await VerifyPotDoesNotExist(request.Name);
-        await CreateNewPot(request);
+        Pot pot = await CreateNewPot(request);
+
+        return new CreatePotResponse
+        {
+            NewPotId = pot.Guid
+        };
     }
 
     private async Task VerifyPotDoesNotExist(string potName)
@@ -43,7 +48,7 @@ public class CreatePotUseCase : IRequestHandler<CreatePotRequest>
             throw new PotAlreadyExistsException();
     }
 
-    private async Task CreateNewPot(CreatePotRequest request)
+    private async Task<Pot> CreateNewPot(CreatePotRequest request)
     {
         Pot newPot = new()
         {
@@ -52,5 +57,7 @@ public class CreatePotUseCase : IRequestHandler<CreatePotRequest>
         };
 
         await potRepository.Add(newPot);
+
+        return newPot;
     }
 }

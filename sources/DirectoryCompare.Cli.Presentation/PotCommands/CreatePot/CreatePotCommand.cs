@@ -26,7 +26,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands.CreatePot;
 
 [NamedCommand("create-pot", Description = "Creates a new pot for the specified disk path.")]
 [CommandOrder(1)]
-public class CreatePotCommand : IConsoleCommand
+internal class CreatePotCommand : IConsoleCommand<CreatePotViewModel>
 {
     private readonly RequestBus requestBus;
 
@@ -41,7 +41,7 @@ public class CreatePotCommand : IConsoleCommand
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
     }
 
-    public async Task Execute()
+    public async Task<CreatePotViewModel> Execute()
     {
         CreatePotRequest request = new()
         {
@@ -49,6 +49,11 @@ public class CreatePotCommand : IConsoleCommand
             Path = TargetPath
         };
 
-        await requestBus.PlaceRequest(request);
+        CreatePotResponse response = await requestBus.PlaceRequest<CreatePotRequest, CreatePotResponse>(request);
+
+        return new CreatePotViewModel
+        {
+            NewPotId = response.NewPotId
+        };
     }
 }

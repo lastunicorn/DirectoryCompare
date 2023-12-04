@@ -21,7 +21,7 @@ namespace DustInTheWind.DirectoryCompare.Domain.PotModel;
 
 public class Pot
 {
-    public Guid Guid { get; init; }
+    public Guid Guid { get; set; }
 
     public string Name { get; init; }
 

@@ -14,15 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.ConsoleTools;
-using DustInTheWind.ConsoleTools.Commando;
-
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands.CreatePot;
 
-public class CreatePotCommandView : IView<CreatePotCommand>
+internal class CreatePotViewModel
 {
-    public void Display(CreatePotCommand command)
-    {
-        CustomConsole.WriteLineSuccess("Pot created successfully.");
-    }
+    public Guid NewPotId { get; set; } 
 }

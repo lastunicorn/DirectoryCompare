@@ -131,6 +131,8 @@ public class PotRepository : IPotRepository
 
         potDirectory.InfoFile.Save();
 
+        pot.Guid = potDirectory.PotGuid;
+
         return Task.CompletedTask;
     }
 
