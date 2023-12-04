@@ -26,8 +26,10 @@ public class PotDto
     public Guid Guid { get; }
 
     public string Path { get; }
-    
+
     public DataSize Size { get; set; }
+
+    public bool HasPathFilters { get; set; }
 
     public PotDto(Pot pot)
     {
@@ -37,5 +39,6 @@ public class PotDto
         Name = pot.Name;
         Guid = pot.Guid;
         Path = pot.Path;
+        HasPathFilters = pot.IncludedPaths?.Count > 0;
     }
 }

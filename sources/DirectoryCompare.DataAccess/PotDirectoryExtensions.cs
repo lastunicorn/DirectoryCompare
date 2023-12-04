@@ -16,6 +16,7 @@
 
 using DustInTheWind.DirectoryCompare.DataAccess.PotFiles;
 using DustInTheWind.DirectoryCompare.DataAccess.PotFiles.PotInfoFileModel;
+using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 
 namespace DustInTheWind.DirectoryCompare.DataAccess;
@@ -28,12 +29,22 @@ internal static class PotDirectoryExtensions
         if (!jPotInfoFile.IsValid)
             return null;
 
-        return new Pot
+        Pot pot = new()
         {
             Guid = potDirectory.PotGuid,
             Name = jPotInfoFile.Content.Name,
             Path = jPotInfoFile.Content.Path,
             Description = jPotInfoFile.Content.Description
         };
+
+        if (potDirectory.InfoFile.Content?.Include != null)
+        {
+            IEnumerable<SnapshotPath> paths = potDirectory.InfoFile.Content.Include
+                .Select(x => (SnapshotPath)x);
+
+            pot.IncludedPaths.AddRange(paths);
+        }
+
+        return pot;
     }
 }

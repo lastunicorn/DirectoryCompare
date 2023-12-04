@@ -35,6 +35,8 @@ public class DisplayPotViewModel
 
     public List<SnapshotViewModel> Snapshots { get; }
 
+    public List<SnapshotPath> IncludedPaths { get; set; }
+
     public DisplayPotViewModel(PotDto pot)
     {
         if (pot == null)
@@ -44,6 +46,7 @@ public class DisplayPotViewModel
         Name = pot.Name;
         Guid = pot.Guid;
         Path = pot.Path;
+        IncludedPaths = pot.IncludedPaths;
         Description = pot.Description;
         Size = pot.Size;
         Snapshots = pot.Snapshots?

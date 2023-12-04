@@ -31,6 +31,8 @@ internal class PotViewControl
 
     public bool DisplaySize { get; set; }
 
+    public bool HasPathFilters { get; set; }
+
     public void Display()
     {
         string guid = Guid.ToString()[..8];
@@ -40,10 +42,14 @@ internal class PotViewControl
         CustomConsole.WriteEmphasized(Name);
         CustomConsole.Write(" ");
 
-        if (DisplaySize) 
+        if (DisplaySize)
             CustomConsole.Write(ConsoleColor.DarkGray, $"({Size}) ");
 
         CustomConsole.Write(ConsoleColor.DarkGray, Path);
+
+        if (HasPathFilters)
+            CustomConsole.Write(ConsoleColor.DarkGray, " (*)");
+
         CustomConsole.WriteLine();
     }
 }

@@ -16,10 +16,11 @@
 
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Commando;
+using DustInTheWind.DirectoryCompare.DataStructures;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands.DisplayPot;
 
-internal class DisplayPotCommandView : ViewBase<DisplayPotViewModel>
+internal class DisplayPotView : ViewBase<DisplayPotViewModel>
 {
     public override void Display(DisplayPotViewModel viewModel)
     {
@@ -34,6 +35,19 @@ internal class DisplayPotCommandView : ViewBase<DisplayPotViewModel>
         WriteValue("Name", viewModel.Name);
         WriteValue("GUID", viewModel.Guid);
         WriteValue("Path", viewModel.Path);
+
+        if (viewModel.IncludedPaths is { Count: > 0 })
+        {
+            CustomConsole.WriteLineEmphasized("Included Paths:");
+            WithIndentation(() =>
+            {
+                foreach (SnapshotPath path in viewModel.IncludedPaths)
+                    WriteInfo(path);
+            });
+
+            DisplaySnapshots(viewModel.Snapshots);
+        }
+
         WriteValue("Size", viewModel.Size.ToString("D"));
 
         if (viewModel.Description != null)

@@ -19,7 +19,7 @@ using DustInTheWind.ConsoleTools.Commando;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands.DisplayPots;
 
-internal class DisplayPotsCommandView : ViewBase<PotsViewModel>
+internal class DisplayPotsView : ViewBase<PotsViewModel>
 {
     public override void Display(PotsViewModel potsViewModel)
     {
@@ -51,7 +51,8 @@ internal class DisplayPotsCommandView : ViewBase<PotsViewModel>
             Name = pot.Name,
             Path = pot.Path,
             Size = pot.Size,
-            DisplaySize = displaySizes
+            DisplaySize = displaySizes,
+            HasPathFilters = pot.HasPathFilters
         };
 
         potViewControl.Display();

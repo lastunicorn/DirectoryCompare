@@ -30,4 +30,6 @@ public class Pot
     public string Description { get; init; }
 
     public List<Snapshot> Snapshots { get; } = new();
+
+    public List<SnapshotPath> IncludedPaths { get; } = new();
 }

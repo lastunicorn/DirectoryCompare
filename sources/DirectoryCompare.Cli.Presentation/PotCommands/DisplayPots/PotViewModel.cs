@@ -26,14 +26,17 @@ public class PotViewModel
     public Guid Guid { get; }
 
     public string Path { get; }
-    
+
     public DataSize Size { get; }
+
+    public bool HasPathFilters { get; }
 
     public PotViewModel(PotDto potDto)
     {
         Name = potDto.Name;
         Guid = potDto.Guid;
         Path = potDto.Path;
+        HasPathFilters = potDto.HasPathFilters;
         Size = potDto.Size;
     }
 }

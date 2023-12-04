@@ -33,11 +33,14 @@ public class PotDto
 
     public List<SnapshotDto> Snapshots { get; }
 
+    public List<SnapshotPath> IncludedPaths { get; set; }
+
     public PotDto(Pot pot)
     {
         Name = pot.Name;
         Guid = pot.Guid;
         Path = pot.Path;
+        IncludedPaths = pot.IncludedPaths;
         Description = pot.Description;
         Snapshots = pot.Snapshots.ToDto();
     }

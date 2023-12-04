@@ -23,4 +23,8 @@ public class JPotInfo
     public string Path { get; set; }
 
     public string Description { get; set; }
+    
+    public string[] Include { get; set; }
+    
+    public string[] Exclude { get; set; }
 }
