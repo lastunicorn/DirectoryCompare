@@ -19,7 +19,7 @@ using DustInTheWind.ConsoleTools.Commando;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands.DeletePot;
 
-internal class DeletePotCommandView : IView<DeletePotCommand>
+internal class DeletePotView : IView<DeletePotCommand>
 {
     public void Display(DeletePotCommand command)
     {

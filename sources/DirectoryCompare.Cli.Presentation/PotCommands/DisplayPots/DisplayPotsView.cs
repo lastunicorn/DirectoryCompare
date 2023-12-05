@@ -36,11 +36,8 @@ internal class DisplayPotsView : ViewBase<PotsViewModel>
         foreach (PotViewModel pot in potsViewModel.Pots)
             DisplayPot(pot, potsViewModel.DisplaySizes);
 
-        if (potsViewModel.DisplaySizes)
-        {
-            CustomConsole.WriteLine();
-            CustomConsole.WriteLine($"Total Size: {potsViewModel.TotalSize}");
-        }
+        if (potsViewModel.DisplaySizes) 
+            DisplayTotalSize(potsViewModel);
     }
 
     private static void DisplayPot(PotViewModel pot, bool displaySizes)
@@ -56,5 +53,11 @@ internal class DisplayPotsView : ViewBase<PotsViewModel>
         };
 
         potViewControl.Display();
+    }
+
+    private static void DisplayTotalSize(PotsViewModel potsViewModel)
+    {
+        CustomConsole.WriteLine();
+        CustomConsole.WriteLine($"Total Size: {potsViewModel.TotalSize}");
     }
 }
