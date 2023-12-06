@@ -20,7 +20,6 @@ internal class IncludeExcludeRule
 {
     private readonly string[] items;
     private readonly bool isRooted;
-    
 
     public IncludeExcludeRule(string value)
     {
@@ -37,61 +36,59 @@ internal class IncludeExcludeRule
         this.isRooted = isRooted;
     }
 
-    public IncludeExcludeMatchResult Match(string name)
+    public IncludeExcludeMatch Match(string name)
     {
-        bool isMatched = ComputeMatch(name);
-        IEnumerable<IncludeExcludeRule> nextRules = ComputeNextRule(isMatched);
+        MatchType matchType = ComputeMatch(name);
+        IEnumerable<IncludeExcludeRule> nextRules = ComputeNextRule(matchType);
 
-        return new IncludeExcludeMatchResult
+        return new IncludeExcludeMatch
         {
-            IsMatch = isMatched,
+            MatchType = matchType,
             NextRules = nextRules
         };
     }
 
-    private bool ComputeMatch(string name)
+    private MatchType ComputeMatch(string name)
     {
         if (name == null)
-            return false;
+            return MatchType.None;
 
         if (items == null)
-            return false;
+            return MatchType.None;
 
         if (items.Length == 0)
-            return false;
+            return MatchType.None;
 
         if (items[0] != name)
-            return false;
+            return MatchType.None;
 
-        return true;
+        bool isLeaf = items.Length == 1;
+
+        return isLeaf
+            ? MatchType.Exact
+            : MatchType.Intermediate;
     }
 
-    private IEnumerable<IncludeExcludeRule> ComputeNextRule(bool isMatched)
+    private IEnumerable<IncludeExcludeRule> ComputeNextRule(MatchType matchType)
     {
-        if (isMatched)
+        switch (matchType)
         {
-            bool isLeaf = items.Length == 1;
+            case MatchType.None:
+                if (!isRooted)
+                    yield return this;
+                break;
 
-            if (isRooted)
-            {
-                if (isLeaf)
-                    yield break;
-                
+            case MatchType.Exact:
+                yield break;
+
+            case MatchType.Intermediate:
                 yield return CreateNewWithoutFirstItem();
-            }
+                if (!isRooted)
+                    yield return this;
+                break;
 
-            if (isLeaf)
-                yield break;
-
-            yield return CreateNewWithoutFirstItem();
-            yield return this;
-        }
-        else
-        {
-            if (isRooted)
-                yield break;
-
-            yield return this;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(matchType), matchType, null);
         }
     }
 

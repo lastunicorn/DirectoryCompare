@@ -29,10 +29,6 @@ internal class DirectoryOpenCrawlerItem : ICrawlerItem
 
     public string Path { get; }
 
-    public long FileCount { get; }
-
-    public long DirectoryCount { get; }
-
     public Exception Exception { get; }
 
     public DataSize Size { get; }
@@ -46,11 +42,9 @@ internal class DirectoryOpenCrawlerItem : ICrawlerItem
         }
     }
 
-    public DirectoryOpenCrawlerItem(string directoryPath, long fileCount, long directoryCount)
+    public DirectoryOpenCrawlerItem(string directoryPath)
     {
         Path = directoryPath;
-        FileCount = fileCount;
-        DirectoryCount = directoryCount;
     }
 
     public Stream ReadContent()

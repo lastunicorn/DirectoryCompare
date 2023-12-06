@@ -1,4 +1,4 @@
-// DirectoryCompare
+﻿// DirectoryCompare
 // Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -14,27 +14,30 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
+using System.Collections.ObjectModel;
 
 namespace DustInTheWind.DirectoryCompare.FileSystemAccess;
 
-public class FileSystem : IFileSystem
+internal class IncludeExcludeRuleCollection : Collection<IncludeExcludeRule>
 {
-    public IDiskCrawler CreateCrawler(string path, List<string> includeRules, List<string> excludeRules)
+    public IncludeExcludeRuleCollection()
     {
-        IEnumerable<IncludeExcludeRule> includeExcludeRules = includeRules.Select(x => new IncludeExcludeRule(x));
-        IncludeExcludeRuleCollection ruleCollection = new(includeExcludeRules);
-        
-        return new DiskCrawler(path, ruleCollection, excludeRules);
     }
 
-    public bool ExistsDirectory(string path)
+    public IncludeExcludeRuleCollection(IEnumerable<IncludeExcludeRule> items)
+        : base(new List<IncludeExcludeRule>(items))
     {
-        return Directory.Exists(path);
     }
 
-    public bool FileExists(string path)
+    public IncludeExcludeMatchCollection Match(string name)
     {
-        return File.Exists(path);
+        IEnumerable<IncludeExcludeMatch> includeExcludeMatches = Items.Select(x => x.Match(name));
+        return new IncludeExcludeMatchCollection(includeExcludeMatches);
+    }
+
+    public void AddRange(IEnumerable<IncludeExcludeRule> rules)
+    {
+        foreach (IncludeExcludeRule rule in rules)
+            Items.Add(rule);
     }
 }

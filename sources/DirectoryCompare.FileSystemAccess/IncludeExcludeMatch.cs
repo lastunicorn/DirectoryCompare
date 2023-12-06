@@ -1,4 +1,4 @@
-// DirectoryCompare
+﻿// DirectoryCompare
 // Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -14,27 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.DataStructures;
+namespace DustInTheWind.DirectoryCompare.FileSystemAccess;
 
-namespace DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
-
-public interface ICrawlerItem
+internal readonly struct IncludeExcludeMatch
 {
-    IDiskCrawler Owner { get; set; }
-
-    CrawlerAction Action { get; }
-
-    string Name { get; }
-
-    string Path { get; }
-
-    Exception Exception { get; }
-
-    DateTime LastModifiedTime { get; }
-
-    DataSize Size { get; }
-
-    bool IsRoot => Path == Owner?.RootPath;
-
-    Stream ReadContent();
+    public MatchType MatchType { get; init; }
+    
+    public IEnumerable<IncludeExcludeRule> NextRules { get; init; }
 }

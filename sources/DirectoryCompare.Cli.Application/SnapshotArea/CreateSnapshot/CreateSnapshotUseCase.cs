@@ -144,8 +144,13 @@ public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest>
 
     private IDiskCrawler CreateDiskCrawler(Pot pot, DiskPathCollection blackList)
     {
-        IDiskCrawler diskCrawler = fileSystem.CreateCrawler(pot.Path, blackList.ToListOfStrings());
-        return diskCrawler;
+        List<string> includeRules = pot.IncludedPaths
+            .Select(x=> (string)x)
+            .ToList();
+
+        List<string> excludeRules = blackList.ToListOfStrings();
+
+        return fileSystem.CreateCrawler(pot.Path, includeRules, excludeRules);
     }
 
     private async Task<PreAnalysis> RunPreAnalysis(IDiskCrawler diskCrawler)

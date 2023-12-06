@@ -18,7 +18,7 @@ namespace DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 
 public interface IFileSystem
 {
-    IDiskCrawler CreateCrawler(string path, List<string> blackList);
+    IDiskCrawler CreateCrawler(string path, List<string> includeRules, List<string> excludeRules);
 
     bool ExistsDirectory(string path);
 

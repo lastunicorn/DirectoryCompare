@@ -20,21 +20,23 @@ namespace DustInTheWind.DirectoryCompare.FileSystemAccess;
 
 internal class DiskCrawler : IDiskCrawler
 {
-    private readonly List<string> blackList;
+    private readonly IncludeExcludeRuleCollection includeRules;
+    private readonly List<string> excludeRules;
 
     public string RootPath { get; }
 
-    public DiskCrawler(string path, List<string> blackList)
+    public DiskCrawler(string path, IncludeExcludeRuleCollection includeRules, List<string> excludeRules)
     {
         RootPath = path ?? throw new ArgumentNullException(nameof(path));
-        this.blackList = blackList ?? throw new ArgumentNullException(nameof(blackList));
+        this.includeRules = includeRules ?? throw new ArgumentNullException(nameof(includeRules));
+        this.excludeRules = excludeRules ?? throw new ArgumentNullException(nameof(excludeRules));
     }
 
     public IEnumerable<ICrawlerItem> Crawl()
     {
         if (Directory.Exists(RootPath))
         {
-            DirectoryCrawler directoryCrawler = new(RootPath, blackList);
+            DirectoryCrawler directoryCrawler = new(RootPath, includeRules, excludeRules, true);
             IEnumerable<ICrawlerItem> crawlerItems = directoryCrawler.Crawl();
 
             foreach (ICrawlerItem crawlerItem in crawlerItems)

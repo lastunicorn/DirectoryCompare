@@ -16,9 +16,9 @@
 
 namespace DustInTheWind.DirectoryCompare.FileSystemAccess;
 
-internal readonly struct IncludeExcludeMatchResult
+internal enum MatchType
 {
-    public bool IsMatch { get; init; }
-
-    public IEnumerable<IncludeExcludeRule> NextRules { get; init; }
+    None = 0,
+    Exact,
+    Intermediate
 }
