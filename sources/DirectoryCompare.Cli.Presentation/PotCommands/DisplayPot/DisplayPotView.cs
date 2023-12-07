@@ -44,8 +44,6 @@ internal class DisplayPotView : ViewBase<DisplayPotViewModel>
                 foreach (SnapshotPath path in viewModel.IncludedPaths)
                     WriteInfo(path);
             });
-
-            DisplaySnapshots(viewModel.Snapshots);
         }
 
         WriteValue("Size", viewModel.Size.ToString("D"));
@@ -53,27 +51,30 @@ internal class DisplayPotView : ViewBase<DisplayPotViewModel>
         if (viewModel.Description != null)
             WriteValue("Description", viewModel.Description);
 
-        if (viewModel.Snapshots is { Count: > 0 })
+        DisplaySnapshots(viewModel.Snapshots);
+    }
+
+    private void DisplaySnapshots(List<SnapshotViewModel> snapshots)
+    {
+        if (snapshots is { Count: > 0 })
         {
-            CustomConsole.WriteLineEmphasized($"Snapshots (Count = {viewModel.Snapshots.Count})");
-            DisplaySnapshots(viewModel.Snapshots);
+            CustomConsole.WriteLine();
+
+            CustomConsole.WriteLineEmphasized($"Snapshots (Count = {snapshots.Count})");
+
+            foreach (SnapshotViewModel snapshot in snapshots)
+            {
+                int index = snapshot.Index;
+                DateTime creationTime = snapshot.CreationTime.ToLocalTime();
+                CustomConsole.Write($"  [{index}] {creationTime}");
+
+                CustomConsole.Write(ConsoleColor.DarkGray, $" ({snapshot.Size})");
+                CustomConsole.WriteLine(ConsoleColor.DarkGray, $" {snapshot.Id:D}");
+            }
         }
         else
         {
             WriteValue("Snapshots", "<none>");
-        }
-    }
-
-    private static void DisplaySnapshots(List<SnapshotViewModel> snapshots)
-    {
-        foreach (SnapshotViewModel snapshot in snapshots)
-        {
-            int index = snapshot.Index;
-            DateTime creationTime = snapshot.CreationTime.ToLocalTime();
-            CustomConsole.Write($"  [{index}] {creationTime}");
-
-            CustomConsole.Write(ConsoleColor.DarkGray, $" ({snapshot.Size})");
-            CustomConsole.WriteLine(ConsoleColor.DarkGray, $" {snapshot.Id:D}");
         }
     }
 }

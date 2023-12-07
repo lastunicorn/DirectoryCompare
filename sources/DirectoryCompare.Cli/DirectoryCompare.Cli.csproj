@@ -50,10 +50,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <ItemGroup>
         <PackageReference Include="ConsoleTools.Commando.Setup.Autofac" Version="2.0.0" />
         <PackageReference Include="ConsoleTools.Controls" Version="1.1.0" />
-        <PackageReference Include="FluentValidation" Version="11.8.0" PrivateAssets="All" />
+        <PackageReference Include="FluentValidation" Version="11.8.1" PrivateAssets="All" />
         <PackageReference Include="log4net" Version="2.0.15" />
-        <PackageReference Include="MediatR" Version="12.1.1" />
-        <PackageReference Include="MediatR.Extensions.Autofac.DependencyInjection" Version="11.2.0" />
+        <PackageReference Include="MediatR" Version="12.2.0" />
+        <PackageReference Include="MediatR.Extensions.Autofac.DependencyInjection" Version="11.3.0" />
     </ItemGroup>
 
     <ItemGroup>

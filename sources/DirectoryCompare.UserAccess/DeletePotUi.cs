@@ -24,7 +24,9 @@ public class DeletePotUi : EnhancedConsole, IDeletePotUi
 {
     public Task<bool> ConfirmToDelete(PotDeletionRequest request)
     {
-        WithIndentation("Deleting pot", () =>
+        WriteWarning("Deleting pot");
+        
+        WithIndentation(() =>
         {
             WriteValue("Pot Name", request.PotName);
             WriteValue("Pot Id", request.PotId);
