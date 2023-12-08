@@ -29,6 +29,8 @@ public class SnapshotViewModel
 
     public DateTime CreationTime { get; }
 
+    public SnapshotPath DirectoryPath { get; }
+
     public DirectoryDto RootDirectory { get; }
 
     public int TotalFileCount { get; }
@@ -45,6 +47,7 @@ public class SnapshotViewModel
         SnapshotId = response.SnapshotId;
         OriginalPath = response.OriginalPath;
         CreationTime = response.SnapshotCreationTime;
+        DirectoryPath = response.DirectoryPath;
         RootDirectory = response.RootDirectory;
         TotalFileCount = response.TotalFileCount;
         TotalDirectoryCount = response.TotalDirectoryCount;

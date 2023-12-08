@@ -22,7 +22,5 @@ public class PresentPotsResponse
 {
     public List<PotDto> Pots { get; init; }
 
-    public bool IncludeSizes { get; set; }
-
     public DataSize TotalSize { get; set; }
 }

@@ -16,7 +16,8 @@
 
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.DirectoryCompare.DataStructures;
+using DustInTheWind.ConsoleTools.Controls;
+using DustInTheWind.ConsoleTools.Controls.Tables;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands.DisplayPot;
 
@@ -32,24 +33,79 @@ internal class DisplayPotView : ViewBase<DisplayPotViewModel>
 
     private void DisplayPotInfo(DisplayPotViewModel viewModel)
     {
-        WriteValue("Name", viewModel.Name);
-        WriteValue("GUID", viewModel.Guid);
-        WriteValue("Path", viewModel.Path);
+        DataGrid dataGrid = new()
+        {
+            HeaderRow =
+            {
+                IsVisible = false
+            },
+            TitleRow =
+            {
+                BackgroundColor = ConsoleColor.DarkGray,
+                ForegroundColor = ConsoleColor.White,
+                TitleCell =
+                {
+                    Content = viewModel.Name
+                }
+            }
+        };
+
+        Column nameColumn = new("Name")
+        {
+            ForegroundColor = ConsoleColor.White
+        };
+        dataGrid.Columns.Add(nameColumn);
+
+        Column valueColumn = new("Value")
+        {
+            ForegroundColor = ConsoleColor.DarkGray
+        };
+        dataGrid.Columns.Add(valueColumn);
+
+        //dataGrid.Rows.Add("Name", viewModel.Name);
+        dataGrid.Rows.Add("GUID", viewModel.Guid);
+
+        List<string> lines = new()
+        {
+            viewModel.Path
+        };
 
         if (viewModel.IncludedPaths is { Count: > 0 })
         {
-            CustomConsole.WriteLineEmphasized("Included Paths:");
-            WithIndentation(() =>
-            {
-                foreach (SnapshotPath path in viewModel.IncludedPaths)
-                    WriteInfo(path);
-            });
+            IEnumerable<string> includedPaths = viewModel.IncludedPaths
+                .Select(x => $"  {x}");
+
+            lines.AddRange(includedPaths);
         }
 
-        WriteValue("Size", viewModel.Size.ToString("D"));
+        MultilineText pathText = new(lines);
+        dataGrid.Rows.Add((MultilineText)"Path", pathText);
+
+        dataGrid.Rows.Add("Size", viewModel.Size.ToString("D"));
 
         if (viewModel.Description != null)
-            WriteValue("Description", viewModel.Description);
+            dataGrid.Rows.Add("Description", viewModel.Description);
+
+        dataGrid.Display();
+
+        //WriteValue("Name", viewModel.Name);
+        //WriteValue("GUID", viewModel.Guid);
+        //WriteValue("Path", viewModel.Path);
+
+        //if (viewModel.IncludedPaths is { Count: > 0 })
+        //{
+        //    CustomConsole.WriteLineEmphasized("Included Paths:");
+        //    WithIndentation(() =>
+        //    {
+        //        foreach (SnapshotPath path in viewModel.IncludedPaths)
+        //            WriteInfo(path);
+        //    });
+        //}
+
+        //WriteValue("Size", viewModel.Size.ToString("D"));
+
+        //if (viewModel.Description != null)
+        //    WriteValue("Description", viewModel.Description);
 
         DisplaySnapshots(viewModel.Snapshots);
     }
@@ -60,21 +116,84 @@ internal class DisplayPotView : ViewBase<DisplayPotViewModel>
         {
             CustomConsole.WriteLine();
 
-            CustomConsole.WriteLineEmphasized($"Snapshots (Count = {snapshots.Count})");
+            DataGrid dataGrid = new()
+            {
+                HeaderRow =
+                {
+                    ForegroundColor = ConsoleColor.White
+                },
+                TitleRow =
+                {
+                    BackgroundColor = ConsoleColor.DarkGray,
+                    ForegroundColor = ConsoleColor.White,
+                    TitleCell =
+                    {
+                        Content = $"Snapshots (Count = {snapshots.Count})"
+                    }
+                }
+            };
+
+            Column nameColumn = new("Index")
+            {
+                CellHorizontalAlignment = HorizontalAlignment.Right
+            };
+            dataGrid.Columns.Add(nameColumn);
+
+            Column valueColumn = new("Date");
+            dataGrid.Columns.Add(valueColumn);
+
+            Column sizeColumn = new("Size")
+            {
+                CellHorizontalAlignment = HorizontalAlignment.Right,
+                ForegroundColor = ConsoleColor.DarkGray
+            };
+            dataGrid.Columns.Add(sizeColumn);
+
+            Column guidColumn = new("GUID")
+            {
+                ForegroundColor = ConsoleColor.DarkGray
+            };
+            dataGrid.Columns.Add(guidColumn);
 
             foreach (SnapshotViewModel snapshot in snapshots)
             {
                 int index = snapshot.Index;
                 DateTime creationTime = snapshot.CreationTime.ToLocalTime();
-                CustomConsole.Write($"  [{index}] {creationTime}");
+                string size = snapshot.Size.ToString();
+                string guid = snapshot.Id.ToString("D");
 
-                CustomConsole.Write(ConsoleColor.DarkGray, $" ({snapshot.Size})");
-                CustomConsole.WriteLine(ConsoleColor.DarkGray, $" {snapshot.Id:D}");
+                dataGrid.Rows.Add(index, creationTime, size, guid);
             }
+
+            dataGrid.Display();
         }
         else
         {
             WriteValue("Snapshots", "<none>");
         }
     }
+
+    //private void DisplaySnapshots(List<SnapshotViewModel> snapshots)
+    //{
+    //    if (snapshots is { Count: > 0 })
+    //    {
+    //        CustomConsole.WriteLine();
+
+    //        CustomConsole.WriteLineEmphasized($"Snapshots (Count = {snapshots.Count})");
+
+    //        foreach (SnapshotViewModel snapshot in snapshots)
+    //        {
+    //            int index = snapshot.Index;
+    //            DateTime creationTime = snapshot.CreationTime.ToLocalTime();
+    //            CustomConsole.Write($"  [{index}] {creationTime}");
+
+    //            CustomConsole.Write(ConsoleColor.DarkGray, $" ({snapshot.Size})");
+    //            CustomConsole.WriteLine(ConsoleColor.DarkGray, $" {snapshot.Id:D}");
+    //        }
+    //    }
+    //    else
+    //    {
+    //        WriteValue("Snapshots", "<none>");
+    //    }
+    //}
 }

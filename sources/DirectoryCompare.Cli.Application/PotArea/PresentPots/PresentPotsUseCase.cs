@@ -52,7 +52,6 @@ public class PresentPotsUseCase : IRequestHandler<PresentPotsRequest, PresentPot
 
         return new PresentPotsResponse
         {
-            IncludeSizes = request.IncludeSizes,
             TotalSize = totalSize,
             Pots = potsDto
         };

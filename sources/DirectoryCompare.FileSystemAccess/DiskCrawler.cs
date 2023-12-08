@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System.IO;
+using System;
 using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 
 namespace DustInTheWind.DirectoryCompare.FileSystemAccess;
@@ -54,4 +56,229 @@ internal class DiskCrawler : IDiskCrawler
             };
         }
     }
+
+    //private IEnumerable<ICrawlerItem> ProcessDirectory(CrawlRequest request)
+    //{
+    //    string[] filePaths = null;
+    //    string[] directoryPaths = null;
+    //    Exception exception = null;
+
+    //    try
+    //    {
+    //        filePaths = Directory.GetFiles(request.Path);
+    //        directoryPaths = Directory.GetDirectories(request.Path);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        exception = ex;
+    //    }
+
+    //    if (exception != null)
+    //    {
+    //        yield return new DirectoryErrorCrawlerItem(exception, request.Path);
+    //    }
+    //    else
+    //    {
+    //        CrawlTask crawlTask = new()
+    //        {
+    //            Request = request,
+    //            Files = filePaths,
+    //            Diretories = directoryPaths
+    //        };
+
+    //        bool isDirectoryOpened = false;
+
+    //        // Open Directory
+
+    //        if (request.IsExactMatch)
+    //        {
+    //            yield return new DirectoryOpenCrawlerItem(request.Path);
+    //            isDirectoryOpened = true;
+    //        }
+
+    //        // Process Files
+
+    //        IEnumerable<ICrawlerItem> childItems = crawlTask.EnumerateItems;
+
+    //        foreach (ICrawlerItem item in childItems)
+    //        {
+    //            if (!isDirectoryOpened)
+    //            {
+    //                yield return new DirectoryOpenCrawlerItem(request.Path);
+    //                isDirectoryOpened = true;
+    //            }
+                
+    //            yield return item;
+    //        }
+
+    //        // Process Sub-Directories
+
+    //        IEnumerable<CrawlRequest> requests = crawlTask.EnumerateRequests;
+
+    //        foreach (CrawlRequest childRequest in requests)
+    //        {
+    //            IEnumerable<ICrawlerItem> items = ProcessDirectory(request);
+
+    //            foreach (ICrawlerItem item in items)
+    //            {
+    //                if (!isDirectoryOpened)
+    //                {
+    //                    yield return new DirectoryOpenCrawlerItem(request.Path);
+    //                    isDirectoryOpened = true;
+    //                }
+
+    //                yield return item;
+    //            }
+    //        }
+
+    //        // Close Directory
+
+    //        if (isDirectoryOpened)
+    //            yield return new DirectoryCloseCrawlerItem(request.Path);
+    //    }
+    //}
 }
+
+//internal struct CrawlRequest
+//{
+//    public string Path { get; set; }
+
+//    public IncludeExcludeRuleCollection IncludeRules { get; set; }
+
+//    public List<string> ExcludeRules { get; set; }
+
+//    public bool IsExactMatch { get; set; }
+//}
+
+//internal class CrawlerTask
+//{
+//    public string Path { get; set; }
+
+//    public IncludeExcludeRuleCollection IncludeRules { get; set; }
+
+//    public List<string> ExcludeRules { get; set; }
+
+//    public bool IsExactMatch { get; set; }
+
+//    public string[] FilePaths { get; set; }
+
+//    public string[] DirectoryPaths { get; set; }
+
+//    public IEnumerable<ICrawlerItem> Crawl()
+//    {
+//        OpenDirectory();
+
+//        if (exception != null)
+//        {
+//            yield return new DirectoryErrorCrawlerItem(exception, Path);
+//        }
+//        else
+//        {
+//            bool isDirectoryOpened = false;
+
+//            if (IsExactMatch)
+//            {
+//                yield return new DirectoryOpenCrawlerItem(Path);
+//                isDirectoryOpened = true;
+//            }
+
+//            // Process Files
+
+//            IEnumerable<FileCrawlerItem> fileCrawlerItems = FilePaths
+//                .Select(ProcessFile)
+//                .Where(x => x != null);
+
+//            foreach (FileCrawlerItem fileCrawlerItem in fileCrawlerItems)
+//            {
+//                if (!isDirectoryOpened)
+//                {
+//                    yield return new DirectoryOpenCrawlerItem(Path);
+//                    isDirectoryOpened = true;
+//                }
+
+//                yield return fileCrawlerItem;
+//            }
+
+//            // Process Sub-Directories
+
+//            IEnumerable<ICrawlerItem> crawlerItems = DirectoryPaths
+//                .SelectMany(ProcessDirectory);
+
+//            foreach (ICrawlerItem crawlerItem in crawlerItems)
+//            {
+//                if (!isDirectoryOpened)
+//                {
+//                    yield return new DirectoryOpenCrawlerItem(Path);
+//                    isDirectoryOpened = true;
+//                }
+
+//                yield return crawlerItem;
+//            }
+
+//            if (isDirectoryOpened)
+//                yield return new DirectoryCloseCrawlerItem(Path);
+//        }
+//    }
+
+//    private FileCrawlerItem ProcessFile(string filePath)
+//    {
+//        string fileName = Path.GetFileName(filePath);
+
+//        // Is Excluded
+
+//        bool isExcluded = ExcludeRules.Contains(fileName);
+
+//        if (isExcluded)
+//            return null;
+
+//        // Is Included
+
+//        IncludeExcludeMatchCollection matches = IncludeRules.Match(fileName);
+//        matches.Analyze(false);
+
+//        return matches.IsExactMatch
+//            ? new FileCrawlerItem(filePath)
+//            : null;
+//    }
+
+//    private IEnumerable<ICrawlerItem> ProcessDirectory(string directoryPath)
+//    {
+//        string directoryName = Path.GetFileName(directoryPath);
+
+//        // Is Excluded
+
+//        bool isExcluded = ExcludeRules.Contains(directoryName);
+
+//        if (isExcluded)
+//            return Enumerable.Empty<ICrawlerItem>();
+
+//        // Is Included
+
+//        IncludeExcludeMatchCollection matches = IncludeRules.Match(directoryName);
+//        matches.Analyze();
+
+//        if (matches.IsExactMatch)
+//        {
+//            DirectoryCrawler directoryCrawler = new(directoryPath, new IncludeExcludeRuleCollection(), ExcludeRules, true);
+//            return directoryCrawler.Crawl();
+//        }
+//        else if (matches.IsIntermediateMatch)
+//        {
+//            // todo: current dir should not be "opened" until a children is proven to be green.
+
+//            DirectoryCrawler directoryCrawler = new(directoryPath, matches.NextRules, ExcludeRules, false);
+//            return directoryCrawler.Crawl();
+//        }
+//        else if (matches.NextRules.Count > 0)
+//        {
+//            // todo: current dir should not be "opened" until a children is proven to be green.
+
+//            DirectoryCrawler directoryCrawler = new(directoryPath, matches.NextRules, ExcludeRules, false);
+//            return directoryCrawler.Crawl();
+//        }
+//        else
+//        {
+//            return Enumerable.Empty<ICrawlerItem>();
+//        }
+//    }
+//}

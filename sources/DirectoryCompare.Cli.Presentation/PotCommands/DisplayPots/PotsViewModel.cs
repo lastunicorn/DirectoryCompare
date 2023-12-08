@@ -22,7 +22,5 @@ public class PotsViewModel
 {
     public List<PotViewModel> Pots { get; set; }
 
-    public bool DisplaySizes { get; set; }
-
     public DataSize TotalSize { get; set; }
 }

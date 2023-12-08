@@ -14,8 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Commando;
+using DustInTheWind.ConsoleTools.Controls;
+using DustInTheWind.ConsoleTools.Controls.Tables;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands.DisplayPots;
 
@@ -33,31 +34,61 @@ internal class DisplayPotsView : ViewBase<PotsViewModel>
 
     private static void DisplayPots(PotsViewModel potsViewModel)
     {
-        foreach (PotViewModel pot in potsViewModel.Pots)
-            DisplayPot(pot, potsViewModel.DisplaySizes);
-
-        if (potsViewModel.DisplaySizes) 
-            DisplayTotalSize(potsViewModel);
-    }
-
-    private static void DisplayPot(PotViewModel pot, bool displaySizes)
-    {
-        PotViewControl potViewControl = new()
+        DataGrid dataGrid = new()
         {
-            Guid = pot.Guid,
-            Name = pot.Name,
-            Path = pot.Path,
-            Size = pot.Size,
-            DisplaySize = displaySizes,
-            HasPathFilters = pot.HasPathFilters
+            HeaderRow =
+            {
+                ForegroundColor = ConsoleColor.White
+            },
+            Border =
+            {
+                ForegroundColor = ConsoleColor.DarkGray
+            },
+            TitleRow =
+            {
+                BackgroundColor = ConsoleColor.DarkGray,
+                ForegroundColor = ConsoleColor.White,
+                TitleCell =
+                {
+                    Content = "Pots"
+                }
+            }
         };
 
-        potViewControl.Display();
-    }
+        dataGrid.Columns.Add("Id");
+        
+        Column nameColumn = new("Name")
+        {
+            ForegroundColor = ConsoleColor.White
+        };
+        dataGrid.Columns.Add(nameColumn);
 
-    private static void DisplayTotalSize(PotsViewModel potsViewModel)
-    {
-        CustomConsole.WriteLine();
-        CustomConsole.WriteLine($"Total Size: {potsViewModel.TotalSize}");
+        Column sizeColumn = new("Size", HorizontalAlignment.Right)
+        {
+            ForegroundColor = ConsoleColor.DarkGray
+        };
+        dataGrid.Columns.Add(sizeColumn);
+
+        Column pathColumn = new("Path")
+        {
+            ForegroundColor = ConsoleColor.DarkGray
+        };
+        dataGrid.Columns.Add(pathColumn);
+
+        IEnumerable<ContentRow> rows = potsViewModel.Pots
+            .Select(pot =>
+            {
+                string guid = pot.Guid.ToString()[..8];
+                string path = pot.Path;
+                if (pot.HasPathFilters)
+                    path += " [*]";
+                return new ContentRow(guid, pot.Name, pot.Size, path);
+            });
+
+        dataGrid.Rows.AddRange(rows);
+
+        dataGrid.FooterRow.FooterCell.Content = $"Total Size: {potsViewModel.TotalSize:D}";
+
+        dataGrid.Display();
     }
 }

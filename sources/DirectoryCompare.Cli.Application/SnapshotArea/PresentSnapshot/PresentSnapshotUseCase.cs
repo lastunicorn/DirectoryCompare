@@ -48,6 +48,7 @@ public class PresentSnapshotUseCase : IRequestHandler<PresentSnapshotRequest, Pr
             SnapshotId = snapshot.Id,
             OriginalPath = snapshot.OriginalPath,
             SnapshotCreationTime = snapshot.CreationTime,
+            DirectoryPath = "/" + request.DirectoryPath,
             RootDirectory = directoryToDisplay,
             TotalFileCount = itemCounter.FileCount,
             TotalDirectoryCount = itemCounter.DirectoryCount,
@@ -66,11 +67,9 @@ public class PresentSnapshotUseCase : IRequestHandler<PresentSnapshotRequest, Pr
                 : -1;
             return new DirectoryDto(hDirectoryToReturn, directoryLevel);
         }
-        
+
         if (request.DirectoryLevel > 0)
-        {
             return new DirectoryDto(snapshot, request.DirectoryLevel);
-        }
 
         return null;
     }

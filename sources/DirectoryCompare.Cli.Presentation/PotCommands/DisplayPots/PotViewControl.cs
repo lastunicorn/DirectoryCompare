@@ -29,8 +29,6 @@ internal class PotViewControl
 
     public DataSize Size { get; set; }
 
-    public bool DisplaySize { get; set; }
-
     public bool HasPathFilters { get; set; }
 
     public void Display()
@@ -42,8 +40,7 @@ internal class PotViewControl
         CustomConsole.WriteEmphasized(Name);
         CustomConsole.Write(" ");
 
-        if (DisplaySize)
-            CustomConsole.Write(ConsoleColor.DarkGray, $"({Size}) ");
+        CustomConsole.Write(ConsoleColor.DarkGray, $"({Size}) ");
 
         CustomConsole.Write(ConsoleColor.DarkGray, Path);
 

@@ -28,6 +28,8 @@ public class PresentSnapshotResponse
 
     public DateTime SnapshotCreationTime { get; set; }
 
+    public SnapshotPath DirectoryPath { get; set; }
+
     public DirectoryDto RootDirectory { get; set; }
 
     public int TotalFileCount { get; set; }

@@ -58,4 +58,24 @@ public readonly struct SnapshotPath
     {
         return path.path;
     }
+
+    public static SnapshotPath operator +(SnapshotPath path1, SnapshotPath path2)
+    {
+        if (path1.path == "/")
+            return path1.path + path2.path?.TrimStart('/');
+
+        List<string> parts = new(2);
+
+        string part1 = path1.path?.TrimEnd('/');
+        if (part1 != null)
+            parts.Add(part1);
+
+        string part2 = path2.path;
+        if (part2 != null)
+            parts.Add(part2);
+
+        string result = string.Join('/', parts);
+
+        return new SnapshotPath(result);
+    }
 }

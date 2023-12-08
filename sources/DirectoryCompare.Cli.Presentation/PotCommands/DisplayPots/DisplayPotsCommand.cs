@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Security.Cryptography;
 using DustInTheWind.ConsoleTools.Commando;
 using DustInTheWind.DirectoryCompare.Cli.Application;
 using DustInTheWind.DirectoryCompare.Cli.Application.PotArea.PresentPots;
@@ -48,7 +47,6 @@ public class DisplayPotsCommand : IConsoleCommand<PotsViewModel>
 
         return new PotsViewModel
         {
-            DisplaySizes = response.IncludeSizes,
             TotalSize = response.TotalSize,
             Pots = response.Pots
                 .Select(x=> new PotViewModel(x))
