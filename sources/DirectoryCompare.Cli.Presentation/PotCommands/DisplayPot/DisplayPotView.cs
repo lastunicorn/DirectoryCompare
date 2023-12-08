@@ -62,8 +62,7 @@ internal class DisplayPotView : ViewBase<DisplayPotViewModel>
         };
         dataGrid.Columns.Add(valueColumn);
 
-        //dataGrid.Rows.Add("Name", viewModel.Name);
-        dataGrid.Rows.Add("GUID", viewModel.Guid);
+        dataGrid.Rows.Add("Id", viewModel.Guid);
 
         List<string> lines = new()
         {
@@ -87,25 +86,6 @@ internal class DisplayPotView : ViewBase<DisplayPotViewModel>
             dataGrid.Rows.Add("Description", viewModel.Description);
 
         dataGrid.Display();
-
-        //WriteValue("Name", viewModel.Name);
-        //WriteValue("GUID", viewModel.Guid);
-        //WriteValue("Path", viewModel.Path);
-
-        //if (viewModel.IncludedPaths is { Count: > 0 })
-        //{
-        //    CustomConsole.WriteLineEmphasized("Included Paths:");
-        //    WithIndentation(() =>
-        //    {
-        //        foreach (SnapshotPath path in viewModel.IncludedPaths)
-        //            WriteInfo(path);
-        //    });
-        //}
-
-        //WriteValue("Size", viewModel.Size.ToString("D"));
-
-        //if (viewModel.Description != null)
-        //    WriteValue("Description", viewModel.Description);
 
         DisplaySnapshots(viewModel.Snapshots);
     }
@@ -149,7 +129,7 @@ internal class DisplayPotView : ViewBase<DisplayPotViewModel>
             };
             dataGrid.Columns.Add(sizeColumn);
 
-            Column guidColumn = new("GUID")
+            Column guidColumn = new("Id")
             {
                 ForegroundColor = ConsoleColor.DarkGray
             };
@@ -172,28 +152,4 @@ internal class DisplayPotView : ViewBase<DisplayPotViewModel>
             WriteValue("Snapshots", "<none>");
         }
     }
-
-    //private void DisplaySnapshots(List<SnapshotViewModel> snapshots)
-    //{
-    //    if (snapshots is { Count: > 0 })
-    //    {
-    //        CustomConsole.WriteLine();
-
-    //        CustomConsole.WriteLineEmphasized($"Snapshots (Count = {snapshots.Count})");
-
-    //        foreach (SnapshotViewModel snapshot in snapshots)
-    //        {
-    //            int index = snapshot.Index;
-    //            DateTime creationTime = snapshot.CreationTime.ToLocalTime();
-    //            CustomConsole.Write($"  [{index}] {creationTime}");
-
-    //            CustomConsole.Write(ConsoleColor.DarkGray, $" ({snapshot.Size})");
-    //            CustomConsole.WriteLine(ConsoleColor.DarkGray, $" {snapshot.Id:D}");
-    //        }
-    //    }
-    //    else
-    //    {
-    //        WriteValue("Snapshots", "<none>");
-    //    }
-    //}
 }
