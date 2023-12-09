@@ -46,6 +46,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <ProjectReference Include="..\DirectoryCompare.Domain\DirectoryCompare.Domain.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.DataStructures\DirectoryCompare.DataStructures.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.DataAccess.PotFiles\DirectoryCompare.DataAccess.PotFiles.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.FileSystemAccess\DirectoryCompare.FileSystemAccess.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.Ports.FileSystemAccess\DirectoryCompare.Ports.FileSystemAccess.csproj" PrivateAssets="All" />
     </ItemGroup>
 
 </Project>

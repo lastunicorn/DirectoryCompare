@@ -32,8 +32,8 @@ internal class DirectoryCrawler
     public DirectoryCrawler(string path, IncludeExcludeRuleCollection includeRules, List<string> excludeRules, bool isExactMatch)
     {
         this.path = path ?? throw new ArgumentNullException(nameof(path));
-        this.includeRules = includeRules ?? throw new ArgumentNullException(nameof(includeRules));
-        this.excludeRules = excludeRules ?? throw new ArgumentNullException(nameof(excludeRules));
+        this.includeRules = includeRules;
+        this.excludeRules = excludeRules;
         this.isExactMatch = isExactMatch;
     }
 
@@ -116,14 +116,14 @@ internal class DirectoryCrawler
 
         // Is Excluded
 
-        bool isExcluded = excludeRules.Contains(fileName);
+        bool isExcluded = excludeRules?.Contains(fileName) ?? false;
 
         if (isExcluded)
             return null;
 
         // Is Included
 
-        IncludeExcludeMatchCollection matches = includeRules.Match(fileName);
+        IncludeExcludeMatchCollection matches = includeRules?.Match(fileName) ?? new IncludeExcludeMatchCollection();
         matches.Analyze(false);
 
         return matches.IsExactMatch
@@ -137,14 +137,14 @@ internal class DirectoryCrawler
 
         // Is Excluded
 
-        bool isExcluded = excludeRules.Contains(directoryName);
+        bool isExcluded = excludeRules?.Contains(directoryName) ?? false;
 
         if (isExcluded)
             return Enumerable.Empty<ICrawlerItem>();
 
         // Is Included
 
-        IncludeExcludeMatchCollection matches = includeRules.Match(directoryName);
+        IncludeExcludeMatchCollection matches = includeRules?.Match(directoryName) ?? new IncludeExcludeMatchCollection();
         matches.Analyze();
 
         if (matches.IsExactMatch)

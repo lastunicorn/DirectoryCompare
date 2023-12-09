@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.IO;
-using System;
 using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 
 namespace DustInTheWind.DirectoryCompare.FileSystemAccess;
@@ -30,8 +28,8 @@ internal class DiskCrawler : IDiskCrawler
     public DiskCrawler(string path, IncludeExcludeRuleCollection includeRules, List<string> excludeRules)
     {
         RootPath = path ?? throw new ArgumentNullException(nameof(path));
-        this.includeRules = includeRules ?? throw new ArgumentNullException(nameof(includeRules));
-        this.excludeRules = excludeRules ?? throw new ArgumentNullException(nameof(excludeRules));
+        this.includeRules = includeRules;
+        this.excludeRules = excludeRules;
     }
 
     public IEnumerable<ICrawlerItem> Crawl()
