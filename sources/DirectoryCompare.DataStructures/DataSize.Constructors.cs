@@ -1,4 +1,4 @@
-﻿// DirectoryCompare
+// DirectoryCompare
 // Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -16,16 +16,21 @@
 
 namespace DustInTheWind.DirectoryCompare.DataStructures;
 
-/// <summary>
-/// The measurement unit for data.
-/// </summary>
-public enum DataSizeUnit
+public readonly partial struct DataSize: IEquatable<DataSize>, IFormattable
 {
-    Unknown,
-    Byte,
-    Kilobyte,
-    Megabyte,
-    Gigabyte,
-    Terabyte,
-    Petabyte
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DataSize"/> struct.
+    /// </summary>
+    public DataSize(ulong value, DataSizeUnit unit = DataSizeUnit.Byte)
+    {
+        Value = ToBytes(value, unit);
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DataSize"/> struct.
+    /// </summary>
+    public DataSize(double value, DataSizeUnit unit = DataSizeUnit.Byte)
+    {
+        Value = ToBytes(value, unit);
+    }
 }

@@ -1,4 +1,4 @@
-﻿// DirectoryCompare
+// DirectoryCompare
 // Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -16,16 +16,21 @@
 
 namespace DustInTheWind.DirectoryCompare.DataStructures;
 
-/// <summary>
-/// The measurement unit for data.
-/// </summary>
-public enum DataSizeUnit
+public readonly partial struct DataSize
 {
-    Unknown,
-    Byte,
-    Kilobyte,
-    Megabyte,
-    Gigabyte,
-    Terabyte,
-    Petabyte
+    public bool Equals(DataSize other)
+    {
+        return Value.Equals(other.Value);
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        return obj is DataSize other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return Value.GetHashCode();
+    }
 }
