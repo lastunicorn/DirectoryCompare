@@ -93,6 +93,23 @@ internal class DirectoryCrawler
         }
     }
 
+    private void OpenDirectory()
+    {
+        filePaths = null;
+        directoryPaths = null;
+        exception = null;
+
+        try
+        {
+            filePaths = Directory.GetFiles(path);
+            directoryPaths = Directory.GetDirectories(path);
+        }
+        catch (Exception ex)
+        {
+            exception = ex;
+        }
+    }
+
     private FileCrawlerItem ProcessFile(string filePath)
     {
         string fileName = Path.GetFileName(filePath);
@@ -152,23 +169,6 @@ internal class DirectoryCrawler
         else
         {
             return Enumerable.Empty<ICrawlerItem>();
-        }
-    }
-
-    private void OpenDirectory()
-    {
-        filePaths = null;
-        directoryPaths = null;
-        exception = null;
-
-        try
-        {
-            filePaths = Directory.GetFiles(path);
-            directoryPaths = Directory.GetDirectories(path);
-        }
-        catch (Exception ex)
-        {
-            exception = ex;
         }
     }
 }

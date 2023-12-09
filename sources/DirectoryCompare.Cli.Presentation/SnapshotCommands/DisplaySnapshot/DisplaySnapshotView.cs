@@ -14,10 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Globalization;
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.ConsoleTools.Controls.Tables;
 using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.PresentSnapshot;
 using DustInTheWind.DirectoryCompare.DataStructures;
 
@@ -35,52 +33,10 @@ public class DisplaySnapshotView : ViewBase<SnapshotViewModel>
 
     private static void DisplaySnapshotMetadata(SnapshotViewModel snapshotViewModel)
     {
-        DataGrid dataGrid = new()
-        {
-            HeaderRow =
-            {
-                IsVisible = false,
-                ForegroundColor = ConsoleColor.White
-            },
-            Border =
-            {
-                ForegroundColor = ConsoleColor.DarkGray
-            },
-            TitleRow =
-            {
-                ForegroundColor = ConsoleColor.White,
-                BackgroundColor = ConsoleColor.DarkGray,
-                TitleCell =
-                {
-                    Content = $"{snapshotViewModel.PotName} > {snapshotViewModel.SnapshotId:D}"
-                }
-            }
-        };
+        SnapshotDataGrid snapshotDataGrid = new();
+        snapshotDataGrid.AddSnapshot(snapshotViewModel);
 
-        Column nameColumn = new("Name")
-        {
-            ForegroundColor = ConsoleColor.White
-        };
-        dataGrid.Columns.Add(nameColumn);
-
-        Column valueColumn = new("Value")
-        {
-            ForegroundColor = ConsoleColor.DarkGray
-        };
-        dataGrid.Columns.Add(valueColumn);
-
-        dataGrid.Rows.Add("Path", snapshotViewModel.OriginalPath);
-        dataGrid.Rows.Add("Creation Time", $"{snapshotViewModel.CreationTime.ToLocalTime()} ({CultureInfo.CurrentUICulture.Name})");
-        dataGrid.Rows.Add("Directories", snapshotViewModel.TotalDirectoryCount.ToString("N0"));
-        dataGrid.Rows.Add("Files", snapshotViewModel.TotalFileCount.ToString("N0"));
-
-        string dataSize = snapshotViewModel.DataSize.ToString("D");
-        dataGrid.Rows.Add("Data Size", dataSize);
-
-        string storageSize = snapshotViewModel.StorageSize.ToString("D");
-        dataGrid.Rows.Add("Snapshot Size", storageSize);
-
-        dataGrid.Display();
+        snapshotDataGrid.Display();
     }
 
     private static void DisplaySnapshotContent(SnapshotPath directoryPath, DirectoryDto rootDirectory)

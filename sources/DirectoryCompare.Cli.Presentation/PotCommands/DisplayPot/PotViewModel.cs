@@ -14,27 +14,21 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.ConsoleTools.Commando;
+using DustInTheWind.DirectoryCompare.DataStructures;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands.DisplayPots;
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands.DisplayPot;
 
-internal class DisplayPotsView : ViewBase<PotsViewModel>
+public class PotViewModel
 {
-    public override void Display(PotsViewModel potsViewModel)
-    {
-        bool hasPots = potsViewModel.Pots is { Count: > 0 };
+    public string Name { get; init; }
 
-        if (hasPots)
-            DisplayPots(potsViewModel);
-        else
-            WriteInfo("There are no Pots.");
-    }
+    public Guid Guid { get; init; }
 
-    private static void DisplayPots(PotsViewModel potsViewModel)
-    {
-        PotsDataGrid potsDataGrid = new();
-        potsDataGrid.AddPots(potsViewModel);
+    public string Path { get; init; }
 
-        potsDataGrid.Display();
-    }
+    public string Description { get; init; }
+
+    public DataSize Size { get; init; }
+
+    public List<SnapshotPath> IncludedPaths { get; init; }
 }

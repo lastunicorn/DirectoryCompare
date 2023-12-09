@@ -23,15 +23,7 @@ public class DisplayPotViewModel
 {
     public bool Exists { get; }
 
-    public string Name { get; }
-
-    public Guid Guid { get; }
-
-    public string Path { get; }
-
-    public string Description { get; }
-    
-    public DataSize Size { get; }
+    public PotViewModel PotViewModel { get; }
 
     public List<SnapshotViewModel> Snapshots { get; }
 
@@ -43,12 +35,16 @@ public class DisplayPotViewModel
             return;
 
         Exists = true;
-        Name = pot.Name;
-        Guid = pot.Guid;
-        Path = pot.Path;
-        IncludedPaths = pot.IncludedPaths;
-        Description = pot.Description;
-        Size = pot.Size;
+        PotViewModel = new PotViewModel
+        {
+            Name = pot.Name,
+            Guid = pot.Guid,
+            Path = pot.Path,
+            IncludedPaths = pot.IncludedPaths,
+            Description = pot.Description,
+            Size = pot.Size
+        };
+
         Snapshots = pot.Snapshots?
             .Select(x => new SnapshotViewModel(x))
             .ToList();

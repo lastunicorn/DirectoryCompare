@@ -16,8 +16,6 @@
 
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.ConsoleTools.Controls;
-using DustInTheWind.ConsoleTools.Controls.Tables;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands.DisplayPot;
 
@@ -26,126 +24,34 @@ internal class DisplayPotView : ViewBase<DisplayPotViewModel>
     public override void Display(DisplayPotViewModel viewModel)
     {
         if (viewModel.Exists)
-            DisplayPotInfo(viewModel);
+        {
+            DisplayPotInfo(viewModel.PotViewModel);
+            CustomConsole.WriteLine();
+
+            DisplaySnapshots(viewModel.Snapshots);
+        }
         else
+        {
             CustomConsole.WriteWarning("The pot does not exist.");
+        }
     }
 
-    private void DisplayPotInfo(DisplayPotViewModel viewModel)
+    private static void DisplayPotInfo(PotViewModel viewModel)
     {
-        DataGrid dataGrid = new()
-        {
-            HeaderRow =
-            {
-                IsVisible = false
-            },
-            TitleRow =
-            {
-                BackgroundColor = ConsoleColor.DarkGray,
-                ForegroundColor = ConsoleColor.White,
-                TitleCell =
-                {
-                    Content = viewModel.Name
-                }
-            }
-        };
+        PotDataGrid potDataGrid = new();
+        potDataGrid.AddPot(viewModel);
 
-        Column nameColumn = new("Name")
-        {
-            ForegroundColor = ConsoleColor.White
-        };
-        dataGrid.Columns.Add(nameColumn);
-
-        Column valueColumn = new("Value")
-        {
-            ForegroundColor = ConsoleColor.DarkGray
-        };
-        dataGrid.Columns.Add(valueColumn);
-
-        dataGrid.Rows.Add("Id", viewModel.Guid);
-
-        List<string> lines = new()
-        {
-            viewModel.Path
-        };
-
-        if (viewModel.IncludedPaths is { Count: > 0 })
-        {
-            IEnumerable<string> includedPaths = viewModel.IncludedPaths
-                .Select(x => $"  {x}");
-
-            lines.AddRange(includedPaths);
-        }
-
-        MultilineText pathText = new(lines);
-        dataGrid.Rows.Add((MultilineText)"Path", pathText);
-
-        dataGrid.Rows.Add("Size", viewModel.Size.ToString("D"));
-
-        if (viewModel.Description != null)
-            dataGrid.Rows.Add("Description", viewModel.Description);
-
-        dataGrid.Display();
-
-        DisplaySnapshots(viewModel.Snapshots);
+        potDataGrid.Display();
     }
 
     private void DisplaySnapshots(List<SnapshotViewModel> snapshots)
     {
         if (snapshots is { Count: > 0 })
         {
-            CustomConsole.WriteLine();
+            SnapshotsDataGrid snapshotsDataGrid = new();
+            snapshotsDataGrid.AddSnapshots(snapshots);
 
-            DataGrid dataGrid = new()
-            {
-                HeaderRow =
-                {
-                    ForegroundColor = ConsoleColor.White
-                },
-                TitleRow =
-                {
-                    BackgroundColor = ConsoleColor.DarkGray,
-                    ForegroundColor = ConsoleColor.White,
-                    TitleCell =
-                    {
-                        Content = $"Snapshots (Count = {snapshots.Count})"
-                    }
-                }
-            };
-
-            Column nameColumn = new("Index")
-            {
-                CellHorizontalAlignment = HorizontalAlignment.Right
-            };
-            dataGrid.Columns.Add(nameColumn);
-
-            Column valueColumn = new("Date");
-            dataGrid.Columns.Add(valueColumn);
-
-            Column sizeColumn = new("Size")
-            {
-                CellHorizontalAlignment = HorizontalAlignment.Right,
-                ForegroundColor = ConsoleColor.DarkGray
-            };
-            dataGrid.Columns.Add(sizeColumn);
-
-            Column guidColumn = new("Id")
-            {
-                ForegroundColor = ConsoleColor.DarkGray
-            };
-            dataGrid.Columns.Add(guidColumn);
-
-            foreach (SnapshotViewModel snapshot in snapshots)
-            {
-                int index = snapshot.Index;
-                DateTime creationTime = snapshot.CreationTime.ToLocalTime();
-                string size = snapshot.Size.ToString();
-                string guid = snapshot.Id.ToString("D");
-
-                dataGrid.Rows.Add(index, creationTime, size, guid);
-            }
-
-            dataGrid.Display();
+            snapshotsDataGrid.Display();
         }
         else
         {
