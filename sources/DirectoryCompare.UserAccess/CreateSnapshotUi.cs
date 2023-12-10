@@ -58,7 +58,7 @@ public class CreateSnapshotUi : EnhancedConsole, ICreateSnapshotUi
 
     public Task AnnounceFileIndexingProgress(FileIndexInfo fileIndexInfo)
     {
-        CustomConsole.WriteLine($"Files indexed so far: {fileIndexInfo.FileCount:N0} ({fileIndexInfo.DataSize})");
+        CustomConsole.WriteLine($"Indexed so far: {fileIndexInfo.FileCount:N0} files ({fileIndexInfo.DataSize})");
 
         return Task.CompletedTask;
     }

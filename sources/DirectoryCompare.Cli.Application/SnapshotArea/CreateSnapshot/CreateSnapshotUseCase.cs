@@ -109,14 +109,14 @@ public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest>
         await diskAnalysis.RunAsync();
     }
 
-    private async Task AnnounceStarting(Pot pot, DiskPathCollection blackList)
+    private Task AnnounceStarting(Pot pot, DiskPathCollection blackList)
     {
         log.WriteInfo("Scanning path: {0}", pot.Path);
 
         if (blackList.Count == 0)
         {
             log.WriteInfo("No blacklist entries.");
-            return;
+            return Task.CompletedTask;
         }
 
         log.WriteInfo("Computed black list:");
@@ -124,10 +124,10 @@ public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest>
         foreach (string blackListItem in blackList)
             log.WriteInfo("- " + blackListItem);
 
-        await AnnounceSnapshotCreating(pot, blackList);
+        return AnnounceSnapshotCreating(pot, blackList);
     }
 
-    private async Task AnnounceSnapshotCreating(Pot pot, DiskPathCollection blackList)
+    private Task AnnounceSnapshotCreating(Pot pot, DiskPathCollection blackList)
     {
         StartNewSnapshotInfo info = new()
         {
@@ -139,7 +139,7 @@ public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest>
             StartTime = systemClock.GetCurrentUtcTime()
         };
 
-        await createSnapshotUi.AnnounceStarting(info);
+        return createSnapshotUi.AnnounceStarting(info);
     }
 
     private IDiskCrawler CreateDiskCrawler(Pot pot, DiskPathCollection blackList)
