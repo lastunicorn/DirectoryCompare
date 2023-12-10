@@ -45,10 +45,13 @@ internal class PreAnalysis
         FileCount = 0;
         TotalDataSize = DataSize.Zero;
 
+        bool fileWasFound = false;
+
         foreach (ICrawlerItem crawlerItem in crawlerItems)
         {
             try
             {
+                fileWasFound = true;
                 FileCount++;
                 TotalDataSize += crawlerItem.Size;
             }
@@ -58,8 +61,14 @@ internal class PreAnalysis
             }
 
             if (FileCount % 1000 == 0)
+            {
                 await AnnounceFileIndexingProgress(TotalDataSize, FileCount);
+                fileWasFound = false;
+            }
         }
+        
+        if(fileWasFound)
+            await AnnounceFileIndexingProgress(TotalDataSize, FileCount);
 
         await AnnounceFilesIndexed(TotalDataSize, FileCount);
     }

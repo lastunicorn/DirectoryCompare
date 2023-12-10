@@ -16,7 +16,6 @@
 
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Commando;
-using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Ports.UserAccess;
 
 namespace DustInTheWind.DirectoryCompare.UserAccess;
@@ -58,7 +57,8 @@ public class CreateSnapshotUi : EnhancedConsole, ICreateSnapshotUi
 
     public Task AnnounceFileIndexingProgress(FileIndexInfo fileIndexInfo)
     {
-        CustomConsole.WriteLine($"Indexed so far: {fileIndexInfo.FileCount:N0} files ({fileIndexInfo.DataSize})");
+        CustomConsole.Write("Indexed:");
+        CustomConsole.WriteLine(ConsoleColor.DarkGray, $" {fileIndexInfo.FileCount:N0} files ({fileIndexInfo.DataSize})");
 
         return Task.CompletedTask;
     }
@@ -96,15 +96,27 @@ public class CreateSnapshotUi : EnhancedConsole, ICreateSnapshotUi
 
     public Task AnnounceAnalysisProgress(DiskAnalysisProgressInfo info)
     {
-        Console.WriteLine($"Progress: {info.Percentage:0.00} % ({info.ProcessedSize} / {info.TotalSize})");
+        CustomConsole.Write("Progress:");
+        CustomConsole.WriteEmphasized($" {info.Percentage:0.00} %");
+        CustomConsole.WriteLine(ConsoleColor.DarkGray, $" ({info.ProcessedSize} / {info.TotalSize})");
 
         return Task.CompletedTask;
     }
 
-    public Task AnnounceAnalysisFinished()
+    public Task AnnounceAnalysisFinished(AnalysisFinishedInfo info)
     {
+        CustomConsole.WriteLine();
+
         WriteSuccess("Done");
-        
+        WriteSuccess($"Total time: {info.ElapsedTime}");
+
+        return Task.CompletedTask;
+    }
+
+    public Task AnnounceAnalysisStarting()
+    {
+        CustomConsole.WriteLine("Analysing files...");
+
         return Task.CompletedTask;
     }
 }

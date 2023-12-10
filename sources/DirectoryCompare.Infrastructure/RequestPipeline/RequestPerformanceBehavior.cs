@@ -29,7 +29,7 @@ public class RequestPerformanceBehavior<TRequest, TResponse> : IPipelineBehavior
         this.log = log ?? throw new ArgumentNullException(nameof(log));
     }
 
-    public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         Stopwatch timer = Stopwatch.StartNew();
 
@@ -38,7 +38,7 @@ public class RequestPerformanceBehavior<TRequest, TResponse> : IPipelineBehavior
 
         try
         {
-            return next();
+            return await next();
         }
         finally
         {

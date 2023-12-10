@@ -32,5 +32,7 @@ public interface ICreateSnapshotUi
 
     Task AnnounceAnalysisError(AnalysisErrorInfo info);
 
-    Task AnnounceAnalysisFinished();
+    Task AnnounceAnalysisFinished(AnalysisFinishedInfo info);
+
+    Task AnnounceAnalysisStarting();
 }
