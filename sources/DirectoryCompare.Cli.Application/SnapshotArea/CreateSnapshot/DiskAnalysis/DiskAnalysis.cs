@@ -46,13 +46,26 @@ internal sealed class DiskAnalysis : IDisposable
         analysisProgress = new AnalysisProgress(createSnapshotUi);
     }
 
-    public async Task RunAsync()
+    public Task RunAsync()
     {
-        await InitializeNewAnalysis();
+        if (DiskCrawler == null)
+            throw new Exception("Crawler must be provided to start the analysis.");
 
+        if (SnapshotWriter == null)
+            throw new Exception("SnapshotWriter must be provided to start the analysis.");
+
+        if (PreAnalysis == null)
+            throw new Exception("PreAnalysis must be provided to start the analysis.");
+
+        return RunInternalAsync();
+    }
+
+    private async Task RunInternalAsync()
+    {
         try
         {
-            WriteSnapshotHeader();
+            await InitializeNewAnalysis();
+            
             IEnumerable<IAnalysisItem> analysisItems = GetAnalysisItems();
 
             foreach (IAnalysisItem analysisItem in analysisItems)
@@ -71,22 +84,17 @@ internal sealed class DiskAnalysis : IDisposable
 
     private async Task InitializeNewAnalysis()
     {
-        if (DiskCrawler == null)
-            throw new Exception("Crawler must be provided to start the analysis.");
-
-        if (SnapshotWriter == null)
-            throw new Exception("SnapshotWriter must be provided to start the analysis.");
-
-        if (PreAnalysis == null)
-            throw new Exception("PreAnalysis must be provided to start the analysis.");
-
         analysisId = Guid.NewGuid();
         await analysisProgress.Start(PreAnalysis.TotalDataSize);
+
+        await AnnounceStarting();
+        
+        SnapshotWriter?.Open(DiskCrawler.RootPath, analysisId);
     }
 
-    private void WriteSnapshotHeader()
+    private Task AnnounceStarting()
     {
-        SnapshotWriter?.Open(DiskCrawler.RootPath, analysisId);
+        return createSnapshotUi.AnnounceAnalysisStarting();
     }
 
     private IEnumerable<IAnalysisItem> GetAnalysisItems()
@@ -153,7 +161,12 @@ internal sealed class DiskAnalysis : IDisposable
     private void AnnounceFinished()
     {
         log.WriteInfo("Finished scanning path in {0}", analysisProgress.Elapsed);
-        createSnapshotUi.AnnounceAnalysisFinished();
+
+        AnalysisFinishedInfo info = new()
+        {
+            ElapsedTime = analysisProgress.Elapsed
+        };
+        createSnapshotUi.AnnounceAnalysisFinished(info);
     }
 
     public void Dispose()

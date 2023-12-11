@@ -1,4 +1,4 @@
-﻿// DirectoryCompare
+// DirectoryCompare
 // Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -14,18 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.DataStructures;
+using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 
-/// <summary>
-/// The measurement unit for data.
-/// </summary>
-public enum DataSizeUnit
+namespace DustInTheWind.DirectoryCompare.IntegrationTests.Utils;
+
+internal class DirectoryOpenedExpectedItem : ExpectedCrawlerItem
 {
-    Unknown,
-    Byte,
-    Kilobyte,
-    Megabyte,
-    Gigabyte,
-    Terabyte,
-    Petabyte
+    public DirectoryOpenedExpectedItem(string path)
+    {
+        Action = CrawlerAction.DirectoryOpened;
+        Path = path;
+    }
 }
