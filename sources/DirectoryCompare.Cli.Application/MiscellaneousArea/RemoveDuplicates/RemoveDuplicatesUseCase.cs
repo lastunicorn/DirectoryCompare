@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.FindDuplicates;
 using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
@@ -40,35 +41,31 @@ public class RemoveDuplicatesUseCase : IRequestHandler<RemoveDuplicatesRequest>
         this.fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
     }
 
-    // This is a draft. Not yet finished.
     public async Task Handle(RemoveDuplicatesRequest request, CancellationToken cancellationToken)
     {
-        IEnumerable<PathBlackItem> blackListPathsLeft = (await blackListRepository.Get(request.SnapshotLeft.PotName))
-            .Select(x => new PathBlackItem(x));
-        BlackList blackListLeft = new(blackListPathsLeft);
+        List<HFile> filesLeft = await GetFiles(request.SnapshotLeft);
+        List<HFile> filesRight = await GetFiles(request.SnapshotRight);
 
-        IEnumerable<PathBlackItem> blackListPathsRight = (await blackListRepository.Get(request.SnapshotRight.PotName))
-            .Select(x => new PathBlackItem(x));
-        BlackList blackListRight = new(blackListPathsRight);
-
-        FileDuplicates fileDuplicates = new()
-        {
-            FilesLeft = (await EnumerateFiles(request.SnapshotLeft, blackListLeft))
-                .ToList(),
-            FilesRight = (await EnumerateFiles(request.SnapshotRight, blackListRight))
-                .ToList()
-        };
-
-        RemoveDuplicates(request, fileDuplicates);
+        IEnumerable<FilePair> duplicates = ComputeDuplicates(filesLeft, filesRight);
+        RemoveDuplicates(request, duplicates);
     }
 
-    private async Task<IEnumerable<HFile>> EnumerateFiles(SnapshotLocation snapshotLocation, BlackList blackList = null)
+    private async Task<List<HFile>> GetFiles(SnapshotLocation snapshotLocation)
     {
-        Snapshot snapshot = await snapshotRepository.Get(snapshotLocation);
+        SnapshotFiles snapshotFiles = new(snapshotLocation, snapshotRepository, blackListRepository);
+        IEnumerable<HFile> hFiles = await snapshotFiles.Enumerate();
+        return hFiles.ToList();
+    }
 
-        return snapshot == null
-            ? Enumerable.Empty<HFile>()
-            : snapshot.EnumerateFiles(snapshotLocation.InternalPath, blackList);
+    private static IEnumerable<FilePair> ComputeDuplicates(List<HFile> filesLeft, List<HFile> filesRight)
+    {
+        FileDuplicates fileDuplicates = new()
+        {
+            FilesLeft = filesLeft,
+            FilesRight = filesRight
+        };
+
+        return fileDuplicates.Enumerate();
     }
 
     private void RemoveDuplicates(RemoveDuplicatesRequest request, IEnumerable<FilePair> fileDuplicates)
@@ -145,6 +142,19 @@ public class RemoveDuplicatesUseCase : IRequestHandler<RemoveDuplicatesRequest>
         AnnounceFinish(report);
     }
 
+    private void AnnounceStart(RemoveDuplicatesRequest request)
+    {
+        RemoveDuplicatesPlan removeDuplicatesPlan = new()
+        {
+            SnapshotLeft = request.SnapshotLeft.ToString(),
+            SnapshotRight = request.SnapshotRight.ToString(),
+            RemovePart = request.FileToRemove.ToString(),
+            PurgatoryDirectory = request.PurgatoryDirectory
+        };
+
+        removeDuplicatesLog.WritePlanInfo(removeDuplicatesPlan);
+    }
+
     private void AnnounceDuplicateFound(FilePair duplicate)
     {
         string pathLeft = duplicate.FullPathLeft;
@@ -159,18 +169,5 @@ public class RemoveDuplicatesUseCase : IRequestHandler<RemoveDuplicatesRequest>
         DataSize totalSize = report.TotalSize;
 
         removeDuplicatesLog.WriteSummary(fileRemovedCount, totalSize);
-    }
-
-    private void AnnounceStart(RemoveDuplicatesRequest request)
-    {
-        RemoveDuplicatesPlan removeDuplicatesPlan = new()
-        {
-            SnapshotLeft = request.SnapshotLeft.ToString(),
-            SnapshotRight = request.SnapshotRight.ToString(),
-            RemovePart = request.FileToRemove.ToString(),
-            PurgatoryDirectory = request.PurgatoryDirectory
-        };
-
-        removeDuplicatesLog.WritePlanInfo(removeDuplicatesPlan);
     }
 }
