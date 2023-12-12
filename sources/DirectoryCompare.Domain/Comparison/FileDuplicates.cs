@@ -19,22 +19,19 @@ using DustInTheWind.DirectoryCompare.Domain.Entities;
 
 namespace DustInTheWind.DirectoryCompare.Domain.Comparison;
 
-public class FileDuplicates : IEnumerable<FilePair>
+public class FileDuplicates
 {
     public List<HFile> FilesLeft { get; set; }
 
     public List<HFile> FilesRight { get; set; }
 
-    public IEnumerator<FilePair> GetEnumerator()
+    public IEnumerable<FilePair> Enumerate()
     {
         if (FilesLeft == null)
-            yield break;
+            return Enumerable.Empty<FilePair>();
 
-        IEnumerable<FilePair> duplicates = GeneratePairs()
+        return GeneratePairs()
             .Where(x => x.AreEqual);
-
-        foreach (FilePair filePair in duplicates)
-            yield return filePair;
     }
 
     private IEnumerable<FilePair> GeneratePairs()
@@ -70,10 +67,5 @@ public class FileDuplicates : IEnumerable<FilePair>
                 yield return new FilePair(fileLeft, fileRight);
             }
         }
-    }
-
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
     }
 }

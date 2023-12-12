@@ -57,7 +57,7 @@ public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest>
         List<HFile> filesRight = await GetFiles(request.SnapshotRight);
 
         IEnumerable<FilePair> duplicates = ComputeDuplicates(filesLeft, filesRight, request.CheckFilesExistence);
-        await AddToResponse(duplicates);
+        await AnnounceDuplicates(duplicates);
 
         stopwatch.Stop();
         await AnnounceFinished();
@@ -80,41 +80,20 @@ public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest>
 
     private async Task<List<HFile>> GetFiles(SnapshotLocation snapshotLocation)
     {
-        if (string.IsNullOrEmpty(snapshotLocation.PotName))
-            return null;
-
-        BlackList blackList = await GetBlackList(snapshotLocation.PotName);
-        Snapshot snapshot = await snapshotRepository.Get(snapshotLocation);
-
-        IEnumerable<HFile> files = snapshot == null
-            ? Enumerable.Empty<HFile>()
-            : snapshot.EnumerateFiles(snapshotLocation.InternalPath, blackList);
-
-        return files.ToList();
-    }
-
-    private async Task<BlackList> GetBlackList(string potName)
-    {
-        if (potName == null)
-            return null;
-
-        IEnumerable<IBlackItem> blackListPaths = (await blackListRepository.Get(potName))
-            .Select(x => new PathBlackItem(x));
-
-        IEnumerable<IBlackItem> blackListHashes = (await blackListRepository.GetDuplicateExcludes(potName))
-            .Select(x => new FileHashBlackItem(x));
-
-        IEnumerable<IBlackItem> blackListItems = blackListPaths.Concat(blackListHashes);
-        return new BlackList(blackListItems);
+        SnapshotFiles snapshotFiles = new(snapshotLocation, snapshotRepository, blackListRepository);
+        IEnumerable<HFile> hFiles = await snapshotFiles.Enumerate();
+        return hFiles.ToList();
     }
 
     private IEnumerable<FilePair> ComputeDuplicates(List<HFile> filesLeft, List<HFile> filesRight, bool checkFilesExistence)
     {
-        IEnumerable<FilePair> duplicates = new FileDuplicates
+        FileDuplicates fileDuplicates = new()
         {
             FilesLeft = filesLeft,
             FilesRight = filesRight
         };
+
+        IEnumerable<FilePair> duplicates = fileDuplicates.Enumerate();
 
         if (checkFilesExistence)
         {
@@ -125,7 +104,7 @@ public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest>
         return duplicates;
     }
 
-    private async Task AddToResponse(IEnumerable<FilePair> duplicates)
+    private async Task AnnounceDuplicates(IEnumerable<FilePair> duplicates)
     {
         foreach (FilePair filePair in duplicates)
         {
