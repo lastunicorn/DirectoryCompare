@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System.Diagnostics;
 using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
@@ -35,7 +36,7 @@ public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest>
 
     private int count;
     private DataSize totalSize;
-
+    private readonly Stopwatch stopwatch = new();
 
     public FindDuplicatesUseCase(ISnapshotRepository snapshotRepository, IBlackListRepository blackListRepository,
         ILog log, IFileSystem fileSystem, IDuplicateFilesUi duplicateFilesUi)
@@ -49,6 +50,7 @@ public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest>
 
     public async Task Handle(FindDuplicatesRequest request, CancellationToken cancellationToken)
     {
+        stopwatch.Restart();
         await AnnounceStart(request);
 
         List<HFile> filesLeft = await GetFiles(request.SnapshotLeft);
@@ -57,16 +59,23 @@ public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest>
         IEnumerable<FilePair> duplicates = ComputeDuplicates(filesLeft, filesRight, request.CheckFilesExistence);
         await AddToResponse(duplicates);
 
+        stopwatch.Stop();
         await AnnounceFinished();
     }
 
-    private async Task AnnounceStart(FindDuplicatesRequest request)
+    private Task AnnounceStart(FindDuplicatesRequest request)
     {
         string potNameLeft = request.SnapshotLeft.PotName;
         string potNameRight = request.SnapshotRight.PotName;
         log.WriteInfo("Searching for duplicates between pot '{0}' and '{1}'.", potNameLeft, potNameRight);
 
-        await duplicateFilesUi.AnnounceStart(request.SnapshotLeft, request.SnapshotRight);
+        DuplicateSearchStartedInfo info = new()
+        {
+            SnapshotLeft = request.SnapshotLeft,
+            SnapshotRight = request.SnapshotRight
+        };
+
+        return duplicateFilesUi.AnnounceStart(info);
     }
 
     private async Task<List<HFile>> GetFiles(SnapshotLocation snapshotLocation)
@@ -123,7 +132,7 @@ public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest>
             count++;
             totalSize += filePair.Size;
 
-            Ports.UserAccess.FilePairDto filePairDto = new()
+            DuplicateFoundInfo duplicateFoundInfo = new()
             {
                 FullPathLeft = filePair.FullPathLeft,
                 FullPathRight = filePair.FullPathRight,
@@ -131,12 +140,19 @@ public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest>
                 Hash = filePair.Hash
             };
 
-            await duplicateFilesUi.AnnounceDuplicate(filePairDto);
+            await duplicateFilesUi.AnnounceDuplicate(duplicateFoundInfo);
         }
     }
 
-    private async Task AnnounceFinished()
+    private Task AnnounceFinished()
     {
-        await duplicateFilesUi.AnnounceFinished(count, totalSize);
+        DuplicateSearchFinishedInfo info = new()
+        {
+            DuplicateCount = count,
+            TotalSize = totalSize,
+            ElapsedTime = stopwatch.Elapsed
+        };
+
+        return duplicateFilesUi.AnnounceFinished(info);
     }
 }

@@ -23,14 +23,14 @@ namespace DustInTheWind.DirectoryCompare.UserAccess;
 
 public class DuplicateFilesUi : EnhancedConsole, IDuplicateFilesUi
 {
-    public Task AnnounceStart(SnapshotLocation snapshotLeft, SnapshotLocation snapshotRight)
+    public Task AnnounceStart(DuplicateSearchStartedInfo info)
     {
         CustomConsole.WriteLine("Searching for duplicates between:");
 
         WithIndentation(() =>
         {
-            WriteValue("Snapshot 1", snapshotLeft);
-            WriteValue("Snapshot 2", snapshotRight);
+            WriteValue("Snapshot 1", info.SnapshotLeft);
+            WriteValue("Snapshot 2", info.SnapshotRight);
         });
 
         CustomConsole.WriteLine();
@@ -38,7 +38,7 @@ public class DuplicateFilesUi : EnhancedConsole, IDuplicateFilesUi
         return Task.CompletedTask;
     }
 
-    public Task AnnounceDuplicate(FilePairDto filePair)
+    public Task AnnounceDuplicate(DuplicateFoundInfo filePair)
     {
         Console.WriteLine(filePair.FullPathLeft);
         Console.WriteLine(filePair.FullPathRight);
@@ -53,10 +53,11 @@ public class DuplicateFilesUi : EnhancedConsole, IDuplicateFilesUi
         return Task.CompletedTask;
     }
 
-    public Task AnnounceFinished(int duplicateCount, DataSize totalSize)
+    public Task AnnounceFinished(DuplicateSearchFinishedInfo info)
     {
-        WriteValue("Duplicates", duplicateCount.ToString("N0"));
-        WriteValue("Total size", totalSize.ToString("D"));
+        WriteValue("Duplicates", info.DuplicateCount.ToString("N0"));
+        WriteValue("Total size", info.TotalSize.ToString("D"));
+        WriteValue("Elapsed Time", info.ElapsedTime);
         Console.WriteLine();
 
         return Task.CompletedTask;

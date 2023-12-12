@@ -18,7 +18,7 @@ using DustInTheWind.DirectoryCompare.DataStructures;
 
 namespace DustInTheWind.DirectoryCompare.Ports.UserAccess;
 
-public class FilePairDto
+public class DuplicateFoundInfo
 {
     public string FullPathLeft { get; set; }
 

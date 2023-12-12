@@ -1,12 +1,10 @@
-using DustInTheWind.DirectoryCompare.DataStructures;
-
 namespace DustInTheWind.DirectoryCompare.Ports.UserAccess;
 
 public interface IDuplicateFilesUi
 {
-    Task AnnounceStart(SnapshotLocation snapshotLeft, SnapshotLocation snapshotRight);
+    Task AnnounceStart(DuplicateSearchStartedInfo info);
 
-    Task AnnounceDuplicate(FilePairDto filePair);
+    Task AnnounceDuplicate(DuplicateFoundInfo filePair);
 
-    Task AnnounceFinished(int duplicateCount, DataSize totalSize);
+    Task AnnounceFinished(DuplicateSearchFinishedInfo info);
 }
