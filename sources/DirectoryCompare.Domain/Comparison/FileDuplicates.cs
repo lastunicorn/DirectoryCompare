@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 
 namespace DustInTheWind.DirectoryCompare.Domain.Comparison;
@@ -30,8 +29,7 @@ public class FileDuplicates
         if (FilesLeft == null)
             return Enumerable.Empty<FilePair>();
 
-        return GeneratePairs()
-            .Where(x => x.AreEqual);
+        return GeneratePairs();
     }
 
     private IEnumerable<FilePair> GeneratePairs()
@@ -50,7 +48,10 @@ public class FileDuplicates
             for (int j = i + 1; j < files.Count; j++)
             {
                 HFile fileRight = files[j];
-                yield return new FilePair(fileLeft, fileRight);
+                FilePair filePair = new(fileLeft, fileRight);
+
+                if (filePair.AreEqual)
+                    yield return filePair;
             }
         }
     }
@@ -64,7 +65,10 @@ public class FileDuplicates
             for (int j = 0; j < filesRight.Count; j++)
             {
                 HFile fileRight = filesRight[j];
-                yield return new FilePair(fileLeft, fileRight);
+                FilePair filePair = new(fileLeft, fileRight);
+
+                if (filePair.AreEqual)
+                    yield return filePair;
             }
         }
     }

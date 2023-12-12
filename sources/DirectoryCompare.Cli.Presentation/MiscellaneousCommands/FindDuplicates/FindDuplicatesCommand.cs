@@ -46,7 +46,7 @@ internal class FindDuplicatesCommand : IConsoleCommand
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
     }
 
-    public async Task Execute()
+    public Task Execute()
     {
         FindDuplicatesRequest request = new()
         {
@@ -55,6 +55,6 @@ internal class FindDuplicatesCommand : IConsoleCommand
             CheckFilesExistence = CheckFilesExistence
         };
 
-        await requestBus.PlaceRequest(request);
+        return requestBus.PlaceRequest(request);
     }
 }

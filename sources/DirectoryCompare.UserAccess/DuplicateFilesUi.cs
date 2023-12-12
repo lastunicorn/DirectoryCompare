@@ -42,12 +42,12 @@ public class DuplicateFilesUi : EnhancedConsole, IDuplicateFilesUi
     {
         Console.WriteLine(filePair.FullPathLeft);
         Console.WriteLine(filePair.FullPathRight);
-
+        
         DataSize sizeShort = filePair.Size;
         string sizeLong = filePair.Size.ToString(DataSizeUnit.Byte);
         FileHash fileHash = filePair.Hash;
         CustomConsole.WriteLine(ConsoleColor.DarkGray, $"{sizeShort} ({sizeLong}) - {fileHash}");
-
+        
         Console.WriteLine();
 
         return Task.CompletedTask;

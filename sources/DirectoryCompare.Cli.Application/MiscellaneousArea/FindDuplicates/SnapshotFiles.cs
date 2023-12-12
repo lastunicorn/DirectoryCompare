@@ -37,7 +37,7 @@ internal class SnapshotFiles
     public async Task<IEnumerable<HFile>> Enumerate()
     {
         if (string.IsNullOrEmpty(snapshotLocation.PotName))
-            return Enumerable.Empty<HFile>();
+            return null;
 
         Snapshot snapshot = await snapshotRepository.Get(snapshotLocation);
 

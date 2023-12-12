@@ -82,7 +82,7 @@ public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest>
     {
         SnapshotFiles snapshotFiles = new(snapshotLocation, snapshotRepository, blackListRepository);
         IEnumerable<HFile> hFiles = await snapshotFiles.Enumerate();
-        return hFiles.ToList();
+        return hFiles?.ToList();
     }
 
     private IEnumerable<FilePair> ComputeDuplicates(List<HFile> filesLeft, List<HFile> filesRight, bool checkFilesExistence)
@@ -118,7 +118,7 @@ public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest>
                 Size = filePair.Size,
                 Hash = filePair.Hash
             };
-
+            
             await duplicateFilesUi.AnnounceDuplicate(duplicateFoundInfo);
         }
     }

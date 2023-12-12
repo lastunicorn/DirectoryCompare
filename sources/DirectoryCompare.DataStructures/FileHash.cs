@@ -35,15 +35,15 @@ public readonly struct FileHash : IEquatable<FileHash>
         return AreEqual(bytes, other.bytes);
     }
 
-    public static bool AreEqual(IReadOnlyList<byte> list1, IReadOnlyList<byte> list2)
-    {
+    private static bool AreEqual(byte[] list1, byte[] list2)
+    {  
         if (list1 == null || list2 == null)
             return false;
 
-        if (list1.Count != list2.Count)
+        if (list1.Length != list2.Length)
             return false;
 
-        for (int i = 0; i < list1.Count; i++)
+        for (int i = 0; i < list1.Length; i++)
         {
             if (list1[i] != list2[i])
                 return false;
@@ -54,7 +54,9 @@ public readonly struct FileHash : IEquatable<FileHash>
 
     public override int GetHashCode()
     {
-        return bytes != null ? bytes.GetHashCode() : 0;
+        return bytes == null 
+            ? 0
+            : bytes.GetHashCode();
     }
 
     public static FileHash Parse(string value)
