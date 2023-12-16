@@ -75,10 +75,7 @@ public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest>
         log.WriteInfo("Building the black list paths.");
 
         DiskPathCollection blackList = await blackListRepository.Get(pot.Name);
-
-        return blackList == null
-            ? new DiskPathCollection()
-            : blackList.PrependPath(pot.Path);
+        return blackList ?? new DiskPathCollection();
     }
 
     private void CheckPotPathExists(Pot pot)
