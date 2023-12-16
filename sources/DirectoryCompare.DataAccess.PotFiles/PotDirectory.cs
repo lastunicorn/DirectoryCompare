@@ -105,7 +105,7 @@ public class PotDirectory
             {
                 JPotInfoFile jPotInfoFile = x.GetInfoFile();
                 bool success = jPotInfoFile.TryOpen();
-                return success && jPotInfoFile.Content.Name == potName;
+                return success && jPotInfoFile.Document.Name == potName;
             })
             .FirstOrDefault();
 
@@ -158,14 +158,6 @@ public class PotDirectory
         long subdirSizes = directoryInfo.GetDirectories().Sum(CalculateSize);
 
         return fileSizes + subdirSizes;
-    }
-
-    public BlackListForReadFile OpenBlackListForReadFile()
-    {
-        string blackListPath = Path.Combine(FullPath, "bl");
-        BlackListForReadFile blackListFile = new(blackListPath);
-        blackListFile.Open();
-        return blackListFile;
     }
 
     public BlackListForDuplicatesFile OpenBlackListForDuplicatesFile()

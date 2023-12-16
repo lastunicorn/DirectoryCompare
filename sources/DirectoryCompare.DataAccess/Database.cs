@@ -58,7 +58,7 @@ public class Database
         IEnumerable<PotDirectory> potDirectories = await GetPotDirectories();
 
         return potDirectories
-            .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == potName);
+            .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Document.Name == potName);
     }
 
     public async Task<PotDirectory> GetPotDirectory(Guid id)

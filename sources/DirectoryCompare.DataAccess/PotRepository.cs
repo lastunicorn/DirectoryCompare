@@ -70,7 +70,7 @@ public class PotRepository : IPotRepository
     {
         IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
         PotDirectory potDirectory = potDirectories
-            .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == name);
+            .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Document.Name == name);
 
         Pot pot = potDirectory?.ToPot();
 
@@ -113,7 +113,7 @@ public class PotRepository : IPotRepository
     {
         IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
         PotDirectory potDirectory = potDirectories
-            .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == name);
+            .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Document.Name == name);
 
         return potDirectory != null;
     }
@@ -122,7 +122,7 @@ public class PotRepository : IPotRepository
     {
         PotDirectory potDirectory = database.NewPotDirectory();
 
-        potDirectory.InfoFile.Content = new JPotInfo
+        potDirectory.InfoFile.Document = new JPotInfoDocument
         {
             Name = pot.Name,
             Path = pot.Path,
@@ -159,7 +159,7 @@ public class PotRepository : IPotRepository
     {
         IEnumerable<Snapshot> snapshots = potDirectory.EnumerateSnapshotFiles()
             .Where(x => x.Open())
-            .Select(x => x.Content.ToSnapshot());
+            .Select(x => x.Document.ToSnapshot());
 
         pot.Snapshots.AddRange(snapshots);
     }

@@ -21,8 +21,8 @@ using DustInTheWind.DirectoryCompare.DataStructures;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.BlackListCommands.DisplayBlackList;
 // Example:
-// blacklist <black-list-name> -p <pot-name>
-// blacklist <black-list-name> --pot <pot-name>
+// black-list <black-list-name> -p <pot-name>
+// black-list <black-list-name> --pot <pot-name>
 
 [NamedCommand("black-list", Description = "Displays the list of paths from a black list.")]
 public class DisplayBlackListCommand : IConsoleCommand

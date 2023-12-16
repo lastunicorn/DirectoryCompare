@@ -23,7 +23,7 @@ public struct DiskPath
 
     public static DiskPath Empty { get; } = new();
 
-    public bool IsEmpty => value == null;
+    public bool IsEmpty => string.IsNullOrEmpty(value);
 
     public bool IsValid
     {

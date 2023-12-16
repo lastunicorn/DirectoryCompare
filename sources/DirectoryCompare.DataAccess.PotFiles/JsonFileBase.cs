@@ -19,18 +19,18 @@ using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.DataAccess.PotFiles;
 
-public class JsonFileBase<TContent>
-    where TContent : class
+public class JsonFileBase<TDocument>
+    where TDocument : class
 {
     public string FilePath { get; }
 
     public bool Exists => FilePath != null && File.Exists(FilePath);
 
-    public TContent Content { get; set; }
+    public TDocument Document { get; set; }
 
     public long Size => new FileInfo(FilePath).Length;
 
-    public bool IsValid => Content != null;
+    public bool IsValid => Document != null;
 
     protected JsonFileBase(string snapshotFilePath)
     {
@@ -53,7 +53,7 @@ public class JsonFileBase<TContent>
     {
         if (!Exists)
         {
-            Content = null;
+            Document = null;
             return false;
         }
 
@@ -70,9 +70,9 @@ public class JsonFileBase<TContent>
             jsonTextReader.MaxDepth = 256;
 
             JsonSerializer serializer = new();
-            Content = (TContent)serializer.Deserialize(jsonTextReader, typeof(TContent));
+            Document = (TDocument)serializer.Deserialize(jsonTextReader, typeof(TDocument));
 
-            return Content != null;
+            return Document != null;
         }
         catch
         {
@@ -90,9 +90,10 @@ public class JsonFileBase<TContent>
 
         using StreamWriter streamWriter = new(stream);
         using JsonTextWriter jsonTextWriter = new(streamWriter);
+        jsonTextWriter.Formatting = Formatting.Indented;
 
         JsonSerializer serializer = new();
-        serializer.Serialize(jsonTextWriter, Content);
+        serializer.Serialize(jsonTextWriter, Document);
     }
 
     protected JsonTextReader OpenReader()

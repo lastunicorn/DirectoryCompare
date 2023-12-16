@@ -36,7 +36,7 @@ internal class TemporarySnapshotFile : IDisposable
 
         SnapshotFile snapshotFile = new(snapshotFilePath)
         {
-            Content = snapshot.ToJSnapshot()
+            Document = snapshot.ToJSnapshot()
         };
         snapshotFile.Save();
 

@@ -32,14 +32,14 @@ internal static class PotDirectoryExtensions
         Pot pot = new()
         {
             Guid = potDirectory.PotGuid,
-            Name = jPotInfoFile.Content.Name,
-            Path = jPotInfoFile.Content.Path,
-            Description = jPotInfoFile.Content.Description
+            Name = jPotInfoFile.Document.Name,
+            Path = jPotInfoFile.Document.Path,
+            Description = jPotInfoFile.Document.Description
         };
 
-        if (potDirectory.InfoFile.Content?.Include != null)
+        if (potDirectory.InfoFile.Document?.Include != null)
         {
-            IEnumerable<SnapshotPath> paths = potDirectory.InfoFile.Content.Include
+            IEnumerable<SnapshotPath> paths = potDirectory.InfoFile.Document.Include
                 .Select(x => (SnapshotPath)x);
 
             pot.IncludedPaths.AddRange(paths);

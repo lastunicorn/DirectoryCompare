@@ -16,6 +16,7 @@
 
 using DustInTheWind.DirectoryCompare.DataAccess.PotFiles;
 using DustInTheWind.DirectoryCompare.DataAccess.PotFiles.BlacklistFileModel;
+using DustInTheWind.DirectoryCompare.DataAccess.PotFiles.PotInfoFileModel;
 using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 
@@ -33,27 +34,33 @@ public class BlackListRepository : IBlackListRepository
     public async Task<DiskPathCollection> Get(string potName)
     {
         PotDirectory potDirectory = await GetPotDirectory(potName);
-        
-        BlackListForReadFile blackListFile = potDirectory.OpenBlackListForReadFile();
-        return new DiskPathCollection(blackListFile.Items);
+
+        JPotInfoFile jPotInfoFile = potDirectory.InfoFile;
+
+        List<string> excludes = jPotInfoFile.Document.Exclude ?? new List<string>();
+        return new DiskPathCollection(excludes);
     }
 
     public async Task Add(string potName, DiskPath path)
     {
         PotDirectory potDirectory = await GetPotDirectory(potName);
 
-        BlackListForReadFile blackListFile = potDirectory.OpenBlackListForReadFile();
-        blackListFile.Add(path);
-        blackListFile.Save();
+        JPotInfoFile jPotInfoFile = potDirectory.InfoFile;
+
+        jPotInfoFile.Document.Exclude ??= new List<string>();
+        jPotInfoFile.Document.Exclude.Add(path);
+        jPotInfoFile.Save();
     }
 
     public async Task Delete(string potName, DiskPath path)
     {
         PotDirectory potDirectory = await GetPotDirectory(potName);
 
-        BlackListForReadFile blackListFile = potDirectory.OpenBlackListForReadFile();
-        blackListFile.Remove(path);
-        blackListFile.Save();
+        JPotInfoFile jPotInfoFile = potDirectory.InfoFile;
+
+        jPotInfoFile.Document.Exclude ??= new List<string>();
+        jPotInfoFile.Document.Exclude.Remove(path);
+        jPotInfoFile.Save();
     }
 
     public async Task<FileHashCollection> GetDuplicateExcludes(string potName)
@@ -68,11 +75,11 @@ public class BlackListRepository : IBlackListRepository
     {
         IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
         PotDirectory potDirectory = potDirectories
-            .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Content.Name == potName);
+            .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Document.Name == potName);
 
         if (potDirectory == null)
             throw new Exception($"There is no pot with name '{potName}'.");
-        
+
         return potDirectory;
     }
 }

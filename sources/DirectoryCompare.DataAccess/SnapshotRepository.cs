@@ -45,7 +45,7 @@ public class SnapshotRepository : ISnapshotRepository
             return null;
 
         snapshotFile.Open();
-        return snapshotFile.Content.ToSnapshot();
+        return snapshotFile.Document.ToSnapshot();
     }
 
     public async IAsyncEnumerable<Snapshot> GetByPot(string potName)
@@ -62,7 +62,7 @@ public class SnapshotRepository : ISnapshotRepository
             bool success = snapshotFile.Open();
 
             if (success)
-                yield return snapshotFile.Content.ToSnapshot();
+                yield return snapshotFile.Document.ToSnapshot();
         }
     }
 
@@ -87,7 +87,7 @@ public class SnapshotRepository : ISnapshotRepository
 
         SnapshotFile snapshotFile = potDirectory.CreateSnapshotFile(snapshot.CreationTime);
         snapshotFile.Open();
-        snapshotFile.Content = snapshot.ToJSnapshot();
+        snapshotFile.Document = snapshot.ToJSnapshot();
         snapshotFile.Save();
     }
 
@@ -177,7 +177,7 @@ public class SnapshotRepository : ISnapshotRepository
         {
             snapshotFile.Open();
 
-            if (snapshotFile.Content.AnalysisId == snapshotId)
+            if (snapshotFile.Document.AnalysisId == snapshotId)
                 return snapshotFile;
         }
 

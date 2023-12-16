@@ -16,7 +16,7 @@
 
 namespace DustInTheWind.DirectoryCompare.DataAccess.PotFiles.PotInfoFileModel;
 
-public class JPotInfoFile : JsonFileBase<JPotInfo>
+public class JPotInfoFile : JsonFileBase<JPotInfoDocument>
 {
     public JPotInfoFile(string filePath)
         : base(filePath)

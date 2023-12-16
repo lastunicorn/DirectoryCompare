@@ -16,7 +16,7 @@
 
 namespace DustInTheWind.DirectoryCompare.DataAccess.PotFiles.PotInfoFileModel;
 
-public class JPotInfo
+public class JPotInfoDocument
 {
     public string Name { get; set; }
 
@@ -24,7 +24,7 @@ public class JPotInfo
 
     public string Description { get; set; }
     
-    public string[] Include { get; set; }
+    public List<string> Include { get; set; }
     
-    public string[] Exclude { get; set; }
+    public List<string> Exclude { get; set; }
 }
