@@ -21,7 +21,7 @@ namespace DustInTheWind.DirectoryCompare.Domain.Comparison;
 
 public class FileDuplicates
 {
-    Dictionary<FileHash, List<HFile>> filesByHash = new();
+    readonly Dictionary<FileHash, List<HFile>> filesByHash = new();
 
     public List<HFile> FilesLeft { get; set; }
 
@@ -30,24 +30,35 @@ public class FileDuplicates
     public IEnumerable<FilePair> Enumerate()
     {
         if (FilesLeft == null)
-            yield break;
+            return Enumerable.Empty<FilePair>();
 
         filesByHash.Clear();
 
         bool existsRight = FilesRight != null && !ReferenceEquals(FilesRight, FilesLeft);
 
         if (existsRight)
-            AddAllFilesWithoutCheck(FilesRight);
-
-        IEnumerable<FilePair> duplicates = AddFilesAndCheckForDuplicates(FilesLeft);
-
-        foreach (FilePair filePair in duplicates)
-            yield return filePair;
+        {
+            AddWithoutCheck(FilesRight);
+            return CheckForDuplicates(FilesLeft);
+        }
+        else
+        {
+            return AddAndCheckForDuplicates(FilesLeft);
+        }
     }
 
-    private IEnumerable<FilePair> AddFilesAndCheckForDuplicates(List<HFile> filesToAdd)
+    private void AddWithoutCheck(List<HFile> files)
     {
-        foreach (HFile hFile in filesToAdd)
+        foreach (HFile hFile in files)
+        {
+            List<HFile> bucket = GetBucketFor(hFile.Hash);
+            bucket.Add(hFile);
+        }
+    }
+
+    private IEnumerable<FilePair> CheckForDuplicates(List<HFile> files)
+    {
+        foreach (HFile hFile in files)
         {
             List<HFile> bucket = GetBucketFor(hFile.Hash);
 
@@ -56,16 +67,21 @@ public class FileDuplicates
                 foreach (HFile existingFile in bucket)
                     yield return new FilePair(hFile, existingFile);
             }
-            
-            bucket.Add(hFile);
         }
     }
 
-    private void AddAllFilesWithoutCheck(List<HFile> filesToAdd)
+    private IEnumerable<FilePair> AddAndCheckForDuplicates(List<HFile> files)
     {
-        foreach (HFile hFile in filesToAdd)
+        foreach (HFile hFile in files)
         {
             List<HFile> bucket = GetBucketFor(hFile.Hash);
+
+            if (bucket.Count > 0)
+            {
+                foreach (HFile existingFile in bucket)
+                    yield return new FilePair(hFile, existingFile);
+            }
+
             bucket.Add(hFile);
         }
     }
