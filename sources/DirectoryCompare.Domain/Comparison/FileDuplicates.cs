@@ -14,12 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 
 namespace DustInTheWind.DirectoryCompare.Domain.Comparison;
 
 public class FileDuplicates
 {
+    Dictionary<FileHash, List<HFile>> filesByHash = new();
+
     public List<HFile> FilesLeft { get; set; }
 
     public List<HFile> FilesRight { get; set; }
@@ -27,49 +30,56 @@ public class FileDuplicates
     public IEnumerable<FilePair> Enumerate()
     {
         if (FilesLeft == null)
-            return Enumerable.Empty<FilePair>();
+            yield break;
 
-        return GeneratePairs();
+        filesByHash.Clear();
+
+        bool existsRight = FilesRight != null && !ReferenceEquals(FilesRight, FilesLeft);
+
+        if (existsRight)
+            AddAllFilesWithoutCheck(FilesRight);
+
+        IEnumerable<FilePair> duplicates = AddFilesAndCheckForDuplicates(FilesLeft);
+
+        foreach (FilePair filePair in duplicates)
+            yield return filePair;
     }
 
-    private IEnumerable<FilePair> GeneratePairs()
+    private IEnumerable<FilePair> AddFilesAndCheckForDuplicates(List<HFile> filesToAdd)
     {
-        return FilesRight == null || FilesRight == FilesLeft
-            ? GeneratePairs(FilesLeft)
-            : GeneratePairs(FilesLeft, FilesRight);
-    }
-
-    private static IEnumerable<FilePair> GeneratePairs(IReadOnlyList<HFile> files)
-    {
-        for (int i = 0; i < files.Count; i++)
+        foreach (HFile hFile in filesToAdd)
         {
-            HFile fileLeft = files[i];
+            List<HFile> bucket = GetBucketFor(hFile.Hash);
 
-            for (int j = i + 1; j < files.Count; j++)
+            if (bucket.Count > 0)
             {
-                HFile fileRight = files[j];
-                FilePair filePair = new(fileLeft, fileRight);
-
-                if (filePair.AreEqual)
-                    yield return filePair;
+                foreach (HFile existingFile in bucket)
+                    yield return new FilePair(hFile, existingFile);
             }
+            
+            bucket.Add(hFile);
         }
     }
 
-    private static IEnumerable<FilePair> GeneratePairs(IReadOnlyList<HFile> filesLeft, IReadOnlyList<HFile> filesRight)
+    private void AddAllFilesWithoutCheck(List<HFile> filesToAdd)
     {
-        for (int i = 0; i < filesLeft.Count; i++)
+        foreach (HFile hFile in filesToAdd)
         {
-            HFile fileLeft = filesLeft[i];
-
-            for (int j = 0; j < filesRight.Count; j++)
-            {
-                HFile fileRight = filesRight[j];
-                FilePair filePair = new(fileLeft, fileRight);
-
-                if (filePair.AreEqual)
-                    yield return filePair;
-            }
+            List<HFile> bucket = GetBucketFor(hFile.Hash);
+            bucket.Add(hFile);
         }
+    }
+
+    private List<HFile> GetBucketFor(FileHash fileHash)
+    {
+        bool exists = filesByHash.TryGetValue(fileHash, out List<HFile> bucket);
+
+        if (!exists)
+        {
+            bucket = new List<HFile>();
+            filesByHash.Add(fileHash, bucket);
+        }
+
+        return bucket;
     }
 }

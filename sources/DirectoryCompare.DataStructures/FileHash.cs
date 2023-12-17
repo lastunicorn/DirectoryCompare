@@ -26,7 +26,7 @@ public readonly struct FileHash : IEquatable<FileHash>
     }
 
     public override bool Equals(object obj)
-    {
+    { 
         return obj is FileHash other && Equals(other);
     }
 
@@ -36,7 +36,7 @@ public readonly struct FileHash : IEquatable<FileHash>
     }
 
     private static bool AreEqual(byte[] list1, byte[] list2)
-    {  
+    {
         if (list1 == null || list2 == null)
             return false;
 
@@ -54,11 +54,21 @@ public readonly struct FileHash : IEquatable<FileHash>
 
     public override int GetHashCode()
     {
-        return bytes == null 
-            ? 0
-            : bytes.GetHashCode();
-    }
+        unchecked
+        {
+            const int p = 16777619;
+            int hash = (int)2166136261;
 
+            if(bytes != null)
+            {
+                for (int i = 0; i < bytes.Length; i++)
+                    hash = (hash ^ bytes[i]) * p;
+            }
+
+            return hash;
+        }
+    }
+    
     public static FileHash Parse(string value)
     {
         byte[] bytes = Convert.FromBase64String(value);
