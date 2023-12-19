@@ -19,7 +19,9 @@ using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
+using DustInTheWind.DirectoryCompare.Ports.DataAccess.ImportExport;
 using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
+using DustInTheWind.DirectoryCompare.Ports.ImportExportAccess;
 using DustInTheWind.DirectoryCompare.Ports.LogAccess;
 using DustInTheWind.DirectoryCompare.Ports.UserAccess;
 using MediatR;
@@ -33,42 +35,69 @@ public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest>
     private readonly ILog log;
     private readonly IFileSystem fileSystem;
     private readonly IDuplicateFilesUi duplicateFilesUi;
+    private readonly IImportExport importExport;
 
     private int count;
     private DataSize totalSize;
     private readonly Stopwatch stopwatch = new();
+    private IDuplicatesOutput duplicatesOutput;
 
     public FindDuplicatesUseCase(ISnapshotRepository snapshotRepository, IBlackListRepository blackListRepository,
-        ILog log, IFileSystem fileSystem, IDuplicateFilesUi duplicateFilesUi)
+        ILog log, IFileSystem fileSystem, IDuplicateFilesUi duplicateFilesUi, IImportExport importExport)
     {
         this.snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
         this.blackListRepository = blackListRepository ?? throw new ArgumentNullException(nameof(blackListRepository));
         this.log = log ?? throw new ArgumentNullException(nameof(log));
         this.fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
         this.duplicateFilesUi = duplicateFilesUi ?? throw new ArgumentNullException(nameof(duplicateFilesUi));
+        this.importExport = importExport ?? throw new ArgumentNullException(nameof(importExport));
     }
 
     public async Task Handle(FindDuplicatesRequest request, CancellationToken cancellationToken)
     {
         stopwatch.Restart();
-        await AnnounceStart(request);
+
+        OpenOutputFile(request.OutputFileName);
+
+        LogStart(request);
+        await AnnounceStartToUser(request);
+        ExportHeader(request);
 
         List<HFile> filesLeft = await GetFiles(request.SnapshotLeft);
         List<HFile> filesRight = await GetFiles(request.SnapshotRight);
 
         IEnumerable<FilePair> duplicates = ComputeDuplicates(filesLeft, filesRight, request.CheckFilesExistence);
-        await AnnounceDuplicates(duplicates);
+
+        foreach (FilePair filePair in duplicates)
+        {
+            count++;
+            totalSize += filePair.Size;
+
+            await AnnounceDuplicateToUser(filePair);
+            ExportDuplicate(filePair);
+        }
 
         stopwatch.Stop();
-        await AnnounceFinished();
+        
+        await AnnounceFinishedToUser();
+        CloseOutputFile();
     }
 
-    private Task AnnounceStart(FindDuplicatesRequest request)
+    private void OpenOutputFile(string outputFileName)
+    {
+        if (outputFileName != null)
+            duplicatesOutput = importExport.OpenDuplicatesOutput(outputFileName);
+    }
+
+    private void LogStart(FindDuplicatesRequest request)
     {
         string potNameLeft = request.SnapshotLeft.PotName;
         string potNameRight = request.SnapshotRight.PotName;
         log.WriteInfo("Searching for duplicates between pot '{0}' and '{1}'.", potNameLeft, potNameRight);
+    }
 
+    private Task AnnounceStartToUser(FindDuplicatesRequest request)
+    {
         DuplicateSearchStartedInfo info = new()
         {
             SnapshotLeft = request.SnapshotLeft,
@@ -76,6 +105,17 @@ public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest>
         };
 
         return duplicateFilesUi.AnnounceStart(info);
+    }
+
+    private void ExportHeader(FindDuplicatesRequest request)
+    {
+        if (duplicatesOutput == null)
+            return;
+
+        string potNameLeft = request.SnapshotLeft.PotName;
+        string potNameRight = request.SnapshotRight.PotName;
+
+        duplicatesOutput.WriteHeader(potNameLeft, potNameRight);
     }
 
     private async Task<List<HFile>> GetFiles(SnapshotLocation snapshotLocation)
@@ -104,26 +144,37 @@ public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest>
         return duplicates;
     }
 
-    private async Task AnnounceDuplicates(IEnumerable<FilePair> duplicates)
+    private Task AnnounceDuplicateToUser(FilePair filePair)
     {
-        foreach (FilePair filePair in duplicates)
+        DuplicateFoundInfo duplicateFoundInfo = new()
         {
-            count++;
-            totalSize += filePair.Size;
+            FullPathLeft = filePair.FullPathLeft,
+            FullPathRight = filePair.FullPathRight,
+            Size = filePair.Size,
+            Hash = filePair.Hash
+        };
 
-            DuplicateFoundInfo duplicateFoundInfo = new()
-            {
-                FullPathLeft = filePair.FullPathLeft,
-                FullPathRight = filePair.FullPathRight,
-                Size = filePair.Size,
-                Hash = filePair.Hash
-            };
-            
-            await duplicateFilesUi.AnnounceDuplicate(duplicateFoundInfo);
-        }
+        return duplicateFilesUi.AnnounceDuplicate(duplicateFoundInfo);
     }
 
-    private Task AnnounceFinished()
+    private void ExportDuplicate(FilePair filePair)
+    {
+        if (duplicatesOutput == null)
+            return;
+
+        Duplicate duplicate = new()
+        {
+            FullPathLeft = filePair.FullPathLeft,
+            FullPathRight = filePair.FullPathRight,
+            Size = filePair.Size,
+            Hash = filePair.Hash
+        };
+
+        duplicatesOutput.WriteDuplicate(duplicate);
+    }
+
+
+    private Task AnnounceFinishedToUser()
     {
         DuplicateSearchFinishedInfo info = new()
         {
@@ -133,5 +184,13 @@ public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest>
         };
 
         return duplicateFilesUi.AnnounceFinished(info);
+    }
+
+    private void CloseOutputFile()
+    {
+        if(duplicatesOutput == null)
+            return;
+        
+        duplicatesOutput.Close();
     }
 }

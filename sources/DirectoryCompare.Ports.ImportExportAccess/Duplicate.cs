@@ -1,4 +1,4 @@
-﻿// DirectoryCompare
+// DirectoryCompare
 // Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -15,17 +15,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.DataStructures;
-using MediatR;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.FindDuplicates;
+namespace DustInTheWind.DirectoryCompare.Ports.ImportExportAccess;
 
-public class FindDuplicatesRequest : IRequest
+public class Duplicate
 {
-    public SnapshotLocation SnapshotLeft { get; set; }
+    public string FullPathLeft { get; set; }
 
-    public SnapshotLocation SnapshotRight { get; set; }
+    public string FullPathRight { get; set; }
 
-    public bool CheckFilesExistence { get; set; }
+    public ulong Size { get; set; }
 
-    public string OutputFileName { get; set; }
+    public FileHash Hash { get; set; }
 }

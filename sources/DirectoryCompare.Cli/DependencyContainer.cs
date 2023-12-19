@@ -21,12 +21,14 @@ using DustInTheWind.DirectoryCompare.Cli.Application.PotArea.PresentPots;
 using DustInTheWind.DirectoryCompare.ConfigAccess;
 using DustInTheWind.DirectoryCompare.DataAccess;
 using DustInTheWind.DirectoryCompare.FileSystemAccess;
+using DustInTheWind.DirectoryCompare.ImportExportAccess;
 using DustInTheWind.DirectoryCompare.Infrastructure.RequestPipeline;
 using DustInTheWind.DirectoryCompare.LogAccess;
 using DustInTheWind.DirectoryCompare.Ports.ConfigAccess;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess.ImportExport;
 using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
+using DustInTheWind.DirectoryCompare.Ports.ImportExportAccess;
 using DustInTheWind.DirectoryCompare.Ports.LogAccess;
 using DustInTheWind.DirectoryCompare.Ports.SystemAccess;
 using DustInTheWind.DirectoryCompare.Ports.UserAccess;
@@ -90,6 +92,10 @@ internal static class DependencyContainer
         // System Access
         
         containerBuilder.RegisterType<SystemClock>().As<ISystemClock>();
+        
+        // Import/Export Access
+        
+        containerBuilder.RegisterType<ImportExport>().As<IImportExport>();
     }
 
     private static void RegisterApplication(ContainerBuilder containerBuilder)

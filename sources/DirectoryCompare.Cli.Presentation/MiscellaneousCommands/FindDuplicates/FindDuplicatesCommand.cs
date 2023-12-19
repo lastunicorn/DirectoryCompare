@@ -40,6 +40,9 @@ internal class FindDuplicatesCommand : IConsoleCommand
 
     [NamedParameter("check-exist", ShortName = 'x', IsOptional = true, Description = "If specified, the files that does not actually exist on disk are not displayed.")]
     public bool CheckFilesExistence { get; set; }
+    
+    [NamedParameter("output", ShortName = 'o', IsOptional = true, Description = "The json file name where to export the list of duplicates.")]
+    public string OutputFileName { get; set; }
 
     public FindDuplicatesCommand(RequestBus requestBus)
     {
@@ -52,7 +55,8 @@ internal class FindDuplicatesCommand : IConsoleCommand
         {
             SnapshotLeft = Snapshot1Location,
             SnapshotRight = Snapshot2Location,
-            CheckFilesExistence = CheckFilesExistence
+            CheckFilesExistence = CheckFilesExistence,
+            OutputFileName = OutputFileName
         };
 
         return requestBus.PlaceRequest(request);
