@@ -17,6 +17,7 @@
 using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
+using DustInTheWind.DirectoryCompare.Ports.DataAccess.ImportExport;
 using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 using DustInTheWind.DirectoryCompare.Ports.LogAccess;
 using DustInTheWind.DirectoryCompare.Ports.SystemAccess;
@@ -31,16 +32,22 @@ public class RetrievePotTests
 {
     private readonly CreateSnapshotUseCase useCase;
     private readonly Mock<IPotRepository> potRepository;
+    private readonly Mock<ISnapshotRepository> snapshotRepository;
     private readonly Mock<IFileSystem> fileSystem;
 
     public RetrievePotTests()
     {
         potRepository = new Mock<IPotRepository>();
-
+        snapshotRepository = new Mock<ISnapshotRepository>();
         fileSystem = new Mock<IFileSystem>();
 
-        useCase = new CreateSnapshotUseCase(Mock.Of<ILog>(), potRepository.Object, Mock.Of<IBlackListRepository>(),
-            Mock.Of<ISnapshotRepository>(), fileSystem.Object, Mock.Of<ICreateSnapshotUi>(),
+        useCase = new CreateSnapshotUseCase(
+            Mock.Of<ILog>(),
+            potRepository.Object,
+            Mock.Of<IBlackListRepository>(),
+            snapshotRepository.Object,
+            fileSystem.Object,
+            Mock.Of<ICreateSnapshotUi>(),
             Mock.Of<ISystemClock>());
     }
 
@@ -137,6 +144,10 @@ public class RetrievePotTests
             {
                 Path = "path2"
             });
+
+        snapshotRepository
+            .Setup(x => x.CreateWriter(It.IsAny<string>()))
+            .ReturnsAsync(Mock.Of<ISnapshotWriter>());
 
         fileSystem
             .Setup(x => x.ExistsDirectory("path2"))

@@ -21,7 +21,7 @@ using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
 
-public class ErrorAnalysisItem : IAnalysisItem
+internal class ErrorAnalysisItem : IAnalysisItem
 {
     private readonly ICrawlerItem crawlerItem;
     private HDirectory hDirectory;

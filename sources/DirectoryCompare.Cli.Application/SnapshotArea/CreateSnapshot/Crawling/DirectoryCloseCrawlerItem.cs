@@ -17,11 +17,11 @@
 using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 
-namespace DustInTheWind.DirectoryCompare.FileSystemAccess;
+namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.Crawling;
 
 internal class DirectoryCloseCrawlerItem : ICrawlerItem
 {
-    public IDiskCrawler Owner { get; set; }
+    public DiskCrawler Owner { get; set; }
 
     public CrawlerAction Action { get; } = CrawlerAction.DirectoryClosed;
 

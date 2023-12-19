@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.Crawling;
 using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
 using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Domain.PotModel;
@@ -92,7 +93,7 @@ public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest>
     {
         await AnnounceStarting(pot, blackList);
 
-        IDiskCrawler diskCrawler = CreateDiskCrawler(pot, blackList);
+        DiskCrawler diskCrawler = CreateDiskCrawler(pot, blackList);
         PreAnalysis preAnalysis = await RunPreAnalysis(diskCrawler);
         using ISnapshotWriter snapshotWriter = await OpenSnapshotWriter(pot);
 
@@ -139,18 +140,19 @@ public class CreateSnapshotUseCase : IRequestHandler<CreateSnapshotRequest>
         return createSnapshotUi.AnnounceStarting(info);
     }
 
-    private IDiskCrawler CreateDiskCrawler(Pot pot, DiskPathCollection blackList)
+    private DiskCrawler CreateDiskCrawler(Pot pot, DiskPathCollection blackList)
     {
-        List<string> includeRules = pot.IncludedPaths
-            .Select(x=> (string)x)
-            .ToList();
+        IEnumerable<IncludeExcludeRule> includeRules = pot.IncludedPaths
+            .Select(x => new IncludeExcludeRule(x));
+
+        IncludeExcludeRuleCollection includeRuleCollection = new(includeRules);
 
         List<string> excludeRules = blackList.ToListOfStrings();
 
-        return fileSystem.CreateCrawler(pot.Path, includeRules, excludeRules);
+        return new DiskCrawler(pot.Path, includeRuleCollection, excludeRules, fileSystem);
     }
 
-    private async Task<PreAnalysis> RunPreAnalysis(IDiskCrawler diskCrawler)
+    private async Task<PreAnalysis> RunPreAnalysis(DiskCrawler diskCrawler)
     {
         PreAnalysis preAnalysis = new(diskCrawler, createSnapshotUi);
         await preAnalysis.RunAsync();

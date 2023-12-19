@@ -17,38 +17,49 @@
 using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 
-namespace DustInTheWind.DirectoryCompare.FileSystemAccess;
+namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.Crawling;
 
-internal class DirectoryOpenCrawlerItem : ICrawlerItem
+internal class FileCrawlerItem : ICrawlerItem
 {
-    public IDiskCrawler Owner { get; set; }
+    public DiskCrawler Owner { get; set; }
 
-    public CrawlerAction Action { get; } = CrawlerAction.DirectoryOpened;
+    public CrawlerAction Action { get; } = CrawlerAction.FileFound;
 
     public string Name => System.IO.Path.GetFileName(Path);
 
     public string Path { get; }
 
-    public Exception Exception { get; }
+    public long FileCount { get; }
 
-    public DataSize Size { get; }
+    public long DirectoryCount { get; }
+
+    public Exception Exception { get; }
 
     public DateTime LastModifiedTime
     {
         get
         {
-            DirectoryInfo directoryInfo = new(Path);
-            return directoryInfo.LastWriteTimeUtc;
+            FileInfo fileInfo = new(Path);
+            return fileInfo.LastWriteTimeUtc;
         }
     }
 
-    public DirectoryOpenCrawlerItem(string directoryPath)
+    public DataSize Size
     {
-        Path = directoryPath;
+        get
+        {
+            FileInfo fileInfo = new(Path);
+            return fileInfo.Length;
+        }
+    }
+
+    public FileCrawlerItem(string filePath)
+    {
+        Path = filePath;
     }
 
     public Stream ReadContent()
     {
-        return new MemoryStream();
+        return File.OpenRead(Path);
     }
 }

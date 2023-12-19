@@ -22,7 +22,7 @@ namespace DustInTheWind.DirectoryCompare.DataStructures;
 public readonly struct SnapshotLocation
 {
     private const char SnapshotIndicator = '~';
-    private const char PathIndicator = ':';
+    private const char PathIndicator = '/';
 
     private readonly string rawValue;
 

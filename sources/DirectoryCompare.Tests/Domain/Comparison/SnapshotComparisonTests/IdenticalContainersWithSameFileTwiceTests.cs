@@ -91,13 +91,13 @@ public class IdenticalSnapshotsWithSameFileTwiceTests
 
         ItemComparison[] expected =
         {
-            new ItemComparison
+            new()
             {
                 RootPath = "/",
                 Item1 = new HFile { Name = "File1.txt", Hash = new byte[] { 1, 2, 3 } },
                 Item2 = new HFile { Name = "File2.txt", Hash = new byte[] { 1, 2, 3 } }
             },
-            new ItemComparison
+            new()
             {
                 RootPath = "/",
                 Item1 = new HFile { Name = "File2.txt", Hash = new byte[] { 1, 2, 3 } },

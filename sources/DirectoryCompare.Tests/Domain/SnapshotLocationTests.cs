@@ -47,7 +47,7 @@ public class SnapshotLocationTests
     [Fact]
     public void PotNameAndSnapshotIndex5AndPath()
     {
-        SnapshotLocation snapshotLocation = new("pot1~5>asd/qwe");
+        SnapshotLocation snapshotLocation = new("pot1~5/asd/qwe");
 
         snapshotLocation.PotName.Should().Be("pot1", "Pot name is not correct.");
         snapshotLocation.SnapshotDate.Should().BeNull("Snapshot date is not correct.");
@@ -69,7 +69,7 @@ public class SnapshotLocationTests
     [Fact]
     public void PotNameAndSnapshotDateAndPath()
     {
-        SnapshotLocation snapshotLocation = new("pot1~2020-05-12 12:34:00>asd/qwe");
+        SnapshotLocation snapshotLocation = new("pot1~2020-05-12 12:34:00/asd/qwe");
 
         snapshotLocation.PotName.Should().Be("pot1", "Pot name is not correct.");
         snapshotLocation.SnapshotDate.Should().Be(new DateTime(2020, 05, 12, 12, 34, 00), "Snapshot date is not correct.");

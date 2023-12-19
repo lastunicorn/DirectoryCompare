@@ -22,7 +22,7 @@ using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
 
-public class FileAnalysisItem : IAnalysisItem
+internal class FileAnalysisItem : IAnalysisItem
 {
     private readonly ICrawlerItem crawlerItem;
     private readonly MD5 md5;

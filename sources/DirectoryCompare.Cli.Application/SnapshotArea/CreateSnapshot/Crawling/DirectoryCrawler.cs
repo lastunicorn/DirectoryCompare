@@ -16,7 +16,7 @@
 
 using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 
-namespace DustInTheWind.DirectoryCompare.FileSystemAccess;
+namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.Crawling;
 
 internal class DirectoryCrawler
 {
@@ -24,17 +24,19 @@ internal class DirectoryCrawler
     private readonly IncludeExcludeRuleCollection includeRules;
     private readonly List<string> excludeRules;
     private readonly bool isExactMatch;
+    private readonly IFileSystem fileSystem;
 
     private string[] filePaths;
     private string[] directoryPaths;
     private Exception exception;
 
-    public DirectoryCrawler(string path, IncludeExcludeRuleCollection includeRules, List<string> excludeRules, bool isExactMatch)
+    public DirectoryCrawler(string path, IncludeExcludeRuleCollection includeRules, List<string> excludeRules, bool isExactMatch, IFileSystem fileSystem)
     {
         this.path = path ?? throw new ArgumentNullException(nameof(path));
         this.includeRules = includeRules;
         this.excludeRules = excludeRules;
         this.isExactMatch = isExactMatch;
+        this.fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
     }
 
     public IEnumerable<ICrawlerItem> Crawl()
@@ -101,8 +103,8 @@ internal class DirectoryCrawler
 
         try
         {
-            filePaths = Directory.GetFiles(path);
-            directoryPaths = Directory.GetDirectories(path);
+            filePaths = fileSystem.GetFiles(path);
+            directoryPaths = fileSystem.GetDirectories(path);
         }
         catch (Exception ex)
         {
@@ -149,21 +151,21 @@ internal class DirectoryCrawler
 
         if (matches.IsExactMatch)
         {
-            DirectoryCrawler directoryCrawler = new(directoryPath, new IncludeExcludeRuleCollection(), excludeRules, true);
+            DirectoryCrawler directoryCrawler = new(directoryPath, new IncludeExcludeRuleCollection(), excludeRules, true, fileSystem);
             return directoryCrawler.Crawl();
         }
         else if (matches.IsIntermediateMatch)
         {
             // todo: current dir should not be "opened" until a children is proven to be green.
 
-            DirectoryCrawler directoryCrawler = new(directoryPath, matches.NextRules, excludeRules, false);
+            DirectoryCrawler directoryCrawler = new(directoryPath, matches.NextRules, excludeRules, false, fileSystem);
             return directoryCrawler.Crawl();
         }
         else if(matches.NextRules.Count > 0)
         {
             // todo: current dir should not be "opened" until a children is proven to be green.
 
-            DirectoryCrawler directoryCrawler = new(directoryPath, matches.NextRules, excludeRules, false);
+            DirectoryCrawler directoryCrawler = new(directoryPath, matches.NextRules, excludeRules, false, fileSystem);
             return directoryCrawler.Crawl();
         }
         else

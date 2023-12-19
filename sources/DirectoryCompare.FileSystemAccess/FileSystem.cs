@@ -20,14 +20,6 @@ namespace DustInTheWind.DirectoryCompare.FileSystemAccess;
 
 public class FileSystem : IFileSystem
 {
-    public IDiskCrawler CreateCrawler(string path, List<string> includeRules, List<string> excludeRules)
-    {
-        IEnumerable<IncludeExcludeRule> includeExcludeRules = includeRules.Select(x => new IncludeExcludeRule(x));
-        IncludeExcludeRuleCollection ruleCollection = new(includeExcludeRules);
-        
-        return new DiskCrawler(path, ruleCollection, excludeRules);
-    }
-
     public bool ExistsDirectory(string path)
     {
         return Directory.Exists(path);
@@ -36,5 +28,15 @@ public class FileSystem : IFileSystem
     public bool FileExists(string path)
     {
         return File.Exists(path);
+    }
+
+    public string[] GetFiles(string path)
+    {
+        return Directory.GetFiles(path);
+    }
+
+    public string[] GetDirectories(string path)
+    {
+        return Directory.GetDirectories(path);
     }
 }

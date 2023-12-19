@@ -16,27 +16,29 @@
 
 using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 
-namespace DustInTheWind.DirectoryCompare.FileSystemAccess;
+namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.Crawling;
 
-internal class DiskCrawler : IDiskCrawler
+internal class DiskCrawler
 {
     private readonly IncludeExcludeRuleCollection includeRules;
     private readonly List<string> excludeRules;
+    private readonly IFileSystem fileSystem;
 
     public string RootPath { get; }
 
-    public DiskCrawler(string path, IncludeExcludeRuleCollection includeRules, List<string> excludeRules)
+    public DiskCrawler(string path, IncludeExcludeRuleCollection includeRules, List<string> excludeRules, IFileSystem fileSystem)
     {
         RootPath = path ?? throw new ArgumentNullException(nameof(path));
         this.includeRules = includeRules;
         this.excludeRules = excludeRules;
+        this.fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
     }
 
     public IEnumerable<ICrawlerItem> Crawl()
     {
         if (Directory.Exists(RootPath))
         {
-            DirectoryCrawler directoryCrawler = new(RootPath, includeRules, excludeRules, true);
+            DirectoryCrawler directoryCrawler = new(RootPath, includeRules, excludeRules, true, fileSystem);
             IEnumerable<ICrawlerItem> crawlerItems = directoryCrawler.Crawl();
 
             foreach (ICrawlerItem crawlerItem in crawlerItems)

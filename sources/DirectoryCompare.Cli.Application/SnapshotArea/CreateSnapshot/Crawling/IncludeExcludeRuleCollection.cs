@@ -16,7 +16,7 @@
 
 using System.Collections.ObjectModel;
 
-namespace DustInTheWind.DirectoryCompare.FileSystemAccess;
+namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.Crawling;
 
 internal class IncludeExcludeRuleCollection : Collection<IncludeExcludeRule>
 {

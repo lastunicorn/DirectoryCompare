@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.Crawling;
 using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 using DustInTheWind.DirectoryCompare.Ports.UserAccess;
@@ -22,14 +23,14 @@ namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnap
 
 internal class PreAnalysis
 {
-    private readonly IDiskCrawler diskCrawler;
+    private readonly DiskCrawler diskCrawler;
     private readonly ICreateSnapshotUi createSnapshotUi;
 
     public int FileCount { get; private set; }
 
     public DataSize TotalDataSize { get; private set; }
 
-    public PreAnalysis(IDiskCrawler diskCrawler, ICreateSnapshotUi createSnapshotUi)
+    public PreAnalysis(DiskCrawler diskCrawler, ICreateSnapshotUi createSnapshotUi)
     {
         this.diskCrawler = diskCrawler ?? throw new ArgumentNullException(nameof(diskCrawler));
         this.createSnapshotUi = createSnapshotUi ?? throw new ArgumentNullException(nameof(createSnapshotUi));

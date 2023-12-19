@@ -67,7 +67,7 @@ public class SnapshotComparison
 
             HDirectory hDirectory1 = Snapshot1.GetDirectory(Path1);
             HDirectory hDirectory2 = Snapshot2.GetDirectory(Path2);
-            
+
             CompareChildFiles(hDirectory1, hDirectory2, "/");
             CompareChildDirectories(hDirectory1, hDirectory2, "/");
         }
@@ -86,7 +86,7 @@ public class SnapshotComparison
 
         foreach (HFile file1 in files1)
         {
-            List<FileComparison> matches = remainingInDirectory2
+            List<FileComparison> matches = files2
                 .Select(x => new FileComparison(file1, x))
                 .Where(x => x.IsSomeMatch)
                 .ToList();
@@ -97,13 +97,15 @@ public class SnapshotComparison
             }
             else
             {
-                List<FileComparison> perfectMatches = matches
-                    .Where(x => x.IsPerfectMatch)
-                    .ToList();
-
-                if (perfectMatches.Count == 0)
+                foreach (FileComparison match in matches)
                 {
-                    foreach (FileComparison match in matches)
+                    bool isPartialMatch = match is
+                    {
+                        IsPerfectMatch: false,
+                        IsSomeMatch: true
+                    };
+
+                    if (isPartialMatch)
                     {
                         ItemComparison itemComparison = new()
                         {
@@ -117,14 +119,9 @@ public class SnapshotComparison
 
                         if (!match.SameContent)
                             differentContent.Add(itemComparison);
-
-                        remainingInDirectory2.Remove(match.File2);
                     }
-                }
-                else
-                {
-                    foreach (FileComparison perfectMatch in perfectMatches)
-                        remainingInDirectory2.Remove(perfectMatch.File2);
+
+                    remainingInDirectory2.Remove(match.File2);
                 }
             }
         }
