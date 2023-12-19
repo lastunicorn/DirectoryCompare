@@ -14,27 +14,21 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.DataStructures;
+namespace DustInTheWind.DirectoryCompare.IntegrationTests.Utils;
 
-namespace DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
-
-public interface ICrawlerItem
+internal class FakeFile
 {
-    IDiskCrawler Owner { get; set; }
+    public string Name { get; }
 
-    CrawlerAction Action { get; }
+    public FakeDirectory Parent { get; set; }
 
-    string Name { get; }
+    public FakeFile(string name)
+    {
+        Name = name;
+    }
 
-    string Path { get; }
-
-    Exception Exception { get; }
-
-    DateTime LastModifiedTime { get; }
-
-    DataSize Size { get; }
-
-    bool IsRoot => Path == Owner?.RootPath;
-
-    Stream ReadContent();
+    private static string GenerateFileContent()
+    {
+        return "file content";
+    }
 }

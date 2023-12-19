@@ -20,7 +20,7 @@ using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
 
-public class DirectoryClosedAnalysisItem : IAnalysisItem
+internal class DirectoryClosedAnalysisItem : IAnalysisItem
 {
     private readonly ICrawlerItem crawlerItem;
 

@@ -14,11 +14,28 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.Crawling;
+using DustInTheWind.DirectoryCompare.DataStructures;
+
 namespace DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 
-public interface IDiskCrawler
+internal interface ICrawlerItem
 {
-    IEnumerable<ICrawlerItem> Crawl();
+    DiskCrawler Owner { get; set; }
 
-    string RootPath { get; }
+    CrawlerAction Action { get; }
+
+    string Name { get; }
+
+    string Path { get; }
+
+    Exception Exception { get; }
+
+    DateTime LastModifiedTime { get; }
+
+    DataSize Size { get; }
+
+    bool IsRoot => Path == Owner?.RootPath;
+
+    Stream ReadContent();
 }

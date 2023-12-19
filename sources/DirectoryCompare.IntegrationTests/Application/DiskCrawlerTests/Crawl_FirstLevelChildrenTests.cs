@@ -14,12 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.Crawling;
 using DustInTheWind.DirectoryCompare.FileSystemAccess;
 using DustInTheWind.DirectoryCompare.IntegrationTests.Utils;
 using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 using Xunit;
 
-namespace DustInTheWind.DirectoryCompare.IntegrationTests.FileSystemAccess.DiskCrawlerTests;
+namespace DustInTheWind.DirectoryCompare.IntegrationTests.Application.DiskCrawlerTests;
 
 [Collection("CrawlerTests")]
 public class Crawl_FirstLevelChildrenTests : IDisposable
@@ -32,10 +33,11 @@ public class Crawl_FirstLevelChildrenTests : IDisposable
         // arrange
 
         playgroundDirectory.CreateChildDirectory("Directory1");
+        FileSystem fileSystem = new();
 
         // act
 
-        DiskCrawler diskCrawler = new(playgroundDirectory, null, null);
+        DiskCrawler diskCrawler = new(playgroundDirectory, null, null, fileSystem);
         List<ICrawlerItem> items = diskCrawler.Crawl().ToList();
 
         // assert
@@ -58,10 +60,11 @@ public class Crawl_FirstLevelChildrenTests : IDisposable
 
         playgroundDirectory.CreateChildDirectory("Directory1");
         playgroundDirectory.CreateChildDirectory("Directory2");
+        FileSystem fileSystem = new();
 
         // act
 
-        DiskCrawler diskCrawler = new(playgroundDirectory, null, null);
+        DiskCrawler diskCrawler = new(playgroundDirectory, null, null, fileSystem);
         List<ICrawlerItem> items = diskCrawler.Crawl().ToList();
 
         // assert
@@ -85,10 +88,11 @@ public class Crawl_FirstLevelChildrenTests : IDisposable
         // arrange
 
         playgroundDirectory.CreateChildFile("file1.txt");
+        FileSystem fileSystem = new();
 
         // act
 
-        DiskCrawler diskCrawler = new(playgroundDirectory, null, null);
+        DiskCrawler diskCrawler = new(playgroundDirectory, null, null, fileSystem);
         List<ICrawlerItem> items = diskCrawler.Crawl().ToList();
 
         // assert
@@ -110,10 +114,11 @@ public class Crawl_FirstLevelChildrenTests : IDisposable
 
         playgroundDirectory.CreateChildFile("file1.txt");
         playgroundDirectory.CreateChildFile("file2.txt");
+        FileSystem fileSystem = new();
 
         // act
 
-        DiskCrawler diskCrawler = new(playgroundDirectory, null, null);
+        DiskCrawler diskCrawler = new(playgroundDirectory, null, null, fileSystem);
         List<ICrawlerItem> items = diskCrawler.Crawl().ToList();
 
         // assert
