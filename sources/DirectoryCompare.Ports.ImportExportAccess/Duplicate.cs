@@ -20,9 +20,7 @@ namespace DustInTheWind.DirectoryCompare.Ports.ImportExportAccess;
 
 public class Duplicate
 {
-    public string FullPathLeft { get; set; }
-
-    public string FullPathRight { get; set; }
+    public List<string> FullPaths { get; set; }
 
     public ulong Size { get; set; }
 

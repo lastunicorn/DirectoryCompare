@@ -65,7 +65,7 @@ public class RemoveDuplicatesUseCase : IRequestHandler<RemoveDuplicatesRequest>
             FilesRight = filesRight
         };
 
-        return fileDuplicates.Enumerate();
+        return fileDuplicates.EnumeratePairs();
     }
 
     private void RemoveDuplicates(RemoveDuplicatesRequest request, IEnumerable<FilePair> fileDuplicates)

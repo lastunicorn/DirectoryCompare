@@ -20,6 +20,8 @@ public readonly struct FileHash : IEquatable<FileHash>
 {
     private readonly byte[] bytes;
 
+    public static FileHash Empty { get; } = new(null);
+    
     public FileHash(byte[] bytes)
     {
         this.bytes = bytes;

@@ -21,13 +21,13 @@ namespace DustInTheWind.DirectoryCompare.Domain.Comparison;
 
 public class FileDuplicates
 {
-    readonly Dictionary<FileHash, List<HFile>> filesByHash = new();
+    readonly DuplicatesCollection<FileHash, HFile> filesByHash = new();
 
     public List<HFile> FilesLeft { get; set; }
 
     public List<HFile> FilesRight { get; set; }
 
-    public IEnumerable<FilePair> Enumerate()
+    public IEnumerable<FilePair> EnumeratePairs()
     {
         if (FilesLeft == null)
             return Enumerable.Empty<FilePair>();
@@ -47,26 +47,38 @@ public class FileDuplicates
         }
     }
 
+    public IEnumerable<FileGroup> EnumerateGroups()
+    {
+        if (FilesLeft == null)
+            return Enumerable.Empty<FileGroup>();
+
+        filesByHash.Clear();
+
+        bool existsRight = FilesRight != null && !ReferenceEquals(FilesRight, FilesLeft);
+
+        AddWithoutCheck(FilesLeft);
+        
+        if (existsRight)
+            AddWithoutCheck(FilesRight);
+
+        return filesByHash
+            .Select(x => new FileGroup(x.Value));
+    }
+
     private void AddWithoutCheck(List<HFile> files)
     {
         foreach (HFile hFile in files)
-        {
-            List<HFile> bucket = GetBucketFor(hFile.Hash);
-            bucket.Add(hFile);
-        }
+            _ = filesByHash.Add(hFile.Hash, hFile);
     }
 
     private IEnumerable<FilePair> CheckForDuplicates(List<HFile> files)
     {
         foreach (HFile hFile in files)
         {
-            List<HFile> bucket = GetBucketFor(hFile.Hash);
+            IEnumerable<HFile> bucket = filesByHash.GetAll(hFile.Hash);
 
-            if (bucket.Count > 0)
-            {
-                foreach (HFile existingFile in bucket)
-                    yield return new FilePair(hFile, existingFile);
-            }
+            foreach (HFile existingFile in bucket)
+                yield return new FilePair(hFile, existingFile);
         }
     }
 
@@ -74,28 +86,10 @@ public class FileDuplicates
     {
         foreach (HFile hFile in files)
         {
-            List<HFile> bucket = GetBucketFor(hFile.Hash);
+            IEnumerable<HFile> bucket = filesByHash.Add(hFile.Hash, hFile);
 
-            if (bucket.Count > 0)
-            {
-                foreach (HFile existingFile in bucket)
-                    yield return new FilePair(hFile, existingFile);
-            }
-
-            bucket.Add(hFile);
+            foreach (HFile existingFile in bucket)
+                yield return new FilePair(hFile, existingFile);
         }
-    }
-
-    private List<HFile> GetBucketFor(FileHash fileHash)
-    {
-        bool exists = filesByHash.TryGetValue(fileHash, out List<HFile> bucket);
-
-        if (!exists)
-        {
-            bucket = new List<HFile>();
-            filesByHash.Add(fileHash, bucket);
-        }
-
-        return bucket;
     }
 }

@@ -76,10 +76,13 @@ public readonly partial struct DataSize
     /// <summary>
     /// Returns a string representation of the instance, using the specified format.
     /// </summary>
+    /// 
     /// <param name="format">
     /// Possible values:
     /// "S" OR "simple" = string representation of the value in bytes;
-    /// "D" OR "detailed" = string representation of the value in both, the most convenient unit and bytes.</param>
+    /// "D" OR "detailed" = string representation of the value in both, the most convenient unit and bytes.
+    /// </param>
+    ///
     /// <returns>A string representation of the current instance.</returns>
     public string ToString(string format)
     {
@@ -89,11 +92,15 @@ public readonly partial struct DataSize
     /// <summary>
     /// Returns a string representation of the instance, using the specified format.
     /// </summary>
+    /// 
     /// <param name="format">
     /// Possible values:
     /// "S" OR "simple" = string representation of the value in bytes;
-    /// "D" OR "detailed" = string representation of the value in both, the most convenient unit and bytes.</param>
+    /// "D" OR "detailed" = string representation of the value in both, the most convenient unit and bytes.
+    /// </param>
+    /// 
     /// <param name="formatProvider"></param>
+    /// 
     /// <returns>A string representation of the current instance.</returns>
     public string ToString(string format, IFormatProvider formatProvider)
     {

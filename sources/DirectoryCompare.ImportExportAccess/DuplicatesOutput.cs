@@ -61,11 +61,13 @@ internal class DuplicatesOutput : IDuplicatesOutput
 
         jsonTextWriter.WriteStartObject();
 
-        jsonTextWriter.WritePropertyName("l");
-        jsonTextWriter.WriteValue(duplicate.FullPathLeft);
+        jsonTextWriter.WritePropertyName("f");
+        jsonTextWriter.WriteStartArray();
 
-        jsonTextWriter.WritePropertyName("r");
-        jsonTextWriter.WriteValue(duplicate.FullPathRight);
+        foreach (string fullPath in duplicate.FullPaths) 
+            jsonTextWriter.WriteValue(fullPath);
+        
+        jsonTextWriter.WriteEndArray();
 
         jsonTextWriter.WritePropertyName("s");
         jsonTextWriter.WriteValue(duplicate.Size);

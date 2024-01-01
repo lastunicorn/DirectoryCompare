@@ -19,7 +19,6 @@ using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Domain.Comparison;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
-using DustInTheWind.DirectoryCompare.Ports.DataAccess.ImportExport;
 using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 using DustInTheWind.DirectoryCompare.Ports.ImportExportAccess;
 using DustInTheWind.DirectoryCompare.Ports.LogAccess;
@@ -66,19 +65,25 @@ public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest>
         List<HFile> filesLeft = await GetFiles(request.SnapshotLeft);
         List<HFile> filesRight = await GetFiles(request.SnapshotRight);
 
-        IEnumerable<FilePair> duplicates = ComputeDuplicates(filesLeft, filesRight, request.CheckFilesExistence);
+        IEnumerable<FileGroup> duplicates = ComputeDuplicates(filesLeft, filesRight, request.CheckFilesExistence);
 
-        foreach (FilePair filePair in duplicates)
+        foreach (FileGroup fileGroup in duplicates)
         {
-            count++;
-            totalSize += filePair.Size;
+            IEnumerable<FilePair> filePairs = fileGroup.EnumeratePairs();
 
-            await AnnounceDuplicateToUser(filePair);
-            ExportDuplicate(filePair);
+            foreach (FilePair filePair in filePairs)
+            {
+                count++;
+                totalSize += fileGroup.Size;
+                
+                await AnnounceDuplicateToUser(filePair);
+            }
+
+            ExportDuplicate(fileGroup);
         }
 
         stopwatch.Stop();
-        
+
         await AnnounceFinishedToUser();
         CloseOutputFile();
     }
@@ -125,7 +130,7 @@ public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest>
         return hFiles?.ToList();
     }
 
-    private IEnumerable<FilePair> ComputeDuplicates(List<HFile> filesLeft, List<HFile> filesRight, bool checkFilesExistence)
+    private IEnumerable<FileGroup> ComputeDuplicates(List<HFile> filesLeft, List<HFile> filesRight, bool checkFilesExistence)
     {
         FileDuplicates fileDuplicates = new()
         {
@@ -133,12 +138,17 @@ public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest>
             FilesRight = filesRight
         };
 
-        IEnumerable<FilePair> duplicates = fileDuplicates.Enumerate();
+        IEnumerable<FileGroup> duplicates = fileDuplicates.EnumerateGroups();
 
         if (checkFilesExistence)
         {
             duplicates = duplicates
-                .Where(x => fileSystem.FileExists(x.FullPathLeft) && fileSystem.FileExists(x.FullPathRight));
+                .Select(x =>
+                {
+                    IEnumerable<HFile> hFiles = x.Where(file => fileSystem.FileExists(file.GetOriginalPath()));
+                    return new FileGroup(hFiles);
+                })
+                .Where(x => x.Count > 1);
         }
 
         return duplicates;
@@ -157,17 +167,18 @@ public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest>
         return duplicateFilesUi.AnnounceDuplicate(duplicateFoundInfo);
     }
 
-    private void ExportDuplicate(FilePair filePair)
+    private void ExportDuplicate(FileGroup fileGroup)
     {
         if (duplicatesOutput == null)
             return;
 
         Duplicate duplicate = new()
         {
-            FullPathLeft = filePair.FullPathLeft,
-            FullPathRight = filePair.FullPathRight,
-            Size = filePair.Size,
-            Hash = filePair.Hash
+            FullPaths = fileGroup
+                .Select(x => x.GetOriginalPath())
+                .ToList(),
+            Size = fileGroup.Size,
+            Hash = fileGroup.Hash
         };
 
         duplicatesOutput.WriteDuplicate(duplicate);
@@ -188,9 +199,6 @@ public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest>
 
     private void CloseOutputFile()
     {
-        if(duplicatesOutput == null)
-            return;
-        
-        duplicatesOutput.Close();
+        duplicatesOutput?.Close();
     }
 }
