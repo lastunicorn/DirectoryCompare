@@ -57,11 +57,12 @@ public class FileDuplicates
         bool existsRight = FilesRight != null && !ReferenceEquals(FilesRight, FilesLeft);
 
         AddWithoutCheck(FilesLeft);
-        
+
         if (existsRight)
             AddWithoutCheck(FilesRight);
 
         return filesByHash
+            .Where(x => x.Value.Count > 1)
             .Select(x => new FileGroup(x.Value));
     }
 

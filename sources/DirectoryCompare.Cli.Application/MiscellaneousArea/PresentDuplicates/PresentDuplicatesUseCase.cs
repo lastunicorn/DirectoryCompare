@@ -44,7 +44,7 @@ internal class PresentDuplicatesUseCase : IRequestHandler<PresentDuplicatesReque
         DataSize totalSize = DataSize.Zero;
 
         IEnumerable<FileDuplicateGroup> fileDuplicateGroups = duplicatesInput.EnumerateDuplicates();
-        
+
         if (request.CheckFilesExistence)
         {
             fileDuplicateGroups = fileDuplicateGroups
@@ -53,34 +53,28 @@ internal class PresentDuplicatesUseCase : IRequestHandler<PresentDuplicatesReque
                     x.FilePaths = x.FilePaths
                         .Where(filePath => fileSystem.FileExists(filePath))
                         .ToList();
-                    
+
                     return x;
                 })
                 .Where(x => x.FilePaths.Count > 1);
         }
-        
+
         foreach (FileDuplicateGroup fileDuplicateGroup in fileDuplicateGroups)
         {
-            try
+            int fileCount = fileDuplicateGroup.FilePaths.Count;
+            int duplicatesCount = ComputeDuplicatesCount(fileCount);
+
+            totalDuplicatesCount += duplicatesCount;
+            totalSize += duplicatesCount * fileDuplicateGroup.FileSize;
+
+            FileGroup fileGroup = new()
             {
-                int fileCount = fileDuplicateGroup.FilePaths.Count;
-                int duplicatesCount = ComputeDuplicatesCount(fileCount);
+                FilePaths = fileDuplicateGroup.FilePaths,
+                FileSize = fileDuplicateGroup.FileSize,
+                FileHash = fileDuplicateGroup.FileHash
+            };
 
-                totalDuplicatesCount += duplicatesCount;
-                totalSize += duplicatesCount * fileDuplicateGroup.FileSize;
-
-                FileGroup fileGroup = new()
-                {
-                    FilePaths = fileDuplicateGroup.FilePaths,
-                    FileSize = fileDuplicateGroup.FileSize,
-                    FileHash = fileDuplicateGroup.FileHash
-                };
-
-                fileGroups.Add(fileGroup.FileSize, fileGroup);
-            }
-            catch
-            {
-            }
+            fileGroups.Add(fileGroup.FileSize, fileGroup);
         }
 
         PresentDuplicatesResponse response = new()

@@ -21,14 +21,14 @@ public readonly struct FileHash : IEquatable<FileHash>
     private readonly byte[] bytes;
 
     public static FileHash Empty { get; } = new(null);
-    
+
     public FileHash(byte[] bytes)
     {
         this.bytes = bytes;
     }
 
     public override bool Equals(object obj)
-    { 
+    {
         return obj is FileHash other && Equals(other);
     }
 
@@ -61,7 +61,7 @@ public readonly struct FileHash : IEquatable<FileHash>
             const int p = 16777619;
             int hash = (int)2166136261;
 
-            if(bytes != null)
+            if (bytes != null)
             {
                 for (int i = 0; i < bytes.Length; i++)
                     hash = (hash ^ bytes[i]) * p;
@@ -70,9 +70,12 @@ public readonly struct FileHash : IEquatable<FileHash>
             return hash;
         }
     }
-    
+
     public static FileHash Parse(string value)
     {
+        if (value == null)
+            return Empty;
+
         byte[] bytes = Convert.FromBase64String(value);
         return new FileHash(bytes);
     }
