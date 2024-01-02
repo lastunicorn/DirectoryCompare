@@ -20,13 +20,16 @@ using MediatR;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands.ShowDuplicates;
 
-[NamedCommand("show-duplicates")]
+[NamedCommand("show-duplicates", Description = "Display the content of a json file containing previously exported duplicates.")]
 internal class ShowDuplicatesCommand : IConsoleCommand<ShowDuplicatesViewModel>
 {
     private readonly IMediator mediator;
 
     [NamedParameter("file", ShortName = 'f', IsOptional = false, Description = "The path to the file containing the duplicates results.")]
     public string FilePath { get; set; }
+
+    [NamedParameter("check-exist", ShortName = 'x', IsOptional = true, Description = "If specified, the files that does not actually exist on disk are not displayed.")]
+    public bool CheckFilesExistence { get; set; }
 
     public ShowDuplicatesCommand(IMediator mediator)
     {
@@ -37,7 +40,8 @@ internal class ShowDuplicatesCommand : IConsoleCommand<ShowDuplicatesViewModel>
     {
         PresentDuplicatesRequest request = new()
         {
-            FilePath = FilePath
+            FilePath = FilePath,
+            CheckFilesExistence = CheckFilesExistence
         };
         PresentDuplicatesResponse response = await mediator.Send(request);
         

@@ -148,7 +148,7 @@ public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest>
             duplicates = duplicates
                 .Select(x =>
                 {
-                    IEnumerable<HFile> hFiles = x.Where(file => fileSystem.FileExists(file.GetOriginalPath()));
+                    IEnumerable<HFile> hFiles = x.Where(filePath => fileSystem.FileExists(filePath.GetOriginalPath()));
                     return new FileGroup(hFiles);
                 })
                 .Where(x => x.Count > 1);

@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.DataStructures;
+using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 using DustInTheWind.DirectoryCompare.Ports.ImportExportAccess;
 using MediatR;
 
@@ -23,10 +24,12 @@ namespace DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.Prese
 internal class PresentDuplicatesUseCase : IRequestHandler<PresentDuplicatesRequest, PresentDuplicatesResponse>
 {
     private readonly IImportExport importExport;
+    private readonly IFileSystem fileSystem;
 
-    public PresentDuplicatesUseCase(IImportExport importExport)
+    public PresentDuplicatesUseCase(IImportExport importExport, IFileSystem fileSystem)
     {
         this.importExport = importExport ?? throw new ArgumentNullException(nameof(importExport));
+        this.fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
     }
 
     public Task<PresentDuplicatesResponse> Handle(PresentDuplicatesRequest request, CancellationToken cancellationToken)
@@ -40,7 +43,23 @@ internal class PresentDuplicatesUseCase : IRequestHandler<PresentDuplicatesReque
         int totalDuplicatesCount = 0;
         DataSize totalSize = DataSize.Zero;
 
-        foreach (FileDuplicateGroup fileDuplicateGroup in duplicatesInput.EnumerateDuplicates())
+        IEnumerable<FileDuplicateGroup> fileDuplicateGroups = duplicatesInput.EnumerateDuplicates();
+        
+        if (request.CheckFilesExistence)
+        {
+            fileDuplicateGroups = fileDuplicateGroups
+                .Select(x =>
+                {
+                    x.FilePaths = x.FilePaths
+                        .Where(filePath => fileSystem.FileExists(filePath))
+                        .ToList();
+                    
+                    return x;
+                })
+                .Where(x => x.FilePaths.Count > 1);
+        }
+        
+        foreach (FileDuplicateGroup fileDuplicateGroup in fileDuplicateGroups)
         {
             try
             {
