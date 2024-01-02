@@ -24,7 +24,7 @@ public class JDuplicateGroup
     public List<string> FilePaths { get; set; }
 
     [JsonProperty("s")]
-    public int FileSize { get; set; }
+    public ulong FileSize { get; set; }
 
     [JsonProperty("h")]
     public string FileHash { get; set; }
