@@ -14,25 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Ports.ImportExportAccess;
+namespace DustInTheWind.DirectoryCompare.Ports.ImportExportAccess;
 
-namespace DustInTheWind.DirectoryCompare.ImportExportAccess;
-
-public class ImportExport : IImportExport
+public class InvalidFileStateException : Exception
 {
-    public IDuplicatesOutput OpenDuplicatesOutput(string fileName)
+    public InvalidFileStateException(string state)
+        :base ($"The file is in an invalid state for the requested action: {state}.")
     {
-        DuplicatesOutput duplicatesOutput = new(fileName);
-        duplicatesOutput.Open();
-        
-        return duplicatesOutput;
-    }
-
-    public IDuplicatesInput OpenDuplicatesInput(string fileName)
-    {
-        DuplicatesInput duplicatesInput = new(fileName);
-        duplicatesInput.Open();
-
-        return duplicatesInput;
     }
 }

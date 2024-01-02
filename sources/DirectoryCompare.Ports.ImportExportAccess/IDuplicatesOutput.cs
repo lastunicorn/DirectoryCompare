@@ -18,7 +18,7 @@ namespace DustInTheWind.DirectoryCompare.Ports.ImportExportAccess;
 
 public interface IDuplicatesOutput
 {
-    void WriteHeader(string potNameLeft, string potNameRight);
+    void WriteHeader(DuplicatesHeader duplicatesHeader);
 
     void WriteDuplicate(Duplicate duplicate);
 

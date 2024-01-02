@@ -19,4 +19,6 @@ namespace DustInTheWind.DirectoryCompare.Ports.ImportExportAccess;
 public interface IImportExport
 {
     IDuplicatesOutput OpenDuplicatesOutput(string fileName);
+    
+    IDuplicatesInput OpenDuplicatesInput(string fileName);
 }

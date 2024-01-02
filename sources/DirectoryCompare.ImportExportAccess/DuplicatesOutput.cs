@@ -44,15 +44,15 @@ internal class DuplicatesOutput : IDuplicatesOutput
         MoveToOpenedState();
     }
 
-    public void WriteHeader(string potNameLeft, string potNameRight)
+    public void WriteHeader(DuplicatesHeader duplicatesHeader)
     {
         MoveToHeaderState();
 
         jsonTextWriter.WritePropertyName("Left");
-        jsonTextWriter.WriteValue(potNameLeft);
+        jsonTextWriter.WriteValue(duplicatesHeader.PotNameLeft);
 
         jsonTextWriter.WritePropertyName("Right");
-        jsonTextWriter.WriteValue(potNameRight);
+        jsonTextWriter.WriteValue(duplicatesHeader.PotNameRight);
     }
 
     public void WriteDuplicate(Duplicate duplicate)
@@ -102,7 +102,7 @@ internal class DuplicatesOutput : IDuplicatesOutput
             case DuplicateFileState.Duplicates:
             case DuplicateFileState.Closed:
             default:
-                throw new Exception($"Invalid output file state: {state}.");
+                throw new InvalidFileStateException(state.ToString());
         }
     }
 
@@ -121,7 +121,7 @@ internal class DuplicatesOutput : IDuplicatesOutput
             case DuplicateFileState.Duplicates:
             case DuplicateFileState.Closed:
             default:
-                throw new Exception($"Invalid output file state: {state}.");
+                throw new InvalidFileStateException(state.ToString());
         }
     }
 
@@ -142,7 +142,7 @@ internal class DuplicatesOutput : IDuplicatesOutput
             case DuplicateFileState.Opened:
             case DuplicateFileState.Closed:
             default:
-                throw new Exception($"Invalid output file state: {state}.");
+                throw new InvalidFileStateException(state.ToString());
         }
     }
 
@@ -174,7 +174,7 @@ internal class DuplicatesOutput : IDuplicatesOutput
                 break;
             
             default:
-                throw new Exception($"Invalid output file state: {state}.");
+                throw new InvalidFileStateException(state.ToString());
         }
     }
 }

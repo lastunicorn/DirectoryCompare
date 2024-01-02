@@ -41,7 +41,7 @@ public class RequestPerformanceBehavior<TRequest, TResponse> : IPipelineBehavior
             return await next();
         }
         finally
-        {
+            {
             timer.Stop();
             log.WriteDebug("Request {0} finished in {1:n0} milliseconds", requestName, timer.ElapsedMilliseconds);
         }

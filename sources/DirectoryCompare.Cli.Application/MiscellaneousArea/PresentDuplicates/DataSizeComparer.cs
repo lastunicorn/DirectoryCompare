@@ -14,25 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Ports.ImportExportAccess;
+using DustInTheWind.DirectoryCompare.DataStructures;
 
-namespace DustInTheWind.DirectoryCompare.ImportExportAccess;
+namespace DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.PresentDuplicates;
 
-public class ImportExport : IImportExport
+internal class DataSizeComparer : IComparer<DataSize>
 {
-    public IDuplicatesOutput OpenDuplicatesOutput(string fileName)
+    public int Compare(DataSize x, DataSize y)
     {
-        DuplicatesOutput duplicatesOutput = new(fileName);
-        duplicatesOutput.Open();
-        
-        return duplicatesOutput;
-    }
-
-    public IDuplicatesInput OpenDuplicatesInput(string fileName)
-    {
-        DuplicatesInput duplicatesInput = new(fileName);
-        duplicatesInput.Open();
-
-        return duplicatesInput;
+        int result = x.Value.CompareTo(y.Value);
+        return result == 0 ? 1 : result;
     }
 }

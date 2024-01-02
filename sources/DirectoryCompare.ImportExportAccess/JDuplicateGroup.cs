@@ -14,25 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Ports.ImportExportAccess;
+using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.ImportExportAccess;
 
-public class ImportExport : IImportExport
+public class JDuplicateGroup
 {
-    public IDuplicatesOutput OpenDuplicatesOutput(string fileName)
-    {
-        DuplicatesOutput duplicatesOutput = new(fileName);
-        duplicatesOutput.Open();
-        
-        return duplicatesOutput;
-    }
+    [JsonProperty("f")]
+    public List<string> FilePaths { get; set; }
 
-    public IDuplicatesInput OpenDuplicatesInput(string fileName)
-    {
-        DuplicatesInput duplicatesInput = new(fileName);
-        duplicatesInput.Open();
+    [JsonProperty("s")]
+    public int FileSize { get; set; }
 
-        return duplicatesInput;
-    }
+    [JsonProperty("h")]
+    public string FileHash { get; set; }
 }

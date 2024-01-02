@@ -75,7 +75,7 @@ public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest>
             {
                 count++;
                 totalSize += fileGroup.Size;
-                
+
                 await AnnounceDuplicateToUser(filePair);
             }
 
@@ -117,10 +117,13 @@ public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest>
         if (duplicatesOutput == null)
             return;
 
-        string potNameLeft = request.SnapshotLeft.PotName;
-        string potNameRight = request.SnapshotRight.PotName;
+        DuplicatesHeader duplicatesHeader = new()
+        {
+            PotNameLeft = request.SnapshotLeft.PotName,
+            PotNameRight = request.SnapshotRight.PotName
+        };
 
-        duplicatesOutput.WriteHeader(potNameLeft, potNameRight);
+        duplicatesOutput.WriteHeader(duplicatesHeader);
     }
 
     private async Task<List<HFile>> GetFiles(SnapshotLocation snapshotLocation)

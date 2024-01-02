@@ -14,25 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Ports.ImportExportAccess;
-
 namespace DustInTheWind.DirectoryCompare.ImportExportAccess;
 
-public class ImportExport : IImportExport
+public class DuplicatesDocument
 {
-    public IDuplicatesOutput OpenDuplicatesOutput(string fileName)
-    {
-        DuplicatesOutput duplicatesOutput = new(fileName);
-        duplicatesOutput.Open();
-        
-        return duplicatesOutput;
-    }
+    public string Left { get; set; }
+    
+    public string Right { get; set; }
 
-    public IDuplicatesInput OpenDuplicatesInput(string fileName)
-    {
-        DuplicatesInput duplicatesInput = new(fileName);
-        duplicatesInput.Open();
-
-        return duplicatesInput;
-    }
+    public List<JDuplicateGroup> Duplicates { get; set; }
 }

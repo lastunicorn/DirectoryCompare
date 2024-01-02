@@ -14,25 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Ports.ImportExportAccess;
+using DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.PresentDuplicates;
+using DustInTheWind.DirectoryCompare.DataStructures;
 
-namespace DustInTheWind.DirectoryCompare.ImportExportAccess;
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands.ShowDuplicates;
 
-public class ImportExport : IImportExport
+internal class ShowDuplicatesViewModel
 {
-    public IDuplicatesOutput OpenDuplicatesOutput(string fileName)
-    {
-        DuplicatesOutput duplicatesOutput = new(fileName);
-        duplicatesOutput.Open();
-        
-        return duplicatesOutput;
-    }
+    public IList<FileGroup> FileGroups { get; set; }
 
-    public IDuplicatesInput OpenDuplicatesInput(string fileName)
-    {
-        DuplicatesInput duplicatesInput = new(fileName);
-        duplicatesInput.Open();
+    public int DuplicateCount { get; set; }
 
-        return duplicatesInput;
-    }
+    public DataSize TotalSize { get; set; }
 }

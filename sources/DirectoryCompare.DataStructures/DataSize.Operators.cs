@@ -20,12 +20,12 @@ public readonly partial struct DataSize
 {
     #region Operator *
     
-    public static DataSize operator *(DataSize dataSize1, float dataSize2)
+    public static DataSize operator *(DataSize dataSize1, ulong dataSize2)
     {
         return new DataSize(dataSize1.Value * dataSize2);
     }
 
-    public static DataSize operator *(float dataSize1, DataSize dataSize2)
+    public static DataSize operator *(ulong dataSize1, DataSize dataSize2)
     {
         return new DataSize(dataSize1 * dataSize2.Value);
     }
@@ -34,12 +34,12 @@ public readonly partial struct DataSize
 
     #region Operator -
 
-    public static DataSize operator -(DataSize dataSize1, float dataSize2)
+    public static DataSize operator -(DataSize dataSize1, ulong dataSize2)
     {
         return new DataSize(dataSize1.Value - dataSize2);
     }
 
-    public static DataSize operator -(float dataSize1, DataSize dataSize2)
+    public static DataSize operator -(ulong dataSize1, DataSize dataSize2)
     {
         return new DataSize(dataSize2.Value - dataSize1);
     }
@@ -53,12 +53,12 @@ public readonly partial struct DataSize
 
     #region Operator +
 
-    public static DataSize operator +(DataSize dataSize1, float dataSize2)
+    public static DataSize operator +(DataSize dataSize1, ulong dataSize2)
     {
         return new DataSize(dataSize1.Value + dataSize2);
     }
 
-    public static DataSize operator +(float dataSize1, DataSize dataSize2)
+    public static DataSize operator +(ulong dataSize1, DataSize dataSize2)
     {
         return new DataSize(dataSize2.Value + dataSize1);
     }
