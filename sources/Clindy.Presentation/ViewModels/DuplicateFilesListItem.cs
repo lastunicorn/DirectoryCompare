@@ -18,15 +18,9 @@ namespace DustInTheWind.Clindy.Presentation.ViewModels;
 
 public class DuplicateFilesListItem
 {
-    public string FilePath { get; }
+    public string FilePath { get; init; }
 
-    public OpenInExplorerCommand OpenCommand { get; }
-
-    public DuplicateFilesListItem(string filePath)
-    {
-        FilePath = filePath;
-        OpenCommand = new OpenInExplorerCommand(filePath);
-    }
+    public OpenInExplorerCommand OpenCommand { get; init; }
 
     public override string ToString()
     {

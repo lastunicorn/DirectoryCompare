@@ -32,15 +32,28 @@ internal class SetCurrentDuplicateGroupUseCase : IRequestHandler<SetCurrentDupli
 
     public Task Handle(SetCurrentDuplicateGroupRequest request, CancellationToken cancellationToken)
     {
-        FileDuplicateGroup fileDuplicateGroup = applicationState.Duplicates
-            .FirstOrDefault(x => x.FileHash == request.Hash);
-        
+        FileDuplicateGroup fileDuplicateGroup = IdentifyFileDuplicateGroup(request);
         applicationState.CurrentDuplicateGroup = fileDuplicateGroup;
 
+        return RaiseCurrentDuplicateReplacedEvent(cancellationToken, fileDuplicateGroup);
+    }
+
+    private FileDuplicateGroup IdentifyFileDuplicateGroup(SetCurrentDuplicateGroupRequest request)
+    {
+        if (request.Hash == null)
+            return null;
+
+        return applicationState.Duplicates
+            .FirstOrDefault(x => x.FileHash == request.Hash);
+    }
+
+    private Task RaiseCurrentDuplicateReplacedEvent(CancellationToken cancellationToken, FileDuplicateGroup fileDuplicateGroup)
+    {
         CurrentDuplicateReplacedEvent currentDuplicateReplaced = new()
         {
             DuplicateGroup = fileDuplicateGroup
         };
+
         return eventBus.PublishAsync(currentDuplicateReplaced, cancellationToken);
     }
 }

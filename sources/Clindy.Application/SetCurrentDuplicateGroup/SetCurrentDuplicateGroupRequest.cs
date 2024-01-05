@@ -21,5 +21,5 @@ namespace DustInTheWind.Clindy.Applications.SetCurrentDuplicateGroup;
 
 public class SetCurrentDuplicateGroupRequest : IRequest
 {
-    public FileHash Hash { get; set; }
+    public FileHash? Hash { get; set; }
 }

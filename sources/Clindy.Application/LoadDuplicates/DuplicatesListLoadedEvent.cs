@@ -16,6 +16,6 @@
 
 namespace DustInTheWind.Clindy.Applications.LoadDuplicates;
 
-public class DuplicatesListChangedEvent
+public class DuplicatesListLoadedEvent
 {
 }

@@ -34,8 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     Title="{Binding Title}">
 
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <viewModels:MainWindowViewModel />
     </Design.DataContext>
 
@@ -81,7 +79,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             <Button
                                 DockPanel.Dock="Right"
                                 Content="Open"
-                                Command="{Binding OpenCommand}" />
+                                Command="{Binding OpenCommand}"
+                                CommandParameter="{Binding}"/>
 
                             <TextBlock
                                 Text="{Binding FilePath}"

@@ -22,9 +22,27 @@ namespace DustInTheWind.Clindy.Applications;
 
 public class DuplicateGroupCollection : Collection<FileDuplicateGroup>
 {
+    public DuplicateGroupCollection(IEnumerable<FileDuplicateGroup> items)
+    {
+        foreach (FileDuplicateGroup item in items)
+        {
+            AddInternal(item);
+            Items.Add(item);
+        }
+    }
+
     public int TotalDuplicatesCount { get; private set; }
 
     public DataSize TotalSize { get; private set; } = DataSize.Zero;
+
+    public void AddRange(IEnumerable<FileDuplicateGroup> items)
+    {
+        foreach (FileDuplicateGroup item in items)
+        {
+            AddInternal(item);
+            Items.Add(item);
+        }
+    }
 
     protected override void InsertItem(int index, FileDuplicateGroup item)
     {

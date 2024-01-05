@@ -18,6 +18,7 @@ using DustInTheWind.Clindy.Applications;
 using DustInTheWind.Clindy.Applications.LoadDuplicates;
 using DustInTheWind.Clindy.Applications.PresentDuplicates;
 using DustInTheWind.Clindy.Applications.SetCurrentDuplicateGroup;
+using DustInTheWind.DirectoryCompare.DataStructures;
 using ReactiveUI;
 
 namespace DustInTheWind.Clindy.Presentation.ViewModels;
@@ -30,6 +31,7 @@ public class DuplicatesNavigatorViewModel : ViewModelBase
     private DuplicateGroupListItem selectedDuplicateGroup;
     private bool isLoading;
     private int duplicateGroupCount;
+    private string totalSize;
 
     public bool IsLoading
     {
@@ -53,20 +55,19 @@ public class DuplicatesNavigatorViewModel : ViewModelBase
         }
     }
 
-    private void SetCurrentDuplicateGroup(DuplicateGroupListItem value)
-    {
-        SetCurrentDuplicateGroupRequest request = new()
-        {
-            Hash = value.DuplicateGroup.FileHash
-        };
-        _ = requestBus.PlaceRequest(request);
-    }
-
     public int DuplicateGroupCount
     {
         get => duplicateGroupCount;
         set => this.RaiseAndSetIfChanged(ref duplicateGroupCount, value);
     }
+
+    public string TotalSize
+    {
+        get => totalSize;
+        set => this.RaiseAndSetIfChanged(ref totalSize, value);
+    }
+
+    public RefreshCommand RefreshCommand { get; }
 
     public DuplicatesNavigatorViewModel()
     {
@@ -77,32 +78,63 @@ public class DuplicatesNavigatorViewModel : ViewModelBase
         if (eventBus == null) throw new ArgumentNullException(nameof(eventBus));
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
 
-        eventBus.Subscribe<DuplicatesListChangedEvent>(HandleDuplicatesListChangedEvent);
+        RefreshCommand = new RefreshCommand(requestBus);
+
+        eventBus.Subscribe<DuplicatesListLoadingEvent>(HandleDuplicatesListLoadingEvent);
+        eventBus.Subscribe<DuplicatesListLoadedEvent>(HandleDuplicatesListLoadedEvent);
     }
 
-    private Task HandleDuplicatesListChangedEvent(DuplicatesListChangedEvent ev, CancellationToken cancellationToken)
-    {
-        return LoadDuplicates();
-    }
-
-    private async Task LoadDuplicates()
+    private async Task HandleDuplicatesListLoadingEvent(DuplicatesListLoadingEvent ev, CancellationToken cancellationToken)
     {
         IsLoading = true;
+        DuplicateGroups = null;
+        DuplicateGroupCount = 0;
+        TotalSize = DataSize.Zero.ToString("simple");
+
+        await Task.Delay(500, cancellationToken);
+    }
+
+    private Task HandleDuplicatesListLoadedEvent(DuplicatesListLoadedEvent ev, CancellationToken cancellationToken)
+    {
         try
         {
-            PresentDuplicatesRequest request = new();
-            PresentDuplicatesResponse response = await requestBus.PlaceRequest<PresentDuplicatesRequest, PresentDuplicatesResponse>(request);
-
-            DuplicateGroups = response.Duplicates
-                .Select(x => new DuplicateGroupListItem(x))
-                .OrderByDescending(x => x.FileSize)
-                .ToList();
-
-            DuplicateGroupCount = DuplicateGroups.Count;
+            return RetrieveDuplicates();
         }
         finally
         {
             IsLoading = false;
         }
+    }
+
+    private async Task RetrieveDuplicates()
+    {
+        PresentDuplicatesRequest request = new();
+        PresentDuplicatesResponse response = await requestBus.PlaceRequest<PresentDuplicatesRequest, PresentDuplicatesResponse>(request);
+
+        DuplicateGroups = response.Duplicates
+            .Select(x => new DuplicateGroupListItem(x))
+            .OrderByDescending(x => x.FileSize)
+            .ToList();
+
+        SelectedDuplicateGroup = IdentifyDuplicateGroup(response.CurrentDuplicateGroup);
+
+        DuplicateGroupCount = DuplicateGroups.Count;
+        TotalSize = response.TotalSize.ToString("detailed");
+    }
+
+    private DuplicateGroupListItem IdentifyDuplicateGroup(FileGroup? fileGroup)
+    {
+        return fileGroup == null
+            ? null
+            : DuplicateGroups.FirstOrDefault(x => x.DuplicateGroup.FileHash == fileGroup.Value.FileHash);
+    }
+
+    private void SetCurrentDuplicateGroup(DuplicateGroupListItem value)
+    {
+        SetCurrentDuplicateGroupRequest request = new()
+        {
+            Hash = value?.DuplicateGroup.FileHash
+        };
+        _ = requestBus.PlaceRequest(request);
     }
 }

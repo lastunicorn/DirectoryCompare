@@ -14,15 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.Clindy.Applications.SetCurrentDuplicateGroup;
+using DustInTheWind.Clindy.Applications.LoadDuplicates;
 using DustInTheWind.DirectoryCompare.Ports.ConfigAccess;
 using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 using DustInTheWind.DirectoryCompare.Ports.ImportExportAccess;
 using MediatR;
 
-namespace DustInTheWind.Clindy.Applications.LoadDuplicates;
+namespace DustInTheWind.Clindy.Applications.Refresh;
 
-internal class LoadDuplicatesUseCase : IRequestHandler<LoadDuplicatesRequest>
+internal class RefreshUseCase : IRequestHandler<RefreshRequest>
 {
     private readonly IImportExport importExport;
     private readonly IFileSystem fileSystem;
@@ -30,7 +30,7 @@ internal class LoadDuplicatesUseCase : IRequestHandler<LoadDuplicatesRequest>
     private readonly EventBus eventBus;
     private readonly IConfig config;
 
-    public LoadDuplicatesUseCase(IImportExport importExport, IFileSystem fileSystem, ApplicationState applicationState,
+    public RefreshUseCase(IImportExport importExport, IFileSystem fileSystem, ApplicationState applicationState,
         EventBus eventBus, IConfig config)
     {
         this.importExport = importExport ?? throw new ArgumentNullException(nameof(importExport));
@@ -40,25 +40,14 @@ internal class LoadDuplicatesUseCase : IRequestHandler<LoadDuplicatesRequest>
         this.config = config ?? throw new ArgumentNullException(nameof(config));
     }
 
-    public async Task Handle(LoadDuplicatesRequest request, CancellationToken cancellationToken)
+    public async Task Handle(RefreshRequest request, CancellationToken cancellationToken)
     {
         await RaiseDuplicatesListLoadingEvent(cancellationToken);
 
         IEnumerable<FileDuplicateGroup> fileDuplicateGroups = RetrieveFileDuplicateGroups();
         applicationState.Duplicates = new DuplicateGroupCollection(fileDuplicateGroups);
+
         await RaiseDuplicatesListLoadedEvent(cancellationToken);
-
-        applicationState.CurrentDuplicateGroup = null;
-        await RaiseCurrentDuplicateReplacedEvent(cancellationToken);
-    }
-
-    private Task RaiseCurrentDuplicateReplacedEvent(CancellationToken cancellationToken)
-    {
-        CurrentDuplicateReplacedEvent ev = new()
-        {
-            DuplicateGroup = applicationState.CurrentDuplicateGroup
-        };
-        return eventBus.PublishAsync(ev, cancellationToken);
     }
 
     private async Task RaiseDuplicatesListLoadingEvent(CancellationToken cancellationToken)

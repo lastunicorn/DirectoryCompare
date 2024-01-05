@@ -14,40 +14,31 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Diagnostics;
 using System.Windows.Input;
+using DustInTheWind.Clindy.Applications;
+using DustInTheWind.Clindy.Applications.Refresh;
 
 namespace DustInTheWind.Clindy.Presentation.ViewModels;
 
-public class OpenInExplorerCommand : ICommand
+public class RefreshCommand : ICommand
 {
+    private readonly RequestBus requestBus;
+
     public event EventHandler CanExecuteChanged;
+
+    public RefreshCommand(RequestBus requestBus)
+    {
+        this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
+    }
 
     public bool CanExecute(object parameter)
     {
-        if (parameter is DuplicateFilesListItem item)
-        {
-            string filePath = item.FilePath;
-            return File.Exists(filePath);
-        }
-        
-        return false;
+        return true;
     }
 
     public void Execute(object parameter)
     {
-        if (parameter is DuplicateFilesListItem item)
-        {
-            string filePath = item.FilePath;
-
-            Process process = new();
-            process.StartInfo = new ProcessStartInfo
-            {
-                FileName = "nautilus",
-                Arguments = @$"""{filePath}""",
-                WindowStyle = ProcessWindowStyle.Hidden
-            };
-            process.Start();
-        }
+        RefreshRequest request = new();
+        _ = requestBus.PlaceRequest(request);
     }
 }

@@ -36,11 +36,63 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <DockPanel>
 
-        <TextBlock
+        <Border
+            DockPanel.Dock="Top"
+            Background="DarkSlateGray"
+            Padding="2">
+
+            <StackPanel
+                Orientation="Horizontal">
+
+                <Button
+                    Content="R"
+                    Command="{Binding RefreshCommand}" />
+
+            </StackPanel>
+
+        </Border>
+
+        <Border
             DockPanel.Dock="Bottom"
             Background="DarkSlateGray"
-            Padding="10"
-            Text="{Binding DuplicateGroupCount}" />
+            Padding="10">
+
+            <Grid>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="8" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Text="Groups:" />
+
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    Text="{Binding DuplicateGroupCount}" />
+
+                <TextBlock
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Text="Total Size:" />
+
+                <TextBlock
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    Text="{Binding TotalSize}" />
+            </Grid>
+
+        </Border>
 
         <Grid>
 

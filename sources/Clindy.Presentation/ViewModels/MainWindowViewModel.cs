@@ -26,6 +26,7 @@ public class MainWindowViewModel : ViewModelBase
 {
     private readonly RequestBus requestBus;
     private List<DuplicateFilesListItem> duplicateFiles;
+    private OpenInExplorerCommand openInExplorerCommand;
 
     public List<DuplicateFilesListItem> DuplicateFiles
     {
@@ -61,6 +62,7 @@ public class MainWindowViewModel : ViewModelBase
         if (eventBus == null) throw new ArgumentNullException(nameof(eventBus));
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
 
+        openInExplorerCommand = new OpenInExplorerCommand();
         DuplicatesNavigatorViewModel = new DuplicatesNavigatorViewModel(requestBus, eventBus);
 
         eventBus.Subscribe<CurrentDuplicateReplacedEvent>(HandleCurrentDuplicateReplacedEvent);
@@ -70,8 +72,12 @@ public class MainWindowViewModel : ViewModelBase
 
     private Task HandleCurrentDuplicateReplacedEvent(CurrentDuplicateReplacedEvent ev, CancellationToken cancellationToken)
     {
-        DuplicateFiles = ev.DuplicateGroup.FilePaths
-            .Select(x => new DuplicateFilesListItem(x))
+        DuplicateFiles = ev.DuplicateGroup?.FilePaths
+            .Select(x => new DuplicateFilesListItem
+            {
+                FilePath = x,
+                OpenCommand = openInExplorerCommand
+            })
             .ToList();
 
         return Task.CompletedTask;
@@ -79,7 +85,7 @@ public class MainWindowViewModel : ViewModelBase
 
     private async void LoadDuplicates()
     {
-        await Task.Delay(1000);
+        await Task.Delay(500);
 
         LoadDuplicatesRequest request = new();
         await requestBus.PlaceRequest(request);

@@ -14,17 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.DataStructures;
+namespace DustInTheWind.Clindy.Applications.LoadDuplicates;
 
-namespace DustInTheWind.Clindy.Applications.PresentDuplicates;
-
-public class PresentDuplicatesResponse
+public class DuplicatesListLoadingEvent
 {
-    public IList<FileGroup> Duplicates { get; set; }
-
-    public int DuplicateCount { get; set; }
-
-    public DataSize TotalSize { get; set; }
-
-    public FileGroup? CurrentDuplicateGroup { get; set; }
 }
