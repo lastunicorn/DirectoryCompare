@@ -67,4 +67,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <ItemGroup>
       <UpToDateCheckInput Remove="Assets\avalonia-logo.ico" />
     </ItemGroup>
+
+    <ItemGroup>
+      <None Update="appsettings.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
 </Project>

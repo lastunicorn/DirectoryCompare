@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.Clindy.Applications.PresentDuplicates;
+using DustInTheWind.DirectoryCompare.Ports.ConfigAccess;
 using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 using DustInTheWind.DirectoryCompare.Ports.ImportExportAccess;
 using MediatR;
@@ -27,18 +27,21 @@ internal class LoadDuplicatesUseCase : IRequestHandler<LoadDuplicatesRequest>
     private readonly IFileSystem fileSystem;
     private readonly ApplicationState applicationState;
     private readonly EventBus eventBus;
+    private readonly IConfig config;
 
-    public LoadDuplicatesUseCase(IImportExport importExport, IFileSystem fileSystem, ApplicationState applicationState, EventBus eventBus)
+    public LoadDuplicatesUseCase(IImportExport importExport, IFileSystem fileSystem, ApplicationState applicationState,
+        EventBus eventBus, IConfig config)
     {
         this.importExport = importExport ?? throw new ArgumentNullException(nameof(importExport));
         this.fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
         this.applicationState = applicationState ?? throw new ArgumentNullException(nameof(applicationState));
         this.eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
+        this.config = config ?? throw new ArgumentNullException(nameof(config));
     }
 
     public async Task Handle(LoadDuplicatesRequest request, CancellationToken cancellationToken)
     {
-        IEnumerable<FileDuplicateGroup> fileDuplicateGroups = RetrieveFileDuplicateGroups(request);
+        IEnumerable<FileDuplicateGroup> fileDuplicateGroups = RetrieveFileDuplicateGroups();
 
         DuplicateGroupCollection duplicateGroupCollection = new();
 
@@ -51,12 +54,12 @@ internal class LoadDuplicatesUseCase : IRequestHandler<LoadDuplicatesRequest>
         await eventBus.PublishAsync(duplicatesListChangedEvent, cancellationToken);
     }
 
-    private IEnumerable<FileDuplicateGroup> RetrieveFileDuplicateGroups(LoadDuplicatesRequest request)
+    private IEnumerable<FileDuplicateGroup> RetrieveFileDuplicateGroups()
     {
-        IDuplicatesInput duplicatesInput = importExport.OpenDuplicatesInput(request.FilePath);
+        IDuplicatesInput duplicatesInput = importExport.OpenDuplicatesInput(config.DuplicatesFilePath);
         IEnumerable<FileDuplicateGroup> fileDuplicateGroups = duplicatesInput.EnumerateDuplicates();
 
-        if (request.CheckFilesExistence)
+        if (config.CheckFilesExistence)
         {
             fileDuplicateGroups = fileDuplicateGroups
                 .Select(x =>

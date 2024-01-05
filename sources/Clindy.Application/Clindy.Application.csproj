@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <ItemGroup>
         <ProjectReference Include="..\DirectoryCompare.DataStructures\DirectoryCompare.DataStructures.csproj" />
+        <ProjectReference Include="..\DirectoryCompare.Ports.ConfigAccess\DirectoryCompare.Ports.ConfigAccess.csproj" />
         <ProjectReference Include="..\DirectoryCompare.Ports.FileSystemAccess\DirectoryCompare.Ports.FileSystemAccess.csproj" />
         <ProjectReference Include="..\DirectoryCompare.Ports.ImportExportAccess\DirectoryCompare.Ports.ImportExportAccess.csproj" />
     </ItemGroup>

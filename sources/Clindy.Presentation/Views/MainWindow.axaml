@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     d:DesignHeight="450"
     x:DataType="viewModels:MainWindowViewModel"
     Icon="/Assets/avalonia-logo.ico"
-    Title="Clindy">
+    Title="{Binding Title}">
 
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,

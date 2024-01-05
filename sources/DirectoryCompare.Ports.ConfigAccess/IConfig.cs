@@ -19,4 +19,14 @@ namespace DustInTheWind.DirectoryCompare.Ports.ConfigAccess;
 public interface IConfig
 {
     string ConnectionString { get; }
+
+    /// <summary>
+    /// Only for GUI
+    /// </summary>
+    string DuplicatesFilePath { get; }
+
+    /// <summary>
+    /// Only for GUI
+    /// </summary>
+    bool CheckFilesExistence { get; }
 }

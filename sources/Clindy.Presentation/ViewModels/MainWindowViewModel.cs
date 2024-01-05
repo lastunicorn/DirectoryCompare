@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System.Reflection;
 using DustInTheWind.Clindy.Applications;
 using DustInTheWind.Clindy.Applications.LoadDuplicates;
 using DustInTheWind.Clindy.Applications.SetCurrentDuplicateGroup;
@@ -35,6 +36,23 @@ public class MainWindowViewModel : ViewModelBase
 
     public DuplicatesNavigatorViewModel DuplicatesNavigatorViewModel { get; }
 
+    public string Title
+    {
+        get
+        {
+            Assembly assembly = Assembly.GetEntryAssembly();
+            AssemblyName assemblyName = assembly?.GetName();
+            Version version = assemblyName?.Version;
+
+            string title = "Clindy";
+
+            if (version != null)
+                title += " " + version.ToString(3);
+
+            return title;
+        }
+    }
+
     public MainWindowViewModel()
     {
     }
@@ -45,9 +63,9 @@ public class MainWindowViewModel : ViewModelBase
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
 
         DuplicatesNavigatorViewModel = new DuplicatesNavigatorViewModel(requestBus, eventBus);
-        
+
         eventBus.Subscribe<CurrentDuplicateReplacedEvent>(HandleCurrentDuplicateReplacedEvent);
-        
+
         LoadDuplicates();
     }
 
@@ -62,11 +80,9 @@ public class MainWindowViewModel : ViewModelBase
 
     private async void LoadDuplicates()
     {
-        LoadDuplicatesRequest request = new()
-        {
-            FilePath = "/home/alez/Temp/amma.json",
-            CheckFilesExistence = true
-        };
+        await Task.Delay(1000);
+
+        LoadDuplicatesRequest request = new();
         await requestBus.PlaceRequest(request);
     }
 }

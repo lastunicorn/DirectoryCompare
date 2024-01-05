@@ -23,7 +23,29 @@ public class Config : IConfig
 {
     private readonly IConfiguration configuration;
 
+    /// <summary>
+    /// Only for CLI
+    /// </summary>
     public string ConnectionString => configuration["ConnectionString"];
+
+    /// <summary>
+    /// Only for GUI
+    /// </summary>
+    public string DuplicatesFilePath => configuration["DuplicatesFilePath"];
+
+    /// <summary>
+    /// Only for GUI
+    /// </summary>
+    public bool CheckFilesExistence
+    {
+        get
+        {
+            string rawValue = configuration["CheckFilesExistence"];
+            return string.IsNullOrEmpty(rawValue)
+                ? false
+                : bool.Parse(rawValue);
+        }
+    }
 
     public Config()
     {
