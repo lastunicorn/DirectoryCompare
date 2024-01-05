@@ -14,21 +14,37 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using DustInTheWind.DirectoryCompare.DataStructures;
+using System.Threading.Tasks;
+using DustInTheWind.Clindy.Applications;
+using DustInTheWind.Clindy.Applications.PresentDuplicates;
 using ReactiveUI;
 
 namespace DustInTheWind.Clindy.ViewModels;
 
 public class MainWindowViewModel : ViewModelBase
 {
+    private readonly RequestBus requestBus;
+
+    private List<DuplicateGroupListItem> duplicateGroups;
     private DuplicateGroupListItem selectedDuplicateGroup;
     private List<DuplicateFilesListItem> duplicateFiles;
+    private bool isLoading;
+    private int duplicateGroupCount;
 
-    public string Greeting => "Welcome to Avalonia!";
+    public bool IsLoading
+    {
+        get => isLoading;
+        set => this.RaiseAndSetIfChanged(ref isLoading, value);
+    }
 
-    public List<DuplicateGroupListItem> DuplicateGroups { get; }
+    public List<DuplicateGroupListItem> DuplicateGroups
+    {
+        get => duplicateGroups;
+        private set => this.RaiseAndSetIfChanged(ref duplicateGroups, value);
+    }
 
     public DuplicateGroupListItem SelectedDuplicateGroup
     {
@@ -43,6 +59,12 @@ public class MainWindowViewModel : ViewModelBase
         }
     }
 
+    public int DuplicateGroupCount
+    {
+        get => duplicateGroupCount;
+        set => this.RaiseAndSetIfChanged(ref duplicateGroupCount, value);
+    }
+
     public List<DuplicateFilesListItem> DuplicateFiles
     {
         get => duplicateFiles;
@@ -51,46 +73,38 @@ public class MainWindowViewModel : ViewModelBase
 
     public MainWindowViewModel()
     {
-        List<DuplicateGroup> duplicateGroups = new()
-        {
-            new DuplicateGroup
-            {
-                FileSize = 1023424,
-                FileHash = FileHash.Empty,
-                FilePaths = new List<string>
-                {
-                    "/nfs/YubabaData/Alez/Untitled Document 1.txt",
-                    "/nfs/YubabaData/Alez/Backup/Untitled Document 1.txt",
-                    "/nfs/YubabaData/Alez/to be sorted/Untitled Document 1.txt"
-                }
-            },
-            new DuplicateGroup
-            {
-                FileSize = 8442,
-                FileHash = FileHash.Empty,
-                FilePaths = new List<string>
-                {
-                    "/nfs/YubabaData/Alez/gsm-solution.png",
-                    "/nfs/YubabaData/Alez/Backup/gsm-solution.png",
-                }
-            },
-            new DuplicateGroup
-            {
-                FileSize = 1023424,
-                FileHash = FileHash.Empty,
-                FilePaths = new List<string>
-                {
-                    "/nfs/YubabaData/Alez/20150212091347191.ods",
-                    "/nfs/YubabaData/Alez/Backup/document.ods",
-                    "/nfs/YubabaData/Alez/to be sorted/20150212091347191.ods",
-                    "/nfs/YubabaData/Alez/to be sorted 2/20150212091347191.ods",
-                    "/nfs/YubabaData/Alez/Temp/2023 12 17.ods"
-                }
-            }
-        };
+    }
 
-        DuplicateGroups = duplicateGroups
-            .Select(x => new DuplicateGroupListItem(x))
-            .ToList();
+    public MainWindowViewModel(RequestBus requestBus)
+    {
+        this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
+
+        LoadDuplicates();
+    }
+
+    private async Task LoadDuplicates()
+    {
+        IsLoading = true;
+        try
+        {
+            PresentDuplicatesRequest request = new()
+            {
+                FilePath = "/home/alez/Temp/iuy.json",
+                CheckFilesExistence = true
+            };
+
+            PresentDuplicatesResponse response = await requestBus.PlaceRequest<PresentDuplicatesRequest, PresentDuplicatesResponse>(request);
+
+            DuplicateGroups = response.Duplicates
+                .Select(x => new DuplicateGroupListItem(x))
+                .OrderByDescending(x => x.FileSize)
+                .ToList();
+
+            DuplicateGroupCount = DuplicateGroups.Count;
+        }
+        finally
+        {
+            IsLoading = false;
+        }
     }
 }

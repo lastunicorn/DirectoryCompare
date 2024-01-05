@@ -14,20 +14,38 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.ObjectModel;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Windows.Input;
 
-namespace DustInTheWind.DirectoryCompare.Domain.Entities;
+namespace DustInTheWind.Clindy.ViewModels;
 
-public class BlackList : Collection<IBlackItem>
+public class OpenInExplorerCommand : ICommand
 {
-    public BlackList(IEnumerable<IBlackItem> items)
+    private readonly string filePath;
+
+    public event EventHandler? CanExecuteChanged;
+
+    public OpenInExplorerCommand(string filePath)
     {
-        foreach (IBlackItem item in items)
-            Items.Add(item);
+        this.filePath = filePath;
     }
 
-    public bool Match(HItem hItem)
+    public bool CanExecute(object? parameter)
     {
-        return Items.Any(x => x.Match(hItem));
+        return File.Exists(filePath);
+    }
+
+    public void Execute(object? parameter)
+    {
+        Process process = new();
+        process.StartInfo = new ProcessStartInfo
+        {
+            FileName = "nautilus",
+            Arguments = @$"""{filePath}""",
+            WindowStyle = ProcessWindowStyle.Hidden
+        };
+        process.Start();
     }
 }

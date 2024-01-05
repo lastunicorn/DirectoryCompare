@@ -33,8 +33,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <AvaloniaResource Include="Assets\**" />
     </ItemGroup>
 
-
     <ItemGroup>
+        <PackageReference Include="Autofac" Version="7.1.0" />
         <PackageReference Include="Avalonia" Version="11.0.6" />
         <PackageReference Include="Avalonia.Desktop" Version="11.0.6" />
         <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.6" />
@@ -43,15 +43,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.6" />
         <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.6" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+        <PackageReference Include="Splat.Autofac" Version="14.8.12" />
+        <PackageReference Include="MediatR" Version="12.2.0" />
+        <PackageReference Include="MediatR.Extensions.Autofac.DependencyInjection" Version="11.3.0" />
     </ItemGroup>
 
-
     <ItemGroup>
-      <ProjectReference Include="..\DirectoryCompare.DataStructures\DirectoryCompare.DataStructures.csproj" />
-    </ItemGroup>
-
-
-    <ItemGroup>
-      <ProjectReference Include="..\DirectoryCompare.DataStructures\DirectoryCompare.DataStructures.csproj" />
+        <ProjectReference Include="..\Clindy.Application\Clindy.Application.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.ConfigAccess\DirectoryCompare.ConfigAccess.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.DataAccess\DirectoryCompare.DataAccess.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.DataStructures\DirectoryCompare.DataStructures.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.FileSystemAccess\DirectoryCompare.FileSystemAccess.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.ImportExportAccess\DirectoryCompare.ImportExportAccess.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.Infrastructure\DirectoryCompare.Infrastructure.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.LogAccess\DirectoryCompare.LogAccess.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.Ports.ConfigAccess\DirectoryCompare.Ports.ConfigAccess.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.Ports.DataAccess\DirectoryCompare.Ports.DataAccess.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.Ports.FileSystemAccess\DirectoryCompare.Ports.FileSystemAccess.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.Ports.ImportExportAccess\DirectoryCompare.Ports.ImportExportAccess.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.Ports.LogAccess\DirectoryCompare.Ports.LogAccess.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.Ports.SystemAccess\DirectoryCompare.Ports.SystemAccess.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.Ports.UserAccess\DirectoryCompare.Ports.UserAccess.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.SystemAccess\DirectoryCompare.SystemAccess.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.UserAccess\DirectoryCompare.UserAccess.csproj" PrivateAssets="All" />
     </ItemGroup>
 </Project>

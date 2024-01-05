@@ -16,7 +16,7 @@
 
 namespace DustInTheWind.DirectoryCompare.DataStructures;
 
-public readonly partial struct DataSize: IEquatable<DataSize>, IFormattable
+public readonly partial struct DataSize: IEquatable<DataSize>, IFormattable, IComparable<DataSize>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="DataSize"/> struct.
@@ -32,5 +32,10 @@ public readonly partial struct DataSize: IEquatable<DataSize>, IFormattable
     public DataSize(double value, DataSizeUnit unit = DataSizeUnit.Byte)
     {
         Value = ToBytes(value, unit);
+    }
+
+    public int CompareTo(DataSize other)
+    {
+        return Value.CompareTo(other.Value);
     }
 }

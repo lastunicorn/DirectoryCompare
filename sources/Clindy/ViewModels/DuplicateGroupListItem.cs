@@ -17,6 +17,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DustInTheWind.Clindy.Applications.PresentDuplicates;
+using DustInTheWind.DirectoryCompare.DataStructures;
 
 namespace DustInTheWind.Clindy.ViewModels;
 
@@ -24,9 +26,21 @@ public class DuplicateGroupListItem
 {
     public DuplicateGroup DuplicateGroup { get; }
 
+    public DataSize FileSize => DuplicateGroup.FileSize;
+
     public DuplicateGroupListItem(DuplicateGroup duplicateGroup)
     {
         DuplicateGroup = duplicateGroup;
+    }
+
+    public DuplicateGroupListItem(FileGroup fileGroup)
+    {
+        DuplicateGroup = new DuplicateGroup
+        {
+            FileSize = fileGroup.FileSize,
+            FileHash = fileGroup.FileHash,
+            FilePaths = fileGroup.FilePaths
+        };
     }
 
     public override string ToString()
@@ -40,7 +54,7 @@ public class DuplicateGroupListItem
 
         int fileCount = filePaths.Count;
 
-        int fileSize = DuplicateGroup.FileSize;
+        DataSize fileSize = DuplicateGroup.FileSize;
         
         return $"{fileName} ({fileCount}) - {fileSize}";
     }

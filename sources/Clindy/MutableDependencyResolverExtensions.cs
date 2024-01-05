@@ -14,15 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using Avalonia;
-using Avalonia.Markup.Xaml;
+using Avalonia.ReactiveUI;
+using ReactiveUI;
+using Splat;
 
 namespace DustInTheWind.Clindy;
 
-public partial class App : Application
+internal static class MutableDependencyResolverExtensions
 {
-    public override void Initialize()
+    public static void InitializeAvalonia(this IMutableDependencyResolver resolver)
     {
-        AvaloniaXamlLoader.Load(this);
+        resolver.RegisterConstant(new AvaloniaActivationForViewFetcher(), typeof(IActivationForViewFetcher));
+        resolver.RegisterConstant(new AutoDataTemplateBindingHook(), typeof(IPropertyBindingHook));
+        RxApp.MainThreadScheduler = AvaloniaScheduler.Instance;
     }
 }

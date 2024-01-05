@@ -14,15 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using Avalonia;
-using Avalonia.Markup.Xaml;
+using DustInTheWind.DirectoryCompare.DataStructures;
 
-namespace DustInTheWind.Clindy;
+namespace DustInTheWind.Clindy.Applications.PresentDuplicates;
 
-public partial class App : Application
+public struct FileGroup
 {
-    public override void Initialize()
-    {
-        AvaloniaXamlLoader.Load(this);
-    }
+    public List<string> FilePaths { get; set; }
+    
+    public DataSize FileSize { get; set; }
+    
+    public FileHash FileHash { get; set; }
 }

@@ -21,7 +21,7 @@ namespace DustInTheWind.Clindy.ViewModels;
 
 public class DuplicateGroup
 {
-    public int FileSize { get; set; }
+    public DataSize FileSize { get; set; }
     
     public FileHash FileHash { get; set; }
 

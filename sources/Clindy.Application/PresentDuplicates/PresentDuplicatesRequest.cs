@@ -14,22 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.Clindy.ViewModels;
-using DustInTheWind.Clindy.Views;
-using Splat;
+using MediatR;
 
-namespace DustInTheWind.Clindy;
+namespace DustInTheWind.Clindy.Applications.PresentDuplicates;
 
-public static class Setup
+public class PresentDuplicatesRequest : IRequest<PresentDuplicatesResponse>
 {
-    public static void ConfigureDependencies(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver)
-    {
-        services.Register(() =>
-        {
-            MainWindowViewModel? mainWindowViewModel = resolver.GetService<MainWindowViewModel>();
-            return new MainWindow(mainWindowViewModel);
-        });
+    public string FilePath { get; set; }
 
-        services.Register(() => new MainWindowViewModel());
-    }
+    public bool CheckFilesExistence { get; set; }
 }

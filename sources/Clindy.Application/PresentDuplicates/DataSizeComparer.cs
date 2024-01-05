@@ -14,15 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using Avalonia;
-using Avalonia.Markup.Xaml;
+using DustInTheWind.DirectoryCompare.DataStructures;
 
-namespace DustInTheWind.Clindy;
+namespace DustInTheWind.Clindy.Applications.PresentDuplicates;
 
-public partial class App : Application
+internal class DataSizeComparer : IComparer<DataSize>
 {
-    public override void Initialize()
+    public int Compare(DataSize x, DataSize y)
     {
-        AvaloniaXamlLoader.Load(this);
+        int result = x.Value.CompareTo(y.Value);
+        return result == 0 ? 1 : result;
     }
 }

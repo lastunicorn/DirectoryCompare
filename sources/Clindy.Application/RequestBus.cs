@@ -1,4 +1,4 @@
-// DirectoryCompare
+﻿// DirectoryCompare
 // Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -14,15 +14,28 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using Avalonia;
-using Avalonia.Markup.Xaml;
+using MediatR;
 
-namespace DustInTheWind.Clindy;
+namespace DustInTheWind.Clindy.Applications;
 
-public partial class App : Application
+public class RequestBus
 {
-    public override void Initialize()
+    private readonly IMediator mediator;
+
+    public RequestBus(IMediator mediator)
     {
-        AvaloniaXamlLoader.Load(this);
+        this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+    }
+
+    public async Task<TResponse> PlaceRequest<TRequest, TResponse>(TRequest request)
+        where TRequest : IRequest<TResponse>
+    {
+        TResponse response = await mediator.Send(request, CancellationToken.None);
+        return response;
+    }
+
+    public async Task PlaceRequest<TRequest>(TRequest request)
+    {
+        await mediator.Send(request);
     }
 }

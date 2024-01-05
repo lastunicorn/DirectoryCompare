@@ -38,21 +38,47 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </Design.DataContext>
 
     <Grid>
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="300" />
             <ColumnDefinition Width="8" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <ListBox
-            Grid.Column="0"
-            ItemsSource="{Binding DuplicateGroups}"
-            SelectedItem="{Binding SelectedDuplicateGroup}">
-        </ListBox>
+        <!-- Left -->
+
+        <DockPanel
+            Grid.Column="0">
+
+            <TextBlock
+                DockPanel.Dock="Bottom"
+                Background="DarkSlateGray"
+                Text="{Binding DuplicateGroupCount}" />
+
+            <Grid>
+
+                <ListBox
+                    IsVisible="{Binding !IsLoading}"
+                    ItemsSource="{Binding DuplicateGroups}"
+                    SelectedItem="{Binding SelectedDuplicateGroup}" />
+
+                <TextBlock
+                    Text="Loading"
+                    IsVisible="{Binding IsLoading}"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center" />
+
+            </Grid>
+
+        </DockPanel>
+
+        <!-- Vertical Splitter -->
 
         <GridSplitter
             Grid.Column="1"
             Background="DarkGray" />
+
+        <!-- Right -->
 
         <Grid
             Grid.Column="2">
@@ -63,18 +89,42 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <RowDefinition Height="2*" />
             </Grid.RowDefinitions>
 
+            <!-- Top -->
+
             <ListBox
                 Grid.Row="0"
                 ItemsSource="{Binding DuplicateFiles}">
+
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="viewModels:DuplicateFilesListItem">
+                        <DockPanel>
+                            <Button
+                                DockPanel.Dock="Right"
+                                Content="Open"
+                                Command="{Binding OpenCommand}" />
+
+                            <TextBlock
+                                Text="{Binding FilePath}"
+                                VerticalAlignment="Center" />
+                        </DockPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+
             </ListBox>
+
+            <!-- Horizontal Splitter -->
 
             <GridSplitter
                 Grid.Row="1"
                 Background="DarkGray" />
 
+            <!-- Bottom -->
+
             <TextBlock
                 Grid.Row="2"
-                Text="{Binding Greeting}" />
+                Text="Hello!"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center" />
         </Grid>
 
     </Grid>
