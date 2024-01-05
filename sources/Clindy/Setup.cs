@@ -20,8 +20,6 @@ using DustInTheWind.Clindy.Applications;
 using DustInTheWind.Clindy.Applications.PresentDuplicates;
 using DustInTheWind.Clindy.Presentation.ViewModels;
 using DustInTheWind.Clindy.Presentation.Views;
-using DustInTheWind.Clindy.ViewModels;
-using DustInTheWind.Clindy.Views;
 using DustInTheWind.DirectoryCompare.ConfigAccess;
 using DustInTheWind.DirectoryCompare.DataAccess;
 using DustInTheWind.DirectoryCompare.FileSystemAccess;

@@ -18,10 +18,9 @@ using System.Reflection;
 using DustInTheWind.Clindy.Applications;
 using DustInTheWind.Clindy.Applications.LoadDuplicates;
 using DustInTheWind.Clindy.Applications.SetCurrentDuplicateGroup;
-using DustInTheWind.Clindy.Presentation.ViewModels;
 using ReactiveUI;
 
-namespace DustInTheWind.Clindy.ViewModels;
+namespace DustInTheWind.Clindy.Presentation.ViewModels;
 
 public class MainWindowViewModel : ViewModelBase
 {

@@ -15,9 +15,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using Avalonia.Controls;
-using DustInTheWind.Clindy.ViewModels;
+using DustInTheWind.Clindy.Presentation.ViewModels;
 
-namespace DustInTheWind.Clindy.Views;
+namespace DustInTheWind.Clindy.Presentation.Views;
 
 public partial class MainWindow : Window
 {

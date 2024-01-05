@@ -17,7 +17,7 @@
 using DustInTheWind.Clindy.Applications.PresentDuplicates;
 using DustInTheWind.DirectoryCompare.DataStructures;
 
-namespace DustInTheWind.Clindy.ViewModels;
+namespace DustInTheWind.Clindy.Presentation.ViewModels;
 
 public class DuplicateGroupListItem
 {

@@ -18,7 +18,7 @@ using System.Collections.ObjectModel;
 using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Ports.ImportExportAccess;
 
-namespace DustInTheWind.Clindy.Applications.LoadDuplicates;
+namespace DustInTheWind.Clindy.Applications;
 
 public class DuplicateGroupCollection : Collection<FileDuplicateGroup>
 {

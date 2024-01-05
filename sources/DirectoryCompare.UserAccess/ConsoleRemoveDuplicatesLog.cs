@@ -16,7 +16,7 @@
 
 using DustInTheWind.ConsoleTools.Commando;
 using DustInTheWind.DirectoryCompare.DataStructures;
-using DustInTheWind.DirectoryCompare.Ports.LogAccess;
+using DustInTheWind.DirectoryCompare.Ports.UserAccess;
 
 namespace DustInTheWind.DirectoryCompare.UserAccess;
 

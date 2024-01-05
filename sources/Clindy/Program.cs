@@ -18,7 +18,7 @@ using System;
 using Autofac;
 using Avalonia;
 using Avalonia.Controls;
-using DustInTheWind.Clindy.Views;
+using DustInTheWind.Clindy.Presentation.Views;
 using ReactiveUI;
 using Splat;
 using Splat.Autofac;

@@ -18,7 +18,6 @@ using DustInTheWind.Clindy.Applications;
 using DustInTheWind.Clindy.Applications.LoadDuplicates;
 using DustInTheWind.Clindy.Applications.PresentDuplicates;
 using DustInTheWind.Clindy.Applications.SetCurrentDuplicateGroup;
-using DustInTheWind.Clindy.ViewModels;
 using ReactiveUI;
 
 namespace DustInTheWind.Clindy.Presentation.ViewModels;

@@ -16,7 +16,7 @@
 
 using DustInTheWind.DirectoryCompare.DataStructures;
 
-namespace DustInTheWind.DirectoryCompare.Ports.LogAccess;
+namespace DustInTheWind.DirectoryCompare.Ports.UserAccess;
 
 public interface IRemoveDuplicatesLog
 {

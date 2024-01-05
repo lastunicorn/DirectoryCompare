@@ -16,7 +16,7 @@
 
 using ReactiveUI;
 
-namespace DustInTheWind.Clindy.ViewModels;
+namespace DustInTheWind.Clindy.Presentation.ViewModels;
 
 public class ViewModelBase : ReactiveObject
 {
