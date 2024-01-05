@@ -31,7 +31,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     d:DesignHeight="450"
     x:DataType="viewModels:MainWindowViewModel"
     Icon="/Assets/avalonia-logo.ico"
-    Title="{Binding Title}">
+    Title="{Binding Title}"
+    WindowState="Maximized">
 
     <Design.DataContext>
         <viewModels:MainWindowViewModel />

@@ -99,7 +99,75 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <ListBox
                 IsVisible="{Binding !IsLoading}"
                 ItemsSource="{Binding DuplicateGroups}"
-                SelectedItem="{Binding SelectedDuplicateGroup}" />
+                SelectedItem="{Binding SelectedDuplicateGroup}">
+
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="viewModels:DuplicateGroupListItem">
+                        <StackPanel
+                            Orientation="Vertical">
+
+                            <TextBlock
+                                FontSize="14"
+                                Text="{Binding FirstFileName}" />
+
+                            <!-- <TextBlock -->
+                            <!--     FontSize="12" -->
+                            <!--     Foreground="Gray"> -->
+                            <!--      -->
+                            <!--     <Run Text="Count: " /> -->
+                            <!--     <Run Text="{Binding FileCount}" /> -->
+                            <!--     <Run Text="{Binding FileSize}" /> -->
+                            <!-- -->
+                            <!-- </TextBlock> -->
+
+                            <Grid
+                                Margin="6 2 0 0">
+
+                                <Grid.Styles>
+                                    <Style Selector="TextBlock">
+                                        <Setter Property="FontSize" Value="12" />
+                                        <Setter Property="Foreground" Value="LightGray" />
+                                    </Style>
+                                </Grid.Styles>
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="8" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="0" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Text="Count:" />
+
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Grid.Column="2"
+                                    Text="{Binding FileCount}" />
+
+                                <TextBlock
+                                    Grid.Row="2"
+                                    Grid.Column="0"
+                                    Text="Size:" />
+
+                                <TextBlock
+                                    Grid.Row="2"
+                                    Grid.Column="2"
+                                    Text="{Binding FileSize}" />
+                            </Grid>
+
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+
+            </ListBox>
 
             <TextBlock
                 Text="Loading"

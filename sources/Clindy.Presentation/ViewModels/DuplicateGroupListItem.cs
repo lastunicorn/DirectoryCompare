@@ -23,7 +23,22 @@ public class DuplicateGroupListItem
 {
     public DuplicateGroup DuplicateGroup { get; }
 
-    public DataSize FileSize => DuplicateGroup.FileSize;
+    public string FirstFileName
+    {
+        get
+        {
+            List<string> filePaths = DuplicateGroup.FilePaths;
+            string firstFilePath = filePaths.FirstOrDefault(x => !string.IsNullOrEmpty(x));
+
+            return firstFilePath == null
+                ? "<no name>"
+                : Path.GetFileName(firstFilePath);
+        }
+    }
+
+    public int FileCount => DuplicateGroup.FilePaths.Count;
+    
+    public string FileSize => DuplicateGroup.FileSize.ToString("simple");
 
     public DuplicateGroupListItem(DuplicateGroup duplicateGroup)
     {
@@ -43,8 +58,8 @@ public class DuplicateGroupListItem
     public override string ToString()
     {
         List<string> filePaths = DuplicateGroup.FilePaths;
-        
-        string? firstFilePath = filePaths.FirstOrDefault(x => !string.IsNullOrEmpty(x));
+
+        string firstFilePath = filePaths.FirstOrDefault(x => !string.IsNullOrEmpty(x));
         string fileName = firstFilePath == null
             ? "<no name>"
             : Path.GetFileName(firstFilePath);
@@ -52,7 +67,7 @@ public class DuplicateGroupListItem
         int fileCount = filePaths.Count;
 
         DataSize fileSize = DuplicateGroup.FileSize;
-        
+
         return $"{fileName} ({fileCount}) - {fileSize}";
     }
 }

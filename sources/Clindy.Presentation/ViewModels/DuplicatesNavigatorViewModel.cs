@@ -113,7 +113,7 @@ public class DuplicatesNavigatorViewModel : ViewModelBase
 
         DuplicateGroups = response.Duplicates
             .Select(x => new DuplicateGroupListItem(x))
-            .OrderByDescending(x => x.FileSize)
+            .OrderByDescending(x => x.DuplicateGroup.FileSize)
             .ToList();
 
         SelectedDuplicateGroup = IdentifyDuplicateGroup(response.CurrentDuplicateGroup);
