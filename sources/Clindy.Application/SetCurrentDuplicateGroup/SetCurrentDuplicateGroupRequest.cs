@@ -15,14 +15,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.DataStructures;
+using MediatR;
 
-namespace DustInTheWind.Clindy.Applications.PresentDuplicates;
+namespace DustInTheWind.Clindy.Applications.SetCurrentDuplicateGroup;
 
-public class PresentDuplicatesResponse
+public class SetCurrentDuplicateGroupRequest : IRequest
 {
-    public IList<FileGroup> Duplicates { get; set; }
-
-    public int DuplicateCount { get; set; }
-
-    public DataSize TotalSize { get; set; }
+    public FileHash Hash { get; set; }
 }

@@ -22,11 +22,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:DustInTheWind.Clindy.ViewModels"
+    xmlns:views="clr-namespace:DustInTheWind.Clindy.Presentation.Views"
 
+    x:Class="DustInTheWind.Clindy.Views.MainWindow"
+    
     mc:Ignorable="d"
     d:DesignWidth="800"
     d:DesignHeight="450"
-    x:Class="DustInTheWind.Clindy.Views.MainWindow"
     x:DataType="viewModels:MainWindowViewModel"
     Icon="/Assets/avalonia-logo.ico"
     Title="Clindy">
@@ -47,36 +49,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
         <!-- Left -->
 
-        <DockPanel
-            Grid.Column="0">
-
-            <TextBlock
-                DockPanel.Dock="Bottom"
-                Background="DarkSlateGray"
-                Text="{Binding DuplicateGroupCount}" />
-
-            <Grid>
-
-                <ListBox
-                    IsVisible="{Binding !IsLoading}"
-                    ItemsSource="{Binding DuplicateGroups}"
-                    SelectedItem="{Binding SelectedDuplicateGroup}" />
-
-                <TextBlock
-                    Text="Loading"
-                    IsVisible="{Binding IsLoading}"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Center" />
-
-            </Grid>
-
-        </DockPanel>
-
+        <views:DuplicatesNavigator
+            DataContext="{Binding DuplicatesNavigatorViewModel}"/>
+        
         <!-- Vertical Splitter -->
 
         <GridSplitter
             Grid.Column="1"
-            Background="DarkGray" />
+            Background="DarkSlateGray" />
 
         <!-- Right -->
 
@@ -116,7 +96,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
             <GridSplitter
                 Grid.Row="1"
-                Background="DarkGray" />
+                Background="DarkSlateGray" />
 
             <!-- Bottom -->
 

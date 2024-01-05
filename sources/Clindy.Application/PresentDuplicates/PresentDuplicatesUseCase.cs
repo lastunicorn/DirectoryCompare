@@ -14,88 +14,35 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.DataStructures;
-using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
-using DustInTheWind.DirectoryCompare.Ports.ImportExportAccess;
 using MediatR;
 
 namespace DustInTheWind.Clindy.Applications.PresentDuplicates;
 
 internal class PresentDuplicatesUseCase : IRequestHandler<PresentDuplicatesRequest, PresentDuplicatesResponse>
 {
-    private readonly IImportExport importExport;
-    private readonly IFileSystem fileSystem;
+    private readonly ApplicationState applicationState;
 
-    public PresentDuplicatesUseCase(IImportExport importExport, IFileSystem fileSystem)
+    public PresentDuplicatesUseCase(ApplicationState applicationState)
     {
-        this.importExport = importExport ?? throw new ArgumentNullException(nameof(importExport));
-        this.fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
+        this.applicationState = applicationState ?? throw new ArgumentNullException(nameof(applicationState));
     }
 
     public Task<PresentDuplicatesResponse> Handle(PresentDuplicatesRequest request, CancellationToken cancellationToken)
     {
-        IDuplicatesInput duplicatesInput = importExport.OpenDuplicatesInput(request.FilePath);
-
-        DuplicatesHeader duplicatesHeader = duplicatesInput.GetHeader();
-
-        DataSizeComparer dataSizeComparer = new();
-        SortedList<DataSize, FileGroup> fileGroups = new(dataSizeComparer);
-        int totalDuplicatesCount = 0;
-        DataSize totalSize = DataSize.Zero;
-
-        IEnumerable<FileDuplicateGroup> fileDuplicateGroups = duplicatesInput.EnumerateDuplicates();
-
-        if (request.CheckFilesExistence)
-        {
-            fileDuplicateGroups = fileDuplicateGroups
-                .Select(x =>
-                {
-                    x.FilePaths = x.FilePaths
-                        .Where(filePath => fileSystem.FileExists(filePath))
-                        .ToList();
-
-                    return x;
-                })
-                .Where(x => x.FilePaths.Count > 1);
-        }
-
-        foreach (FileDuplicateGroup fileDuplicateGroup in fileDuplicateGroups)
-        {
-            int fileCount = fileDuplicateGroup.FilePaths.Count;
-            int duplicatesCount = ComputeDuplicatesCount(fileCount);
-
-            totalDuplicatesCount += duplicatesCount;
-            totalSize += duplicatesCount * fileDuplicateGroup.FileSize;
-
-            FileGroup fileGroup = new()
-            {
-                FilePaths = fileDuplicateGroup.FilePaths,
-                FileSize = fileDuplicateGroup.FileSize,
-                FileHash = fileDuplicateGroup.FileHash
-            };
-
-            fileGroups.Add(fileGroup.FileSize, fileGroup);
-        }
-
         PresentDuplicatesResponse response = new()
         {
-            PotnameLeft = duplicatesHeader.PotNameLeft,
-            PotnameRight = duplicatesHeader.PotNameRight,
-            Duplicates = fileGroups.Values,
-            DuplicateCount = totalDuplicatesCount,
-            TotalSize = totalSize
+            Duplicates = applicationState.Duplicates.EnumerateOrdered(false)
+                .Select(x => new FileGroup
+                {
+                    FilePaths = x.FilePaths,
+                    FileSize = x.FileSize,
+                    FileHash = x.FileHash
+                })
+                .ToList(),
+            DuplicateCount = applicationState.Duplicates.TotalDuplicatesCount,
+            TotalSize = applicationState.Duplicates.TotalSize
         };
 
         return Task.FromResult(response);
-    }
-
-    private static int ComputeDuplicatesCount(int fileCount)
-    {
-        int value = 0;
-
-        for (int i = 1; i < fileCount; i++)
-            value += i;
-
-        return value;
     }
 }

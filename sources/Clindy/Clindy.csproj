@@ -29,11 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </PropertyGroup>
 
     <ItemGroup>
-        <Folder Include="Models\" />
-        <AvaloniaResource Include="Assets\**" />
-    </ItemGroup>
-
-    <ItemGroup>
         <PackageReference Include="Autofac" Version="7.1.0" />
         <PackageReference Include="Avalonia" Version="11.0.6" />
         <PackageReference Include="Avalonia.Desktop" Version="11.0.6" />
@@ -50,6 +45,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <ItemGroup>
         <ProjectReference Include="..\Clindy.Application\Clindy.Application.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\Clindy.Presentation\Clindy.Presentation.csproj" />
         <ProjectReference Include="..\DirectoryCompare.ConfigAccess\DirectoryCompare.ConfigAccess.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.DataAccess\DirectoryCompare.DataAccess.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.DataStructures\DirectoryCompare.DataStructures.csproj" PrivateAssets="All" />
@@ -66,5 +62,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <ProjectReference Include="..\DirectoryCompare.Ports.UserAccess\DirectoryCompare.Ports.UserAccess.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.SystemAccess\DirectoryCompare.SystemAccess.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.UserAccess\DirectoryCompare.UserAccess.csproj" PrivateAssets="All" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Assets\avalonia-logo.ico" />
     </ItemGroup>
 </Project>

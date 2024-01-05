@@ -14,15 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.DataStructures;
+using MediatR;
 
-namespace DustInTheWind.Clindy.Applications.PresentDuplicates;
+namespace DustInTheWind.Clindy.Applications.LoadDuplicates;
 
-public class PresentDuplicatesResponse
+public class LoadDuplicatesRequest : IRequest
 {
-    public IList<FileGroup> Duplicates { get; set; }
+    public string FilePath { get; set; }
 
-    public int DuplicateCount { get; set; }
-
-    public DataSize TotalSize { get; set; }
+    public bool CheckFilesExistence { get; set; }
 }

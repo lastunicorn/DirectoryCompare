@@ -1,4 +1,4 @@
-﻿// DirectoryCompare
+// DirectoryCompare
 // Copyright (C) 2017-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -14,23 +14,21 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using DustInTheWind.Clindy.Applications;
+using DustInTheWind.Clindy.Applications.LoadDuplicates;
 using DustInTheWind.Clindy.Applications.PresentDuplicates;
+using DustInTheWind.Clindy.Applications.SetCurrentDuplicateGroup;
+using DustInTheWind.Clindy.ViewModels;
 using ReactiveUI;
 
-namespace DustInTheWind.Clindy.ViewModels;
+namespace DustInTheWind.Clindy.Presentation.ViewModels;
 
-public class MainWindowViewModel : ViewModelBase
+public class DuplicatesNavigatorViewModel : ViewModelBase
 {
     private readonly RequestBus requestBus;
 
     private List<DuplicateGroupListItem> duplicateGroups;
     private DuplicateGroupListItem selectedDuplicateGroup;
-    private List<DuplicateFilesListItem> duplicateFiles;
     private bool isLoading;
     private int duplicateGroupCount;
 
@@ -52,11 +50,17 @@ public class MainWindowViewModel : ViewModelBase
         set
         {
             this.RaiseAndSetIfChanged(ref selectedDuplicateGroup, value);
-
-            DuplicateFiles = value.DuplicateGroup.FilePaths
-                .Select(x => new DuplicateFilesListItem(x))
-                .ToList();
+            SetCurrentDuplicateGroup(value);
         }
+    }
+
+    private void SetCurrentDuplicateGroup(DuplicateGroupListItem value)
+    {
+        SetCurrentDuplicateGroupRequest request = new()
+        {
+            Hash = value.DuplicateGroup.FileHash
+        };
+        _ = requestBus.PlaceRequest(request);
     }
 
     public int DuplicateGroupCount
@@ -65,21 +69,21 @@ public class MainWindowViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref duplicateGroupCount, value);
     }
 
-    public List<DuplicateFilesListItem> DuplicateFiles
-    {
-        get => duplicateFiles;
-        set => this.RaiseAndSetIfChanged(ref duplicateFiles, value);
-    }
-
-    public MainWindowViewModel()
+    public DuplicatesNavigatorViewModel()
     {
     }
 
-    public MainWindowViewModel(RequestBus requestBus)
+    public DuplicatesNavigatorViewModel(RequestBus requestBus, EventBus eventBus)
     {
+        if (eventBus == null) throw new ArgumentNullException(nameof(eventBus));
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
 
-        LoadDuplicates();
+        eventBus.Subscribe<DuplicatesListChangedEvent>(HandleDuplicatesListChangedEvent);
+    }
+
+    private Task HandleDuplicatesListChangedEvent(DuplicatesListChangedEvent ev, CancellationToken cancellationToken)
+    {
+        return LoadDuplicates();
     }
 
     private async Task LoadDuplicates()
@@ -87,12 +91,7 @@ public class MainWindowViewModel : ViewModelBase
         IsLoading = true;
         try
         {
-            PresentDuplicatesRequest request = new()
-            {
-                FilePath = "/home/alez/Temp/iuy.json",
-                CheckFilesExistence = true
-            };
-
+            PresentDuplicatesRequest request = new();
             PresentDuplicatesResponse response = await requestBus.PlaceRequest<PresentDuplicatesRequest, PresentDuplicatesResponse>(request);
 
             DuplicateGroups = response.Duplicates

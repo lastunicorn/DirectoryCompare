@@ -20,7 +20,4 @@ namespace DustInTheWind.Clindy.Applications.PresentDuplicates;
 
 public class PresentDuplicatesRequest : IRequest<PresentDuplicatesResponse>
 {
-    public string FilePath { get; set; }
-
-    public bool CheckFilesExistence { get; set; }
 }

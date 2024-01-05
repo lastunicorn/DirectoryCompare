@@ -14,15 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.DataStructures;
+using Avalonia.Controls;
 
-namespace DustInTheWind.Clindy.Applications.PresentDuplicates;
+namespace DustInTheWind.Clindy.Presentation.Views;
 
-internal class DataSizeComparer : IComparer<DataSize>
+public partial class DuplicatesNavigator : UserControl
 {
-    public int Compare(DataSize x, DataSize y)
+    public DuplicatesNavigator()
     {
-        int result = x.Value.CompareTo(y.Value);
-        return result == 0 ? 1 : result;
+        InitializeComponent();
     }
 }
