@@ -50,7 +50,7 @@ internal static class Setup
     public static void RegisterDependencies(ContainerBuilder containerBuilder)
     {
         RegisterPresentation(containerBuilder);
-        RegisterAdapters(containerBuilder);
+        RegisterExternalDependenciesAdapters(containerBuilder);
         RegisterApplication(containerBuilder);
     }
 
@@ -69,53 +69,53 @@ internal static class Setup
         containerBuilder.RegisterType<RefreshCommand>().AsSelf();
     }
 
-    private static void RegisterAdapters(ContainerBuilder containerBuilder)
+    private static void RegisterExternalDependenciesAdapters(ContainerBuilder containerBuilder)
     {
         // Log Access
-
+        
         containerBuilder.RegisterType<Log>().As<ILog>().SingleInstance();
         containerBuilder.RegisterType<ConsoleRemoveDuplicatesLog>().As<IRemoveDuplicatesLog>().SingleInstance();
-
+        
         // Config Access
-
+        
         containerBuilder.RegisterType<Config>().As<IConfig>().SingleInstance();
-
+        
         // Data Access
-
+        
         containerBuilder
             .Register(x =>
             {
                 IConfig config = x.Resolve<IConfig>();
-
+        
                 Database database = new();
                 database.Open(config.ConnectionString);
-
+        
                 return database;
             })
             .AsSelf()
             .SingleInstance();
-
+        
         containerBuilder.RegisterType<PotRepository>().As<IPotRepository>();
         containerBuilder.RegisterType<BlackListRepository>().As<IBlackListRepository>();
         containerBuilder.RegisterType<SnapshotRepository>().As<ISnapshotRepository>();
         containerBuilder.RegisterType<PotImportExport>().As<IPotImportExport>();
-
+        
         // File System Access
-
+        
         containerBuilder.RegisterType<FileSystem>().As<IFileSystem>();
-
+        
         // User Access
-
+        
         containerBuilder.RegisterType<DeletePotUi>().As<IDeletePotUi>();
         containerBuilder.RegisterType<CreateSnapshotUi>().As<ICreateSnapshotUi>();
         containerBuilder.RegisterType<DuplicateFilesUi>().As<IDuplicateFilesUi>();
-
+        
         // System Access
-
+        
         containerBuilder.RegisterType<DustInTheWind.DirectoryCompare.SystemAccess.SystemClock>().As<DustInTheWind.DirectoryCompare.Ports.SystemAccess.ISystemClock>();
-
+        
         // Import/Export Access
-
+        
         containerBuilder.RegisterType<ImportExport>().As<IImportExport>();
     }
 

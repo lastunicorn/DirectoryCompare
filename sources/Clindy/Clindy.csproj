@@ -17,10 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <Project Sdk="Microsoft.NET.Sdk">
+    
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net6.0</TargetFramework>
-        <Nullable>enable</Nullable>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
@@ -62,10 +62,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <ProjectReference Include="..\DirectoryCompare.Ports.UserAccess\DirectoryCompare.Ports.UserAccess.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.SystemAccess\DirectoryCompare.SystemAccess.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.UserAccess\DirectoryCompare.UserAccess.csproj" PrivateAssets="All" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <UpToDateCheckInput Remove="Assets\avalonia-logo.ico" />
     </ItemGroup>
 
     <ItemGroup>

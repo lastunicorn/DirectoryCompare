@@ -14,10 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.Clindy.Applications.LoadDuplicates;
 using DustInTheWind.Clindy.Applications.PresentDuplicates;
-using DustInTheWind.Clindy.Applications.SetCurrentDuplicateGroup;
-using DustInTheWind.DirectoryCompare.Infrastructure;
 
 namespace DustInTheWind.Clindy.Applications;
 
@@ -27,32 +24,3 @@ public class ApplicationState
 
     public DuplicateGroup CurrentDuplicateGroup { get; set; }
 }
-
-// public class ApplicationState : ApplicationStateBase
-// {
-//     public DuplicateGroupCollection Duplicates
-//     {
-//         get => GetValue<DuplicateGroupCollection>();
-//         set => SetValue(value);
-//     }
-//
-//     public DuplicateGroup CurrentDuplicateGroup
-//     {
-//         get => GetValue<DuplicateGroup>();
-//         set => SetValue(value);
-//     }
-//
-//     public ApplicationState(EventBus eventBus)
-//         : base(eventBus)
-//     {
-//         CreateProperty(nameof(Duplicates))
-//             .OfType<DuplicateGroupCollection>()
-//             .RaisesChangeEvent<DuplicatesLoadedEvent>()
-//             .Register();
-//
-//         CreateProperty(nameof(CurrentDuplicateGroup))
-//             .OfType<DuplicateGroup>()
-//             .RaisesChangeEvent<CurrentDuplicateGroupChangedEvent>()
-//             .Register();
-//     }
-// }

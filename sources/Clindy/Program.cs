@@ -26,7 +26,7 @@ using Splat.Autofac;
 
 namespace DustInTheWind.Clindy;
 
-sealed class Program
+internal static class Program
 {
     // Initialization code. Don't use any Avalonia, third-party APIs or any
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
@@ -63,7 +63,7 @@ sealed class Program
 
     private static void AppMain(Application app, string[] args)
     {
-        MainWindow? mainWindow = Locator.Current.GetService<MainWindow>();
+        MainWindow mainWindow = Locator.Current.GetService<MainWindow>();
         app.Run(mainWindow);
     }
 
