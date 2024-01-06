@@ -70,6 +70,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <DependentUpon>DuplicatesNavigatorItem.axaml</DependentUpon>
             <SubType>Code</SubType>
         </Compile>
+        <Compile Update="MainArea\MainWindow.axaml.cs">
+          <DependentUpon>MainWindow.axaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="FileGroupDetailsArea\FileGroupControl.axaml.cs">
+          <DependentUpon>FileGroupControl.axaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
     </ItemGroup>
 
 </Project>

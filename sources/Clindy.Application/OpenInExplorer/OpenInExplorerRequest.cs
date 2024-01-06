@@ -1,4 +1,4 @@
-// DirectoryCompare
+// Directory Compare
 // Copyright (C) 2017-2024 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -14,17 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using Avalonia.Controls;
-using DustInTheWind.Clindy.Presentation.MainArea.ViewModels;
+using MediatR;
 
-namespace DustInTheWind.Clindy.Presentation.MainArea.Views;
+namespace DustInTheWind.Clindy.Applications.OpenInExplorer;
 
-public partial class MainWindow : Window
+public class OpenInExplorerRequest : IRequest
 {
-    public MainWindow(MainWindowViewModel viewModel)
-    {
-        InitializeComponent();
-
-        DataContext = viewModel;
-    }
+    public string FilePath { get; set; }
 }

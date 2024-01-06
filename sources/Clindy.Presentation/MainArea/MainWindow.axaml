@@ -21,22 +21,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewModels="clr-namespace:DustInTheWind.Clindy.Presentation.MainArea.ViewModels"
     xmlns:views1="clr-namespace:DustInTheWind.Clindy.Presentation.DuplicatesNavigatorArea.Views"
-    xmlns:views2="clr-namespace:DustInTheWind.Clindy.Presentation.FileGroupDetailsArea.Views"
+    xmlns:mainArea="clr-namespace:DustInTheWind.Clindy.Presentation.MainArea"
+    xmlns:fileGroupDetailsArea="clr-namespace:DustInTheWind.Clindy.Presentation.FileGroupDetailsArea"
 
-    x:Class="DustInTheWind.Clindy.Presentation.MainArea.Views.MainWindow"
+    x:Class="DustInTheWind.Clindy.Presentation.MainArea.MainWindow"
     
     mc:Ignorable="d"
     d:DesignWidth="800"
     d:DesignHeight="450"
-    x:DataType="viewModels:MainWindowViewModel"
+    x:DataType="mainArea:MainWindowViewModel"
     Icon="/Assets/avalonia-logo.ico"
     Title="{Binding Title}"
     WindowState="Maximized">
 
     <Design.DataContext>
-        <viewModels:MainWindowViewModel />
+        <mainArea:MainWindowViewModel />
     </Design.DataContext>
 
     <Grid>
@@ -71,7 +71,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
             <!-- Right-Top -->
 
-            <views2:FileGroupControl
+            <fileGroupDetailsArea:FileGroupControl
                 Grid.Row="0"
                 DataContext="{Binding FileGroupViewModel}"/>
             

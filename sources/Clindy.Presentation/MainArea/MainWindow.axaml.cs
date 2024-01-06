@@ -14,16 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 
-namespace DustInTheWind.Clindy.Presentation.FileGroupDetailsArea.Views;
+namespace DustInTheWind.Clindy.Presentation.MainArea;
 
-public partial class FileGroupControl : UserControl
+public partial class MainWindow : Window
 {
-    public FileGroupControl()
+    public MainWindow(MainWindowViewModel viewModel)
     {
         InitializeComponent();
+
+        DataContext = viewModel;
     }
 }

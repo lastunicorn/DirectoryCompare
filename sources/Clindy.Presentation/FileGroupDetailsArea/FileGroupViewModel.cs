@@ -14,12 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.Clindy.Applications;
 using DustInTheWind.Clindy.Applications.SetCurrentDuplicateGroup;
 using DustInTheWind.DirectoryCompare.Infrastructure;
 using ReactiveUI;
 
-namespace DustInTheWind.Clindy.Presentation.FileGroupDetailsArea.ViewModels;
+namespace DustInTheWind.Clindy.Presentation.FileGroupDetailsArea;
 
 public class FileGroupViewModel : ViewModelBase
 {

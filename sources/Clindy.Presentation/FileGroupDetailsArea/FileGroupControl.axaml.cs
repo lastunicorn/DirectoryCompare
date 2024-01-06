@@ -14,16 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.Clindy.Presentation.FileGroupDetailsArea.ViewModels;
+using Avalonia.Controls;
 
-public class FileGroupItem
+namespace DustInTheWind.Clindy.Presentation.FileGroupDetailsArea;
+
+public partial class FileGroupControl : UserControl
 {
-    public string FilePath { get; init; }
-
-    public OpenInExplorerCommand OpenCommand { get; init; }
-
-    public override string ToString()
+    public FileGroupControl()
     {
-        return FilePath;
+        InitializeComponent();
     }
 }

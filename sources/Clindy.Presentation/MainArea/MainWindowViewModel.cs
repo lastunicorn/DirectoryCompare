@@ -18,9 +18,9 @@ using System.Reflection;
 using DustInTheWind.Clindy.Applications;
 using DustInTheWind.Clindy.Applications.LoadDuplicates;
 using DustInTheWind.Clindy.Presentation.DuplicatesNavigatorArea.ViewModels;
-using DustInTheWind.Clindy.Presentation.FileGroupDetailsArea.ViewModels;
+using DustInTheWind.Clindy.Presentation.FileGroupDetailsArea;
 
-namespace DustInTheWind.Clindy.Presentation.MainArea.ViewModels;
+namespace DustInTheWind.Clindy.Presentation.MainArea;
 
 public class MainWindowViewModel : ViewModelBase
 {

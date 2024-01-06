@@ -19,7 +19,7 @@ using System.Globalization;
 using Autofac;
 using Avalonia;
 using Avalonia.Controls;
-using DustInTheWind.Clindy.Presentation.MainArea.Views;
+using DustInTheWind.Clindy.Presentation.MainArea;
 using ReactiveUI;
 using Splat;
 using Splat.Autofac;
