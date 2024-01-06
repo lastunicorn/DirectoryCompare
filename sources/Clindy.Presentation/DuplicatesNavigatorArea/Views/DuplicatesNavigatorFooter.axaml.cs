@@ -14,19 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.DataStructures;
+using Avalonia.Controls;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.PresentDuplicates;
+namespace DustInTheWind.Clindy.Presentation.DuplicatesNavigatorArea.Views;
 
-public class PresentDuplicatesResponse
+public partial class DuplicatesNavigatorFooter : UserControl
 {
-    public string PotnameLeft { get; set; }
-
-    public string PotnameRight { get; set; }
-    
-    public IList<DuplicateGroup> Duplicates { get; set; }
-
-    public int DuplicateCount { get; set; }
-
-    public DataSize TotalSize { get; set; }
+    public DuplicatesNavigatorFooter()
+    {
+        InitializeComponent();
+    }
 }

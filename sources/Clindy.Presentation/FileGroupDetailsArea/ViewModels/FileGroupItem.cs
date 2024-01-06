@@ -14,19 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.DataStructures;
+namespace DustInTheWind.Clindy.Presentation.DuplicatesGroupDetailsArea.ViewModels;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.PresentDuplicates;
-
-public class PresentDuplicatesResponse
+public class FileGroupItem
 {
-    public string PotnameLeft { get; set; }
+    public string FilePath { get; init; }
 
-    public string PotnameRight { get; set; }
-    
-    public IList<DuplicateGroup> Duplicates { get; set; }
+    public OpenInExplorerCommand OpenCommand { get; init; }
 
-    public int DuplicateCount { get; set; }
-
-    public DataSize TotalSize { get; set; }
+    public override string ToString()
+    {
+        return FilePath;
+    }
 }

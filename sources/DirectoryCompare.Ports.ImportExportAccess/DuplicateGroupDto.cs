@@ -16,17 +16,13 @@
 
 using DustInTheWind.DirectoryCompare.DataStructures;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.PresentDuplicates;
+namespace DustInTheWind.DirectoryCompare.Ports.ImportExportAccess;
 
-public class PresentDuplicatesResponse
+public class DuplicateGroupDto
 {
-    public string PotnameLeft { get; set; }
+    public List<string> FilePaths { get; set; }
 
-    public string PotnameRight { get; set; }
-    
-    public IList<DuplicateGroup> Duplicates { get; set; }
+    public DataSize FileSize { get; set; }
 
-    public int DuplicateCount { get; set; }
-
-    public DataSize TotalSize { get; set; }
+    public FileHash FileHash { get; set; }
 }

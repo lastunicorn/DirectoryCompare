@@ -50,10 +50,10 @@ public class DuplicatesInput : IDuplicatesInput
         };
     }
 
-    public IEnumerable<FileDuplicateGroup> EnumerateDuplicates()
+    public IEnumerable<DuplicateGroupDto> EnumerateDuplicates()
     {
         return duplicatesDocument.Duplicates
-            .Select(x => new FileDuplicateGroup
+            .Select(x => new DuplicateGroupDto
             {
                 FilePaths = x.FilePaths,
                 FileSize = x.FileSize,

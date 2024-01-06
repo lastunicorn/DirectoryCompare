@@ -15,13 +15,37 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.Clindy.Applications.LoadDuplicates;
-using DustInTheWind.DirectoryCompare.Ports.ImportExportAccess;
+using DustInTheWind.Clindy.Applications.PresentDuplicates;
+using DustInTheWind.Clindy.Applications.SetCurrentDuplicateGroup;
+using DustInTheWind.DirectoryCompare.Infrastructure;
 
 namespace DustInTheWind.Clindy.Applications;
 
-public class ApplicationState
+public class ApplicationState : ApplicationStateBase
 {
-    public DuplicateGroupCollection Duplicates { get; set; }
+    public DuplicateGroupCollection Duplicates
+    {
+        get => GetValue<DuplicateGroupCollection>();
+        set => SetValue(value);
+    }
 
-    public FileDuplicateGroup CurrentDuplicateGroup { get; set; }
+    public DuplicateGroup CurrentDuplicateGroup
+    {
+        get => GetValue<DuplicateGroup>();
+        set => SetValue(value);
+    }
+
+    public ApplicationState(EventBus eventBus)
+        : base(eventBus)
+    {
+        CreateProperty(nameof(Duplicates))
+            .OfType<DuplicateGroupCollection>()
+            .RaisesChangeEvent<DuplicatesListLoadedEvent>()
+            .Register();
+
+        CreateProperty(nameof(CurrentDuplicateGroup))
+            .OfType<DuplicateGroup>()
+            .RaisesChangeEvent<CurrentDuplicateGroupChangedEvent>()
+            .Register();
+    }
 }

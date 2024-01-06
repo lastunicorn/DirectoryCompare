@@ -14,19 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.DataStructures;
+namespace DustInTheWind.DirectoryCompare.Infrastructure;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.PresentDuplicates;
-
-public class PresentDuplicatesResponse
+public class StateProperty<TValue>
 {
-    public string PotnameLeft { get; set; }
+    public TValue Value { get; set; }
 
-    public string PotnameRight { get; set; }
-    
-    public IList<DuplicateGroup> Duplicates { get; set; }
-
-    public int DuplicateCount { get; set; }
-
-    public DataSize TotalSize { get; set; }
+    public Type EventType { get; set; }
 }

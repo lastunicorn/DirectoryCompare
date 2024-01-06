@@ -20,11 +20,11 @@ namespace DustInTheWind.Clindy.Applications.PresentDuplicates;
 
 public class PresentDuplicatesResponse
 {
-    public IList<FileGroup> Duplicates { get; set; }
+    public IList<DuplicateGroup> Duplicates { get; set; }
 
     public int DuplicateCount { get; set; }
 
     public DataSize TotalSize { get; set; }
 
-    public FileGroup? CurrentDuplicateGroup { get; set; }
+    public DuplicateGroup CurrentDuplicateGroup { get; set; }
 }

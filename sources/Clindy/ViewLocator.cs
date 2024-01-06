@@ -17,7 +17,7 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using DustInTheWind.Clindy.Presentation.ViewModels;
+using DustInTheWind.Clindy.Presentation;
 
 namespace DustInTheWind.Clindy;
 

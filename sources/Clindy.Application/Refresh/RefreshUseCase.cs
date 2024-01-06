@@ -15,6 +15,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.Clindy.Applications.LoadDuplicates;
+using DustInTheWind.Clindy.Applications.PresentDuplicates;
+using DustInTheWind.DirectoryCompare.Infrastructure;
 using DustInTheWind.DirectoryCompare.Ports.ConfigAccess;
 using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 using DustInTheWind.DirectoryCompare.Ports.ImportExportAccess;
@@ -42,24 +44,36 @@ internal class RefreshUseCase : IRequestHandler<RefreshRequest>
 
     public async Task Handle(RefreshRequest request, CancellationToken cancellationToken)
     {
-        await RaiseDuplicatesListLoadingEvent(cancellationToken);
-
-        IEnumerable<FileDuplicateGroup> fileDuplicateGroups = RetrieveFileDuplicateGroups();
-        applicationState.Duplicates = new DuplicateGroupCollection(fileDuplicateGroups);
-
-        await RaiseDuplicatesListLoadedEvent(cancellationToken);
+        RaiseDuplicatesListLoadingEvent();
+        applicationState.Duplicates = await RetrieveDuplicatesGroupCollection(cancellationToken);
     }
 
-    private async Task RaiseDuplicatesListLoadingEvent(CancellationToken cancellationToken)
+    private async Task<DuplicateGroupCollection> RetrieveDuplicatesGroupCollection(CancellationToken cancellationToken)
+    {
+        return await MinimumExecutionTime.RunAsync(1000, () =>
+        {
+            IEnumerable<DuplicateGroup> fileDuplicateGroups = RetrieveFileDuplicateGroups()
+                .Select(x => new DuplicateGroup
+                {
+                    FilePaths = x.FilePaths,
+                    FileSize = x.FileSize,
+                    FileHash = x.FileHash
+                });
+            DuplicateGroupCollection duplicateGroupCollection = new(fileDuplicateGroups);
+            return Task.FromResult(duplicateGroupCollection);
+        }, cancellationToken);
+    }
+
+    private void RaiseDuplicatesListLoadingEvent()
     {
         DuplicatesListLoadingEvent duplicatesListLoadedEvent = new();
-        await eventBus.PublishAsync(duplicatesListLoadedEvent, cancellationToken);
+        eventBus.Publish(duplicatesListLoadedEvent);
     }
 
-    private IEnumerable<FileDuplicateGroup> RetrieveFileDuplicateGroups()
+    private IEnumerable<DuplicateGroupDto> RetrieveFileDuplicateGroups()
     {
         IDuplicatesInput duplicatesInput = importExport.OpenDuplicatesInput(config.DuplicatesFilePath);
-        IEnumerable<FileDuplicateGroup> fileDuplicateGroups = duplicatesInput.EnumerateDuplicates();
+        IEnumerable<DuplicateGroupDto> fileDuplicateGroups = duplicatesInput.EnumerateDuplicates();
 
         if (config.CheckFilesExistence)
         {
@@ -75,11 +89,5 @@ internal class RefreshUseCase : IRequestHandler<RefreshRequest>
                 .Where(x => x.FilePaths.Count > 1);
         }
         return fileDuplicateGroups;
-    }
-
-    private async Task RaiseDuplicatesListLoadedEvent(CancellationToken cancellationToken)
-    {
-        DuplicatesListLoadedEvent duplicatesListLoadedEvent = new();
-        await eventBus.PublishAsync(duplicatesListLoadedEvent, cancellationToken);
     }
 }

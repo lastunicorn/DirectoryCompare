@@ -21,7 +21,7 @@ namespace DustInTheWind.DirectoryCompare.Cli.Presentation.MiscellaneousCommands.
 
 internal class ShowDuplicatesViewModel
 {
-    public IList<FileGroup> FileGroups { get; set; }
+    public IList<DuplicateGroup> FileGroups { get; set; }
 
     public int DuplicateCount { get; set; }
 

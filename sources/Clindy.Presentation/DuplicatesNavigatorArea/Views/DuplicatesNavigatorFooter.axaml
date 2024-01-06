@@ -1,0 +1,55 @@
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:DustInTheWind.Clindy.Presentation.DuplicatesNavigatorArea.ViewModels"
+
+    x:Class="DustInTheWind.Clindy.Presentation.DuplicatesNavigatorArea.Views.DuplicatesNavigatorFooter"
+
+    mc:Ignorable="d"
+    d:DesignWidth="300"
+    x:DataType="viewModels:DuplicatesNavigatorFooterViewModel">
+
+    <Border
+        Background="DarkSlateGray"
+        Padding="10">
+
+        <Grid>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="8" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="0"
+                Text="Groups:" />
+
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="2"
+                Text="{Binding DuplicateGroupCount, StringFormat={}N0}" />
+
+            <TextBlock
+                Grid.Row="2"
+                Grid.Column="0"
+                Text="Total Size:" />
+
+            <TextBlock
+                Grid.Row="2"
+                Grid.Column="2"
+                Text="{Binding TotalSize}" />
+        </Grid>
+
+    </Border>
+
+</UserControl>

@@ -20,7 +20,7 @@ public interface IDuplicatesOutput
 {
     void WriteHeader(DuplicatesHeader duplicatesHeader);
 
-    void WriteDuplicate(Duplicate duplicate);
+    void WriteDuplicate(DuplicateGroupDto duplicateGroupDto);
 
     void Close();
 }

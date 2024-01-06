@@ -48,12 +48,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Clindy.Application\Clindy.Application.csproj" PrivateAssets="All" />
-      <ProjectReference Include="..\DirectoryCompare.DataStructures\DirectoryCompare.DataStructures.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\Clindy.Application\Clindy.Application.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.DataStructures\DirectoryCompare.DataStructures.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.Infrastructure\DirectoryCompare.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <AvaloniaResource Include="Assets\avalonia-logo.ico" />
+        <Compile Update="DuplicatesNavigatorArea\Views\DuplicatesNavigator.axaml.cs">
+            <DependentUpon>DuplicatesNavigator.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="DuplicatesNavigatorArea\Views\DuplicatesNavigatorFooter.axaml.cs">
+            <DependentUpon>DuplicatesNavigatorFooter.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="DuplicatesNavigatorArea\Views\DuplicatesNavigatorHeader.axaml.cs">
+            <DependentUpon>DuplicatesNavigatorHeader.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="DuplicatesNavigatorArea\Views\DuplicatesNavigatorItem.axaml.cs">
+            <DependentUpon>DuplicatesNavigatorItem.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
     </ItemGroup>
 
 </Project>

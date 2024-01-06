@@ -175,16 +175,16 @@ public class FindDuplicatesUseCase : IRequestHandler<FindDuplicatesRequest>
         if (duplicatesOutput == null)
             return;
 
-        Duplicate duplicate = new()
+        DuplicateGroupDto duplicateGroupDto = new()
         {
-            FullPaths = fileGroup
+            FilePaths = fileGroup
                 .Select(x => x.GetOriginalPath())
                 .ToList(),
-            Size = fileGroup.Size,
-            Hash = fileGroup.Hash
+            FileSize = fileGroup.Size,
+            FileHash = fileGroup.Hash
         };
 
-        duplicatesOutput.WriteDuplicate(duplicate);
+        duplicatesOutput.WriteDuplicate(duplicateGroupDto);
     }
 
 

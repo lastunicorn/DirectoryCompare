@@ -18,11 +18,11 @@ using DustInTheWind.DirectoryCompare.DataStructures;
 
 namespace DustInTheWind.DirectoryCompare.Ports.ImportExportAccess;
 
-public class FileDuplicateGroup
-{
-    public List<string> FilePaths { get; set; }
-
-    public DataSize FileSize { get; set; }
-
-    public FileHash FileHash { get; set; }
-}
+// public class FileDuplicateGroup
+// {
+//     public List<string> FilePaths { get; set; }
+//
+//     public DataSize FileSize { get; set; }
+//
+//     public FileHash FileHash { get; set; }
+// }

@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Ports.ImportExportAccess;
 using MediatR;
 
 namespace DustInTheWind.Clindy.Applications.PresentDuplicates;
@@ -33,28 +32,12 @@ internal class PresentDuplicatesUseCase : IRequestHandler<PresentDuplicatesReque
         PresentDuplicatesResponse response = new()
         {
             Duplicates = applicationState.Duplicates.EnumerateOrdered(false)
-                .Select(ToFileGroup)
-                .Where(x => x != null)
-                .Select(x => x.Value)
                 .ToList(),
-            CurrentDuplicateGroup = ToFileGroup(applicationState.CurrentDuplicateGroup),
+            CurrentDuplicateGroup = applicationState.CurrentDuplicateGroup,
             DuplicateCount = applicationState.Duplicates.TotalDuplicatesCount,
             TotalSize = applicationState.Duplicates.TotalSize
         };
 
         return Task.FromResult(response);
-    }
-
-    private static FileGroup? ToFileGroup(FileDuplicateGroup fileDuplicateGroup)
-    {
-        if (fileDuplicateGroup == null)
-            return null;
-
-        return new FileGroup
-        {
-            FilePaths = fileDuplicateGroup.FilePaths,
-            FileSize = fileDuplicateGroup.FileSize,
-            FileHash = fileDuplicateGroup.FileHash
-        };
     }
 }

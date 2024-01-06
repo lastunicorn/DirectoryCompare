@@ -39,11 +39,11 @@ internal class PresentDuplicatesUseCase : IRequestHandler<PresentDuplicatesReque
         DuplicatesHeader duplicatesHeader = duplicatesInput.GetHeader();
 
         DataSizeComparer dataSizeComparer = new();
-        SortedList<DataSize, FileGroup> fileGroups = new(dataSizeComparer);
+        SortedList<DataSize, DuplicateGroup> duplicateGroups = new(dataSizeComparer);
         int totalDuplicatesCount = 0;
         DataSize totalSize = DataSize.Zero;
 
-        IEnumerable<FileDuplicateGroup> fileDuplicateGroups = duplicatesInput.EnumerateDuplicates();
+        IEnumerable<DuplicateGroupDto> fileDuplicateGroups = duplicatesInput.EnumerateDuplicates();
 
         if (request.CheckFilesExistence)
         {
@@ -59,7 +59,7 @@ internal class PresentDuplicatesUseCase : IRequestHandler<PresentDuplicatesReque
                 .Where(x => x.FilePaths.Count > 1);
         }
 
-        foreach (FileDuplicateGroup fileDuplicateGroup in fileDuplicateGroups)
+        foreach (DuplicateGroupDto fileDuplicateGroup in fileDuplicateGroups)
         {
             int fileCount = fileDuplicateGroup.FilePaths.Count;
             int duplicatesCount = ComputeDuplicatesCount(fileCount);
@@ -67,21 +67,21 @@ internal class PresentDuplicatesUseCase : IRequestHandler<PresentDuplicatesReque
             totalDuplicatesCount += duplicatesCount;
             totalSize += duplicatesCount * fileDuplicateGroup.FileSize;
 
-            FileGroup fileGroup = new()
+            DuplicateGroup duplicateGroup = new()
             {
                 FilePaths = fileDuplicateGroup.FilePaths,
                 FileSize = fileDuplicateGroup.FileSize,
                 FileHash = fileDuplicateGroup.FileHash
             };
 
-            fileGroups.Add(fileGroup.FileSize, fileGroup);
+            duplicateGroups.Add(duplicateGroup.FileSize, duplicateGroup);
         }
 
         PresentDuplicatesResponse response = new()
         {
             PotnameLeft = duplicatesHeader.PotNameLeft,
             PotnameRight = duplicatesHeader.PotNameRight,
-            Duplicates = fileGroups.Values,
+            Duplicates = duplicateGroups.Values,
             DuplicateCount = totalDuplicatesCount,
             TotalSize = totalSize
         };

@@ -16,12 +16,10 @@
 
 using System;
 using System.Globalization;
-using System.Runtime.InteropServices;
-using System.Threading;
 using Autofac;
 using Avalonia;
 using Avalonia.Controls;
-using DustInTheWind.Clindy.Presentation.Views;
+using DustInTheWind.Clindy.Presentation.MainArea.Views;
 using ReactiveUI;
 using Splat;
 using Splat.Autofac;

@@ -18,12 +18,18 @@ using System.Reflection;
 using Autofac;
 using DustInTheWind.Clindy.Applications;
 using DustInTheWind.Clindy.Applications.PresentDuplicates;
-using DustInTheWind.Clindy.Presentation.ViewModels;
-using DustInTheWind.Clindy.Presentation.Views;
+using DustInTheWind.Clindy.Presentation.DuplicatesGroupDetailsArea.ViewModels;
+using DustInTheWind.Clindy.Presentation.DuplicatesNavigatorArea.Commands;
+using DustInTheWind.Clindy.Presentation.DuplicatesNavigatorArea.ViewModels;
+using DustInTheWind.Clindy.Presentation.DuplicatesNavigatorArea.Views;
+using DustInTheWind.Clindy.Presentation.FileGroupDetailsArea.ViewModels;
+using DustInTheWind.Clindy.Presentation.MainArea.ViewModels;
+using DustInTheWind.Clindy.Presentation.MainArea.Views;
 using DustInTheWind.DirectoryCompare.ConfigAccess;
 using DustInTheWind.DirectoryCompare.DataAccess;
 using DustInTheWind.DirectoryCompare.FileSystemAccess;
 using DustInTheWind.DirectoryCompare.ImportExportAccess;
+using DustInTheWind.DirectoryCompare.Infrastructure;
 using DustInTheWind.DirectoryCompare.Infrastructure.RequestPipeline;
 using DustInTheWind.DirectoryCompare.LogAccess;
 using DustInTheWind.DirectoryCompare.Ports.ConfigAccess;
@@ -58,7 +64,8 @@ internal static class Setup
         containerBuilder.RegisterType<DuplicatesNavigatorViewModel>().AsSelf();
         containerBuilder.RegisterType<DuplicatesNavigatorHeaderViewModel>().AsSelf();
         containerBuilder.RegisterType<DuplicatesNavigatorFooterViewModel>().AsSelf();
-        
+        containerBuilder.RegisterType<FileGroupViewModel>().AsSelf();
+
         containerBuilder.RegisterType<OpenInExplorerCommand>().AsSelf();
         containerBuilder.RegisterType<RefreshCommand>().AsSelf();
     }

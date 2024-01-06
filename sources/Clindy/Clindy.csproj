@@ -45,7 +45,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <ItemGroup>
         <ProjectReference Include="..\Clindy.Application\Clindy.Application.csproj" PrivateAssets="All" />
-        <ProjectReference Include="..\Clindy.Presentation\Clindy.Presentation.csproj" />
+        <ProjectReference Include="..\Clindy.Presentation\Clindy.Presentation.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.ConfigAccess\DirectoryCompare.ConfigAccess.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.DataAccess\DirectoryCompare.DataAccess.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.DataStructures\DirectoryCompare.DataStructures.csproj" PrivateAssets="All" />

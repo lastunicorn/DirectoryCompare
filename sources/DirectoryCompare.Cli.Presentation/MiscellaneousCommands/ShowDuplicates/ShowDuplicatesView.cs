@@ -25,7 +25,7 @@ internal class ShowDuplicatesView : ViewBase<ShowDuplicatesViewModel>
 {
     public override void Display(ShowDuplicatesViewModel viewModel)
     {
-        foreach (FileGroup fileGroup in viewModel.FileGroups)
+        foreach (DuplicateGroup fileGroup in viewModel.FileGroups)
         {
             foreach (string filePath in fileGroup.FilePaths)
                 CustomConsole.WriteLine(filePath);

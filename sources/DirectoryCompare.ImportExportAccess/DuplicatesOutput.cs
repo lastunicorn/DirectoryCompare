@@ -55,7 +55,7 @@ internal class DuplicatesOutput : IDuplicatesOutput
         jsonTextWriter.WriteValue(duplicatesHeader.PotNameRight);
     }
 
-    public void WriteDuplicate(Duplicate duplicate)
+    public void WriteDuplicate(DuplicateGroupDto duplicateGroupDto)
     {
         MoveToDuplicatesState();
 
@@ -64,16 +64,16 @@ internal class DuplicatesOutput : IDuplicatesOutput
         jsonTextWriter.WritePropertyName("f");
         jsonTextWriter.WriteStartArray();
 
-        foreach (string fullPath in duplicate.FullPaths) 
+        foreach (string fullPath in duplicateGroupDto.FilePaths) 
             jsonTextWriter.WriteValue(fullPath);
         
         jsonTextWriter.WriteEndArray();
 
         jsonTextWriter.WritePropertyName("s");
-        jsonTextWriter.WriteValue(duplicate.Size);
+        jsonTextWriter.WriteValue(duplicateGroupDto.FileSize);
 
         jsonTextWriter.WritePropertyName("h");
-        jsonTextWriter.WriteValue(duplicate.Hash);
+        jsonTextWriter.WriteValue(duplicateGroupDto.FileHash);
 
         jsonTextWriter.WriteEndObject();
     }

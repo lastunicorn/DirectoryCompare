@@ -15,16 +15,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections.ObjectModel;
+using DustInTheWind.Clindy.Applications.PresentDuplicates;
 using DustInTheWind.DirectoryCompare.DataStructures;
-using DustInTheWind.DirectoryCompare.Ports.ImportExportAccess;
 
 namespace DustInTheWind.Clindy.Applications;
 
-public class DuplicateGroupCollection : Collection<FileDuplicateGroup>
+public class DuplicateGroupCollection : Collection<DuplicateGroup>
 {
-    public DuplicateGroupCollection(IEnumerable<FileDuplicateGroup> items)
+    public DuplicateGroupCollection(IEnumerable<DuplicateGroup> items)
     {
-        foreach (FileDuplicateGroup item in items)
+        foreach (DuplicateGroup item in items)
         {
             AddInternal(item);
             Items.Add(item);
@@ -35,16 +35,16 @@ public class DuplicateGroupCollection : Collection<FileDuplicateGroup>
 
     public DataSize TotalSize { get; private set; } = DataSize.Zero;
 
-    public void AddRange(IEnumerable<FileDuplicateGroup> items)
+    public void AddRange(IEnumerable<DuplicateGroup> items)
     {
-        foreach (FileDuplicateGroup item in items)
+        foreach (DuplicateGroup item in items)
         {
             AddInternal(item);
             Items.Add(item);
         }
     }
 
-    protected override void InsertItem(int index, FileDuplicateGroup item)
+    protected override void InsertItem(int index, DuplicateGroup item)
     {
         if (item == null) throw new ArgumentNullException(nameof(item));
 
@@ -52,9 +52,9 @@ public class DuplicateGroupCollection : Collection<FileDuplicateGroup>
         base.InsertItem(index, item);
     }
 
-    protected override void SetItem(int index, FileDuplicateGroup item)
+    protected override void SetItem(int index, DuplicateGroup item)
     {
-        FileDuplicateGroup removedItem = Items[index];
+        DuplicateGroup removedItem = Items[index];
         RemoveInternal(removedItem);
         AddInternal(item);
 
@@ -63,7 +63,7 @@ public class DuplicateGroupCollection : Collection<FileDuplicateGroup>
 
     protected override void RemoveItem(int index)
     {
-        FileDuplicateGroup removedItem = Items[index];
+        DuplicateGroup removedItem = Items[index];
         RemoveInternal(removedItem);
 
         base.RemoveItem(index);
@@ -77,7 +77,7 @@ public class DuplicateGroupCollection : Collection<FileDuplicateGroup>
         base.ClearItems();
     }
 
-    private void AddInternal(FileDuplicateGroup item)
+    private void AddInternal(DuplicateGroup item)
     {
         int fileCount = item.FilePaths.Count;
         int duplicatesCount = ComputeDuplicatesCount(fileCount);
@@ -86,7 +86,7 @@ public class DuplicateGroupCollection : Collection<FileDuplicateGroup>
         TotalSize += duplicatesCount * item.FileSize;
     }
 
-    private void RemoveInternal(FileDuplicateGroup item)
+    private void RemoveInternal(DuplicateGroup item)
     {
         int fileCount = item.FilePaths.Count;
         int duplicatesCount = ComputeDuplicatesCount(fileCount);
@@ -95,7 +95,7 @@ public class DuplicateGroupCollection : Collection<FileDuplicateGroup>
         TotalSize -= duplicatesCount * item.FileSize;
     }
 
-    public IEnumerable<FileDuplicateGroup> EnumerateOrdered(bool ascending = true)
+    public IEnumerable<DuplicateGroup> EnumerateOrdered(bool ascending = true)
     {
         if (ascending)
         {

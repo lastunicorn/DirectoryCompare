@@ -14,7 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Ports.ImportExportAccess;
+using DustInTheWind.Clindy.Applications.PresentDuplicates;
+using DustInTheWind.DirectoryCompare.DataStructures;
+using DustInTheWind.DirectoryCompare.Infrastructure;
 using MediatR;
 
 namespace DustInTheWind.Clindy.Applications.SetCurrentDuplicateGroup;
@@ -32,28 +34,28 @@ internal class SetCurrentDuplicateGroupUseCase : IRequestHandler<SetCurrentDupli
 
     public Task Handle(SetCurrentDuplicateGroupRequest request, CancellationToken cancellationToken)
     {
-        FileDuplicateGroup fileDuplicateGroup = IdentifyFileDuplicateGroup(request);
-        applicationState.CurrentDuplicateGroup = fileDuplicateGroup;
+        DuplicateGroup duplicateGroup = IdentifyFileDuplicateGroup(request.Hash);
+        applicationState.CurrentDuplicateGroup = duplicateGroup;
 
-        return RaiseCurrentDuplicateReplacedEvent(cancellationToken, fileDuplicateGroup);
+        return Task.CompletedTask;
     }
 
-    private FileDuplicateGroup IdentifyFileDuplicateGroup(SetCurrentDuplicateGroupRequest request)
+    private DuplicateGroup IdentifyFileDuplicateGroup(FileHash? fileHash)
     {
-        if (request.Hash == null)
+        if (fileHash == null)
             return null;
 
         return applicationState.Duplicates
-            .FirstOrDefault(x => x.FileHash == request.Hash);
+            .FirstOrDefault(x => x.FileHash == fileHash);
     }
 
-    private Task RaiseCurrentDuplicateReplacedEvent(CancellationToken cancellationToken, FileDuplicateGroup fileDuplicateGroup)
+    private void RaiseCurrentDuplicateChangedEvent(DuplicateGroup duplicateGroup)
     {
-        CurrentDuplicateReplacedEvent currentDuplicateReplaced = new()
+        CurrentDuplicateGroupChangedEvent currentDuplicateGroupChanged = new()
         {
-            DuplicateGroup = fileDuplicateGroup
+            DuplicateGroup = duplicateGroup
         };
 
-        return eventBus.PublishAsync(currentDuplicateReplaced, cancellationToken);
+        eventBus.Publish(currentDuplicateGroupChanged);
     }
 }

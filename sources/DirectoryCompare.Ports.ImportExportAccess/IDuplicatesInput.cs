@@ -20,5 +20,5 @@ public interface IDuplicatesInput
 {
     DuplicatesHeader GetHeader();
 
-    IEnumerable<FileDuplicateGroup> EnumerateDuplicates();
+    IEnumerable<DuplicateGroupDto> EnumerateDuplicates();
 }
