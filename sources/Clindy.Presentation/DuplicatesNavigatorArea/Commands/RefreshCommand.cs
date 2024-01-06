@@ -18,12 +18,11 @@ using System.Windows.Input;
 using Avalonia.Threading;
 using DustInTheWind.Clindy.Applications;
 using DustInTheWind.Clindy.Applications.LoadDuplicates;
-using DustInTheWind.Clindy.Applications.Refresh;
 using DustInTheWind.DirectoryCompare.Infrastructure;
 
 namespace DustInTheWind.Clindy.Presentation.DuplicatesNavigatorArea.Commands;
 
-public class RefreshCommand : ICommand
+public sealed class RefreshCommand : ICommand
 {
     private readonly RequestBus requestBus;
     private bool canExecute = true;
@@ -35,26 +34,20 @@ public class RefreshCommand : ICommand
         if (eventBus == null) throw new ArgumentNullException(nameof(eventBus));
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
 
-        eventBus.Subscribe<DuplicatesListLoadingEvent>(HandleDuplicatesListLoadingEvent);
-        eventBus.Subscribe<DuplicatesListLoadedEvent>(HandleDuplicatesListLoadedEvent);
+        eventBus.Subscribe<DuplicatesLoadingEvent>(HandleDuplicatesListLoadingEvent);
+        eventBus.Subscribe<DuplicatesLoadedEvent>(HandleDuplicatesListLoadedEvent);
     }
 
-    private void HandleDuplicatesListLoadingEvent(DuplicatesListLoadingEvent ev)
+    private void HandleDuplicatesListLoadingEvent(DuplicatesLoadingEvent ev)
     {
-        Dispatcher.UIThread.Post(() =>
-        {
-            canExecute = false;
-            OnCanExecuteChanged();
-        });
+        canExecute = false;
+        Dispatcher.UIThread.Invoke(OnCanExecuteChanged);
     }
 
-    private void HandleDuplicatesListLoadedEvent(DuplicatesListLoadedEvent ev)
+    private void HandleDuplicatesListLoadedEvent(DuplicatesLoadedEvent ev)
     {
-        Dispatcher.UIThread.Post(() =>
-        {
-            canExecute = true;
-            OnCanExecuteChanged();
-        });
+        canExecute = true;
+        Dispatcher.UIThread.Invoke(OnCanExecuteChanged);
     }
 
     public bool CanExecute(object parameter)
@@ -64,11 +57,11 @@ public class RefreshCommand : ICommand
 
     public void Execute(object parameter)
     {
-        RefreshRequest request = new();
+        LoadDuplicatesRequest request = new();
         _ = requestBus.PlaceRequest(request);
     }
 
-    protected virtual void OnCanExecuteChanged()
+    private void OnCanExecuteChanged()
     {
         CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }

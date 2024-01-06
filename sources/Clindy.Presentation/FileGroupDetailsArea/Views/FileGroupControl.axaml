@@ -21,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewModels="clr-namespace:DustInTheWind.Clindy.Presentation.DuplicatesGroupDetailsArea.ViewModels"
     xmlns:viewModels1="clr-namespace:DustInTheWind.Clindy.Presentation.FileGroupDetailsArea.ViewModels"
 
     x:Class="DustInTheWind.Clindy.Presentation.FileGroupDetailsArea.Views.FileGroupControl"
@@ -35,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         ItemsSource="{Binding DuplicateFiles}">
 
         <ListBox.ItemTemplate>
-            <DataTemplate DataType="viewModels:FileGroupItem">
+            <DataTemplate DataType="viewModels1:FileGroupItem">
                 <DockPanel>
                     <Button
                         DockPanel.Dock="Right"

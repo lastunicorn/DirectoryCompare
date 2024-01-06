@@ -42,7 +42,7 @@ public class DuplicateGroupListItem
 
     public DuplicateGroupListItem(DuplicateGroup duplicateGroup)
     {
-        DuplicateGroup = duplicateGroup;
+        DuplicateGroup = duplicateGroup ?? throw new ArgumentNullException(nameof(duplicateGroup));
     }
 
     public override string ToString()

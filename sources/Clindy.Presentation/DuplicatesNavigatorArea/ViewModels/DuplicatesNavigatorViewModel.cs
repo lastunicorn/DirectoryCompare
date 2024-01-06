@@ -14,12 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System.Collections.ObjectModel;
 using Avalonia.Threading;
 using DustInTheWind.Clindy.Applications;
 using DustInTheWind.Clindy.Applications.LoadDuplicates;
 using DustInTheWind.Clindy.Applications.PresentDuplicates;
 using DustInTheWind.Clindy.Applications.SetCurrentDuplicateGroup;
 using DustInTheWind.DirectoryCompare.Infrastructure;
+using DynamicData;
 using ReactiveUI;
 
 namespace DustInTheWind.Clindy.Presentation.DuplicatesNavigatorArea.ViewModels;
@@ -28,7 +30,6 @@ public class DuplicatesNavigatorViewModel : ViewModelBase
 {
     private readonly RequestBus requestBus;
 
-    private List<DuplicateGroupListItem> duplicateGroups;
     private DuplicateGroupListItem selectedDuplicateGroup;
     private bool isLoading;
 
@@ -38,11 +39,7 @@ public class DuplicatesNavigatorViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref isLoading, value);
     }
 
-    public List<DuplicateGroupListItem> DuplicateGroups
-    {
-        get => duplicateGroups;
-        private set => this.RaiseAndSetIfChanged(ref duplicateGroups, value);
-    }
+    public ObservableCollection<DuplicateGroupListItem> DuplicateGroups { get; } = new();
 
     public DuplicateGroupListItem SelectedDuplicateGroup
     {
@@ -50,7 +47,9 @@ public class DuplicatesNavigatorViewModel : ViewModelBase
         set
         {
             this.RaiseAndSetIfChanged(ref selectedDuplicateGroup, value);
-            SetCurrentDuplicateGroup(value);
+
+            if (!InitializeMode)
+                SetCurrentDuplicateGroup(value);
         }
     }
 
@@ -71,21 +70,25 @@ public class DuplicatesNavigatorViewModel : ViewModelBase
         FooterViewModel = footerViewModel ?? throw new ArgumentNullException(nameof(footerViewModel));
         HeaderViewModel = headerViewModel ?? throw new ArgumentNullException(nameof(headerViewModel));
 
-        eventBus.Subscribe<DuplicatesListLoadingEvent>(HandleDuplicatesListLoadingEvent);
-        eventBus.Subscribe<DuplicatesListLoadedEvent>(HandleDuplicatesListLoadedEvent);
+        eventBus.Subscribe<DuplicatesLoadingEvent>(HandleDuplicatesLoadingEvent);
+        eventBus.Subscribe<DuplicatesLoadedEvent>(HandleDuplicatesLoadedEvent);
     }
 
-    private void HandleDuplicatesListLoadingEvent(DuplicatesListLoadingEvent ev)
+    private void HandleDuplicatesLoadingEvent(DuplicatesLoadingEvent ev)
     {
-        Dispatcher.UIThread.Post(() =>
+        Dispatcher.UIThread.Invoke(() =>
         {
             IsLoading = true;
-            DuplicateGroups = null;
-            FooterViewModel.Clear();
+
+            RunAsInitialize(() =>
+            {
+                DuplicateGroups.Clear();
+                FooterViewModel.Clear();
+            });
         });
     }
 
-    private void HandleDuplicatesListLoadedEvent(DuplicatesListLoadedEvent ev)
+    private void HandleDuplicatesLoadedEvent(DuplicatesLoadedEvent ev)
     {
         try
         {
@@ -93,7 +96,7 @@ public class DuplicatesNavigatorViewModel : ViewModelBase
         }
         finally
         {
-            Dispatcher.UIThread.Post(() =>
+            Dispatcher.UIThread.Invoke(() =>
             {
                 IsLoading = false;
             });
@@ -105,12 +108,12 @@ public class DuplicatesNavigatorViewModel : ViewModelBase
         PresentDuplicatesRequest request = new();
         PresentDuplicatesResponse response = await requestBus.PlaceRequest<PresentDuplicatesRequest, PresentDuplicatesResponse>(request);
 
-        Dispatcher.UIThread.Post(() =>
+        Dispatcher.UIThread.Invoke(() =>
         {
-            DuplicateGroups = response.Duplicates
+            IOrderedEnumerable<DuplicateGroupListItem> listItems = response.Duplicates
                 .Select(x => new DuplicateGroupListItem(x))
-                .OrderByDescending(x => x.DuplicateGroup.FileSize)
-                .ToList();
+                .OrderByDescending(x => x.DuplicateGroup.FileSize);
+            DuplicateGroups.AddRange(listItems);
 
             SelectedDuplicateGroup = IdentifyDuplicateGroup(response.CurrentDuplicateGroup);
 

@@ -21,31 +21,38 @@ using DustInTheWind.DirectoryCompare.Infrastructure;
 
 namespace DustInTheWind.Clindy.Applications;
 
-public class ApplicationState : ApplicationStateBase
+public class ApplicationState
 {
-    public DuplicateGroupCollection Duplicates
-    {
-        get => GetValue<DuplicateGroupCollection>();
-        set => SetValue(value);
-    }
+    public DuplicateGroupCollection Duplicates { get; set; }
 
-    public DuplicateGroup CurrentDuplicateGroup
-    {
-        get => GetValue<DuplicateGroup>();
-        set => SetValue(value);
-    }
-
-    public ApplicationState(EventBus eventBus)
-        : base(eventBus)
-    {
-        CreateProperty(nameof(Duplicates))
-            .OfType<DuplicateGroupCollection>()
-            .RaisesChangeEvent<DuplicatesListLoadedEvent>()
-            .Register();
-
-        CreateProperty(nameof(CurrentDuplicateGroup))
-            .OfType<DuplicateGroup>()
-            .RaisesChangeEvent<CurrentDuplicateGroupChangedEvent>()
-            .Register();
-    }
+    public DuplicateGroup CurrentDuplicateGroup { get; set; }
 }
+
+// public class ApplicationState : ApplicationStateBase
+// {
+//     public DuplicateGroupCollection Duplicates
+//     {
+//         get => GetValue<DuplicateGroupCollection>();
+//         set => SetValue(value);
+//     }
+//
+//     public DuplicateGroup CurrentDuplicateGroup
+//     {
+//         get => GetValue<DuplicateGroup>();
+//         set => SetValue(value);
+//     }
+//
+//     public ApplicationState(EventBus eventBus)
+//         : base(eventBus)
+//     {
+//         CreateProperty(nameof(Duplicates))
+//             .OfType<DuplicateGroupCollection>()
+//             .RaisesChangeEvent<DuplicatesLoadedEvent>()
+//             .Register();
+//
+//         CreateProperty(nameof(CurrentDuplicateGroup))
+//             .OfType<DuplicateGroup>()
+//             .RaisesChangeEvent<CurrentDuplicateGroupChangedEvent>()
+//             .Register();
+//     }
+// }

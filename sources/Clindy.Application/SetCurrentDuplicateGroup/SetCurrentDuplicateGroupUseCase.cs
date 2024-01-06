@@ -37,6 +37,8 @@ internal class SetCurrentDuplicateGroupUseCase : IRequestHandler<SetCurrentDupli
         DuplicateGroup duplicateGroup = IdentifyFileDuplicateGroup(request.Hash);
         applicationState.CurrentDuplicateGroup = duplicateGroup;
 
+        RaiseCurrentDuplicateChangedEvent(duplicateGroup);
+
         return Task.CompletedTask;
     }
 

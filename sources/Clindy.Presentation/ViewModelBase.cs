@@ -20,4 +20,19 @@ namespace DustInTheWind.Clindy.Presentation;
 
 public class ViewModelBase : ReactiveObject
 {
+    protected bool InitializeMode { get; private set; }
+
+    protected void RunAsInitialize(Action action)
+    {
+        InitializeMode = true;
+
+        try
+        {
+            action();
+        }
+        finally
+        {
+            InitializeMode = false;
+        }
+    }
 }

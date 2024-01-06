@@ -16,7 +16,6 @@
 
 using DustInTheWind.Clindy.Applications;
 using DustInTheWind.Clindy.Applications.SetCurrentDuplicateGroup;
-using DustInTheWind.Clindy.Presentation.DuplicatesGroupDetailsArea.ViewModels;
 using DustInTheWind.DirectoryCompare.Infrastructure;
 using ReactiveUI;
 

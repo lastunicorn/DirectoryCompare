@@ -17,7 +17,7 @@
 using System.Diagnostics;
 using System.Windows.Input;
 
-namespace DustInTheWind.Clindy.Presentation.DuplicatesGroupDetailsArea.ViewModels;
+namespace DustInTheWind.Clindy.Presentation.FileGroupDetailsArea.ViewModels;
 
 public class OpenInExplorerCommand : ICommand
 {

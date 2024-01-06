@@ -18,7 +18,6 @@ using System.Reflection;
 using Autofac;
 using DustInTheWind.Clindy.Applications;
 using DustInTheWind.Clindy.Applications.PresentDuplicates;
-using DustInTheWind.Clindy.Presentation.DuplicatesGroupDetailsArea.ViewModels;
 using DustInTheWind.Clindy.Presentation.DuplicatesNavigatorArea.Commands;
 using DustInTheWind.Clindy.Presentation.DuplicatesNavigatorArea.ViewModels;
 using DustInTheWind.Clindy.Presentation.DuplicatesNavigatorArea.Views;
