@@ -18,7 +18,6 @@ using DustInTheWind.Clindy.Applications;
 using DustInTheWind.Clindy.Applications.LoadDuplicates;
 using DustInTheWind.Clindy.Applications.PresentDuplicates;
 using DustInTheWind.Clindy.Applications.SetCurrentDuplicateGroup;
-using DustInTheWind.DirectoryCompare.DataStructures;
 using ReactiveUI;
 
 namespace DustInTheWind.Clindy.Presentation.ViewModels;
@@ -30,8 +29,6 @@ public class DuplicatesNavigatorViewModel : ViewModelBase
     private List<DuplicateGroupListItem> duplicateGroups;
     private DuplicateGroupListItem selectedDuplicateGroup;
     private bool isLoading;
-    private int duplicateGroupCount;
-    private string totalSize;
 
     public bool IsLoading
     {
@@ -55,30 +52,22 @@ public class DuplicatesNavigatorViewModel : ViewModelBase
         }
     }
 
-    public int DuplicateGroupCount
-    {
-        get => duplicateGroupCount;
-        set => this.RaiseAndSetIfChanged(ref duplicateGroupCount, value);
-    }
+    public DuplicatesNavigatorHeaderViewModel HeaderViewModel { get; }
 
-    public string TotalSize
-    {
-        get => totalSize;
-        set => this.RaiseAndSetIfChanged(ref totalSize, value);
-    }
-
-    public RefreshCommand RefreshCommand { get; }
+    public DuplicatesNavigatorFooterViewModel FooterViewModel { get; }
 
     public DuplicatesNavigatorViewModel()
     {
     }
 
-    public DuplicatesNavigatorViewModel(RequestBus requestBus, EventBus eventBus)
+    public DuplicatesNavigatorViewModel(RequestBus requestBus, EventBus eventBus,
+        DuplicatesNavigatorFooterViewModel footerViewModel, DuplicatesNavigatorHeaderViewModel headerViewModel)
     {
         if (eventBus == null) throw new ArgumentNullException(nameof(eventBus));
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
 
-        RefreshCommand = new RefreshCommand(requestBus);
+        FooterViewModel = footerViewModel ?? throw new ArgumentNullException(nameof(footerViewModel));
+        HeaderViewModel = headerViewModel ?? throw new ArgumentNullException(nameof(headerViewModel));
 
         eventBus.Subscribe<DuplicatesListLoadingEvent>(HandleDuplicatesListLoadingEvent);
         eventBus.Subscribe<DuplicatesListLoadedEvent>(HandleDuplicatesListLoadedEvent);
@@ -88,8 +77,7 @@ public class DuplicatesNavigatorViewModel : ViewModelBase
     {
         IsLoading = true;
         DuplicateGroups = null;
-        DuplicateGroupCount = 0;
-        TotalSize = DataSize.Zero.ToString("simple");
+        FooterViewModel.Clear();
 
         await Task.Delay(500, cancellationToken);
     }
@@ -118,8 +106,8 @@ public class DuplicatesNavigatorViewModel : ViewModelBase
 
         SelectedDuplicateGroup = IdentifyDuplicateGroup(response.CurrentDuplicateGroup);
 
-        DuplicateGroupCount = DuplicateGroups.Count;
-        TotalSize = response.TotalSize.ToString("detailed");
+        FooterViewModel.SetDuplicateGroupCount(DuplicateGroups.Count);
+        FooterViewModel.SetTotalSize(response.TotalSize);
     }
 
     private DuplicateGroupListItem IdentifyDuplicateGroup(FileGroup? fileGroup)

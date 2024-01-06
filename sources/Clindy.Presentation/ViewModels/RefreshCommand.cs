@@ -16,6 +16,7 @@
 
 using System.Windows.Input;
 using DustInTheWind.Clindy.Applications;
+using DustInTheWind.Clindy.Applications.LoadDuplicates;
 using DustInTheWind.Clindy.Applications.Refresh;
 
 namespace DustInTheWind.Clindy.Presentation.ViewModels;
@@ -23,22 +24,48 @@ namespace DustInTheWind.Clindy.Presentation.ViewModels;
 public class RefreshCommand : ICommand
 {
     private readonly RequestBus requestBus;
+    private bool canExecute = true;
 
     public event EventHandler CanExecuteChanged;
 
-    public RefreshCommand(RequestBus requestBus)
+    public RefreshCommand(RequestBus requestBus, EventBus eventBus)
     {
+        if (eventBus == null) throw new ArgumentNullException(nameof(eventBus));
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
+
+        eventBus.Subscribe<DuplicatesListLoadingEvent>(HandleDuplicatesListLoadingEvent);
+        eventBus.Subscribe<DuplicatesListLoadedEvent>(HandleDuplicatesListLoadedEvent);
+    }
+
+    private Task HandleDuplicatesListLoadingEvent(DuplicatesListLoadingEvent ev, CancellationToken cancellationToken)
+    {
+        canExecute = false;
+        OnCanExecuteChanged();
+
+        return Task.CompletedTask;
+    }
+
+    private Task HandleDuplicatesListLoadedEvent(DuplicatesListLoadedEvent ev, CancellationToken cancellationToken)
+    {
+        canExecute = true;
+        OnCanExecuteChanged();
+
+        return Task.CompletedTask;
     }
 
     public bool CanExecute(object parameter)
     {
-        return true;
+        return canExecute;
     }
 
     public void Execute(object parameter)
     {
         RefreshRequest request = new();
         _ = requestBus.PlaceRequest(request);
+    }
+
+    protected virtual void OnCanExecuteChanged()
+    {
+        CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
 }

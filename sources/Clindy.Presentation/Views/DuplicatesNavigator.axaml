@@ -22,11 +22,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:DustInTheWind.Clindy.Presentation.ViewModels"
+    xmlns:views="clr-namespace:DustInTheWind.Clindy.Presentation.Views"
 
     x:Class="DustInTheWind.Clindy.Presentation.Views.DuplicatesNavigator"
 
     mc:Ignorable="d"
-    d:DesignWidth="800"
+    d:DesignWidth="300"
     d:DesignHeight="450"
     x:DataType="viewModels:DuplicatesNavigatorViewModel">
 
@@ -36,63 +37,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <DockPanel>
 
-        <Border
+        <views:DuplicatesNavigatorHeader
             DockPanel.Dock="Top"
-            Background="DarkSlateGray"
-            Padding="2">
+            DataContext="{Binding HeaderViewModel}"/>
 
-            <StackPanel
-                Orientation="Horizontal">
-
-                <Button
-                    Content="R"
-                    Command="{Binding RefreshCommand}" />
-
-            </StackPanel>
-
-        </Border>
-
-        <Border
+        <views:DuplicatesNavigatorFooter
             DockPanel.Dock="Bottom"
-            Background="DarkSlateGray"
-            Padding="10">
-
-            <Grid>
-
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="8" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <TextBlock
-                    Grid.Row="0"
-                    Grid.Column="0"
-                    Text="Groups:" />
-
-                <TextBlock
-                    Grid.Row="0"
-                    Grid.Column="2"
-                    Text="{Binding DuplicateGroupCount}" />
-
-                <TextBlock
-                    Grid.Row="2"
-                    Grid.Column="0"
-                    Text="Total Size:" />
-
-                <TextBlock
-                    Grid.Row="2"
-                    Grid.Column="2"
-                    Text="{Binding TotalSize}" />
-            </Grid>
-
-        </Border>
+            DataContext="{Binding FooterViewModel}" />
 
         <Grid>
 
@@ -103,67 +54,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="viewModels:DuplicateGroupListItem">
-                        <StackPanel
-                            Orientation="Vertical">
-
-                            <TextBlock
-                                FontSize="14"
-                                Text="{Binding FirstFileName}" />
-
-                            <!-- <TextBlock -->
-                            <!--     FontSize="12" -->
-                            <!--     Foreground="Gray"> -->
-                            <!--      -->
-                            <!--     <Run Text="Count: " /> -->
-                            <!--     <Run Text="{Binding FileCount}" /> -->
-                            <!--     <Run Text="{Binding FileSize}" /> -->
-                            <!-- -->
-                            <!-- </TextBlock> -->
-
-                            <Grid
-                                Margin="6 2 0 0">
-
-                                <Grid.Styles>
-                                    <Style Selector="TextBlock">
-                                        <Setter Property="FontSize" Value="12" />
-                                        <Setter Property="Foreground" Value="LightGray" />
-                                    </Style>
-                                </Grid.Styles>
-
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="8" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="0" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-
-                                <TextBlock
-                                    Grid.Row="0"
-                                    Grid.Column="0"
-                                    Text="Count:" />
-
-                                <TextBlock
-                                    Grid.Row="0"
-                                    Grid.Column="2"
-                                    Text="{Binding FileCount}" />
-
-                                <TextBlock
-                                    Grid.Row="2"
-                                    Grid.Column="0"
-                                    Text="Size:" />
-
-                                <TextBlock
-                                    Grid.Row="2"
-                                    Grid.Column="2"
-                                    Text="{Binding FileSize}" />
-                            </Grid>
-
-                        </StackPanel>
+                        <views:DuplicatesNavigatorItem DataContext="{Binding}" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
 

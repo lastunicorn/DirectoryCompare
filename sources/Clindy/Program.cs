@@ -15,6 +15,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Globalization;
+using System.Runtime.InteropServices;
+using System.Threading;
 using Autofac;
 using Avalonia;
 using Avalonia.Controls;
@@ -33,6 +36,8 @@ sealed class Program
     [STAThread]
     public static void Main(string[] args)
     {
+        CultureInfo.CurrentCulture = new CultureInfo("ro-RO");
+        
         // Build a new Autofac container.
         ContainerBuilder containerBuilder = new();
 

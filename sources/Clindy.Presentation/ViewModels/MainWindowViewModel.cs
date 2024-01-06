@@ -57,13 +57,14 @@ public class MainWindowViewModel : ViewModelBase
     {
     }
 
-    public MainWindowViewModel(RequestBus requestBus, EventBus eventBus)
+    public MainWindowViewModel(RequestBus requestBus, EventBus eventBus,
+        OpenInExplorerCommand openInExplorerCommand, DuplicatesNavigatorViewModel duplicatesNavigatorViewModel)
     {
         if (eventBus == null) throw new ArgumentNullException(nameof(eventBus));
         this.requestBus = requestBus ?? throw new ArgumentNullException(nameof(requestBus));
 
-        openInExplorerCommand = new OpenInExplorerCommand();
-        DuplicatesNavigatorViewModel = new DuplicatesNavigatorViewModel(requestBus, eventBus);
+        this.openInExplorerCommand = openInExplorerCommand;
+        DuplicatesNavigatorViewModel = duplicatesNavigatorViewModel;
 
         eventBus.Subscribe<CurrentDuplicateReplacedEvent>(HandleCurrentDuplicateReplacedEvent);
 

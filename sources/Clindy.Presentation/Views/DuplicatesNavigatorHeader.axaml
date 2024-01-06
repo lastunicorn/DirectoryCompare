@@ -1,0 +1,65 @@
+<!--
+DirectoryCompare
+Copyright (C) 2017-2020 Dust in the Wind
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:DustInTheWind.Clindy.Presentation.ViewModels"
+
+    x:Class="DustInTheWind.Clindy.Presentation.Views.DuplicatesNavigatorHeader"
+    
+    mc:Ignorable="d"
+    d:DesignWidth="800"
+    d:DesignHeight="450"
+    x:DataType="viewModels:DuplicatesNavigatorHeaderViewModel">
+    
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="/RefreshIconStyles.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Border
+        Background="DarkSlateGray"
+        Padding="4">
+
+        <StackPanel
+            Orientation="Horizontal">
+
+            <Button
+                Width="40"
+                Height="40"
+                Command="{Binding RefreshCommand}">
+
+                <Viewbox>
+                    <Path
+                        Data="{StaticResource RefreshGeometry}"
+                        Fill="DarkGray" />
+                </Viewbox>
+
+            </Button>
+
+        </StackPanel>
+
+    </Border>
+    
+</UserControl>

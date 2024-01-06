@@ -56,6 +56,11 @@ internal static class Setup
 
         containerBuilder.RegisterType<DuplicatesNavigator>().AsSelf();
         containerBuilder.RegisterType<DuplicatesNavigatorViewModel>().AsSelf();
+        containerBuilder.RegisterType<DuplicatesNavigatorHeaderViewModel>().AsSelf();
+        containerBuilder.RegisterType<DuplicatesNavigatorFooterViewModel>().AsSelf();
+        
+        containerBuilder.RegisterType<OpenInExplorerCommand>().AsSelf();
+        containerBuilder.RegisterType<RefreshCommand>().AsSelf();
     }
 
     private static void RegisterAdapters(ContainerBuilder containerBuilder)
