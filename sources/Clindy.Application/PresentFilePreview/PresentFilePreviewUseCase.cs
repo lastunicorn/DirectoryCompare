@@ -51,14 +51,14 @@ public class PresentFilePreviewUseCase : IRequestHandler<PresentFilePreviewReque
                 case ".exe":
                 case ".dll":
                 {
-                    response.FileStream = fileSystem.GetFileStream(filePath);
+                    response.FileStream = SaveRetrieveFileStream(filePath);
                     response.FileType = FileType.Image;
                     break;
                 }
 
                 case ".txt":
                 {
-                    response.FileStream = fileSystem.GetFileStream(filePath);
+                    response.FileStream = SaveRetrieveFileStream(filePath);
                     response.FileType = FileType.Text;
                     break;
                 }
@@ -78,5 +78,17 @@ public class PresentFilePreviewUseCase : IRequestHandler<PresentFilePreviewReque
         }
 
         return Task.FromResult(response);
+    }
+
+    private Stream SaveRetrieveFileStream(string filePath)
+    {
+        try
+        {
+            return fileSystem.GetFileStream(filePath);
+        }
+        catch
+        {
+            return Stream.Null;
+        }
     }
 }

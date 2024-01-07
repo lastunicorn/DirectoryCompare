@@ -42,6 +42,8 @@ public class FileSystem : IFileSystem
 
     public Stream GetFileStream(string filePath)
     {
-        return File.OpenRead(filePath);
+        return File.Exists(filePath)
+            ? File.OpenRead(filePath)
+            : Stream.Null;
     }
 }

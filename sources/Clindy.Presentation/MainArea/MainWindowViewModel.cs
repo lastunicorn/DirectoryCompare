@@ -112,7 +112,9 @@ public class MainWindowViewModel : ViewModelBase
                         break;
 
                     case FileType.Image:
-                        Image = new Bitmap(response.FileStream);
+                        Image = response.FileStream == Stream.Null
+                            ? null
+                            : new Bitmap(response.FileStream);
                         Text = null;
                         break;
 
@@ -132,7 +134,8 @@ public class MainWindowViewModel : ViewModelBase
             }
             catch
             {
-                // Ignore
+                Image = null;
+                Text = null;
             }
         });
         Dispatcher.UIThread.RunJobs();
@@ -140,6 +143,7 @@ public class MainWindowViewModel : ViewModelBase
 
     private async void LoadDuplicates()
     {
+        await Task.Delay(1000);
         LoadDuplicatesRequest request = new();
         await requestBus.PlaceRequest(request);
     }

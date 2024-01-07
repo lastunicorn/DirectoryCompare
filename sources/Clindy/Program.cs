@@ -38,7 +38,6 @@ internal static class Program
         
         // Build a new Autofac container.
         ContainerBuilder containerBuilder = new();
-
         Setup.RegisterDependencies(containerBuilder);
 
         // Use Autofac for ReactiveUI dependency resolution.
@@ -57,8 +56,7 @@ internal static class Program
         IContainer container = containerBuilder.Build();
         resolver.SetLifetimeScope(container);
 
-        BuildAvaloniaApp()
-            .Start(AppMain, args);
+        BuildAvaloniaApp().Start(AppMain, args);
     }
 
     private static void AppMain(Application app, string[] args)
