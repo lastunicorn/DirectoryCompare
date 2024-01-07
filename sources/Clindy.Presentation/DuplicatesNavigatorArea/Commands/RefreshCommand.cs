@@ -64,8 +64,6 @@ public sealed class RefreshCommand : ICommand
 
     private async void ReloadDuplicatesList()
     {
-        await Task.Delay(1000);
-
         LoadDuplicatesRequest request = new();
         await requestBus.PlaceRequest(request);
     }
