@@ -75,15 +75,18 @@ internal class LoadDuplicatesUseCase : IRequestHandler<LoadDuplicatesRequest>
     {
         return await MinimumExecutionTime.RunAsync(1000, () =>
         {
-            IEnumerable<DuplicateGroup> fileDuplicateGroups = RetrieveFileDuplicateGroups()
-                .Select(x => new DuplicateGroup
-                {
-                    FilePaths = x.FilePaths,
-                    FileSize = x.FileSize,
-                    FileHash = x.FileHash
-                });
-            DuplicateGroupCollection duplicateGroupCollection = new(fileDuplicateGroups);
-            return Task.FromResult(duplicateGroupCollection);
+            return Task.Run(() =>
+            {
+                IEnumerable<DuplicateGroup> fileDuplicateGroups = RetrieveFileDuplicateGroups()
+                    .Select(x => new DuplicateGroup
+                    {
+                        FilePaths = x.FilePaths,
+                        FileSize = x.FileSize,
+                        FileHash = x.FileHash
+                    });
+                DuplicateGroupCollection duplicateGroupCollection = new(fileDuplicateGroups);
+                return duplicateGroupCollection;
+            }, cancellationToken);
         }, cancellationToken);
     }
 

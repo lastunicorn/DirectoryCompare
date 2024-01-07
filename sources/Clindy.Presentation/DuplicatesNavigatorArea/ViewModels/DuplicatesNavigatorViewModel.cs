@@ -86,7 +86,6 @@ public class DuplicatesNavigatorViewModel : ViewModelBase
                 FooterViewModel.Clear();
             });
         });
-        Dispatcher.UIThread.RunJobs();
     }
 
     private void HandleDuplicatesLoadedEvent(DuplicatesLoadedEvent ev)
@@ -101,7 +100,6 @@ public class DuplicatesNavigatorViewModel : ViewModelBase
             {
                 IsLoading = false;
             });
-            Dispatcher.UIThread.RunJobs();
         }
     }
 

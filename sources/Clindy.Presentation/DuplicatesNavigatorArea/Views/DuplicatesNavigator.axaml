@@ -39,7 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
         <views:DuplicatesNavigatorHeader
             DockPanel.Dock="Top"
-            DataContext="{Binding HeaderViewModel}"/>
+            DataContext="{Binding HeaderViewModel}" />
 
         <views:DuplicatesNavigatorFooter
             DockPanel.Dock="Bottom"
