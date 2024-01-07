@@ -30,10 +30,10 @@ internal class LoadDuplicatesUseCase : IRequestHandler<LoadDuplicatesRequest>
     private readonly IFileSystem fileSystem;
     private readonly ApplicationState applicationState;
     private readonly EventBus eventBus;
-    private readonly IConfig config;
+    private readonly IGuiConfig config;
 
     public LoadDuplicatesUseCase(IImportExport importExport, IFileSystem fileSystem, ApplicationState applicationState,
-        EventBus eventBus, IConfig config)
+        EventBus eventBus, IGuiConfig config)
     {
         this.importExport = importExport ?? throw new ArgumentNullException(nameof(importExport));
         this.fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));

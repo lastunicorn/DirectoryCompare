@@ -77,7 +77,7 @@ internal static class Setup
         
         // Config Access
         
-        containerBuilder.RegisterType<Config>().As<IConfig>().SingleInstance();
+        containerBuilder.RegisterType<GuiConfig>().As<IGuiConfig>().SingleInstance();
         
         // Data Access
         

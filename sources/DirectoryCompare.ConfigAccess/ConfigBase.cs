@@ -14,16 +14,36 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Ports.ConfigAccess;
+using Microsoft.Extensions.Configuration;
 
 namespace DustInTheWind.DirectoryCompare.ConfigAccess;
 
-public class Config : ConfigBase, IConfig
+public class ConfigBase
 {
-    public string ConnectionString => Configuration["ConnectionString"];
+    protected readonly IConfiguration Configuration;
 
-    public Config()
-        : base("appsettings.json")
+    protected ConfigBase(string configFilePath)
     {
+        Configuration = new ConfigurationBuilder()
+            .AddJsonFile(configFilePath)
+            .Build();
+    }
+
+    protected bool GetBool(string name)
+    {
+        string rawValue = Configuration[name];
+
+        if (string.IsNullOrEmpty(rawValue))
+            return false;
+
+        return bool.Parse(rawValue);
+    }
+
+    protected IEnumerable<string> GetArray(string name)
+    {
+        IConfigurationSection configurationSection = Configuration.GetSection(name);
+
+        string[] value = configurationSection.Get<string[]>();
+        return value ?? Enumerable.Empty<string>();
     }
 }

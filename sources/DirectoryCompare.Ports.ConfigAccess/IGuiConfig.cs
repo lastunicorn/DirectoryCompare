@@ -14,16 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Ports.ConfigAccess;
+namespace DustInTheWind.DirectoryCompare.Ports.ConfigAccess;
 
-namespace DustInTheWind.DirectoryCompare.ConfigAccess;
-
-public class Config : ConfigBase, IConfig
+public interface IGuiConfig
 {
-    public string ConnectionString => Configuration["ConnectionString"];
+    string DuplicatesFilePath { get; }
 
-    public Config()
-        : base("appsettings.json")
-    {
-    }
+    bool CheckFilesExistence { get; }
+
+    bool EnableFilePreview { get; }
+
+    IEnumerable<string> ImageFileExtensions { get; }
+
+    IEnumerable<string> TextFileExtensions { get; }
 }

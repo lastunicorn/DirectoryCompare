@@ -1,4 +1,4 @@
-// DirectoryCompare
+// Directory Compare
 // Copyright (C) 2017-2024 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -19,14 +19,4 @@ namespace DustInTheWind.DirectoryCompare.Ports.ConfigAccess;
 public interface IConfig
 {
     string ConnectionString { get; }
-
-    /// <summary>
-    /// Only for GUI
-    /// </summary>
-    string DuplicatesFilePath { get; }
-
-    /// <summary>
-    /// Only for GUI
-    /// </summary>
-    bool CheckFilesExistence { get; }
 }

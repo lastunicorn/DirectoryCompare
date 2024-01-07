@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.Ports.ConfigAccess;
 using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 using MediatR;
 
@@ -23,64 +24,72 @@ public class PresentFilePreviewUseCase : IRequestHandler<PresentFilePreviewReque
 {
     private readonly ApplicationState applicationState;
     private readonly IFileSystem fileSystem;
+    private readonly IGuiConfig config;
+    private PresentFilePreviewResponse response;
 
-    public PresentFilePreviewUseCase(ApplicationState applicationState, IFileSystem fileSystem)
+    public PresentFilePreviewUseCase(ApplicationState applicationState, IFileSystem fileSystem, IGuiConfig config)
     {
         this.applicationState = applicationState ?? throw new ArgumentNullException(nameof(applicationState));
         this.fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
+        this.config = config ?? throw new ArgumentNullException(nameof(config));
     }
 
     public async Task<PresentFilePreviewResponse> Handle(PresentFilePreviewRequest request, CancellationToken cancellationToken)
     {
-        PresentFilePreviewResponse response = new();
-
-        string filePath = applicationState.CurrentDuplicateFile;
-
-        if (filePath != null)
+        response = new PresentFilePreviewResponse
         {
-            string fileExtension = Path.GetExtension(filePath);
+            FileStream = Stream.Null,
+            FileType = FileType.None
+        };
 
-            switch (fileExtension.ToLower())
+        if (config.EnableFilePreview)
+        {
+            string filePath = applicationState.CurrentDuplicateFile;
+
+            if (filePath != null)
             {
-                case ".jpg":
-                case ".jpeg":
-                case ".gif":
-                case ".png":
-                case ".webp":
-                case ".bmp":
-                case ".exe":
-                case ".dll":
-                {
-                    response.FileStream = SaveRetrieveFileStream(filePath);
-                    response.FileType = FileType.Image;
-                    break;
-                }
-
-                case ".txt":
-                {
-                    response.FileStream = SaveRetrieveFileStream(filePath);
-                    response.FileType = FileType.Text;
-                    break;
-                }
-
-                default:
-                {
-                    response.FileStream = Stream.Null;
-                    response.FileType = FileType.Unknown;
-                    break;
-                }
+                FileType fileType = ComputeFileType(filePath);
+                CreatePreviewInfo(fileType, filePath);
             }
-        }
-        else
-        {
-            response.FileStream = Stream.Null;
-            response.FileType = FileType.None;
         }
 
         return response;
     }
 
-    private Stream SaveRetrieveFileStream(string filePath)
+    private FileType ComputeFileType(string filePath)
+    {
+        FileExtensions fileExtensions = new();
+
+        fileExtensions.Add(FileType.Image, config.ImageFileExtensions);
+        fileExtensions.Add(FileType.Image, config.TextFileExtensions);
+
+        return fileExtensions.FindFileType(filePath);
+    }
+
+    private void CreatePreviewInfo(FileType fileType, string filePath)
+    {
+        switch (fileType)
+        {
+            case FileType.None:
+            case FileType.Unknown:
+                break;
+
+            case FileType.Image:
+                response.FileStream = SafeRetrieveFileStream(filePath);
+                response.FileType = FileType.Image;
+                break;
+
+            case FileType.Text:
+                response.FileStream = SafeRetrieveFileStream(filePath);
+                response.FileType = FileType.Text;
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+
+    private Stream SafeRetrieveFileStream(string filePath)
     {
         try
         {

@@ -1,4 +1,4 @@
-// DirectoryCompare
+// Directory Compare
 // Copyright (C) 2017-2024 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -14,36 +14,24 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
+using DustInTheWind.DirectoryCompare.Ports.ConfigAccess;
 
-namespace DustInTheWind.DirectoryCompare.FileSystemAccess;
+namespace DustInTheWind.DirectoryCompare.ConfigAccess;
 
-public class FileSystem : IFileSystem
+public class GuiConfig : ConfigBase, IGuiConfig
 {
-    public bool ExistsDirectory(string path)
-    {
-        return Directory.Exists(path);
-    }
+    public string DuplicatesFilePath => Configuration["DuplicatesFilePath"];
 
-    public bool FileExists(string path)
-    {
-        return File.Exists(path);
-    }
+    public bool CheckFilesExistence => GetBool("CheckFilesExistence");
 
-    public string[] GetFiles(string path)
-    {
-        return Directory.GetFiles(path);
-    }
+    public bool EnableFilePreview => GetBool("EnableFilePreview");
 
-    public string[] GetDirectories(string path)
-    {
-        return Directory.GetDirectories(path);
-    }
+    public IEnumerable<string> ImageFileExtensions => GetArray("ImageFileExtensions");
 
-    public Stream GetFileStream(string filePath)
-    {   
-        return File.Exists(filePath)
-            ? File.OpenRead(filePath)
-            : Stream.Null;
+    public IEnumerable<string> TextFileExtensions => GetArray("TextFileExtensions");
+
+    public GuiConfig()
+        : base("appsettings.json")
+    {
     }
 }
