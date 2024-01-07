@@ -31,7 +31,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     x:DataType="fileGroupDetailsArea:FileGroupViewModel">
 
     <ListBox
-        ItemsSource="{Binding DuplicateFiles}">
+        ItemsSource="{Binding DuplicateFiles}"
+        SelectedItem="{Binding SelectedDuplicateFile}">
 
         <ListBox.ItemTemplate>
             <DataTemplate DataType="fileGroupDetailsArea:FileGroupItem">
@@ -44,6 +45,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
                     <TextBlock
                         Text="{Binding FilePath}"
+                        TextWrapping="Wrap"
                         VerticalAlignment="Center" />
                 </DockPanel>
             </DataTemplate>

@@ -20,5 +20,7 @@ namespace DustInTheWind.Clindy.Applications.SetCurrentDuplicateGroup;
 
 public class CurrentDuplicateGroupChangedEvent
 {
-    public DuplicateGroup? DuplicateGroup { get; set; }
+    public DuplicateGroup DuplicateGroup { get; set; }
+
+    public string DuplicateFile { get; set; }
 }

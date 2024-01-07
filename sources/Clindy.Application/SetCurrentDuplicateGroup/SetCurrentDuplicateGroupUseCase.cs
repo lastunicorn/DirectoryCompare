@@ -36,8 +36,9 @@ internal class SetCurrentDuplicateGroupUseCase : IRequestHandler<SetCurrentDupli
     {
         DuplicateGroup duplicateGroup = IdentifyFileDuplicateGroup(request.Hash);
         applicationState.CurrentDuplicateGroup = duplicateGroup;
+        applicationState.CurrentDuplicateFile = duplicateGroup?.FilePaths?.FirstOrDefault();
 
-        RaiseCurrentDuplicateChangedEvent(duplicateGroup);
+        RaiseCurrentDuplicateChangedEvent();
 
         return Task.CompletedTask;
     }
@@ -51,11 +52,12 @@ internal class SetCurrentDuplicateGroupUseCase : IRequestHandler<SetCurrentDupli
             .FirstOrDefault(x => x.FileHash == fileHash);
     }
 
-    private void RaiseCurrentDuplicateChangedEvent(DuplicateGroup duplicateGroup)
+    private void RaiseCurrentDuplicateChangedEvent()
     {
         CurrentDuplicateGroupChangedEvent currentDuplicateGroupChanged = new()
         {
-            DuplicateGroup = duplicateGroup
+            DuplicateGroup = applicationState.CurrentDuplicateGroup,
+            DuplicateFile = applicationState.CurrentDuplicateFile
         };
 
         eventBus.Publish(currentDuplicateGroupChanged);

@@ -47,8 +47,11 @@ internal class LoadDuplicatesUseCase : IRequestHandler<LoadDuplicatesRequest>
         RaiseDuplicatesListLoadingEvent();
 
         DuplicateGroup oldDuplicateGroup = applicationState.CurrentDuplicateGroup;
+        string oldDuplicateFile = applicationState.CurrentDuplicateFile;
+
         applicationState.CurrentDuplicateGroup = null;
-        RaiseCurrentDuplicateChangedEvent(null);
+        applicationState.CurrentDuplicateFile = null;
+        RaiseCurrentDuplicateChangedEvent();
 
         DuplicateGroupCollection duplicatesGroupCollection = await RetrieveDuplicatesGroupCollection(cancellationToken);
         applicationState.Duplicates = duplicatesGroupCollection;
@@ -60,10 +63,11 @@ internal class LoadDuplicatesUseCase : IRequestHandler<LoadDuplicatesRequest>
             if (oldDuplicateGroupStillExists)
             {
                 applicationState.CurrentDuplicateGroup = oldDuplicateGroup;
-                RaiseCurrentDuplicateChangedEvent(oldDuplicateGroup);
+                applicationState.CurrentDuplicateFile = oldDuplicateFile;
+                RaiseCurrentDuplicateChangedEvent();
             }
         }
-        
+
         RaiseDuplicatesLoadedEvent();
     }
 
@@ -116,11 +120,12 @@ internal class LoadDuplicatesUseCase : IRequestHandler<LoadDuplicatesRequest>
         eventBus.Publish(duplicatesLoadedEvent);
     }
 
-    private void RaiseCurrentDuplicateChangedEvent(DuplicateGroup duplicateGroup)
+    private void RaiseCurrentDuplicateChangedEvent()
     {
         CurrentDuplicateGroupChangedEvent currentDuplicateGroupChanged = new()
         {
-            DuplicateGroup = duplicateGroup
+            DuplicateGroup = applicationState.CurrentDuplicateGroup,
+            DuplicateFile = applicationState.CurrentDuplicateFile
         };
 
         eventBus.Publish(currentDuplicateGroupChanged);

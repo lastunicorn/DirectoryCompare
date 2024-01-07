@@ -23,4 +23,6 @@ public class ApplicationState
     public DuplicateGroupCollection Duplicates { get; set; }
 
     public DuplicateGroup CurrentDuplicateGroup { get; set; }
+
+    public string CurrentDuplicateFile { get; set; }
 }

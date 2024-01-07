@@ -39,4 +39,9 @@ public class FileSystem : IFileSystem
     {
         return Directory.GetDirectories(path);
     }
+
+    public Stream GetFileStream(string filePath)
+    {
+        return File.OpenRead(filePath);
+    }
 }

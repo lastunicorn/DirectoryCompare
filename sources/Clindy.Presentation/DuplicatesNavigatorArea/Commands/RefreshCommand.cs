@@ -41,13 +41,15 @@ public sealed class RefreshCommand : ICommand
     private void HandleDuplicatesListLoadingEvent(DuplicatesLoadingEvent ev)
     {
         canExecute = false;
-        Dispatcher.UIThread.Invoke(OnCanExecuteChanged);
+        Dispatcher.UIThread.Post(OnCanExecuteChanged);
+        Dispatcher.UIThread.RunJobs();
     }
 
     private void HandleDuplicatesListLoadedEvent(DuplicatesLoadedEvent ev)
     {
         canExecute = true;
-        Dispatcher.UIThread.Invoke(OnCanExecuteChanged);
+        Dispatcher.UIThread.Post(OnCanExecuteChanged);
+        Dispatcher.UIThread.RunJobs();
     }
 
     public bool CanExecute(object parameter)

@@ -1,4 +1,4 @@
-// DirectoryCompare
+// Directory Compare
 // Copyright (C) 2017-2024 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -14,17 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
+namespace DustInTheWind.Clindy.Applications.PresentFilePreview;
 
-public interface IFileSystem
+public enum FileType
 {
-    bool ExistsDirectory(string path);
-
-    bool FileExists(string path);
-
-    string[] GetFiles(string path);
-
-    string[] GetDirectories(string path);
-
-    Stream GetFileStream(string filePath);
+    None = 0,
+    Unknown,
+    Image,
+    Text
 }

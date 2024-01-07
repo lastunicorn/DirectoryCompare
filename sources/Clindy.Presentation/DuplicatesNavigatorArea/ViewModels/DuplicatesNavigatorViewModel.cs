@@ -76,7 +76,7 @@ public class DuplicatesNavigatorViewModel : ViewModelBase
 
     private void HandleDuplicatesLoadingEvent(DuplicatesLoadingEvent ev)
     {
-        Dispatcher.UIThread.Invoke(() =>
+        Dispatcher.UIThread.Post(() =>
         {
             IsLoading = true;
 
@@ -86,6 +86,7 @@ public class DuplicatesNavigatorViewModel : ViewModelBase
                 FooterViewModel.Clear();
             });
         });
+        Dispatcher.UIThread.RunJobs();
     }
 
     private void HandleDuplicatesLoadedEvent(DuplicatesLoadedEvent ev)
@@ -96,10 +97,11 @@ public class DuplicatesNavigatorViewModel : ViewModelBase
         }
         finally
         {
-            Dispatcher.UIThread.Invoke(() =>
+            Dispatcher.UIThread.Post(() =>
             {
                 IsLoading = false;
             });
+            Dispatcher.UIThread.RunJobs();
         }
     }
 
@@ -108,7 +110,7 @@ public class DuplicatesNavigatorViewModel : ViewModelBase
         PresentDuplicatesRequest request = new();
         PresentDuplicatesResponse response = await requestBus.PlaceRequest<PresentDuplicatesRequest, PresentDuplicatesResponse>(request);
 
-        Dispatcher.UIThread.Invoke(() =>
+        Dispatcher.UIThread.Post(() =>
         {
             IOrderedEnumerable<DuplicateGroupListItem> listItems = response.Duplicates
                 .Select(x => new DuplicateGroupListItem(x))
@@ -120,6 +122,7 @@ public class DuplicatesNavigatorViewModel : ViewModelBase
             FooterViewModel.SetDuplicateGroupCount(DuplicateGroups.Count);
             FooterViewModel.SetTotalSize(response.TotalSize);
         });
+        Dispatcher.UIThread.RunJobs();
     }
 
     private DuplicateGroupListItem IdentifyDuplicateGroup(DuplicateGroup duplicateGroup)

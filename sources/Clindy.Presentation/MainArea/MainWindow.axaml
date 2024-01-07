@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     xmlns:fileGroupDetailsArea="clr-namespace:DustInTheWind.Clindy.Presentation.FileGroupDetailsArea"
 
     x:Class="DustInTheWind.Clindy.Presentation.MainArea.MainWindow"
-    
+
     mc:Ignorable="d"
     d:DesignWidth="800"
     d:DesignHeight="450"
@@ -50,8 +50,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <!-- Left -->
 
         <views1:DuplicatesNavigator
-            DataContext="{Binding DuplicatesNavigatorViewModel}"/>
-        
+            DataContext="{Binding DuplicatesNavigatorViewModel}" />
+
         <!-- Vertical Splitter -->
 
         <GridSplitter
@@ -73,8 +73,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
             <fileGroupDetailsArea:FileGroupControl
                 Grid.Row="0"
-                DataContext="{Binding FileGroupViewModel}"/>
-            
+                DataContext="{Binding FileGroupViewModel}" />
+
             <!-- Horizontal Splitter -->
 
             <GridSplitter
@@ -83,11 +83,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
             <!-- Right-Bottom -->
 
-            <TextBlock
+            <!-- <TextBlock -->
+            <!--     Grid.Row="2" -->
+            <!--     Text="No file selected or unknown file type." -->
+            <!--     VerticalAlignment="Center" -->
+            <!--     HorizontalAlignment="Center" /> -->
+
+            <Image
                 Grid.Row="2"
-                Text="Hello!"
-                VerticalAlignment="Center"
-                HorizontalAlignment="Center" />
+                IsVisible="{Binding Image, Converter={x:Static ObjectConverters.IsNotNull}}"
+                Source="{Binding Image}" />
+
+            <ScrollViewer
+                Grid.Row="2"
+                VerticalScrollBarVisibility="Auto"
+                HorizontalScrollBarVisibility="Auto"
+                IsVisible="{Binding Text, Converter={x:Static ObjectConverters.IsNotNull}}">
+
+                <TextBlock
+                    Text="{Binding Text}"
+                    Margin="10" />
+
+            </ScrollViewer>
         </Grid>
 
     </Grid>

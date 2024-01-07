@@ -21,9 +21,4 @@ public class FileGroupItem
     public string FilePath { get; init; }
 
     public OpenInExplorerCommand OpenCommand { get; init; }
-
-    public override string ToString()
-    {
-        return FilePath;
-    }
 }

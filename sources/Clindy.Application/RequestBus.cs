@@ -34,8 +34,8 @@ public class RequestBus
         return response;
     }
 
-    public async Task PlaceRequest<TRequest>(TRequest request)
+    public Task PlaceRequest<TRequest>(TRequest request)
     {
-        await mediator.Send(request);
+        return mediator.Send(request);
     }
 }
