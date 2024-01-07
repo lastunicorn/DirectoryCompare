@@ -30,13 +30,11 @@ public class SetCurrentDuplicateFileUseCase : IRequestHandler<SetCurrentDuplicat
         this.eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
     }
 
-    public Task Handle(SetCurrentDuplicateFileRequest request, CancellationToken cancellationToken)
+    public async Task Handle(SetCurrentDuplicateFileRequest request, CancellationToken cancellationToken)
     {
         applicationState.CurrentDuplicateFile = request.FilePath;
 
         CurrentDuplicateFileChangedEvent ev = new();
         eventBus.Publish(ev);
-
-        return Task.CompletedTask;
     }
 }

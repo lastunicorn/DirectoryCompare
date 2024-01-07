@@ -30,7 +30,7 @@ public class PresentFilePreviewUseCase : IRequestHandler<PresentFilePreviewReque
         this.fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
     }
 
-    public Task<PresentFilePreviewResponse> Handle(PresentFilePreviewRequest request, CancellationToken cancellationToken)
+    public async Task<PresentFilePreviewResponse> Handle(PresentFilePreviewRequest request, CancellationToken cancellationToken)
     {
         PresentFilePreviewResponse response = new();
 
@@ -77,7 +77,7 @@ public class PresentFilePreviewUseCase : IRequestHandler<PresentFilePreviewReque
             response.FileType = FileType.None;
         }
 
-        return Task.FromResult(response);
+        return response;
     }
 
     private Stream SaveRetrieveFileStream(string filePath)

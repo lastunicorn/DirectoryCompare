@@ -32,15 +32,13 @@ internal class SetCurrentDuplicateGroupUseCase : IRequestHandler<SetCurrentDupli
         this.eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
     }
 
-    public Task Handle(SetCurrentDuplicateGroupRequest request, CancellationToken cancellationToken)
+    public async Task Handle(SetCurrentDuplicateGroupRequest request, CancellationToken cancellationToken)
     {
         DuplicateGroup duplicateGroup = IdentifyFileDuplicateGroup(request.Hash);
         applicationState.CurrentDuplicateGroup = duplicateGroup;
         applicationState.CurrentDuplicateFile = duplicateGroup?.FilePaths?.FirstOrDefault();
 
         RaiseCurrentDuplicateChangedEvent();
-
-        return Task.CompletedTask;
     }
 
     private DuplicateGroup IdentifyFileDuplicateGroup(FileHash? fileHash)
