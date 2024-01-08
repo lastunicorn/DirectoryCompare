@@ -61,7 +61,7 @@ public class PresentFilePreviewUseCase : IRequestHandler<PresentFilePreviewReque
         FileExtensions fileExtensions = new();
 
         fileExtensions.Add(FileType.Image, config.ImageFileExtensions);
-        fileExtensions.Add(FileType.Image, config.TextFileExtensions);
+        fileExtensions.Add(FileType.Text, config.TextFileExtensions);
 
         return fileExtensions.FindFileType(filePath);
     }
