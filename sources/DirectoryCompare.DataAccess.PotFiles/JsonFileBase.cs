@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using ICSharpCode.SharpZipLib.Zip;
 using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.DataAccess.PotFiles;
@@ -61,10 +60,6 @@ public class JsonFileBase<TDocument>
         {
             Stream stream = File.OpenRead(FilePath);
 
-            bool isZipFile = Path.GetExtension(FilePath) == ".zip";
-            if (isZipFile)
-                stream = CreateZipStreamForRead(stream);
-
             using StreamReader streamReader = new(stream);
             using JsonTextReader jsonTextReader = new(streamReader);
             jsonTextReader.MaxDepth = 256;
@@ -84,10 +79,6 @@ public class JsonFileBase<TDocument>
     {
         Stream stream = File.Create(FilePath);
 
-        bool isZipFile = Path.GetExtension(FilePath) == ".zip";
-        if (isZipFile)
-            stream = CreateZipStreamForWrite(stream);
-
         using StreamWriter streamWriter = new(stream);
         using JsonTextWriter jsonTextWriter = new(streamWriter);
         jsonTextWriter.Formatting = Formatting.Indented;
@@ -103,10 +94,6 @@ public class JsonFileBase<TDocument>
 
         Stream stream = File.OpenRead(FilePath);
 
-        bool isZipFile = Path.GetExtension(FilePath) == ".zip";
-        if (isZipFile)
-            stream = CreateZipStreamForRead(stream);
-
         StreamReader streamReader = new(stream);
         return new JsonTextReader(streamReader);
     }
@@ -118,43 +105,11 @@ public class JsonFileBase<TDocument>
 
         Stream stream = File.Create(FilePath);
 
-        bool isZipFile = Path.GetExtension(FilePath) == ".zip";
-        if (isZipFile)
-            stream = CreateZipStreamForWrite(stream);
-
         StreamWriter streamWriter = new(stream);
         JsonTextWriter jsonTextWriter = new(streamWriter);
         jsonTextWriter.Formatting = Formatting.Indented;
 
         return jsonTextWriter;
-    }
-
-    private static Stream CreateZipStreamForRead(Stream stream)
-    {
-        ZipInputStream zipInputStream = new(stream);
-
-        while (true)
-        {
-            ZipEntry zipEntry = zipInputStream.GetNextEntry();
-
-            if (zipEntry == null)
-                break;
-
-            if (zipEntry.Name == "snapshot.json")
-                return zipInputStream;
-        }
-
-        throw new Exception("Invalid compressed snapshot file. 'snapshot.json' file was not found.");
-    }
-
-    private static ZipOutputStream CreateZipStreamForWrite(Stream stream)
-    {
-        ZipOutputStream zipOutputStream = new(stream);
-
-        ZipEntry zipEntry = new("snapshot.json");
-        zipOutputStream.PutNextEntry(zipEntry);
-
-        return zipOutputStream;
     }
 
     public void Delete()

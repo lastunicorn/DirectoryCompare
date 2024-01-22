@@ -2,7 +2,7 @@
   "profiles": {
     "DirectoryCompare.Cli": {
       "commandName": "Project",
-      "commandLineArgs": "duplicates video -x -o video.json"
+      "commandLineArgs": "duplicates test"
     }
   }
 }

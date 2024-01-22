@@ -16,7 +16,7 @@
 
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 
-namespace DustInTheWind.DirectoryCompare.IntegrationTests.PotFiles.SnapshotFileTests;
+namespace DustInTheWind.DirectoryCompare.IntegrationTests.PotFiles.SnapshotPackageTests;
 
 internal class DummySnapshotBuilder
 {

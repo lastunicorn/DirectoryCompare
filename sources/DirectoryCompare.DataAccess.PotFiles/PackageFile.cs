@@ -94,10 +94,10 @@ public abstract class PackageFile
 
         Stream stream = File.Create(FilePath);
         ZipOutputStream zipOutputStream = new(stream);
-        
+
         ZipEntry zipEntry = new(documentName);
         zipOutputStream.PutNextEntry(zipEntry);
-            
+
         StreamWriter streamWriter = new(zipOutputStream);
         JsonTextWriter jsonTextWriter = new(streamWriter);
         jsonTextWriter.Formatting = Formatting.Indented;

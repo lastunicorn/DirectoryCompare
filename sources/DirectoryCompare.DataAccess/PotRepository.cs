@@ -157,9 +157,9 @@ public class PotRepository : IPotRepository
 
     private static void LoadSnapshots(PotDirectory potDirectory, Pot pot)
     {
-        IEnumerable<Snapshot> snapshots = potDirectory.EnumerateSnapshotFiles()
+        IEnumerable<Snapshot> snapshots = potDirectory.EnumerateSnapshotPackages()
             .Where(x => x.Open())
-            .Select(x => x.Document.ToSnapshot());
+            .Select(x => x.SnapshotContent.ToSnapshot());
 
         pot.Snapshots.AddRange(snapshots);
     }

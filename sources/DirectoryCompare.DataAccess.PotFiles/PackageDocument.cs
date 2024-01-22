@@ -25,14 +25,12 @@ public class PackageDocument
 
     public Type Type { get; set; }
 
-    public object Content { get; private set; }
+    public object Content { get; set; }
     
-    internal PackageFile Parent { get; set; }
-
     internal void OpenFrom(ZipInputStream zipInputStream)
     {
-        using StreamReader streamReader = new(zipInputStream);
-        using JsonTextReader jsonTextReader = new(streamReader);
+        StreamReader streamReader = new(zipInputStream);
+        JsonTextReader jsonTextReader = new(streamReader);
         jsonTextReader.MaxDepth = 256;
 
         JsonSerializer serializer = new();
@@ -50,25 +48,5 @@ public class PackageDocument
 
         JsonSerializer serializer = new();
         serializer.Serialize(jsonTextWriter, Content);
-    }
-    
-    protected JsonTextWriter OpenWriter()
-    {
-        string filePath = Parent.FilePath;
-        
-        string directoryPath = Path.GetDirectoryName(filePath);
-        Directory.CreateDirectory(directoryPath);
-
-        Stream stream = File.Create(filePath);
-        ZipOutputStream zipOutputStream = new(stream);
-        
-        ZipEntry zipEntry = new(Name);
-        zipOutputStream.PutNextEntry(zipEntry);
-            
-        StreamWriter streamWriter = new(zipOutputStream);
-        JsonTextWriter jsonTextWriter = new(streamWriter);
-        jsonTextWriter.Formatting = Formatting.Indented;
-
-        return jsonTextWriter;
     }
 }

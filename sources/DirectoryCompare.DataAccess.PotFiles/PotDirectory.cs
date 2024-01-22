@@ -168,18 +168,6 @@ public class PotDirectory
         return blackListFile;
     }
 
-    public IEnumerable<SnapshotFile> EnumerateSnapshotFiles()
-    {
-        string snapshotsDirectoryPath = Path.Combine(FullPath, SnapshotsDirectoryName);
-
-        if (!Directory.Exists(snapshotsDirectoryPath))
-            return Enumerable.Empty<SnapshotFile>();
-
-        return Directory.GetFiles(snapshotsDirectoryPath)
-            .Select(x => new SnapshotFile(x))
-            .OrderByDescending(x => x.CreationTime);
-    }
-
     public IEnumerable<SnapshotPackage> EnumerateSnapshotPackages()
     {
         string snapshotsDirectoryPath = Path.Combine(FullPath, SnapshotsDirectoryName);
@@ -192,12 +180,12 @@ public class PotDirectory
             .OrderByDescending(x => x.CreationTime);
     }
 
-    public SnapshotFile CreateSnapshotFile(in DateTime creationTime)
+    public SnapshotPackage CreateSnapshotPackage(in DateTime creationTime)
     {
         string snapshotsDirectoryPath = Path.Combine(FullPath, SnapshotsDirectoryName);
         SnapshotFilePath snapshotFilePath = new(creationTime, snapshotsDirectoryPath);
 
-        return new SnapshotFile(snapshotFilePath);
+        return new SnapshotPackage(snapshotFilePath);
     }
 
     private JPotInfoFile GetInfoFile()

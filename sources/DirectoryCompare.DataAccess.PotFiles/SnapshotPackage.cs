@@ -15,65 +15,40 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.DataAccess.PotFiles.SnapshotFileModel;
+using Newtonsoft.Json;
 
 namespace DustInTheWind.DirectoryCompare.DataAccess.PotFiles;
 
 public class SnapshotPackage : PackageFile
 {
     private readonly SnapshotFilePath snapshotFilePath;
+    private readonly PackageDocument snapshotPackageDocument;
 
     public SnapshotPackage(string filePath)
         : base(filePath)
     {
         snapshotFilePath = filePath;
-        
-        Documents.Add(new PackageDocument
+
+        snapshotPackageDocument = new PackageDocument
         {
             Name = "snapshot.json",
             Type = typeof(JSnapshot)
-        });
+        };
+
+        Documents.Add(snapshotPackageDocument);
     }
 
     public DateTime? CreationTime => snapshotFilePath.CreationTime;
 
-    // private readonly string packageFilePath;
-    // private ZipInputStream zipInputStream;
-    //
-    // public SnapshotPackage(string packageFilePath)
-    // {
-    //     this.packageFilePath = packageFilePath ?? throw new ArgumentNullException(nameof(packageFilePath));
-    // }
-    //
-    // public void Open()
-    // {
-    //     if (!File.Exists(packageFilePath))
-    //         throw new Exception($"File {packageFilePath} does not exist.");
-    //
-    //     FileStream fileStream = File.OpenRead(packageFilePath);
-    //     zipInputStream = new ZipInputStream(fileStream);
-    // }
-    //
-    // public TDocument GetDocument<TDocument>(string documentName)
-    //     where TDocument : class
-    // {
-    //     while (true)
-    //     {
-    //         ZipEntry zipEntry = zipInputStream.GetNextEntry();
-    //
-    //         if (zipEntry == null)
-    //             break;
-    //
-    //         if (zipEntry.Name == documentName) //"snapshot.json"
-    //         {
-    //             using StreamReader streamReader = new(zipInputStream);
-    //             using JsonTextReader jsonTextReader = new(streamReader);
-    //             jsonTextReader.MaxDepth = 256;
-    //
-    //             JsonSerializer serializer = new();
-    //             return (TDocument)serializer.Deserialize(jsonTextReader, typeof(TDocument));
-    //         }
-    //     }
-    //
-    //     throw new Exception($"Document was not found: '{documentName}'");
-    // }
+    public JSnapshot SnapshotContent
+    {
+        get => snapshotPackageDocument.Content as JSnapshot;
+        set => snapshotPackageDocument.Content = value;
+    }
+
+    public JSnapshotWriter OpenSnapshotWriter()
+    {
+        JsonTextWriter jsonTextWriter = OpenWriter("snapshot.json");
+        return new JSnapshotWriter(jsonTextWriter);
+    }
 }

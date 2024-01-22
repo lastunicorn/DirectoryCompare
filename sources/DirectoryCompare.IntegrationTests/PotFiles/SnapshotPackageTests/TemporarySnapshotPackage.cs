@@ -1,4 +1,4 @@
-// DirectoryCompare
+// Directory Compare
 // Copyright (C) 2017-2024 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -18,27 +18,27 @@ using DustInTheWind.DirectoryCompare.DataAccess.PotFiles;
 using DustInTheWind.DirectoryCompare.DataAccess.Transformations;
 using DustInTheWind.DirectoryCompare.Domain.Entities;
 
-namespace DustInTheWind.DirectoryCompare.IntegrationTests.PotFiles.SnapshotFileTests;
+namespace DustInTheWind.DirectoryCompare.IntegrationTests.PotFiles.SnapshotPackageTests;
 
-internal class TemporarySnapshotFile : IDisposable
+internal class TemporarySnapshotPackage : IDisposable
 {
     public string FilePath { get; }
 
-    public TemporarySnapshotFile(Snapshot snapshot)
+    public TemporarySnapshotPackage(Snapshot snapshot)
     {
-        FilePath = CreateSnapshotFile(snapshot);
+        FilePath = CreateSnapshotPackage(snapshot);
     }
 
-    private static SnapshotFilePath CreateSnapshotFile(Snapshot snapshot)
+    private static SnapshotFilePath CreateSnapshotPackage(Snapshot snapshot)
     {
         string temporaryPath = Path.GetTempPath();
         SnapshotFilePath snapshotFilePath = new(DateTime.UtcNow, temporaryPath);
 
-        SnapshotFile snapshotFile = new(snapshotFilePath)
+        SnapshotPackage snapshotPackage = new(snapshotFilePath)
         {
-            Document = snapshot.ToJSnapshot()
+            SnapshotContent = snapshot.ToJSnapshot()
         };
-        snapshotFile.Save();
+        snapshotPackage.Save();
 
         return snapshotFilePath;
     }

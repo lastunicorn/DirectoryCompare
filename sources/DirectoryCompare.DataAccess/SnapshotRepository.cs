@@ -39,13 +39,13 @@ public class SnapshotRepository : ISnapshotRepository
         if (string.IsNullOrEmpty(location.PotName))
             return null;
 
-        SnapshotFile snapshotFile = await GetSnapshotFile(location);
+        SnapshotPackage snapshotPackage = await GetSnapshotFile(location);
 
-        if (snapshotFile == null)
+        if (snapshotPackage == null)
             return null;
 
-        snapshotFile.Open();
-        return snapshotFile.Document.ToSnapshot();
+        snapshotPackage.Open();
+        return snapshotPackage.SnapshotContent.ToSnapshot();
     }
 
     public async IAsyncEnumerable<Snapshot> GetByPot(string potName)
@@ -55,14 +55,14 @@ public class SnapshotRepository : ISnapshotRepository
         if (potDirectory == null)
             throw new PotNotFoundException(potName);
 
-        IEnumerable<SnapshotFile> allSnapshotFiles = potDirectory.EnumerateSnapshotFiles();
+        IEnumerable<SnapshotPackage> allSnapshotPackages = potDirectory.EnumerateSnapshotPackages();
 
-        foreach (SnapshotFile snapshotFile in allSnapshotFiles)
+        foreach (SnapshotPackage snapshotPackage in allSnapshotPackages)
         {
-            bool success = snapshotFile.Open();
+            bool success = snapshotPackage.Open();
 
             if (success)
-                yield return snapshotFile.Document.ToSnapshot();
+                yield return snapshotPackage.SnapshotContent.ToSnapshot();
         }
     }
 
@@ -73,8 +73,8 @@ public class SnapshotRepository : ISnapshotRepository
         if (potDirectory == null)
             throw new Exception($"There is no pot with name '{potName}'.");
 
-        SnapshotFile snapshotFile = potDirectory.CreateSnapshotFile(DateTime.UtcNow);
-        JSnapshotWriter jSnapshotWriter = snapshotFile.OpenSnapshotWriter();
+        SnapshotPackage snapshotPackage = potDirectory.CreateSnapshotPackage(DateTime.UtcNow);
+        JSnapshotWriter jSnapshotWriter = snapshotPackage.OpenSnapshotWriter();
         return new JsonSnapshotWriter(jSnapshotWriter);
     }
 
@@ -85,10 +85,10 @@ public class SnapshotRepository : ISnapshotRepository
         if (potDirectory == null)
             throw new Exception($"There is no pot with name '{potName}'.");
 
-        SnapshotFile snapshotFile = potDirectory.CreateSnapshotFile(snapshot.CreationTime);
-        snapshotFile.Open();
-        snapshotFile.Document = snapshot.ToJSnapshot();
-        snapshotFile.Save();
+        SnapshotPackage snapshotPackage = potDirectory.CreateSnapshotPackage(snapshot.CreationTime);
+        snapshotPackage.Open();
+        snapshotPackage.SnapshotContent = snapshot.ToJSnapshot();
+        snapshotPackage.Save();
     }
 
     public async Task DeleteByIndex(string potName, int index = 0)
@@ -98,11 +98,11 @@ public class SnapshotRepository : ISnapshotRepository
         if (potDirectory == null)
             throw new Exception($"There is no pot with name '{potName}'.");
 
-        SnapshotFile snapshotFile = potDirectory.EnumerateSnapshotFiles()
+        SnapshotPackage snapshotPackage = potDirectory.EnumerateSnapshotPackages()
             .Skip(index)
             .FirstOrDefault();
 
-        snapshotFile?.Delete();
+        snapshotPackage?.Delete();
     }
 
     public async Task DeleteLast(string potName)
@@ -117,17 +117,17 @@ public class SnapshotRepository : ISnapshotRepository
         if (potDirectory == null)
             throw new Exception($"There is no pot with name '{potName}'.");
 
-        SnapshotFile[] snapshotFiles = potDirectory.EnumerateSnapshotFiles()
+        SnapshotPackage[] snapshotPackages = potDirectory.EnumerateSnapshotPackages()
             .Where(x => x.CreationTime.HasValue && x.CreationTime.Value.Date == dateTime.Date)
             .ToArray();
 
-        if (snapshotFiles.Length == 0)
+        if (snapshotPackages.Length == 0)
             return false;
 
-        if (snapshotFiles.Length > 1)
+        if (snapshotPackages.Length > 1)
             throw new Exception($"There are multiple snapshots that match the specified date. Pot = {potName}; Date = {dateTime}");
 
-        snapshotFiles.First().Delete();
+        snapshotPackages.First().Delete();
         return true;
     }
 
@@ -138,13 +138,13 @@ public class SnapshotRepository : ISnapshotRepository
         if (potDirectory == null)
             throw new Exception($"There is no pot with name '{potName}'.");
 
-        SnapshotFile snapshotFile = potDirectory.EnumerateSnapshotFiles()
+        SnapshotPackage snapshotPackage = potDirectory.EnumerateSnapshotPackages()
             .FirstOrDefault(x => x.CreationTime.HasValue && x.CreationTime.Value == dateTime);
 
-        if (snapshotFile == null)
+        if (snapshotPackage == null)
             return false;
 
-        snapshotFile.Delete();
+        snapshotPackage.Delete();
         return true;
     }
 
@@ -153,38 +153,38 @@ public class SnapshotRepository : ISnapshotRepository
         if (string.IsNullOrEmpty(location.PotName))
             return DataSize.Zero;
 
-        SnapshotFile snapshotFile = await GetSnapshotFile(location);
+        SnapshotPackage snapshotPackage = await GetSnapshotFile(location);
 
-        return snapshotFile?.Size ?? DataSize.Zero;
+        return snapshotPackage?.Size ?? DataSize.Zero;
     }
 
     public async Task<DataSize> GetSnapshotSize(Guid potId, Guid snapshotId)
     {
-        SnapshotFile snapshotFile = await GetById(potId, snapshotId);
-        return snapshotFile?.Size ?? DataSize.Zero;
+        SnapshotPackage snapshotPackage = await GetById(potId, snapshotId);
+        return snapshotPackage?.Size ?? DataSize.Zero;
     }
 
-    private async Task<SnapshotFile> GetById(Guid potId, Guid snapshotId)
+    private async Task<SnapshotPackage> GetById(Guid potId, Guid snapshotId)
     {
         PotDirectory potDirectory = await database.GetPotDirectory(potId);
 
         if (potDirectory == null)
             return null;
 
-        IEnumerable<SnapshotFile> snapshotFiles = potDirectory.EnumerateSnapshotFiles();
+        IEnumerable<SnapshotPackage> snapshotPackages = potDirectory.EnumerateSnapshotPackages();
 
-        foreach (SnapshotFile snapshotFile in snapshotFiles)
+        foreach (SnapshotPackage snapshotPackage in snapshotPackages)
         {
-            snapshotFile.Open();
+            snapshotPackage.Open();
 
-            if (snapshotFile.Document.AnalysisId == snapshotId)
-                return snapshotFile;
+            if (snapshotPackage.SnapshotContent.AnalysisId == snapshotId)
+                return snapshotPackage;
         }
 
         return null;
     }
 
-    private async Task<SnapshotFile> GetSnapshotFile(SnapshotLocation location)
+    private async Task<SnapshotPackage> GetSnapshotFile(SnapshotLocation location)
     {
         if (location.SnapshotIndex.HasValue)
             return await GetByIndex(location.PotName, location.SnapshotIndex.Value);
@@ -195,55 +195,66 @@ public class SnapshotRepository : ISnapshotRepository
         return await GetByIndex(location.PotName);
     }
 
-    private async Task<SnapshotFile> GetByIndex(string potName, int index = 0)
+    private async Task<SnapshotPackage> GetSnapshotPackage(SnapshotLocation location)
+    {
+        if (location.SnapshotIndex.HasValue)
+            return await GetByIndex(location.PotName, location.SnapshotIndex.Value);
+
+        if (location.SnapshotDate.HasValue)
+            return await GetByDateAndOptionalTime(location.PotName, location.SnapshotDate.Value);
+
+        return await GetByIndex(location.PotName);
+    }
+
+    private async Task<SnapshotPackage> GetByIndex(string potName, int index = 0)
     {
         PotDirectory potDirectory = await database.GetPotDirectory(potName);
 
-        return potDirectory?.EnumerateSnapshotFiles()
+        return potDirectory?.EnumerateSnapshotPackages()
             .Skip(index)
             .FirstOrDefault();
     }
 
-    private async Task<SnapshotFile> GetByDateAndOptionalTime(string potName, DateTime dateTime)
+    private async Task<SnapshotPackage> GetByDateAndOptionalTime(string potName, DateTime dateTime)
     {
-        SnapshotFile snapshotFile = await GetByExactDateTime(potName, dateTime);
+        SnapshotPackage snapshotPackage = await GetByExactDateTime(potName, dateTime);
 
-        if (snapshotFile == null && dateTime.TimeOfDay == TimeSpan.Zero)
-            snapshotFile = await GetByDateOnly(potName, dateTime);
-        
-        return snapshotFile;
+        if (snapshotPackage == null && dateTime.TimeOfDay == TimeSpan.Zero)
+            snapshotPackage = await GetByDateOnly(potName, dateTime);
+
+        return snapshotPackage;
     }
 
-    private async Task<SnapshotFile> GetByExactDateTime(string potName, DateTime dateTime)
+    private async Task<SnapshotPackage> GetByExactDateTime(string potName, DateTime dateTime)
     {
         PotDirectory potDirectory = await database.GetPotDirectory(potName);
 
-        return potDirectory?.EnumerateSnapshotFiles()
+        return potDirectory?.EnumerateSnapshotPackages()
             .FirstOrDefault(x => x.CreationTime.HasValue && x.CreationTime.Value == dateTime);
     }
 
-    private async Task<SnapshotFile> GetByDateOnly(string potName, DateTime dateTime)
+    private async Task<SnapshotPackage> GetByDateOnly(string potName, DateTime dateTime)
     {
         PotDirectory potDirectory = await database.GetPotDirectory(potName);
 
         if (potDirectory == null)
             return null;
 
-        IEnumerable<SnapshotFile> snapshotFiles = potDirectory.EnumerateSnapshotFiles()
+        IEnumerable<SnapshotPackage> snapshotPackages = potDirectory.EnumerateSnapshotPackages()
             .Where(x => x.CreationTime.HasValue && x.CreationTime.Value.Date == dateTime.Date);
 
-        SnapshotFile theSnapshotFile = null;
+        SnapshotPackage theSnapshotPackage = null;
         int count = 0;
 
-        foreach (SnapshotFile snapshotFile in snapshotFiles)
+        foreach (SnapshotPackage snapshotPackage in snapshotPackages)
         {
             if (count > 0)
                 throw new Exception($"There are multiple snapshots that match the specified date. Pot = {potName}; Date = {dateTime}");
 
-            theSnapshotFile = snapshotFile;
+            theSnapshotPackage = snapshotPackage;
             count++;
         }
 
-        return theSnapshotFile;
+        return theSnapshotPackage;
     }
 }
