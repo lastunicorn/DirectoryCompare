@@ -180,6 +180,18 @@ public class PotDirectory
             .OrderByDescending(x => x.CreationTime);
     }
 
+    public IEnumerable<SnapshotPackage> EnumerateSnapshotPackages()
+    {
+        string snapshotsDirectoryPath = Path.Combine(FullPath, SnapshotsDirectoryName);
+
+        if (!Directory.Exists(snapshotsDirectoryPath))
+            return Enumerable.Empty<SnapshotPackage>();
+
+        return Directory.GetFiles(snapshotsDirectoryPath)
+            .Select(x => new SnapshotPackage(x))
+            .OrderByDescending(x => x.CreationTime);
+    }
+
     public SnapshotFile CreateSnapshotFile(in DateTime creationTime)
     {
         string snapshotsDirectoryPath = Path.Combine(FullPath, SnapshotsDirectoryName);
