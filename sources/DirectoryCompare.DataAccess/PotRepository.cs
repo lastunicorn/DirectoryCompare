@@ -70,7 +70,11 @@ public class PotRepository : IPotRepository
     {
         IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
         PotDirectory potDirectory = potDirectories
-            .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Document.Name == name);
+            .FirstOrDefault(x =>
+            {
+                JPotInfo jPotInfo = x.InfoFile.Read();
+                return jPotInfo != null && jPotInfo.Name == name;
+            });
 
         Pot pot = potDirectory?.ToPot();
 
@@ -113,7 +117,11 @@ public class PotRepository : IPotRepository
     {
         IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
         PotDirectory potDirectory = potDirectories
-            .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Document.Name == name);
+            .FirstOrDefault(x =>
+            {
+                JPotInfo jPotInfo = x.InfoFile.Read();
+                return jPotInfo != null && jPotInfo.Name == name;
+            });
 
         return potDirectory != null;
     }
@@ -122,15 +130,15 @@ public class PotRepository : IPotRepository
     {
         PotDirectory potDirectory = database.NewPotDirectory();
 
-        potDirectory.InfoFile.Document = new JPotInfoDocument
+        JPotInfo jPotInfo = new()
         {
             Name = pot.Name,
             Path = pot.Path,
             Description = pot.Description
         };
 
-        potDirectory.InfoFile.Save();
-
+        potDirectory.InfoFile.SaveNew(jPotInfo);
+        
         pot.Guid = potDirectory.PotGuid;
 
         return Task.CompletedTask;

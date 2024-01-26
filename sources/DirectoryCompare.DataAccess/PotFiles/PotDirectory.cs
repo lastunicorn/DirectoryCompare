@@ -28,19 +28,7 @@ public class PotDirectory
 
     public string FullPath { get; private set; }
 
-    public JPotInfoFile InfoFile
-    {
-        get
-        {
-            if (jPotInfoFile == null)
-            {
-                jPotInfoFile = GetInfoFile();
-                jPotInfoFile.TryOpen();
-            }
-
-            return jPotInfoFile;
-        }
-    }
+    public JPotInfoFile InfoFile => jPotInfoFile ??= GetInfoFile();
 
     public Guid PotGuid
     {
@@ -76,7 +64,9 @@ public class PotDirectory
             if (!directoryExists)
                 return false;
 
-            if (!InfoFile.IsValid)
+            JPotInfo jPotInfo = InfoFile.Read();
+
+            if (jPotInfo == null)
                 return false;
 
             return true;
@@ -104,8 +94,8 @@ public class PotDirectory
             .Where(x =>
             {
                 JPotInfoFile jPotInfoFile = x.GetInfoFile();
-                bool success = jPotInfoFile.TryOpen();
-                return success && jPotInfoFile.Document.Name == potName;
+                JPotInfo jPotInfo = jPotInfoFile.Read();
+                return jPotInfo != null && jPotInfo.Name == potName;
             })
             .FirstOrDefault();
 
@@ -193,7 +183,9 @@ public class PotDirectory
         if (FullPath == null)
             return null;
 
-        string infoFilePath = Path.Combine(FullPath, "info.json");
-        return new JPotInfoFile(infoFilePath);
+        return new JPotInfoFile
+        {
+            RootPath = FullPath
+        };
     }
 }

@@ -21,8 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
-        <AssemblyName>DustInTheWind.DirectoryCompare.DataAccess.PotFiles</AssemblyName>
-        <RootNamespace>DustInTheWind.DirectoryCompare.DataAccess.PotFiles</RootNamespace>
+        <AssemblyName>DustInTheWind.DirectoryCompare.DataAccess.FileDatabase</AssemblyName>
+        <RootNamespace>DustInTheWind.DirectoryCompare.DataAccess.FileDatabase</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

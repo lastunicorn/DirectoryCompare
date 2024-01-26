@@ -35,9 +35,10 @@ public class BlackListRepository : IBlackListRepository
     {
         PotDirectory potDirectory = await GetPotDirectory(potName);
 
-        JPotInfoFile jPotInfoFile = potDirectory.InfoFile;
+        JPotInfoFile infoFile = potDirectory.InfoFile;
+        JPotInfo jPotInfo = infoFile.Read();
 
-        List<string> excludes = jPotInfoFile.Document.Exclude ?? new List<string>();
+        List<string> excludes = jPotInfo.Exclude ?? new List<string>();
         return new DiskPathCollection(excludes);
     }
 
@@ -45,22 +46,24 @@ public class BlackListRepository : IBlackListRepository
     {
         PotDirectory potDirectory = await GetPotDirectory(potName);
 
-        JPotInfoFile jPotInfoFile = potDirectory.InfoFile;
+        JPotInfoFile infoFile = potDirectory.InfoFile;
+        JPotInfo jPotInfo = infoFile.Read();
 
-        jPotInfoFile.Document.Exclude ??= new List<string>();
-        jPotInfoFile.Document.Exclude.Add(path);
-        jPotInfoFile.Save();
+        jPotInfo.Exclude ??= new List<string>();
+        jPotInfo.Exclude.Add(path);
+        infoFile.SaveChanges();
     }
 
     public async Task Delete(string potName, DiskPath path)
     {
         PotDirectory potDirectory = await GetPotDirectory(potName);
 
-        JPotInfoFile jPotInfoFile = potDirectory.InfoFile;
+        JPotInfoFile infoFile = potDirectory.InfoFile;
+        JPotInfo jPotInfo = infoFile.Read();
 
-        jPotInfoFile.Document.Exclude ??= new List<string>();
-        jPotInfoFile.Document.Exclude.Remove(path);
-        jPotInfoFile.Save();
+        jPotInfo.Exclude ??= new List<string>();
+        jPotInfo.Exclude.Remove(path);
+        infoFile.SaveChanges();
     }
 
     public async Task<FileHashCollection> GetDuplicateExcludes(string potName)
@@ -75,7 +78,11 @@ public class BlackListRepository : IBlackListRepository
     {
         IEnumerable<PotDirectory> potDirectories = await database.GetPotDirectories();
         PotDirectory potDirectory = potDirectories
-            .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Document.Name == potName);
+            .FirstOrDefault(x =>
+            {
+                JPotInfo jPotInfo = x.InfoFile.Read();
+                return jPotInfo != null && jPotInfo.Name == potName;
+            });
 
         if (potDirectory == null)
             throw new Exception($"There is no pot with name '{potName}'.");

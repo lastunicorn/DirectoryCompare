@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.DirectoryCompare.DataAccess.PotFiles;
+using DustInTheWind.DirectoryCompare.DataAccess.PotFiles.PotInfoFileModel;
 using DustInTheWind.DirectoryCompare.Ports.DataAccess;
 
 namespace DustInTheWind.DirectoryCompare.DataAccess;
@@ -58,7 +59,11 @@ public class Database
         IEnumerable<PotDirectory> potDirectories = await GetPotDirectories();
 
         return potDirectories
-            .FirstOrDefault(x => x.InfoFile.IsValid && x.InfoFile.Document.Name == potName);
+            .FirstOrDefault(x =>
+            {
+                JPotInfo jPotInfo = x.InfoFile.Read();
+                return jPotInfo != null && jPotInfo.Name == potName;
+            });
     }
 
     public async Task<PotDirectory> GetPotDirectory(Guid id)

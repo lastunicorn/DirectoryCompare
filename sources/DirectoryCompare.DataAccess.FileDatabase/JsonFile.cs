@@ -1,4 +1,4 @@
-// DirectoryCompare
+// Directory Compare
 // Copyright (C) 2017-2024 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -16,66 +16,80 @@
 
 using Newtonsoft.Json;
 
-namespace DustInTheWind.DirectoryCompare.DataAccess.PotFiles;
+namespace DustInTheWind.DirectoryCompare.DataAccess.FileDatabase;
 
-public class JsonFileBase<TDocument>
+public class JsonFile<TDocument>
     where TDocument : class
 {
-    public string FilePath { get; }
+    private TDocument document;
+    private bool isLoaded;
+
+    private string FilePath => string.IsNullOrEmpty(RootPath)
+        ? FileName
+        : Path.Combine(RootPath, FileName);
+
+    public string FileName { get; }
+
+    public string RootPath { get; set; }
 
     public bool Exists => FilePath != null && File.Exists(FilePath);
 
-    public TDocument Document { get; set; }
-
     public long Size => new FileInfo(FilePath).Length;
 
-    public bool IsValid => Document != null;
-
-    protected JsonFileBase(string snapshotFilePath)
+    public bool IsValid
     {
-        FilePath = snapshotFilePath ?? throw new ArgumentNullException(nameof(snapshotFilePath));
-    }
-
-    public bool TryOpen()
-    {
-        try
+        get
         {
-            return Open();
-        }
-        catch
-        {
-            return false;
+            TDocument document = Read();
+            return document != null;
         }
     }
 
-    public bool Open()
+    protected JsonFile(string fileName)
+    {
+        FileName = fileName ?? throw new ArgumentNullException(nameof(fileName));
+    }
+
+    public TDocument Read(bool force = false)
+    {
+        if (!isLoaded || force)
+            OpenInternal();
+
+        return document;
+    }
+
+    private void OpenInternal()
     {
         if (!Exists)
-        {
-            Document = null;
-            return false;
-        }
+            return;
 
-        try
-        {
-            Stream stream = File.OpenRead(FilePath);
+        Stream stream = File.OpenRead(FilePath);
 
-            using StreamReader streamReader = new(stream);
-            using JsonTextReader jsonTextReader = new(streamReader);
-            jsonTextReader.MaxDepth = 256;
+        using StreamReader streamReader = new(stream);
+        using JsonTextReader jsonTextReader = new(streamReader);
+        jsonTextReader.MaxDepth = 256;
 
-            JsonSerializer serializer = new();
-            Document = (TDocument)serializer.Deserialize(jsonTextReader, typeof(TDocument));
-
-            return Document != null;
-        }
-        catch
-        {
-            return false;
-        }
+        JsonSerializer serializer = new();
+        document = (TDocument)serializer.Deserialize(jsonTextReader, typeof(TDocument));
+        isLoaded = true;
     }
 
-    public void Save()
+    public void SaveChanges()
+    {
+        if (!isLoaded)
+            return;
+
+        WriteInternal();
+    }
+
+    public void SaveNew(TDocument document)
+    {
+        this.document = document ?? throw new ArgumentNullException(nameof(document));
+
+        WriteInternal();
+    }
+
+    private void WriteInternal()
     {
         Stream stream = File.Create(FilePath);
 
@@ -84,7 +98,9 @@ public class JsonFileBase<TDocument>
         jsonTextWriter.Formatting = Formatting.Indented;
 
         JsonSerializer serializer = new();
-        serializer.Serialize(jsonTextWriter, Document);
+        serializer.Serialize(jsonTextWriter, document);
+
+        isLoaded = true;
     }
 
     protected JsonTextReader OpenReader()

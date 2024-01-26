@@ -17,7 +17,7 @@
 using ICSharpCode.SharpZipLib.Zip;
 using Newtonsoft.Json;
 
-namespace DustInTheWind.DirectoryCompare.DataAccess.PotFiles;
+namespace DustInTheWind.DirectoryCompare.DataAccess.FileDatabase;
 
 public abstract class PackageFile
 {

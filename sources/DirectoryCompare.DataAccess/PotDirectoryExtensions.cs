@@ -25,21 +25,23 @@ internal static class PotDirectoryExtensions
 {
     public static Pot ToPot(this PotDirectory potDirectory)
     {
-        JPotInfoFile jPotInfoFile = potDirectory.InfoFile;
-        if (!jPotInfoFile.IsValid)
+        JPotInfoFile infoFile = potDirectory.InfoFile;
+        JPotInfo jPotInfo = infoFile.Read();
+        
+        if (jPotInfo == null)
             return null;
 
         Pot pot = new()
         {
             Guid = potDirectory.PotGuid,
-            Name = jPotInfoFile.Document.Name,
-            Path = jPotInfoFile.Document.Path,
-            Description = jPotInfoFile.Document.Description
+            Name = jPotInfo.Name,
+            Path = jPotInfo.Path,
+            Description = jPotInfo.Description
         };
 
-        if (potDirectory.InfoFile.Document?.Include != null)
+        if (jPotInfo.Include != null)
         {
-            IEnumerable<SnapshotPath> paths = potDirectory.InfoFile.Document.Include
+            IEnumerable<SnapshotPath> paths = jPotInfo.Include
                 .Select(x => (SnapshotPath)x);
 
             pot.IncludedPaths.AddRange(paths);

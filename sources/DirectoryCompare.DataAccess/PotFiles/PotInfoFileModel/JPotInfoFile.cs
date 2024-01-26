@@ -14,12 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.DirectoryCompare.DataAccess.FileDatabase;
+
 namespace DustInTheWind.DirectoryCompare.DataAccess.PotFiles.PotInfoFileModel;
 
-public class JPotInfoFile : JsonFileBase<JPotInfoDocument>
+public class JPotInfoFile : JsonFile<JPotInfo>
 {
-    public JPotInfoFile(string filePath)
-        : base(filePath)
+    public JPotInfoFile()
+        : base("info.json")
     {
     }
 }
