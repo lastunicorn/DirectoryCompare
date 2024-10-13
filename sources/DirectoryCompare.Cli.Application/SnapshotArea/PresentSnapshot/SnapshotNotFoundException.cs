@@ -14,12 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Runtime.Serialization;
 using DustInTheWind.DirectoryCompare.DataStructures;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.PresentSnapshot;
 
-[Serializable]
 public class SnapshotNotFoundException : Exception
 {
     private const string DefaultMessage = "The snapshot '{0}' could not be found.";
@@ -32,10 +30,5 @@ public class SnapshotNotFoundException : Exception
     private static string BuildMessage(SnapshotLocation snapshotLocation)
     {
         return string.Format(DefaultMessage, snapshotLocation);
-    }
-
-    public SnapshotNotFoundException(SerializationInfo serializationInfo, StreamingContext streamingContext)
-        : base(serializationInfo, streamingContext)
-    {
     }
 }

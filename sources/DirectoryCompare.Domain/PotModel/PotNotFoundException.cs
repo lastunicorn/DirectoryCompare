@@ -14,22 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Runtime.Serialization;
-
 namespace DustInTheWind.DirectoryCompare.Domain.PotModel;
 
-[Serializable]
 public class PotNotFoundException : Exception
 {
     private const string DefaultMessage = "There is no pot with the name or id '{0}'.";
 
     public PotNotFoundException(string potName)
         : base(string.Format(DefaultMessage, potName))
-    {
-    }
-
-    public PotNotFoundException(SerializationInfo info, StreamingContext context)
-        : base(info, context)
     {
     }
 }

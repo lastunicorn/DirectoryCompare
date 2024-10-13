@@ -27,7 +27,7 @@ internal class PresentDuplicatesUseCase : IRequestHandler<PresentDuplicatesReque
         this.applicationState = applicationState ?? throw new ArgumentNullException(nameof(applicationState));
     }
 
-    public async Task<PresentDuplicatesResponse> Handle(PresentDuplicatesRequest request, CancellationToken cancellationToken)
+    public Task<PresentDuplicatesResponse> Handle(PresentDuplicatesRequest request, CancellationToken cancellationToken)
     {
         PresentDuplicatesResponse response = new()
         {
@@ -38,6 +38,6 @@ internal class PresentDuplicatesUseCase : IRequestHandler<PresentDuplicatesReque
             TotalSize = applicationState.Duplicates.TotalSize
         };
 
-        return response;
+        return Task.FromResult(response);
     }
 }

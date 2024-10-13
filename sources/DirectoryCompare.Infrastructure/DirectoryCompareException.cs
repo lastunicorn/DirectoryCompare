@@ -14,11 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Runtime.Serialization;
-
 namespace DustInTheWind.DirectoryCompare.Infrastructure;
 
-[Serializable]
 public class DirectoryCompareException : Exception
 {
     public DirectoryCompareException()
@@ -32,11 +29,6 @@ public class DirectoryCompareException : Exception
 
     public DirectoryCompareException(string message, Exception inner)
         : base(message, inner)
-    {
-    }
-
-    protected DirectoryCompareException(SerializationInfo info, StreamingContext context)
-        : base(info, context)
     {
     }
 }

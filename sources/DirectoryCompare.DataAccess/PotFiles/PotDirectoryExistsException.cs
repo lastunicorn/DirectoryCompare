@@ -14,22 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Runtime.Serialization;
-
 namespace DustInTheWind.DirectoryCompare.DataAccess.PotFiles;
 
-[Serializable]
 public class PotDirectoryExistsException : Exception
 {
     private const string DefaultMessage = "The pot directory already exists.";
 
     public PotDirectoryExistsException()
         : base(DefaultMessage)
-    {
-    }
-
-    public PotDirectoryExistsException(SerializationInfo serializationInfo, StreamingContext streamingContext)
-        : base(serializationInfo, streamingContext)
     {
     }
 }

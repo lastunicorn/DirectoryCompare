@@ -14,22 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Runtime.Serialization;
-
 namespace DustInTheWind.DirectoryCompare.DataAccess.PotFiles;
 
-[Serializable]
 public class InvalidSnapshotFileNameException : Exception
 {
     private const string DefaultMessage = "Invalid file name. The file name should be in the format: 'yyyy MM dd HHmmss.json'.";
 
     public InvalidSnapshotFileNameException()
         : base(DefaultMessage)
-    {
-    }
-
-    protected InvalidSnapshotFileNameException(SerializationInfo info, StreamingContext context)
-        : base(info, context)
     {
     }
 }

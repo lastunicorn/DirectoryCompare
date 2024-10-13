@@ -14,22 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Runtime.Serialization;
-
 namespace DustInTheWind.DirectoryCompare.DataAccess.PotFiles;
 
-[Serializable]
 public class FileNameNotSpecifiedException : Exception
 {
     private const string DefaultMessage = "The provided path must specify a file name.";
 
     public FileNameNotSpecifiedException()
         : base(DefaultMessage)
-    {
-    }
-
-    protected FileNameNotSpecifiedException(SerializationInfo info, StreamingContext context)
-        : base(info, context)
     {
     }
 }

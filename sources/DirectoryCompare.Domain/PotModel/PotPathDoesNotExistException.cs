@@ -14,22 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Runtime.Serialization;
-
 namespace DustInTheWind.DirectoryCompare.Domain.PotModel;
 
-[Serializable]
 public class PotPathDoesNotExistException : Exception
 {
     private const string DefaultMessage = "The path of the pot '{0}' does not exist on disk: {1}";
 
     public PotPathDoesNotExistException(string potName, string path)
         : base(string.Format(DefaultMessage, potName, path))
-    {
-    }
-
-    public PotPathDoesNotExistException(SerializationInfo info, StreamingContext context)
-        : base(info, context)
     {
     }
 }

@@ -14,22 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Runtime.Serialization;
-
 namespace DustInTheWind.DirectoryCompare.DataAccess.PotFiles;
 
-[Serializable]
 public class NameGenerationException : Exception
 {
     private const string DefaultMessage = "Could not generate a valid name for the pot's directory. All the tried names already exist.";
 
     public NameGenerationException()
         : base(DefaultMessage)
-    {
-    }
-
-    public NameGenerationException(SerializationInfo serializationInfo, StreamingContext streamingContext)
-        : base(serializationInfo, streamingContext)
     {
     }
 }

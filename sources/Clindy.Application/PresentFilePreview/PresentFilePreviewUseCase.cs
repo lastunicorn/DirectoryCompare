@@ -34,7 +34,7 @@ public class PresentFilePreviewUseCase : IRequestHandler<PresentFilePreviewReque
         this.config = config ?? throw new ArgumentNullException(nameof(config));
     }
 
-    public async Task<PresentFilePreviewResponse> Handle(PresentFilePreviewRequest request, CancellationToken cancellationToken)
+    public Task<PresentFilePreviewResponse> Handle(PresentFilePreviewRequest request, CancellationToken cancellationToken)
     {
         response = new PresentFilePreviewResponse
         {
@@ -53,7 +53,7 @@ public class PresentFilePreviewUseCase : IRequestHandler<PresentFilePreviewReque
             }
         }
 
-        return response;
+        return Task.FromResult(response);
     }
 
     private FileType ComputeFileType(string filePath)

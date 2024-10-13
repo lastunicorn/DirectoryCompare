@@ -104,7 +104,10 @@ public class CreateSnapshotUi : EnhancedConsole, ICreateSnapshotUi
     {
         CustomConsole.Write("Progress:");
         CustomConsole.WriteEmphasized($" {info.Percentage:0.00} %");
-        CustomConsole.WriteLine(ConsoleColor.DarkGray, $" ({info.ProcessedSize} / {info.TotalSize.ToDataSizeDisplay(DataSizeFormat)})");
+        
+        DataSizeDisplay processedSize = info.ProcessedSize.ToDataSizeDisplay(DataSizeFormat);
+        DataSizeDisplay totalSize = info.TotalSize.ToDataSizeDisplay(DataSizeFormat);
+        CustomConsole.WriteLine(ConsoleColor.DarkGray, $" ({processedSize} / {totalSize})");
 
         return Task.CompletedTask;
     }
