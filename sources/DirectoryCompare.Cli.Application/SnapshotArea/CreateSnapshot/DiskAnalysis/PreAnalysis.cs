@@ -1,4 +1,4 @@
-// DirectoryCompare
+// Directory Compare
 // Copyright (C) 2017-2024 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,6 @@
 
 using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.Crawling;
 using DustInTheWind.DirectoryCompare.DataStructures;
-using DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
 using DustInTheWind.DirectoryCompare.Ports.UserAccess;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.CreateSnapshot.DiskAnalysis;
@@ -25,8 +24,6 @@ internal class PreAnalysis
 {
     private readonly DiskCrawler diskCrawler;
     private readonly ICreateSnapshotUi createSnapshotUi;
-
-    public int FileCount { get; private set; }
 
     public DataSize TotalDataSize { get; private set; }
 
@@ -43,7 +40,7 @@ internal class PreAnalysis
         IEnumerable<ICrawlerItem> crawlerItems = diskCrawler.Crawl()
             .Where(x => x.Action == CrawlerAction.FileFound);
 
-        FileCount = 0;
+        int fileCount = 0;
         TotalDataSize = DataSize.Zero;
 
         bool fileWasFound = false;
@@ -53,7 +50,7 @@ internal class PreAnalysis
             try
             {
                 fileWasFound = true;
-                FileCount++;
+                fileCount++;
                 TotalDataSize += crawlerItem.Size;
             }
             catch (Exception ex)
@@ -61,17 +58,17 @@ internal class PreAnalysis
                 await AnnounceFileIndexingError(crawlerItem.Path, ex);
             }
 
-            if (FileCount % 1000 == 0)
+            if (fileCount % 1000 == 0)
             {
-                await AnnounceFileIndexingProgress(TotalDataSize, FileCount);
+                await AnnounceFileIndexingProgress(TotalDataSize, fileCount);
                 fileWasFound = false;
             }
         }
-        
-        if(fileWasFound)
-            await AnnounceFileIndexingProgress(TotalDataSize, FileCount);
 
-        await AnnounceFilesIndexed(TotalDataSize, FileCount);
+        if (fileWasFound)
+            await AnnounceFileIndexingProgress(TotalDataSize, fileCount);
+
+        await AnnounceFilesIndexed(TotalDataSize, fileCount);
     }
 
     private Task AnnounceFileIndexingError(string path, Exception exception)
@@ -87,23 +84,23 @@ internal class PreAnalysis
 
     private Task AnnounceFileIndexingProgress(ulong dataSize, int fileCount)
     {
-        FileIndexInfo fileIndexInfo1 = new()
+        FileIndexInfo fileIndexInfo = new()
         {
             DataSize = dataSize,
             FileCount = fileCount
         };
 
-        return createSnapshotUi.AnnounceFileIndexingProgress(fileIndexInfo1);
+        return createSnapshotUi.AnnounceFileIndexingProgress(fileIndexInfo);
     }
 
     private Task AnnounceFilesIndexed(ulong dataSize, int fileCount)
     {
-        FileIndexInfo fileIndexInfo2 = new()
+        FileIndexInfo fileIndexInfo = new()
         {
             DataSize = dataSize,
             FileCount = fileCount
         };
 
-        return createSnapshotUi.AnnounceFilesIndexed(fileIndexInfo2);
+        return createSnapshotUi.AnnounceFilesIndexed(fileIndexInfo);
     }
 }

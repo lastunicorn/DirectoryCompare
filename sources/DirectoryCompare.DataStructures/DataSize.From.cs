@@ -19,7 +19,7 @@ namespace DustInTheWind.DirectoryCompare.DataStructures;
 public readonly partial struct DataSize
 {
     /// <summary>
-    /// Creates a new <see cref="DataSize"/> with the specified value in Bytes.
+    /// Creates a new <see cref="DataSize"/> with the specified value in bytes.
     /// </summary>
     public static DataSize FromBytes(ulong value)
     {
@@ -27,7 +27,7 @@ public readonly partial struct DataSize
     }
 
     /// <summary>
-    /// Creates a new <see cref="DataSize"/> with the specified value in Kilobytes.
+    /// Creates a new <see cref="DataSize"/> with the specified value in kilobytes.
     /// </summary>
     public static DataSize FromKilobytes(double value)
     {
@@ -35,7 +35,7 @@ public readonly partial struct DataSize
     }
 
     /// <summary>
-    /// Creates a new <see cref="DataSize"/> with the specified value in Megabytes.
+    /// Creates a new <see cref="DataSize"/> with the specified value in megabytes.
     /// </summary>
     public static DataSize FromMegabytes(double value)
     {
@@ -43,7 +43,7 @@ public readonly partial struct DataSize
     }
 
     /// <summary>
-    /// Creates a new <see cref="DataSize"/> with the specified value in Gigabytes.
+    /// Creates a new <see cref="DataSize"/> with the specified value in gigabytes.
     /// </summary>
     public static DataSize FromGigabytes(double value)
     {
@@ -51,7 +51,7 @@ public readonly partial struct DataSize
     }
 
     /// <summary>
-    /// Creates a new <see cref="DataSize"/> with the specified value in Terabytes.
+    /// Creates a new <see cref="DataSize"/> with the specified value in terabytes.
     /// </summary>
     public static DataSize FromTerabytes(double value)
     {
@@ -59,7 +59,7 @@ public readonly partial struct DataSize
     }
 
     /// <summary>
-    /// Creates a new <see cref="DataSize"/> with the specified value in Petabytes.
+    /// Creates a new <see cref="DataSize"/> with the specified value in petabytes.
     /// </summary>
     public static DataSize FromPetabytes(double value)
     {

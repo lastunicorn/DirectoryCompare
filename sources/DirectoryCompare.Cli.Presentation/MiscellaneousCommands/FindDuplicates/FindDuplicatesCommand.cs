@@ -38,7 +38,7 @@ internal class FindDuplicatesCommand : IConsoleCommand
     [AnonymousParameter(Order = 2, IsOptional = true, Description = "The location of the second snapshot to compare. Location structure: '<pot>~<snapshot>:<path>'.")]
     public string Snapshot2Location { get; set; }
 
-    [NamedParameter("check-exist", ShortName = 'x', IsOptional = true, Description = "If specified, the files that does not actually exist on disk are not displayed.")]
+    [NamedParameter("check-exist", ShortName = 'x', IsOptional = true, Description = "If set, the files that does not actually exist on disk are not displayed.")]
     public bool CheckFilesExistence { get; set; }
     
     [NamedParameter("output", ShortName = 'o', IsOptional = true, Description = "The json file name where to export the list of duplicates.")]
