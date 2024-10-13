@@ -20,7 +20,7 @@ public readonly partial struct DataSize
 {
     public static implicit operator ulong(DataSize dataSize)
     {
-        return dataSize.Value;
+        return dataSize.value;
     }
 
     public static implicit operator DataSize(ulong bytes)

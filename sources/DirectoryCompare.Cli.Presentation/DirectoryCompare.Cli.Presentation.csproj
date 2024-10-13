@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <AssemblyName>DustInTheWind.DirectoryCompare.Cli.Presentation</AssemblyName>
         <RootNamespace>DustInTheWind.DirectoryCompare.Cli.Presentation</RootNamespace>
@@ -37,6 +37,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <ItemGroup>
         <ProjectReference Include="..\DirectoryCompare.Cli.Application\DirectoryCompare.Cli.Application.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.DataStructures\DirectoryCompare.DataStructures.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.Ports.ConfigAccess\DirectoryCompare.Ports.ConfigAccess.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.Cli.Presentation.Utils\DirectoryCompare.Cli.Presentation.Utils.csproj" PrivateAssets="All" />
     </ItemGroup>
 
 </Project>

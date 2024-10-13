@@ -19,12 +19,74 @@ namespace DustInTheWind.DirectoryCompare.DataStructures;
 public readonly partial struct DataSize
 {
     /// <summary>
+    /// Creates a new <see cref="DataSize"/> with the specified value.
+    /// </summary>
+    public static DataSize From(ulong value, DataSizeUnit unit)
+    {
+        return new DataSize(value, unit);
+    }
+    
+    /// <summary>
+    /// Creates a new <see cref="DataSize"/> with the specified value.
+    /// </summary>
+    public static DataSize From(double value, DataSizeUnit unit)
+    {
+        return new DataSize(value, unit);
+    }
+    
+    // ---
+
+    /// <summary>
     /// Creates a new <see cref="DataSize"/> with the specified value in bytes.
     /// </summary>
     public static DataSize FromBytes(ulong value)
     {
         return new DataSize(value);
     }
+
+    // ---
+
+    /// <summary>
+    /// Creates a new <see cref="DataSize"/> with the specified value in kibibytes.
+    /// </summary>
+    public static DataSize FromKibibytes(double value)
+    {
+        return new DataSize(value, DataSizeUnit.Kibibyte);
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="DataSize"/> with the specified value in mebibytes.
+    /// </summary>
+    public static DataSize FromMebibytes(double value)
+    {
+        return new DataSize(value, DataSizeUnit.Mebibyte);
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="DataSize"/> with the specified value in gibibytes.
+    /// </summary>
+    public static DataSize FromGibibytes(double value)
+    {
+        return new DataSize(value, DataSizeUnit.Gibibyte);
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="DataSize"/> with the specified value in tebibytes.
+    /// </summary>
+    public static DataSize FromTebibytes(double value)
+    {
+        return new DataSize(value, DataSizeUnit.Tebibyte);
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="DataSize"/> with the specified value in pebibytes.
+    /// </summary>
+    public static DataSize FromPebibytes(double value)
+    {
+        return new DataSize(value, DataSizeUnit.Pebibyte);
+    }
+    
+    // ---
 
     /// <summary>
     /// Creates a new <see cref="DataSize"/> with the specified value in kilobytes.

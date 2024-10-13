@@ -15,11 +15,14 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools.Controls.Tables;
+using DustInTheWind.DirectoryCompare.Cli.Presentation.Utils;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands.DisplayPot;
 
 internal class SnapshotsDataGrid : CustomDataGrid
 {
+    public DataSizeFormat DataSizeFormat { get; set; }
+    
     public SnapshotsDataGrid()
     {
         CreateColumns();
@@ -56,7 +59,7 @@ internal class SnapshotsDataGrid : CustomDataGrid
         {
             int index = snapshot.Index;
             DateTime creationTime = snapshot.CreationTime.ToLocalTime();
-            string size = snapshot.Size.ToString();
+            DataSizeDisplay size = snapshot.Size.ToDataSizeDisplay(DataSizeFormat);
             string guid = snapshot.Id.ToString("D");
 
             Rows.Add(index, creationTime, size, guid);

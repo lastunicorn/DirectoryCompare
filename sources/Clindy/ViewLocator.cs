@@ -23,13 +23,13 @@ namespace DustInTheWind.Clindy;
 
 public class ViewLocator : IDataTemplate
 {
-    public Control? Build(object? data)
+    public Control Build(object data)
     {
         if (data is null)
             return null;
 
         string name = data.GetType().FullName!.Replace("ViewModel", "View", StringComparison.Ordinal);
-        Type? type = Type.GetType(name);
+        Type type = Type.GetType(name);
 
         if (type != null)
         {
@@ -44,7 +44,7 @@ public class ViewLocator : IDataTemplate
         };
     }
 
-    public bool Match(object? data)
+    public bool Match(object data)
     {
         return data is ViewModelBase;
     }

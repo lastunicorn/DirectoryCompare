@@ -29,6 +29,25 @@ public readonly partial struct DataSize
             case DataSizeUnit.Byte:
                 return value;
 
+            // ---
+            
+            case DataSizeUnit.Kibibyte:
+                return value * OneKibibyteValue;
+
+            case DataSizeUnit.Mebibyte:
+                return value * OneMebibyteValue;
+
+            case DataSizeUnit.Gibibyte:
+                return value * OneGibibyteValue;
+
+            case DataSizeUnit.Tebibyte:
+                return value * OneTebibyteValue;
+
+            case DataSizeUnit.Pebibyte:
+                return value * OnePebibyteValue;
+
+            // ---
+            
             case DataSizeUnit.Kilobyte:
                 return value * OneKilobyteValue;
 
@@ -43,6 +62,8 @@ public readonly partial struct DataSize
 
             case DataSizeUnit.Petabyte:
                 return value * OnePetabyteValue;
+
+            // ---
 
             default:
                 throw new ArgumentOutOfRangeException();
@@ -63,6 +84,25 @@ public readonly partial struct DataSize
             case DataSizeUnit.Byte:
                 return (ulong)Math.Round(value);
 
+            // ---
+
+            case DataSizeUnit.Kibibyte:
+                return (ulong)Math.Round(value) * OneKibibyteValue;
+
+            case DataSizeUnit.Mebibyte:
+                return (ulong)Math.Round(value) * OneMebibyteValue;
+
+            case DataSizeUnit.Gibibyte:
+                return (ulong)Math.Round(value) * OneGibibyteValue;
+
+            case DataSizeUnit.Tebibyte:
+                return (ulong)Math.Round(value) * OneTebibyteValue;
+
+            case DataSizeUnit.Pebibyte:
+                return (ulong)Math.Round(value) * OnePebibyteValue;
+
+            // ---
+
             case DataSizeUnit.Kilobyte:
                 return (ulong)Math.Round(value) * OneKilobyteValue;
 
@@ -77,6 +117,8 @@ public readonly partial struct DataSize
 
             case DataSizeUnit.Petabyte:
                 return (ulong)Math.Round(value) * OnePetabyteValue;
+
+            // ---
 
             default:
                 throw new ArgumentOutOfRangeException();

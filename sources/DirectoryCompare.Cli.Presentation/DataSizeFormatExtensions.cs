@@ -1,4 +1,4 @@
-// DirectoryCompare
+// Directory Compare
 // Copyright (C) 2017-2024 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -14,15 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.DataStructures;
+using DataSizeFormat = DustInTheWind.DirectoryCompare.Cli.Presentation.Utils.DataSizeFormat;
+using DataSizeFormatFromConfig = DustInTheWind.DirectoryCompare.Ports.ConfigAccess.DataSizeFormat;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.PresentDuplicates;
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation;
 
-internal class DataSizeComparer : IComparer<DataSize>
+internal static class DataSizeFormatExtensions
 {
-    public int Compare(DataSize x, DataSize y)
+    public static DataSizeFormat ToPresentationModel(this DataSizeFormatFromConfig format)
     {
-        int result = x.Bytes.CompareTo(y.Bytes);
-        return result == 0 ? 1 : result;
+        return format switch
+        {
+            DataSizeFormatFromConfig.Binary => DataSizeFormat.Binary,
+            DataSizeFormatFromConfig.Decimal => DataSizeFormat.Decimal,
+            _ => throw new ArgumentOutOfRangeException(nameof(format), format, null)
+        };
     }
 }

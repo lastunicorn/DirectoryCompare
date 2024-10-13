@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <AssemblyName>DustInTheWind.DirectoryCompare.Ports.ImportExportAccess</AssemblyName>
         <RootNamespace>DustInTheWind.DirectoryCompare.Ports.ImportExportAccess</RootNamespace>

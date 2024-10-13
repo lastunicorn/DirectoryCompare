@@ -1,4 +1,4 @@
-﻿// DirectoryCompare
+﻿// Directory Compare
 // Copyright (C) 2017-2024 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -51,16 +51,26 @@ internal static class DependencyContainer
     private static void RegisterAdapters(ContainerBuilder containerBuilder)
     {
         // Log Access
-        
+
         containerBuilder.RegisterType<Log>().As<ILog>().SingleInstance();
-        containerBuilder.RegisterType<ConsoleRemoveDuplicatesLog>().As<IRemoveDuplicatesLog>().SingleInstance();
-        
+        containerBuilder
+            .Register(x =>
+            {
+                IConfig config = x.Resolve<IConfig>();
+
+                return new ConsoleRemoveDuplicatesLog
+                {
+                    DataSizeFormat = config.DataSizeFormat.ToPresentationModel()
+                };
+            })
+            .As<IRemoveDuplicatesLog>().SingleInstance();
+
         // Config Access
-        
+
         containerBuilder.RegisterType<Config>().As<IConfig>().SingleInstance();
-        
+
         // Data Access
-        
+
         containerBuilder
             .Register(x =>
             {
@@ -78,23 +88,44 @@ internal static class DependencyContainer
         containerBuilder.RegisterType<BlackListRepository>().As<IBlackListRepository>();
         containerBuilder.RegisterType<SnapshotRepository>().As<ISnapshotRepository>();
         containerBuilder.RegisterType<PotImportExport>().As<IPotImportExport>();
-        
+
         // File System Access
-        
+
         containerBuilder.RegisterType<FileSystem>().As<IFileSystem>();
-        
+
         // User Access
-        
+
         containerBuilder.RegisterType<DeletePotUi>().As<IDeletePotUi>();
-        containerBuilder.RegisterType<CreateSnapshotUi>().As<ICreateSnapshotUi>();
-        containerBuilder.RegisterType<DuplicateFilesUi>().As<IDuplicateFilesUi>();
-        
+        containerBuilder
+            .Register(x =>
+            {
+                IConfig config = x.Resolve<IConfig>();
+
+                return new CreateSnapshotUi
+                {
+                    DataSizeFormat = config.DataSizeFormat.ToPresentationModel()
+                };
+            })
+            .As<ICreateSnapshotUi>();
+
+        containerBuilder
+            .Register(x =>
+            {
+                IConfig config = x.Resolve<IConfig>();
+
+                return new DuplicateFilesUi
+                {
+                    DataSizeFormat = config.DataSizeFormat.ToPresentationModel()
+                };
+            })
+            .As<IDuplicateFilesUi>();
+
         // System Access
-        
+
         containerBuilder.RegisterType<SystemClock>().As<ISystemClock>();
-        
+
         // Import/Export Access
-        
+
         containerBuilder.RegisterType<ImportExport>().As<IImportExport>();
     }
 

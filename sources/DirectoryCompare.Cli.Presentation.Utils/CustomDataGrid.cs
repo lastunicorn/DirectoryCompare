@@ -1,4 +1,4 @@
-// DirectoryCompare
+﻿// Directory Compare
 // Copyright (C) 2017-2024 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -14,15 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.DirectoryCompare.DataStructures;
+using DustInTheWind.ConsoleTools.Controls.Tables;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.PresentDuplicates;
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.Utils;
 
-internal class DataSizeComparer : IComparer<DataSize>
+public class CustomDataGrid : DataGrid
 {
-    public int Compare(DataSize x, DataSize y)
+    public CustomDataGrid()
     {
-        int result = x.Bytes.CompareTo(y.Bytes);
-        return result == 0 ? 1 : result;
+        TitleRow.BackgroundColor = ConsoleColor.DarkGray;
+        TitleRow.ForegroundColor = ConsoleColor.Black;
+
+        HeaderRow.ForegroundColor = ConsoleColor.White;
+
+        Border.ForegroundColor = ConsoleColor.DarkGray;
     }
 }

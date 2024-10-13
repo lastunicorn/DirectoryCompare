@@ -15,11 +15,19 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools.Commando;
+using DustInTheWind.DirectoryCompare.Ports.ConfigAccess;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands.DisplayPots;
 
 internal class DisplayPotsView : ViewBase<PotsViewModel>
 {
+    private readonly IConfig config;
+
+    public DisplayPotsView(IConfig config)
+    {
+        this.config = config ?? throw new ArgumentNullException(nameof(config));
+    }
+    
     public override void Display(PotsViewModel potsViewModel)
     {
         bool hasPots = potsViewModel.Pots is { Count: > 0 };
@@ -30,9 +38,12 @@ internal class DisplayPotsView : ViewBase<PotsViewModel>
             WriteInfo("There are no Pots.");
     }
 
-    private static void DisplayPots(PotsViewModel potsViewModel)
+    private void DisplayPots(PotsViewModel potsViewModel)
     {
-        PotsDataGrid potsDataGrid = new();
+        PotsDataGrid potsDataGrid = new()
+        {
+            DataSizeFormat = config.DataSizeFormat.ToPresentationModel()
+        };
         potsDataGrid.AddPots(potsViewModel);
 
         potsDataGrid.Display();

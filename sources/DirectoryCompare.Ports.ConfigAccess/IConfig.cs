@@ -19,4 +19,6 @@ namespace DustInTheWind.DirectoryCompare.Ports.ConfigAccess;
 public interface IConfig
 {
     string ConnectionString { get; }
+
+    DataSizeFormat DataSizeFormat { get; }
 }

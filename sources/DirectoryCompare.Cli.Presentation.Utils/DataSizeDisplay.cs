@@ -1,4 +1,4 @@
-// DirectoryCompare
+// Directory Compare
 // Copyright (C) 2017-2024 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -16,13 +16,26 @@
 
 using DustInTheWind.DirectoryCompare.DataStructures;
 
-namespace DustInTheWind.DirectoryCompare.Cli.Application.MiscellaneousArea.PresentDuplicates;
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.Utils;
 
-internal class DataSizeComparer : IComparer<DataSize>
+public struct DataSizeDisplay
 {
-    public int Compare(DataSize x, DataSize y)
+    private readonly DataSize dataSize;
+    private readonly DataSizeFormat format;
+
+    public DataSizeDisplay(DataSize dataSize, DataSizeFormat format = DataSizeFormat.Simple)
     {
-        int result = x.Bytes.CompareTo(y.Bytes);
-        return result == 0 ? 1 : result;
+        this.dataSize = dataSize;
+        this.format = format;
+    }
+
+    public override string ToString()
+    {
+        bool isDetailed = (format & DataSizeFormat.Detailed) == DataSizeFormat.Detailed;
+        bool isDecimal = (format & DataSizeFormat.Decimal) == DataSizeFormat.Decimal;
+
+        return isDetailed
+            ? dataSize.ToString(isDecimal ? "D10" : "D2")
+            : dataSize.ToString(isDecimal ? "S10" : "S2");
     }
 }

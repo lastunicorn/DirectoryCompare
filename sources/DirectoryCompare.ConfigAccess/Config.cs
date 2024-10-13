@@ -22,6 +22,18 @@ public class Config : ConfigBase, IConfig
 {
     public string ConnectionString => Configuration["ConnectionString"];
 
+    public DataSizeFormat DataSizeFormat
+    {
+        get
+        {
+            string rawValue = Configuration["DataSizeFormat"];
+
+            return rawValue == null
+                ? DataSizeFormat.Binary
+                : Enum.Parse<DataSizeFormat>(rawValue, true);
+        }
+    }
+
     public Config()
         : base("appsettings.json")
     {

@@ -48,7 +48,7 @@ public class DuplicatesNavigatorFooterViewModel : ViewModelBase
 
     public void SetTotalSize(DataSize value)
     {
-        if (value < DataSize.OneKilobyte)
+        if (value < DataSize.OneKibibyte)
             TotalSize = value.ToString("simple");
         else
             TotalSize = value.ToString("detailed");

@@ -16,11 +16,19 @@
 
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Commando;
+using DustInTheWind.DirectoryCompare.Ports.ConfigAccess;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands.DisplayPot;
 
 internal class DisplayPotView : ViewBase<DisplayPotViewModel>
 {
+    private readonly IConfig config;
+
+    public DisplayPotView(IConfig config)
+    {
+        this.config = config ?? throw new ArgumentNullException(nameof(config));
+    }
+
     public override void Display(DisplayPotViewModel viewModel)
     {
         if (viewModel.Exists)
@@ -36,9 +44,12 @@ internal class DisplayPotView : ViewBase<DisplayPotViewModel>
         }
     }
 
-    private static void DisplayPotInfo(PotViewModel viewModel)
+    private void DisplayPotInfo(PotViewModel viewModel)
     {
-        PotDataGrid potDataGrid = new();
+        PotDataGrid potDataGrid = new()
+        {
+            DataSizeFormat = config.DataSizeFormat.ToPresentationModel()
+        };
         potDataGrid.AddPot(viewModel);
 
         potDataGrid.Display();
@@ -48,7 +59,10 @@ internal class DisplayPotView : ViewBase<DisplayPotViewModel>
     {
         if (snapshots is { Count: > 0 })
         {
-            SnapshotsDataGrid snapshotsDataGrid = new();
+            SnapshotsDataGrid snapshotsDataGrid = new()
+            {
+                DataSizeFormat = config.DataSizeFormat.ToPresentationModel()
+            };
             snapshotsDataGrid.AddSnapshots(snapshots);
 
             snapshotsDataGrid.Display();

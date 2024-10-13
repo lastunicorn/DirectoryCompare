@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
 
         <AssemblyTitle>DirectoryCompare.Cli</AssemblyTitle>
@@ -47,6 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <ProjectReference Include="..\DirectoryCompare.Ports.UserAccess\DirectoryCompare.Ports.UserAccess.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.SystemAccess\DirectoryCompare.SystemAccess.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DirectoryCompare.UserAccess\DirectoryCompare.UserAccess.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.Cli.Presentation.Utils\DirectoryCompare.Cli.Presentation.Utils.csproj" PrivateAssets="All" />
     </ItemGroup>
 
     <ItemGroup>

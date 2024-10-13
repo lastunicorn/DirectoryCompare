@@ -18,11 +18,19 @@ using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Commando;
 using DustInTheWind.DirectoryCompare.Cli.Application.SnapshotArea.PresentSnapshot;
 using DustInTheWind.DirectoryCompare.DataStructures;
+using DustInTheWind.DirectoryCompare.Ports.ConfigAccess;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands.DisplaySnapshot;
 
 public class DisplaySnapshotView : ViewBase<SnapshotViewModel>
 {
+    private readonly IConfig config;
+
+    public DisplaySnapshotView(IConfig config)
+    {
+        this.config = config ?? throw new ArgumentNullException(nameof(config));
+    }
+    
     public override void Display(SnapshotViewModel snapshotViewModel)
     {
         DisplaySnapshotMetadata(snapshotViewModel);
@@ -31,9 +39,12 @@ public class DisplaySnapshotView : ViewBase<SnapshotViewModel>
             DisplaySnapshotContent(snapshotViewModel.DirectoryPath, snapshotViewModel.RootDirectory);
     }
 
-    private static void DisplaySnapshotMetadata(SnapshotViewModel snapshotViewModel)
+    private void DisplaySnapshotMetadata(SnapshotViewModel snapshotViewModel)
     {
-        SnapshotDataGrid snapshotDataGrid = new();
+        SnapshotDataGrid snapshotDataGrid = new()
+        {
+            DataSizeFormat = config.DataSizeFormat.ToPresentationModel()
+        };
         snapshotDataGrid.AddSnapshot(snapshotViewModel);
 
         snapshotDataGrid.Display();

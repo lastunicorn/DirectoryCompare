@@ -16,11 +16,14 @@
 
 using DustInTheWind.ConsoleTools.Controls;
 using DustInTheWind.ConsoleTools.Controls.Tables;
+using DustInTheWind.DirectoryCompare.Cli.Presentation.Utils;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.PotCommands.DisplayPot;
 
 internal class PotDataGrid : CustomDataGrid
 {
+    public DataSizeFormat DataSizeFormat { get; set; }
+
     public PotDataGrid()
     {
         HeaderRow.IsVisible = false;
@@ -64,7 +67,7 @@ internal class PotDataGrid : CustomDataGrid
         MultilineText pathText = new(lines);
         Rows.Add((MultilineText)"Path", pathText);
 
-        Rows.Add("Size", viewModel.Size.ToString("D"));
+        Rows.Add("Size", viewModel.Size.ToDataSizeDisplay(DataSizeFormat | DataSizeFormat.Detailed));
 
         if (viewModel.Description != null)
             Rows.Add("Description", viewModel.Description);

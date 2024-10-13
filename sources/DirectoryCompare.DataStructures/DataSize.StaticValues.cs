@@ -16,17 +16,19 @@
 
 namespace DustInTheWind.DirectoryCompare.DataStructures;
 
-/// <summary>
-/// Represents the size of some data.
-/// It contains a value and a measurement unit.
-/// </summary>
 public readonly partial struct DataSize
 {
-    private const ulong OneKilobyteValue = 1024;
-    private const ulong OneMegabyteValue = OneKilobyteValue * 1024;
-    private const ulong OneGigabyteValue = OneMegabyteValue * 1024;
-    private const ulong OneTerabyteValue = OneGigabyteValue * 1024;
-    private const ulong OnePetabyteValue = OneTerabyteValue * 1024;
+    private const ulong OneKibibyteValue = 1024;
+    private const ulong OneMebibyteValue = OneKibibyteValue * 1024;
+    private const ulong OneGibibyteValue = OneMebibyteValue * 1024;
+    private const ulong OneTebibyteValue = OneGibibyteValue * 1024;
+    private const ulong OnePebibyteValue = OneTebibyteValue * 1024;
+    
+    private const ulong OneKilobyteValue = 1000;
+    private const ulong OneMegabyteValue = OneKilobyteValue * 1000;
+    private const ulong OneGigabyteValue = OneMegabyteValue * 1000;
+    private const ulong OneTerabyteValue = OneGigabyteValue * 1000;
+    private const ulong OnePetabyteValue = OneTerabyteValue * 1000;
 
     /// <summary>
     /// Gets a <see cref="DataSize"/> instance that represents zero bytes.
@@ -38,28 +40,57 @@ public readonly partial struct DataSize
     /// </summary>
     public static DataSize OneByte { get; } = new(1);
 
+    // ---
+    
     /// <summary>
-    /// Gets a <see cref="DataSize"/> instance that represents one kilobyte.
+    /// Gets a <see cref="DataSize"/> instance that represents one kibibyte (2 ^ 10 bytes).
+    /// </summary>
+    public static DataSize OneKibibyte { get; } = new(OneKibibyteValue);
+
+    /// <summary>
+    /// Gets a <see cref="DataSize"/> instance that represents one mebibyte (2 ^ 20 bytes).
+    /// </summary>
+    public static DataSize OneMebibyte { get; } = new(OneMebibyteValue);
+
+    /// <summary>
+    /// Gets a <see cref="DataSize"/> instance that represents one gibibyte (2 ^ 30 bytes).
+    /// </summary>
+    public static DataSize OneGibibyte { get; } = new(OneGibibyteValue);
+
+    /// <summary>
+    /// Gets a <see cref="DataSize"/> instance that represents one tebibyte (2 ^ 40 bytes).
+    /// </summary>
+    public static DataSize OneTebibyte { get; } = new(OneTebibyteValue);
+    
+    /// <summary>
+    /// Gets a <see cref="DataSize"/> instance that represents one pebibyte (2 ^ 50 bytes).
+    /// </summary>
+    public static DataSize OnePebibyte { get; } = new(OnePebibyteValue);
+    
+    // ---
+
+    /// <summary>
+    /// Gets a <see cref="DataSize"/> instance that represents one kilobyte (10 ^ 3 bytes).
     /// </summary>
     public static DataSize OneKilobyte { get; } = new(OneKilobyteValue);
 
     /// <summary>
-    /// Gets a <see cref="DataSize"/> instance that represents one megabyte.
+    /// Gets a <see cref="DataSize"/> instance that represents one megabyte (10 ^ 6 bytes).
     /// </summary>
     public static DataSize OneMegabyte { get; } = new(OneMegabyteValue);
 
     /// <summary>
-    /// Gets a <see cref="DataSize"/> instance that represents one gigabyte.
+    /// Gets a <see cref="DataSize"/> instance that represents one gigabyte (10 ^ 9 bytes).
     /// </summary>
     public static DataSize OneGigabyte { get; } = new(OneGigabyteValue);
 
     /// <summary>
-    /// Gets a <see cref="DataSize"/> instance that represents one terabyte.
+    /// Gets a <see cref="DataSize"/> instance that represents one terabyte (10 ^ 12 bytes).
     /// </summary>
     public static DataSize OneTerabyte { get; } = new(OneTerabyteValue);
     
     /// <summary>
-    /// Gets a <see cref="DataSize"/> instance that represents one petabyte.
+    /// Gets a <see cref="DataSize"/> instance that represents one petabyte (10 ^ 15 bytes).
     /// </summary>
     public static DataSize OnePetabyte { get; } = new(OnePetabyteValue);
 }

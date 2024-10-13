@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 DirectoryCompare
 Copyright (C) 2017-2024 Dust in the Wind
 
@@ -21,8 +21,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
-        <AssemblyName>DustInTheWind.DirectoryCompare.DataStructures</AssemblyName>
-        <RootNamespace>DustInTheWind.DirectoryCompare.DataStructures</RootNamespace>
+        <AssemblyName>DustInTheWind.DirectoryCompare.Cli.Presentation.Utils</AssemblyName>
+        <RootNamespace>DustInTheWind.DirectoryCompare.Cli.Presentation.Utils</RootNamespace>
     </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Remove="ResultExporters\ConsoleComparisonReducedExporter.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="ConsoleTools.Commando" Version="2.0.0" />
+        <PackageReference Include="ConsoleTools.Controls" Version="1.1.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\DirectoryCompare.Cli.Application\DirectoryCompare.Cli.Application.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DirectoryCompare.DataStructures\DirectoryCompare.DataStructures.csproj" PrivateAssets="All" />
+    </ItemGroup>
 
 </Project>

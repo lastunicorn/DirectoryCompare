@@ -16,12 +16,15 @@
 
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Commando;
+using DustInTheWind.DirectoryCompare.Cli.Presentation.Utils;
 using DustInTheWind.DirectoryCompare.Ports.UserAccess;
 
 namespace DustInTheWind.DirectoryCompare.UserAccess;
 
 public class CreateSnapshotUi : EnhancedConsole, ICreateSnapshotUi
 {
+    public DataSizeFormat DataSizeFormat { get; set; }
+
     public Task AnnounceStarting(StartNewSnapshotInfo info)
     {
         WithIndentation("Creating a new snapshot", () =>
@@ -58,7 +61,10 @@ public class CreateSnapshotUi : EnhancedConsole, ICreateSnapshotUi
     public Task AnnounceFileIndexingProgress(FileIndexInfo fileIndexInfo)
     {
         CustomConsole.Write("Indexed:");
-        CustomConsole.WriteLine(ConsoleColor.DarkGray, $" {fileIndexInfo.FileCount:N0} files ({fileIndexInfo.DataSize})");
+        
+        int fileCount = fileIndexInfo.FileCount;
+        DataSizeDisplay dataSizeDisplay = fileIndexInfo.DataSize.ToDataSizeDisplay(DataSizeFormat);
+        CustomConsole.WriteLine(ConsoleColor.DarkGray, $" {fileCount:N0} files ({dataSizeDisplay})");
 
         return Task.CompletedTask;
     }
@@ -70,7 +76,7 @@ public class CreateSnapshotUi : EnhancedConsole, ICreateSnapshotUi
         WithIndentation(() =>
         {
             CustomConsole.WriteLineSuccess($"File count: {fileIndexInfo.FileCount:N0}");
-            CustomConsole.WriteLineSuccess($"Data Size: {fileIndexInfo.DataSize.ToString("D")}");
+            CustomConsole.WriteLineSuccess($"Data Size: {fileIndexInfo.DataSize.ToDataSizeDisplay(DataSizeFormat | DataSizeFormat.Detailed)}");
         });
 
         CustomConsole.WriteLine();
@@ -98,7 +104,7 @@ public class CreateSnapshotUi : EnhancedConsole, ICreateSnapshotUi
     {
         CustomConsole.Write("Progress:");
         CustomConsole.WriteEmphasized($" {info.Percentage:0.00} %");
-        CustomConsole.WriteLine(ConsoleColor.DarkGray, $" ({info.ProcessedSize} / {info.TotalSize})");
+        CustomConsole.WriteLine(ConsoleColor.DarkGray, $" ({info.ProcessedSize} / {info.TotalSize.ToDataSizeDisplay(DataSizeFormat)})");
 
         return Task.CompletedTask;
     }

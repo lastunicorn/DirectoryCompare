@@ -68,7 +68,7 @@ public class WriteSnapshotTests
         snapshot.Files.Add(new HFile
         {
             Name = "file.extension",
-            Size = DataSize.FromKilobytes(42),
+            Size = DataSize.FromKibibytes(42),
             LastModifiedTime = new DateTime(2011, 05, 13, 12, 56, 20),
             Hash = new byte[] { 0, 1, 2 }
         });

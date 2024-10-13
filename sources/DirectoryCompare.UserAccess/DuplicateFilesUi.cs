@@ -16,6 +16,7 @@
 
 using DustInTheWind.ConsoleTools;
 using DustInTheWind.ConsoleTools.Commando;
+using DustInTheWind.DirectoryCompare.Cli.Presentation.Utils;
 using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Ports.UserAccess;
 
@@ -23,6 +24,8 @@ namespace DustInTheWind.DirectoryCompare.UserAccess;
 
 public class DuplicateFilesUi : EnhancedConsole, IDuplicateFilesUi
 {
+    public DataSizeFormat DataSizeFormat { get; set; }
+    
     public Task AnnounceStart(DuplicateSearchStartedInfo info)
     {
         CustomConsole.WriteLine("Searching for duplicates between:");
@@ -43,10 +46,9 @@ public class DuplicateFilesUi : EnhancedConsole, IDuplicateFilesUi
         Console.WriteLine(filePair.FullPathLeft);
         Console.WriteLine(filePair.FullPathRight);
         
-        DataSize sizeShort = filePair.Size;
-        string sizeLong = filePair.Size.ToString(DataSizeUnit.Byte);
+        DataSizeDisplay size = filePair.Size.ToDataSizeDisplay(DataSizeFormat | DataSizeFormat.Detailed);
         FileHash fileHash = filePair.Hash;
-        CustomConsole.WriteLine(ConsoleColor.DarkGray, $"{sizeShort} ({sizeLong}) - {fileHash}");
+        CustomConsole.WriteLine(ConsoleColor.DarkGray, $"{size} - {fileHash}");
         
         Console.WriteLine();
 
@@ -56,7 +58,7 @@ public class DuplicateFilesUi : EnhancedConsole, IDuplicateFilesUi
     public Task AnnounceFinished(DuplicateSearchFinishedInfo info)
     {
         WriteValue("Duplicates", info.DuplicateCount.ToString("N0"));
-        WriteValue("Total size", info.TotalSize.ToString("D"));
+        WriteValue("Total size", info.TotalSize.ToDataSizeDisplay(DataSizeFormat | DataSizeFormat.Detailed));
         WriteValue("Elapsed Time", info.ElapsedTime);
         Console.WriteLine();
 

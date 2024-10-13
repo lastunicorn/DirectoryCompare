@@ -1,4 +1,4 @@
-// DirectoryCompare
+// Directory Compare
 // Copyright (C) 2017-2024 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -14,26 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.DataStructures;
+using DustInTheWind.DirectoryCompare.DataStructures;
 
-/// <summary>
-/// Represents the size in bytes of binary data.
-/// </summary>
-public readonly partial struct DataSize: IEquatable<DataSize>, IFormattable, IComparable<DataSize>
+namespace DustInTheWind.DirectoryCompare.Cli.Presentation.Utils;
+
+public static class DataSizeDisplayExtensions
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DataSize"/> struct.
-    /// </summary>
-    public DataSize(ulong value, DataSizeUnit unit = DataSizeUnit.Byte)
+    public static DataSizeDisplay ToDataSizeDisplay(this DataSize dataSize)
     {
-        this.value = ToBytes(value, unit);
+        return new DataSizeDisplay(dataSize);
     }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DataSize"/> struct.
-    /// </summary>
-    public DataSize(double value, DataSizeUnit unit = DataSizeUnit.Byte)
+    
+    public static DataSizeDisplay ToDataSizeDisplay(this DataSize dataSize, DataSizeFormat format)
     {
-        this.value = ToBytes(value, unit);
+        return new DataSizeDisplay(dataSize, format);
     }
 }

@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools.Commando;
+using DustInTheWind.DirectoryCompare.Cli.Presentation.Utils;
 using DustInTheWind.DirectoryCompare.DataStructures;
 using DustInTheWind.DirectoryCompare.Ports.UserAccess;
 
@@ -22,6 +23,8 @@ namespace DustInTheWind.DirectoryCompare.UserAccess;
 
 public class ConsoleRemoveDuplicatesLog : EnhancedConsole, IRemoveDuplicatesLog
 {
+    public DataSizeFormat DataSizeFormat { get; set; }
+
     public void WritePlanInfo(RemoveDuplicatesPlan removeDuplicatesPlan)
     {
         WithIndentation("Removing duplicates:", () =>
@@ -104,7 +107,7 @@ public class ConsoleRemoveDuplicatesLog : EnhancedConsole, IRemoveDuplicatesLog
     public void WriteSummary(int removedFiles, DataSize removedSize)
     {
         Console.WriteLine("Total files removed: " + removedFiles);
-        Console.WriteLine($"Total size: {removedSize} ({removedSize.ToString(DataSizeUnit.Byte)})");
+        Console.WriteLine($"Total size: {removedSize.ToDataSizeDisplay(DataSizeFormat | DataSizeFormat.Detailed)}");
         Console.WriteLine();
     }
 }

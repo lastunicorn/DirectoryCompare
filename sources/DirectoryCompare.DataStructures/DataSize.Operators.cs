@@ -22,12 +22,12 @@ public readonly partial struct DataSize
     
     public static DataSize operator *(DataSize dataSize1, ulong dataSize2)
     {
-        return new DataSize(dataSize1.Value * dataSize2);
+        return new DataSize(dataSize1.value * dataSize2);
     }
 
     public static DataSize operator *(ulong dataSize1, DataSize dataSize2)
     {
-        return new DataSize(dataSize1 * dataSize2.Value);
+        return new DataSize(dataSize1 * dataSize2.value);
     }
 
     #endregion
@@ -36,17 +36,17 @@ public readonly partial struct DataSize
 
     public static DataSize operator -(DataSize dataSize1, ulong dataSize2)
     {
-        return new DataSize(dataSize1.Value - dataSize2);
+        return new DataSize(dataSize1.value - dataSize2);
     }
 
     public static DataSize operator -(ulong dataSize1, DataSize dataSize2)
     {
-        return new DataSize(dataSize2.Value - dataSize1);
+        return new DataSize(dataSize2.value - dataSize1);
     }
 
     public static DataSize operator -(DataSize dataSize1, DataSize dataSize2)
     {
-        return new DataSize(dataSize1.Value - dataSize2.Value);
+        return new DataSize(dataSize1.value - dataSize2.value);
     }
 
     #endregion
@@ -55,17 +55,17 @@ public readonly partial struct DataSize
 
     public static DataSize operator +(DataSize dataSize1, ulong dataSize2)
     {
-        return new DataSize(dataSize1.Value + dataSize2);
+        return new DataSize(dataSize1.value + dataSize2);
     }
 
     public static DataSize operator +(ulong dataSize1, DataSize dataSize2)
     {
-        return new DataSize(dataSize2.Value + dataSize1);
+        return new DataSize(dataSize2.value + dataSize1);
     }
 
     public static DataSize operator +(DataSize dataSize1, DataSize dataSize2)
     {
-        return new DataSize(dataSize1.Value + dataSize2.Value);
+        return new DataSize(dataSize1.value + dataSize2.value);
     }
 
     #endregion
@@ -74,12 +74,12 @@ public readonly partial struct DataSize
 
     public static bool operator <(DataSize dataSize1, DataSize dataSize2)
     {
-        return dataSize1.Value < dataSize2.Value;
+        return dataSize1.value < dataSize2.value;
     }
 
     public static bool operator <(DataSize dataSize1, ulong dataSize2)
     {
-        return dataSize1.Value < dataSize2;
+        return dataSize1.value < dataSize2;
     }
 
     public static bool operator <(DataSize dataSize1, int dataSize2)
@@ -87,7 +87,7 @@ public readonly partial struct DataSize
         if (dataSize2 < 0)
             return false;
 
-        return dataSize1.Value < (ulong)dataSize2;
+        return dataSize1.value < (ulong)dataSize2;
     }
 
     #endregion
@@ -96,12 +96,12 @@ public readonly partial struct DataSize
 
     public static bool operator >(DataSize dataSize1, DataSize dataSize2)
     {
-        return dataSize1.Value > dataSize2.Value;
+        return dataSize1.value > dataSize2.value;
     }
 
     public static bool operator >(DataSize dataSize1, ulong dataSize2)
     {
-        return dataSize1.Value > dataSize2;
+        return dataSize1.value > dataSize2;
     }
 
     public static bool operator >(DataSize dataSize1, int dataSize2)
@@ -109,7 +109,7 @@ public readonly partial struct DataSize
         if (dataSize2 < 0)
             return true;
 
-        return dataSize1.Value > (ulong)dataSize2;
+        return dataSize1.value > (ulong)dataSize2;
     }
 
     #endregion
@@ -118,12 +118,12 @@ public readonly partial struct DataSize
 
     public static bool operator <=(DataSize dataSize1, DataSize dataSize2)
     {
-        return dataSize1.Value <= dataSize2.Value;
+        return dataSize1.value <= dataSize2.value;
     }
 
     public static bool operator <=(DataSize dataSize1, ulong dataSize2)
     {
-        return dataSize1.Value <= dataSize2;
+        return dataSize1.value <= dataSize2;
     }
 
     public static bool operator <=(DataSize dataSize1, int dataSize2)
@@ -131,7 +131,7 @@ public readonly partial struct DataSize
         if (dataSize2 < 0)
             return false;
 
-        return dataSize1.Value <= (ulong)dataSize2;
+        return dataSize1.value <= (ulong)dataSize2;
     }
 
     #endregion
@@ -140,12 +140,12 @@ public readonly partial struct DataSize
 
     public static bool operator >=(DataSize dataSize1, DataSize dataSize2)
     {
-        return dataSize1.Value >= dataSize2.Value;
+        return dataSize1.value >= dataSize2.value;
     }
 
     public static bool operator >=(DataSize dataSize1, ulong dataSize2)
     {
-        return dataSize1.Value >= dataSize2;
+        return dataSize1.value >= dataSize2;
     }
 
     public static bool operator >=(DataSize dataSize1, int dataSize2)
@@ -153,7 +153,7 @@ public readonly partial struct DataSize
         if (dataSize2 < 0)
             return true;
 
-        return dataSize1.Value >= (ulong)dataSize2;
+        return dataSize1.value >= (ulong)dataSize2;
     }
 
     #endregion

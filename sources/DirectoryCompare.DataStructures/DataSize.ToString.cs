@@ -1,4 +1,4 @@
-// DirectoryCompare
+// Directory Compare
 // Copyright (C) 2017-2024 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -23,54 +23,111 @@ public readonly partial struct DataSize
     /// </summary>
     public override string ToString()
     {
-        double tempSize = Value;
+        return ToStringBinary();
+    }
 
-        if (tempSize >= OnePetabyteValue)
+    public string ToStringBinary()
+    {
+        double n = value;
+
+        if (n >= OnePebibyteValue)
         {
-            tempSize /= OnePetabyteValue;
+            n /= OnePebibyteValue;
 
-            return tempSize < 10
-                ? $"{tempSize:N2} PiB"
-                : $"{tempSize:N0} PiB";
+            return n < 10
+                ? $"{n:N2} PiB"
+                : $"{n:N0} PiB";
         }
 
-        if (tempSize >= OneTerabyteValue)
+        if (n >= OneTebibyteValue)
         {
-            tempSize /= OneTerabyteValue;
+            n /= OneTebibyteValue;
 
-            return tempSize < 10
-                ? $"{tempSize:N2} TiB"
-                : $"{tempSize:N0} TiB";
+            return n < 10
+                ? $"{n:N2} TiB"
+                : $"{n:N0} TiB";
         }
 
-        if (tempSize >= OneGigabyteValue)
+        if (n >= OneGibibyteValue)
         {
-            tempSize /= OneGigabyteValue;
+            n /= OneGibibyteValue;
 
-            return tempSize < 10
-                ? $"{tempSize:N2} GiB"
-                : $"{tempSize:N0} GiB";
+            return n < 10
+                ? $"{n:N2} GiB"
+                : $"{n:N0} GiB";
         }
 
-        if (tempSize >= OneMegabyteValue)
+        if (n >= OneMebibyteValue)
         {
-            tempSize /= OneMegabyteValue;
+            n /= OneMebibyteValue;
 
-            return tempSize < 10
-                ? $"{tempSize:N2} MiB"
-                : $"{tempSize:N0} MiB";
+            return n < 10
+                ? $"{n:N2} MiB"
+                : $"{n:N0} MiB";
         }
 
-        if (tempSize >= OneKilobyteValue)
+        if (n >= OneKibibyteValue)
         {
-            tempSize /= OneKilobyteValue;
+            n /= OneKibibyteValue;
 
-            return tempSize < 10
-                ? $"{tempSize:N2} KiB"
-                : $"{tempSize:N0} KiB";
+            return n < 10
+                ? $"{n:N2} KiB"
+                : $"{n:N0} KiB";
         }
 
-        return $"{tempSize:N0} B";
+        return $"{n:N0} B";
+    }
+
+    public string ToStringDecimal()
+    {
+        double n = value;
+
+        if (n >= OnePetabyteValue)
+        {
+            n /= OnePetabyteValue;
+
+            return n < 10
+                ? $"{n:N2} PB"
+                : $"{n:N0} PB";
+        }
+
+        if (n >= OneTerabyteValue)
+        {
+            n /= OneTerabyteValue;
+
+            return n < 10
+                ? $"{n:N2} TB"
+                : $"{n:N0} TB";
+        }
+
+        if (n >= OneGigabyteValue)
+        {
+            n /= OneGigabyteValue;
+
+            return n < 10
+                ? $"{n:N2} GB"
+                : $"{n:N0} GB";
+        }
+
+        if (n >= OneMegabyteValue)
+        {
+            n /= OneMegabyteValue;
+
+            return n < 10
+                ? $"{n:N2} MB"
+                : $"{n:N0} MB";
+        }
+
+        if (n >= OneKilobyteValue)
+        {
+            n /= OneKilobyteValue;
+
+            return n < 10
+                ? $"{n:N2} KB"
+                : $"{n:N0} KB";
+        }
+
+        return $"{n:N0} B";
     }
 
     /// <summary>
@@ -104,20 +161,29 @@ public readonly partial struct DataSize
     /// <returns>A string representation of the current instance.</returns>
     public string ToString(string format, IFormatProvider formatProvider)
     {
-        if (format is "S" or "simple")
-        {
-            return ToString() ?? string.Empty;
-        }
+        if (format is "S2" or "simple-binary")
+            return ToStringBinary() ?? string.Empty;
 
-        if (format is "D" or "detailed")
+        if (format is "S10" or "simple-decimal")
+            return ToStringDecimal() ?? string.Empty;
+
+        if (format is "D2" or "detailed-binary")
         {
-            string simple = ToString();
+            string simple = ToStringBinary();
             string asBytes = ToString(DataSizeUnit.Byte);
 
             return $"{simple} ({asBytes})";
         }
 
-        return ToString() ?? string.Empty;
+        if (format is "D10" or "detailed-decimal")
+        {
+            string simple = ToStringDecimal();
+            string asBytes = ToString(DataSizeUnit.Byte);
+
+            return $"{simple} ({asBytes})";
+        }
+
+        return ToStringBinary() ?? string.Empty;
     }
 
     /// <summary>
@@ -129,22 +195,43 @@ public readonly partial struct DataSize
         {
             case DataSizeUnit.Unknown:
             case DataSizeUnit.Byte:
-                return $"{Value:N0} B";
+                return $"{value:N0} B";
+
+            // ---
+
+            case DataSizeUnit.Kibibyte:
+                return $"{Kibibytes:N0} KiB";
+
+            case DataSizeUnit.Mebibyte:
+                return $"{Mebibytes:N0} MiB";
+
+            case DataSizeUnit.Gibibyte:
+                return $"{Gibibytes:N0} GiB";
+
+            case DataSizeUnit.Tebibyte:
+                return $"{Tebibytes:N0} TiB";
+
+            case DataSizeUnit.Pebibyte:
+                return $"{Pebibytes:N0} PiB";
+
+            // ---
 
             case DataSizeUnit.Kilobyte:
-                return $"{Kilobytes:N0} KiB";
+                return $"{Kilobytes:N0} KB";
 
             case DataSizeUnit.Megabyte:
-                return $"{Megabytes:N0} MiB";
+                return $"{Megabytes:N0} MB";
 
             case DataSizeUnit.Gigabyte:
-                return $"{Gigabytes:N0} GiB";
+                return $"{Gigabytes:N0} GB";
 
             case DataSizeUnit.Terabyte:
-                return $"{Terabytes:N0} TiB";
+                return $"{Terabytes:N0} TB";
 
             case DataSizeUnit.Petabyte:
-                return $"{Terabytes:N0} PiB";
+                return $"{Petabytes:N0} PB";
+
+            // ---
 
             default:
                 throw new ArgumentOutOfRangeException(nameof(unit), unit, null);

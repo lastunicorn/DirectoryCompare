@@ -16,11 +16,14 @@
 
 using System.Globalization;
 using DustInTheWind.ConsoleTools.Controls.Tables;
+using DustInTheWind.DirectoryCompare.Cli.Presentation.Utils;
 
 namespace DustInTheWind.DirectoryCompare.Cli.Presentation.SnapshotCommands.DisplaySnapshot;
 
 internal class SnapshotDataGrid : CustomDataGrid
 {
+    public DataSizeFormat DataSizeFormat { get; set; }
+
     public SnapshotDataGrid()
     {
         HeaderRow.IsVisible = false;
@@ -52,10 +55,10 @@ internal class SnapshotDataGrid : CustomDataGrid
         Rows.Add("Directories", snapshotViewModel.TotalDirectoryCount.ToString("N0"));
         Rows.Add("Files", snapshotViewModel.TotalFileCount.ToString("N0"));
 
-        string dataSize = snapshotViewModel.DataSize.ToString("D");
+        DataSizeDisplay dataSize = snapshotViewModel.DataSize.ToDataSizeDisplay(DataSizeFormat | DataSizeFormat.Detailed);
         Rows.Add("Data Size", dataSize);
 
-        string storageSize = snapshotViewModel.StorageSize.ToString("D");
+        DataSizeDisplay storageSize = snapshotViewModel.StorageSize.ToDataSizeDisplay(DataSizeFormat | DataSizeFormat.Detailed);
         Rows.Add("Snapshot Size", storageSize);
     }
 }
