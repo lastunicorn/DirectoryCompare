@@ -14,12 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Runtime.Serialization;
 using DustInTheWind.DirectoryCompare.Infrastructure;
 
 namespace DustInTheWind.DirectoryCompare.Ports.DataAccess;
 
-[Serializable]
 public class DataAccessException : DirectoryCompareException
 {
     public DataAccessException()
@@ -33,11 +31,6 @@ public class DataAccessException : DirectoryCompareException
 
     public DataAccessException(string message, Exception inner)
         : base(message, inner)
-    {
-    }
-
-    protected DataAccessException(SerializationInfo info, StreamingContext context)
-        : base(info, context)
     {
     }
 }
