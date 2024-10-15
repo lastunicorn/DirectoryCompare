@@ -14,9 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System.Collections;
+
 namespace DustInTheWind.DirectoryCompare.DataStructures;
 
-public readonly struct SnapshotPath
+public readonly struct SnapshotPath : IEnumerable<string>
 {
     private readonly string path;
 
@@ -27,26 +29,52 @@ public readonly struct SnapshotPath
 
     public bool IsEmpty => string.IsNullOrEmpty(path);
 
+    public IEnumerable<string> EnumerateDirectories()
+    {
+        using IEnumerator<string> enumerator = GetEnumerator();
+
+        string previousPart = null;
+
+        while (enumerator.MoveNext())
+        {
+            if (previousPart == null)
+            {
+                previousPart = enumerator.Current;
+            }
+            else
+            {
+                yield return previousPart;
+                previousPart = enumerator.Current;
+            }
+        }
+    }
+
     public IEnumerable<string> Enumerate()
     {
-        if (path == null)
-            yield break;
+        using IEnumerator<string> enumerator = GetEnumerator();
 
-        string[] parts = path.Split('/');
+        while (enumerator.MoveNext())
+            yield return enumerator.Current;
+    }
 
-        bool isRooted = path.StartsWith("/");
-        int startIndex = isRooted ? 1 : 0;
-
-        for (int i = startIndex; i < parts.Length; i++)
-        {
-            string part = parts[i].Trim();
-            yield return part;
-        }
+    public IEnumerator<string> GetEnumerator()
+    {
+        return new SnapshotPathEnumerator(this);
     }
 
     public override string ToString()
     {
-        return path;
+        if (path == null)
+            return string.Empty;
+
+        return path.StartsWith("/")
+            ? path
+            : "/" + path;
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 
     public static implicit operator SnapshotPath(string path)
@@ -56,7 +84,7 @@ public readonly struct SnapshotPath
 
     public static implicit operator string(SnapshotPath path)
     {
-        return path.path;
+        return path.ToString();
     }
 
     public static SnapshotPath operator +(SnapshotPath path1, SnapshotPath path2)
@@ -77,5 +105,50 @@ public readonly struct SnapshotPath
         string result = string.Join('/', parts);
 
         return new SnapshotPath(result);
+    }
+
+    private class SnapshotPathEnumerator : IEnumerator<string>
+    {
+        private readonly SnapshotPath snapshotPath;
+        private readonly string[] parts;
+        private readonly bool isRooted;
+        private int index;
+
+        public string Current { get; private set; }
+
+        object IEnumerator.Current => Current;
+
+        public SnapshotPathEnumerator(SnapshotPath snapshotPath)
+        {
+            this.snapshotPath = snapshotPath;
+
+            parts = snapshotPath.path?.Split('/');
+            isRooted = snapshotPath.path?.StartsWith("/") ?? false;
+
+            index = isRooted ? 1 : 0;
+        }
+
+        public bool MoveNext()
+        {
+            if (parts == null || index == parts.Length)
+            {
+                Current = null;
+                return false;
+            }
+
+            Current = parts[index].Trim();
+            index++;
+
+            return true;
+        }
+
+        public void Reset()
+        {
+            index = isRooted ? 1 : 0;
+        }
+
+        public void Dispose()
+        {
+        }
     }
 }

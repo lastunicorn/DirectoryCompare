@@ -153,4 +153,9 @@ public class HDirectory : HItem, IEquatable<HDirectory>, IEnumerable<HItem>
     {
         return Directories.FirstOrDefault(x => x.Name == name);
     }
+
+    public HFile GetChildFile(string name)
+    {
+        return Files.FirstOrDefault(x => x.Name == name);
+    }
 }

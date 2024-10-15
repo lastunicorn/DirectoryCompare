@@ -48,6 +48,28 @@ public class Snapshot : HDirectory
         return hDirectory;
     }
 
+    public HFile GetFile(SnapshotPath path)
+    {
+        HDirectory hDirectory = this;
+        IEnumerable<string> names = path.Enumerate();
+        string previousName = null;
+
+        foreach (string name in names)
+        {
+            if (previousName != null)
+            {
+                hDirectory = hDirectory.GetChildDirectory(previousName);
+
+                if (hDirectory == null)
+                    return null;
+            }
+
+            previousName = name;
+        }
+
+        return hDirectory.GetChildFile(previousName);
+    }
+
     public override string ToString()
     {
         return $"Snapshot: {Id:D)}; Path: {OriginalPath}";
