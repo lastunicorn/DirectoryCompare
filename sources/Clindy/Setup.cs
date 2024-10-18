@@ -86,8 +86,8 @@ internal static class Setup
             {
                 IConfig config = x.Resolve<IConfig>();
         
-                Database database = new();
-                database.Open(config.ConnectionString);
+                Database database = new(config.ConnectionString);
+                database.Open();
         
                 return database;
             })

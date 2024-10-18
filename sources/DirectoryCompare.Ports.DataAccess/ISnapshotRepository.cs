@@ -41,4 +41,6 @@ public interface ISnapshotRepository
     Task<DataSize> GetStorageSize(SnapshotLocation location);
 
     Task<DataSize> GetSnapshotSize(Guid potId, Guid snapshotId);
+
+    Task SaveChanges(string potName, Snapshot snapshot);
 }

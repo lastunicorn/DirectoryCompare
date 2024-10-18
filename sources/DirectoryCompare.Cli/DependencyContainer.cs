@@ -74,11 +74,21 @@ internal static class DependencyContainer
         containerBuilder
             .Register(x =>
             {
-                IConfig config = x.Resolve<IConfig>();
+                IFileSystem fileSystem = x.Resolve<IFileSystem>();
 
-                Database database = new();
-                database.Open(config.ConnectionString);
+                string currentDirectory = fileSystem.GetCurrentDirectory();
+                Database database = new(currentDirectory);
 
+                if (!database.Exists())
+                {
+                    IConfig config = x.Resolve<IConfig>();
+                    database = new(config.ConnectionString);
+
+                    if (!database.Exists())
+                        database.Create();
+                }
+
+                database.Open();
                 return database;
             })
             .AsSelf()

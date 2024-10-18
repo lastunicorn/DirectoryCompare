@@ -1,4 +1,4 @@
-// DirectoryCompare
+// Directory Compare
 // Copyright (C) 2017-2024 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -25,18 +25,70 @@ public class Database
     private DatabaseState state = DatabaseState.Closed;
     private string rootDirectory;
 
-    public void Open(string connectionString)
+    public Database(string connectionString)
+    {
+        rootDirectory = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
+    }
+
+    public bool Exists()
+    {
+        if (!Directory.Exists(rootDirectory))
+            return false;
+
+        JDatabaseInfoFile jDatabaseInfoFile = new()
+        {
+            RootPath = rootDirectory
+        };
+
+        if (!jDatabaseInfoFile.Exists)
+            return false;
+
+        JDatabaseInfo jDatabaseInfo = jDatabaseInfoFile.Read();
+
+        if (jDatabaseInfo.Version != "1.0")
+            return false;
+
+        return true;
+    }
+
+    public void Create()
+    {
+        if (Directory.Exists(rootDirectory))
+        {
+            bool rootDirectoryHasChildren = Directory.EnumerateFileSystemEntries(rootDirectory).Any();
+            if (rootDirectoryHasChildren)
+                throw new DatabaseCreateException(rootDirectory);
+        }
+        else
+        {
+            Directory.CreateDirectory(rootDirectory);
+        }
+
+        if (!Directory.Exists(rootDirectory))
+            throw new DatabaseCreateException(rootDirectory);
+
+        JDatabaseInfoFile jDatabaseInfoFile = new()
+        {
+            RootPath = rootDirectory
+        };
+
+        if (!jDatabaseInfoFile.Exists)
+        {
+            JDatabaseInfo jDatabaseInfo = new()
+            {
+                Version = "1.0"
+            };
+            jDatabaseInfoFile.SaveNew(jDatabaseInfo);
+        }
+    }
+
+    public void Open()
     {
         if (state == DatabaseState.Opened)
             return;
 
-        rootDirectory = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
-
-        if (!Directory.Exists(rootDirectory))
-            Directory.CreateDirectory(rootDirectory);
-
-        if (!Directory.Exists(rootDirectory))
-            throw new DatabaseOpenException();
+        if (!Exists())
+            throw new DatabaseOpenException(rootDirectory);
 
         state = DatabaseState.Opened;
     }

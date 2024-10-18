@@ -18,10 +18,10 @@ namespace DustInTheWind.DirectoryCompare.Ports.DataAccess;
 
 public class DatabaseOpenException : DataAccessException
 {
-    private const string DefaultMessage = "The database could not be opened.";
+    private const string DefaultMessage = "The database could not be opened: {0}";
 
-    public DatabaseOpenException()
-        : base(DefaultMessage)
+    public DatabaseOpenException(string connectionString)
+        : base(string.Format(DefaultMessage, connectionString))
     {
     }
 }

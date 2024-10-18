@@ -18,6 +18,9 @@ using System.Collections;
 
 namespace DustInTheWind.DirectoryCompare.DataStructures;
 
+/// <summary>
+/// Represents a path inside a snapshot.
+/// </summary>
 public readonly struct SnapshotPath : IEnumerable<string>
 {
     private readonly string path;
@@ -109,7 +112,6 @@ public readonly struct SnapshotPath : IEnumerable<string>
 
     private class SnapshotPathEnumerator : IEnumerator<string>
     {
-        private readonly SnapshotPath snapshotPath;
         private readonly string[] parts;
         private readonly bool isRooted;
         private int index;
@@ -120,8 +122,6 @@ public readonly struct SnapshotPath : IEnumerable<string>
 
         public SnapshotPathEnumerator(SnapshotPath snapshotPath)
         {
-            this.snapshotPath = snapshotPath;
-
             parts = snapshotPath.path?.Split('/');
             isRooted = snapshotPath.path?.StartsWith("/") ?? false;
 

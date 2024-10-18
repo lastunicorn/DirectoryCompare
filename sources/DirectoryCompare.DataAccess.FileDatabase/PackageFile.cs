@@ -21,7 +21,10 @@ namespace DustInTheWind.DirectoryCompare.DataAccess.FileDatabase;
 
 public abstract class PackageFile
 {
-    public string FilePath { get; }
+    public string FilePath { get; private set; }
+
+
+    public string FileName => Path.GetFileName(FilePath);
 
     public bool Exists => FilePath != null && File.Exists(FilePath);
 
@@ -108,5 +111,22 @@ public abstract class PackageFile
     public void Delete()
     {
         File.Delete(FilePath);
+    }
+
+    public void Move(string path)
+    {
+        string newFilePath = Path.Combine(path, FileName);
+        File.Move(FilePath, newFilePath);
+
+        FilePath = newFilePath;
+    }
+
+    public void Rename(string newFileName)
+    {
+        string directoryPath = Path.GetDirectoryName(FilePath);
+        string newFilePath = Path.Combine(directoryPath, newFileName);
+        File.Move(FilePath, newFilePath, true);
+
+        FilePath = newFilePath;
     }
 }

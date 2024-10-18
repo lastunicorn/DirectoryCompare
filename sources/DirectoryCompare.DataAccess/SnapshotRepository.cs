@@ -257,4 +257,23 @@ public class SnapshotRepository : ISnapshotRepository
 
         return theSnapshotPackage;
     }
+
+    public async Task SaveChanges(string potName, Snapshot snapshot)
+    {
+        PotDirectory potDirectory = await database.GetPotDirectory(potName);
+
+        if (potDirectory == null)
+            throw new Exception($"There is no pot with name '{potName}'.");
+
+        SnapshotPackage existingSnapshotPackage = potDirectory.EnumerateSnapshotPackages()
+            .FirstOrDefault(x => x.Open() && x.SnapshotContent.CreationTime == snapshot.CreationTime);
+
+        existingSnapshotPackage?.Rename(existingSnapshotPackage.FileName + ".bak");
+
+        SnapshotPackage newSnapshotPackage = potDirectory.CreateSnapshotPackage(snapshot.CreationTime);
+        newSnapshotPackage.SnapshotContent = snapshot.ToJSnapshot();
+        newSnapshotPackage.Save();
+        
+        existingSnapshotPackage?.Delete();
+    }
 }

@@ -46,4 +46,9 @@ public class FileSystem : IFileSystem
             ? File.OpenRead(filePath)
             : Stream.Null;
     }
+
+    public string GetCurrentDirectory()
+    {
+        return Environment.CurrentDirectory;
+    }
 }

@@ -2,7 +2,9 @@
   "profiles": {
     "DirectoryCompare.Cli": {
       "commandName": "Project",
-      "commandLineArgs": "pots"
+      "commandLineArgs": "purge acte~1 Thumbs.db"
+      //"commandLineArgs": "find-change \"eight-ua/bg114 - maid/069.jpeg\""
+      //"commandLineArgs": "find-change \"eight-ua/bg115 - beach/nude naken blonde preteen lolita.jpg\""
     }
   }
 }

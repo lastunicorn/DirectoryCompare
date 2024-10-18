@@ -1,4 +1,4 @@
-// DirectoryCompare
+// Directory Compare
 // Copyright (C) 2017-2024 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -14,19 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.DirectoryCompare.Ports.FileSystemAccess;
+namespace DustInTheWind.DirectoryCompare.Ports.DataAccess;
 
-public interface IFileSystem
+public class DatabaseCreateException : DataAccessException
 {
-    bool ExistsDirectory(string path);
+    private const string DefaultMessage = "The database could not be created: {0}";
 
-    bool FileExists(string path);
-
-    string[] GetFiles(string path);
-
-    string[] GetDirectories(string path);
-
-    Stream GetFileStream(string filePath);
-
-    string GetCurrentDirectory();
+    public DatabaseCreateException(string connectionString)
+        : base(string.Format(DefaultMessage, connectionString))
+    {
+    }
 }

@@ -100,4 +100,16 @@ public class HItemCollection<T> : Collection<T>
             item.Parent = parent;
         }
     }
+
+    public List<T> Remove(Predicate<T> predicate)
+    {
+        List<T> itemsToRemove = Items
+            .Where(x => predicate(x))
+            .ToList();
+
+        foreach (T item in itemsToRemove)
+            Items.Remove(item);
+
+        return itemsToRemove;
+    }
 }

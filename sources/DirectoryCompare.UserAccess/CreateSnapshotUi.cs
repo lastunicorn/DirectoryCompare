@@ -60,11 +60,13 @@ public class CreateSnapshotUi : EnhancedConsole, ICreateSnapshotUi
 
     public Task AnnounceFileIndexingProgress(FileIndexInfo fileIndexInfo)
     {
+        Console.CursorLeft = 0;
+        
         CustomConsole.Write("Indexed:");
         
         int fileCount = fileIndexInfo.FileCount;
         DataSizeDisplay dataSizeDisplay = fileIndexInfo.DataSize.ToDataSizeDisplay(DataSizeFormat);
-        CustomConsole.WriteLine(ConsoleColor.DarkGray, $" {fileCount:N0} files ({dataSizeDisplay})");
+        CustomConsole.Write(ConsoleColor.DarkGray, $" {fileCount:N0} files ({dataSizeDisplay})");
 
         return Task.CompletedTask;
     }
@@ -102,12 +104,14 @@ public class CreateSnapshotUi : EnhancedConsole, ICreateSnapshotUi
 
     public Task AnnounceAnalysisProgress(DiskAnalysisProgressInfo info)
     {
+        Console.CursorLeft = 0;
+        
         CustomConsole.Write("Progress:");
         CustomConsole.WriteEmphasized($" {info.Percentage:0.00} %");
         
         DataSizeDisplay processedSize = info.ProcessedSize.ToDataSizeDisplay(DataSizeFormat);
         DataSizeDisplay totalSize = info.TotalSize.ToDataSizeDisplay(DataSizeFormat);
-        CustomConsole.WriteLine(ConsoleColor.DarkGray, $" ({processedSize} / {totalSize})");
+        CustomConsole.Write(ConsoleColor.DarkGray, $" ({processedSize} / {totalSize})");
 
         return Task.CompletedTask;
     }
